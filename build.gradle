@@ -13,22 +13,14 @@ buildscript {
 task generatesettings << {
     def f = new File(project.projectDir.path)
     def bndProjects = []
-    f.eachFile { 
+    f.eachFile {
         if(new File(it, 'bnd.bnd').exists()) {
             bndProjects << it.name
-        } 
+        }
     }
 
     def settingsFile = new File("${project.projectDir.path}/settings.gradle")
-    settingsFile.text = 'include '
-
-    bndProjects.eachWithIndex { item,idx ->
-        if(idx > 0) {
-            settingsFile << ', '
-        }
-
-        settingsFile << "'$item'"
-    }
+    settingsFile.text = 'include ' + bndProjects.collect{"'$it'"}.join(', ')
 }
 
 //Setup the workspace
@@ -65,30 +57,25 @@ subprojects { p ->
         compileJava.dependsOn(':' +  it.name + ':bndbuild')
     }
 
-    bndProject.getBuildpath().each {
-        dependencies.add('compile', files(it.getFile()))
+    bndProject.buildpath.each {
+        dependencies.add 'compile', files(it.file)
     }
 
     //Add junit as a default dependency
-    dependencies.add('testCompile', 'junit:junit:4.+')
+    dependencies.add 'testCompile', 'junit:junit:4.+'
 
     //Perform the actual bnd build
     task bndbuild << { task ->
-        bndProject.build()
+
+        bndProject.build
 
         //Report errors and warnings to the Gradle output
-        bndProject.getWarnings().each {
-            logger.warn it
-        }
+        bndProject.warnings.each { logger.warn it  }
+        bndProject.errors.each   { logger.error it }
 
-        bndProject.getErrors().each {
-            logger.error it
-        }
-        
         //Fail the build if there are build errors
-        if(bndProject.getErrors()) {
+        if(bndProject.errors)
             throw new  GradleException("Bnd build failure. Check build logs for error messages")
-        }
     }
 
     bndbuild.dependsOn(['compileJava','processResources'])
