@@ -1,0 +1,22 @@
+-sourcepath: src, src-gen, xtend-gen
+-sub: *.bnd
+-buildpath: emf-for-osgi.minimal;version=latest,\
+	emf-for-osgi.xmi;version=latest,\
+	org.eclipse.emf.mwe.utils,\
+	org.eclipse.emf.mwe.core,\
+	org.eclipse.emf.mwe2.lib,\
+	org.eclipse.emf.mwe2.runtime,\
+	org.eclipse.emf.mwe2.launch,\
+	org.apache.commons.cli,\
+	org.apache.log4j,\
+	org.eclipse.emf.mwe2.language,\
+	org.eclipse.xtext,\
+	com.google.inject,\
+	javax.inject,\
+	org.eclipse.xtext.common.types,\
+	com.google.guava,\
+	org.antlr.runtime,\
+	org.eclipse.xtext.util,\
+	org.apache.commons.logging,\
+	org.eclipse.emf.codegen.ecore,\
+	org.eclipse.emf.codegen

@@ -1,0 +1,34 @@
+module GenerateUcm
+
+import org.eclipse.emf.mwe.utils.StandaloneSetup
+import org.eclipse.emf.mwe2.ecore.EcoreGenerator
+import org.eclipse.emf.mwe2.runtime.workflow.Workflow
+import org.eclipse.emf.mwe.utils.DirectoryCleaner
+
+Workflow {
+	bean = StandaloneSetup {
+		scanClassPath = true
+		platformUri = ".."
+		uriMap = {
+			from = "platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore"
+			to = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore"
+		}
+		uriMap = {
+			from = "platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel"
+			to = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel"
+		}
+		registerGenModelFile = "platform:/resource/foam-models/models/foam.genmodel"
+	}
+
+	component = DirectoryCleaner {
+		directory = "src-gen"
+	}
+
+	component = EcoreGenerator {
+		genModel = "platform:/resource/foam-models/models/foam.genmodel"
+		srcPath = "platform:/resource/foam-models/src"
+		srcPath = "platform:/resource/foam-models/xtend-gen"
+		generateEdit = false
+		generateEditor = false
+	}
+}
