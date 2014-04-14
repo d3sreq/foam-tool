@@ -1,0 +1,7 @@
+-sources: src, xtend-gen
+-sub: *.bnd
+-buildpath: foam-models.todo;version=latest,\
+	foam-models.graphviz.dot;version=latest,\
+	org.eclipse.xtext,\
+	org.apache.log4j,\
+	org.apache.commons.lang
