@@ -1,0 +1,1 @@
+include 'emf-for-osgi', 'foam-transform', 'foam-models'

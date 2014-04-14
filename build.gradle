@@ -1,0 +1,119 @@
+import aQute.bnd.build.Workspace
+
+defaultTasks 'clean', 'bndbuild'
+
+//Add bnd as a build dependency
+buildscript {
+    dependencies {
+        classpath files('cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.2.0.jar')
+    }
+}
+
+//Generate settings.gradle containing all projects
+task generatesettings << {
+    def f = new File(project.projectDir.path)
+    def bndProjects = []
+    f.eachFile { 
+        if(new File(it, 'bnd.bnd').exists()) {
+            bndProjects << it.name
+        } 
+    }
+
+    def settingsFile = new File("${project.projectDir.path}/settings.gradle")
+    settingsFile.text = 'include '
+
+    bndProjects.eachWithIndex { item,idx ->
+        if(idx > 0) {
+            settingsFile << ', '
+        }
+
+        settingsFile << "'$item'"
+    }
+}
+
+//Setup the workspace
+Workspace workspace
+def parentDir = project.projectDir
+    
+workspace = Workspace.getWorkspace(parentDir)
+
+subprojects { p ->
+    apply plugin: 'java'
+
+    repositories {
+       mavenCentral()
+    }
+
+    aQute.bnd.build.Project bndProject
+    bndProject = workspace.getProject(p.projectDir)
+    
+    //Setup source and target directories
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+    sourceSets.main.java.srcDirs = ['src']
+    sourceSets.main.resources.srcDirs = ['src']
+    sourceSets.test.java.srcDirs = ['test']
+    sourceSets.test.resources.srcDirs = ['test']    
+    sourceSets.main.output.classesDir = 'bin'
+    sourceSets.main.output.resourcesDir = 'bin'
+    sourceSets.test.output.classesDir = 'bin_test'
+    sourceSets.test.output.resourcesDir = 'bin_test'
+    testResultsDirName = 'generated/test-reports'
+
+    //Setup project dependencies
+    bndProject.getDependson().each {
+        compileJava.dependsOn(':' +  it.name + ':bndbuild')
+    }
+
+    bndProject.getBuildpath().each {
+        dependencies.add('compile', files(it.getFile()))
+    }
+
+    //Add junit as a default dependency
+    dependencies.add('testCompile', 'junit:junit:4.+')
+
+    //Perform the actual bnd build
+    task bndbuild << { task ->
+        bndProject.build()
+
+        //Report errors and warnings to the Gradle output
+        bndProject.getWarnings().each {
+            logger.warn it
+        }
+
+        bndProject.getErrors().each {
+            logger.error it
+        }
+        
+        //Fail the build if there are build errors
+        if(bndProject.getErrors()) {
+            throw new  GradleException("Bnd build failure. Check build logs for error messages")
+        }
+    }
+
+    bndbuild.dependsOn(['compileJava','processResources'])
+
+    //Run integration tests
+    task bndtest << { task -> 
+        if(bndProject.getProperty("Test-Cases")) {
+            bndProject.test();
+        }
+    }
+
+    clean.doLast {
+        p.file('generated').deleteDir()
+    }
+}
+
+//Collect generated and external bundles for deployment
+task release() << {
+    delete "release"
+    ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.2.0.jar')
+    ant.bndrelease(allowsnapshots: true, bndfile: 'release.bndrun', rootdir: parentDir, outputdir: "$parentDir/release")   
+}
+
+//Generate a Gradle wrapper
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.6'
+}
+

@@ -1,0 +1,7 @@
+/generated
+.gradle
+gradle
+*/build
+release
+/build
+/bin
