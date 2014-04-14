@@ -1,0 +1,5 @@
+Bundle-Name: EMF for OSGi (XMI support)
+Bundle-Version: 2.9.1
+Export-Package: org.eclipse.emf.ecore.xmi;version=${emf-version},\
+	org.eclipse.emf.ecore.xmi.impl;version=${emf-version},\
+	org.eclipse.emf.ecore.xmi.util;version=${emf-version}
