@@ -1,0 +1,5 @@
+Bundle-Version: 1.0.0
+Export-Package: org.foam.ucm,\
+	org.foam.ucm.impl,\
+	org.foam.ucm.impl.xtend,\
+	org.foam.ucm.util

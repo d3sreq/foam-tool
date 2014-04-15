@@ -1,7 +1,3 @@
-/generated
-.gradle
-gradle
-*/build
-release
-/build
-/bin
+/.gradle/
+/reports/
+/generated/

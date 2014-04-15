@@ -1,0 +1,13 @@
+-sources: src, xtend-gen
+-sub: *.bnd
+-buildpath: biz.aQute.bnd.annotation,\
+	osgi.cmpn,\
+	org.apache.servicemix.bundles.jopt-simple,\
+	org.foam.transform.utils;version=latest,\
+	org.foam.transform.ucm2lts;version=latest,\
+	org.foam.models.foamannot;version=latest,\
+	org.foam.models.graphviz;version=latest,\
+	org.foam.models.lts;version=latest,\
+	org.foam.models.traceability;version=latest,\
+	org.foam.models.ucm;version=latest,\
+	org.foam.models.verification;version=latest

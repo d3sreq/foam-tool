@@ -1,0 +1,7 @@
+Bundle-Version: 1.0.0
+Export-Package: org.foam.verification,\
+	org.foam.verification.impl,\
+	org.foam.verification.util,\
+	org.foam.cntex,\
+	org.foam.cntex.impl,\
+	org.foam.cntex.util

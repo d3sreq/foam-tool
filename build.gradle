@@ -1,106 +1,45 @@
-import aQute.bnd.build.Workspace
+/*
+ * WARNING
+ *
+ * This file is maintained automatically by Bndtools.
+ * You should not edit it.
+ *
+ * See the BUILDING-GRADLE.md document in the root project for more details.
+ */
 
-defaultTasks 'clean', 'bndbuild'
+assert(project == rootProject)
 
-//Add bnd as a build dependency
-buildscript {
-    dependencies {
-        classpath files('cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.2.0.jar')
-    }
+
+/* Scan for the location of the configuration (cnf) project, relative to the root project */
+def cnfs = new LinkedList<String>();
+rootDir.eachFile {
+  if (it.isDirectory() && new File(it, "build.bnd").exists()) {
+    cnfs.add(relativePath(it))
+  }
 }
-
-//Generate settings.gradle containing all projects
-task generatesettings << {
-    def f = new File(project.projectDir.path)
-    def bndProjects = []
-    f.eachFile {
-        if(new File(it, 'bnd.bnd').exists()) {
-            bndProjects << it.name
-        }
-    }
-
-    def settingsFile = new File("${project.projectDir.path}/settings.gradle")
-    settingsFile.text = 'include ' + bndProjects.collect{"'$it'"}.join(', ')
+if (cnfs.isEmpty()) {
+  throw new GradleException("Could not locate the cnf project.")
 }
-
-//Setup the workspace
-Workspace workspace
-def parentDir = project.projectDir
-    
-workspace = Workspace.getWorkspace(parentDir)
-
-subprojects { p ->
-    apply plugin: 'java'
-
-    repositories {
-       mavenCentral()
-    }
-
-    aQute.bnd.build.Project bndProject
-    bndProject = workspace.getProject(p.projectDir)
-    
-    //Setup source and target directories
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
-    sourceSets.main.java.srcDirs = ['src']
-    sourceSets.main.resources.srcDirs = ['src']
-    sourceSets.test.java.srcDirs = ['test']
-    sourceSets.test.resources.srcDirs = ['test']    
-    sourceSets.main.output.classesDir = 'bin'
-    sourceSets.main.output.resourcesDir = 'bin'
-    sourceSets.test.output.classesDir = 'bin_test'
-    sourceSets.test.output.resourcesDir = 'bin_test'
-    testResultsDirName = 'generated/test-reports'
-
-    //Setup project dependencies
-    bndProject.getDependson().each {
-        compileJava.dependsOn(':' +  it.name + ':bndbuild')
-    }
-
-    bndProject.buildpath.each {
-        dependencies.add 'compile', files(it.file)
-    }
-
-    //Add junit as a default dependency
-    dependencies.add 'testCompile', 'junit:junit:4.+'
-
-    //Perform the actual bnd build
-    task bndbuild << { task ->
-
-        bndProject.build
-
-        //Report errors and warnings to the Gradle output
-        bndProject.warnings.each { logger.warn it  }
-        bndProject.errors.each   { logger.error it }
-
-        //Fail the build if there are build errors
-        if(bndProject.errors)
-            throw new  GradleException("Bnd build failure. Check build logs for error messages")
-    }
-
-    bndbuild.dependsOn(['compileJava','processResources'])
-
-    //Run integration tests
-    task bndtest << { task -> 
-        if(bndProject.getProperty("Test-Cases")) {
-            bndProject.test();
-        }
-    }
-
-    clean.doLast {
-        p.file('generated').deleteDir()
-    }
+if (cnfs.size() > 1) {
+  throw new GradleException("Multiple cnf projects found: $cnfs")
 }
+ext.bnd_cnf = cnfs.get(0)
 
-//Collect generated and external bundles for deployment
-task release() << {
-    delete "release"
-    ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.2.0.jar')
-    ant.bndrelease(allowsnapshots: true, bndfile: 'release.bndrun', rootdir: parentDir, outputdir: "$parentDir/release")   
-}
 
-//Generate a Gradle wrapper
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.6'
-}
+/* Load the workspace build settings */
+apply from: file("$bnd_cnf/gradle/template/settings-workspace.gradle")
 
+/* Logging */
+assert(hasProperty("gradleBuild_loggingCaptureStandardOutput"))
+assert(hasProperty("gradleBuild_loggingLevel"))
+logging.captureStandardOutput   gradleBuild_loggingCaptureStandardOutput
+logging.level                 = gradleBuild_loggingLevel
+
+/* Determine the build dependencies */
+apply from: file("$bnd_cnf/gradle/template/buildDependencies.gradle")
+
+/* Initialise the bnd workspace and load the workspace defaults */
+apply from: file("$bnd_cnf/gradle/template/bndWorkspace.gradle")
+
+/* Apply the build template */
+apply from: file("$bnd_cnf/gradle/template/template.gradle")

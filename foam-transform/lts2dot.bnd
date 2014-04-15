@@ -1,6 +1,0 @@
-Bundle-Version: 1.0.0
-Export-Package: lts2dot,\
-	lts2dot.processor.state,\
-	lts2dot.processor.state.color,\
-	lts2dot.processor.state.label,\
-	lts2dot.processor.transition

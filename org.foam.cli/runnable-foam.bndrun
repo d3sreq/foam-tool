@@ -1,0 +1,53 @@
+-runfw: org.apache.felix.framework;version='[4,5)'
+-runee: JavaSE-1.7
+-runsystemcapabilities: ${native_capability}
+
+-resolve.effective: active
+
+-runbundles: com.google.guava;version='[11.0.2,11.0.3)',\
+	javax.servlet;version='[2.5.0,2.5.1)',\
+	org.apache.felix.configadmin;version='[1.6.0,1.6.1)',\
+	org.apache.felix.gogo.command;version='[0.12.0,0.12.1)',\
+	org.apache.felix.gogo.runtime;version='[0.10.0,0.10.1)',\
+	org.apache.felix.gogo.shell;version='[0.10.0,0.10.1)',\
+	org.apache.felix.http.jetty;version='[2.2.0,2.2.1)',\
+	org.apache.felix.log;version='[1.0.1,1.0.2)',\
+	org.apache.felix.metatype;version='[1.0.4,1.0.5)',\
+	org.apache.felix.scr;version='[1.6.2,1.6.3)',\
+	org.apache.felix.webconsole;version='[3.1.8,3.1.9)',\
+	org.apache.servicemix.bundles.jopt-simple;version='[4.6.0,4.6.1)',\
+	org.eclipse.xtend.lib;version='[2.4.3,2.4.4)',\
+	org.eclipse.xtext.xbase.lib;version='[2.4.3,2.4.4)',\
+	org.foam.cli.launcher;version=latest,\
+	org.foam.cli.launcher.api;version=latest,\
+	org.foam.cli.tools.nusmv;version=latest,\
+	org.foam.cli.tools.ucm2lts;version=latest,\
+	org.foam.emf4osgi.minimal;version=latest,\
+	org.foam.emf4osgi.xmi;version=latest,\
+	org.foam.models.foamannot;version=latest,\
+	org.foam.models.graphviz;version=latest,\
+	org.foam.models.lts;version=latest,\
+	org.foam.models.traceability;version=latest,\
+	org.foam.models.ucm;version=latest,\
+	org.foam.models.verification;version=latest,\
+	org.foam.transform.ucm2lts;version=latest,\
+	org.foam.transform.utils;version=latest,\
+	osgi.cmpn;version='[5.0.0,5.0.1)',\
+	osgi.enterprise;version='[4.2.0,4.2.1)',\
+	osgi.residential;version='[4.3.0,4.3.1)'
+
+-runrequires: osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.shell)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.command)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.webconsole)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.configadmin)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.metatype)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.log)',\
+	osgi.identity;filter:='(&(osgi.identity=osgi.cmpn)(version>=4.2))',\
+	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=1.6.0))',\
+	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.http.jetty)',\
+	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.ucm2lts)',\
+	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.nusmv)'
+
+## Uncomment if you need to change the HTTP port
+#-runproperties: org.osgi.service.http.port=8080

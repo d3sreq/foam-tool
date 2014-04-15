@@ -1,0 +1,11 @@
+-sources: src, xtend-gen
+-sub: *.bnd
+-buildpath: org.eclipse.xtext,\
+	org.apache.log4j,\
+	org.apache.commons.lang,\
+	org.foam.models.lts;version=latest,\
+	org.foam.models.traceability;version=latest,\
+	org.foam.models.ucm;version=latest,\
+	org.foam.models.foamannot;version=latest,\
+	org.foam.models.graphviz;version=latest,\
+	org.foam.models.verification;version=latest

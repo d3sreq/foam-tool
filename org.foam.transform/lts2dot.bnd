@@ -1,0 +1,6 @@
+Bundle-Version: 1.0.0
+Export-Package: org.foam.transform.lts2dot,\
+	org.foam.transform.lts2dot.processor.state,\
+	org.foam.transform.lts2dot.processor.state.color,\
+	org.foam.transform.lts2dot.processor.state.label,\
+	org.foam.transform.lts2dot.processor.transition
