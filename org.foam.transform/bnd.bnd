@@ -8,4 +8,9 @@
 	org.foam.models.ucm;version=latest,\
 	org.foam.models.foamannot;version=latest,\
 	org.foam.models.graphviz;version=latest,\
-	org.foam.models.verification;version=latest
+	org.foam.models.verification;version=latest,\
+	osgi.cmpn,\
+	biz.aQute.bnd.annotation,\
+	com.google.inject,\
+	org.eclipse.xtext.util,\
+	org.antlr.runtime
