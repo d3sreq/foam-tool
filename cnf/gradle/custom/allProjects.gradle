@@ -3,3 +3,9 @@
  *
  * Build customisations that are applied to all projects.
  */
+
+
+// Fixing the problem of SSL errors (handshake alert: unrecognized_name)
+// as described here: https://github.com/bndtools/bnd/issues/492
+
+System.setProperty("jsse.enableSNIExtension", "false")
