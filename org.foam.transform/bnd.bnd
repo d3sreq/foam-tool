@@ -1,16 +1,27 @@
--sources: src, xtend-gen
 -sub: *.bnd
--buildpath: org.eclipse.xtext,\
-	org.apache.log4j,\
+-buildpath: org.apache.log4j,\
 	org.apache.commons.lang,\
-	org.foam.models.lts;version=latest,\
-	org.foam.models.traceability;version=latest,\
-	org.foam.models.ucm;version=latest,\
-	org.foam.models.foamannot;version=latest,\
-	org.foam.models.graphviz;version=latest,\
-	org.foam.models.verification;version=latest,\
 	osgi.cmpn,\
 	biz.aQute.bnd.annotation,\
 	com.google.inject,\
+	org.antlr.runtime,\
+	org.foam.models.annotation;version=latest,\
+	org.foam.models.cntex;version=latest,\
+	org.foam.models.ctl;version=latest,\
+	org.foam.models.dot;version=latest,\
+	org.foam.models.flowannotation;version=latest,\
+	org.foam.models.foamannot;version=latest,\
+	org.foam.models.ltl;version=latest,\
+	org.foam.models.lts;version=latest,\
+	org.foam.models.propositionallogic;version=latest,\
+	org.foam.models.tadl;version=latest,\
+	org.foam.models.traceability;version=latest,\
+	org.foam.models.ucm;version=latest,\
+	org.foam.models.verification;version=latest,\
+	org.eclipse.xtend.lib,\
 	org.eclipse.xtext.util,\
-	org.antlr.runtime
+	org.eclipse.xtext.xbase.lib,\
+	com.google.guava,\
+	org.foam.emf4osgi.minimal,\
+	org.foam.emf4osgi.xmi,\
+	org.foam.xtext4osgi;version=1.1.0

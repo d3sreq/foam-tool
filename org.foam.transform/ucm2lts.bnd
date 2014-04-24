@@ -1,6 +1,8 @@
+-sourcepath: src/java, src/xtend-gen
 Bundle-Version: 1.0.0
 Export-Package: org.foam.transform.ucm2lts,\
 	org.foam.transform.ucm2lts.listeners,\
 	org.foam.transform.ltsreduction,\
 	org.foam.transform.ltsreduction.listeners,\
 	org.foam.transform.ltsreduction.predicates
+

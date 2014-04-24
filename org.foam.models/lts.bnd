@@ -1,4 +1,3 @@
 Bundle-Version: 1.0.0
-Export-Package: org.foam.lts,\
-	org.foam.lts.impl,\
-	org.foam.lts.util
+Export-Package: org.foam.lts
+Private-Package: org.foam.lts.impl

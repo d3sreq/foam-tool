@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.foam.models/src/emf-gen" modelPluginID="org.foam.models"
+    modelName="Ucm" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    testsDirectory="/org.foam.models/src/tests" importerID="org.eclipse.emf.importer.ecore"
+    bundleManifest="false" complianceLevel="7.0" copyrightFields="false" usedGenPackages="annotation.genmodel#//annotation"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>ucm.ecore</foreignModel>
+  <genPackages prefix="Ucm" basePackage="org.foam" disposableProviderFactory="true"
+      adapterFactory="false" ecorePackage="ucm.ecore#/">
+    <genClasses ecoreClass="ucm.ecore#//UseCaseModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucm.ecore#//UseCaseModel/useCases"/>
+    </genClasses>
+    <genClasses ecoreClass="ucm.ecore#//UseCase">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucm.ecore#//UseCase/mainScenario"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucm.ecore#//UseCase/branches"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ucm.ecore#//UseCase/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ucm.ecore#//UseCase/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ucm.ecore#//UseCase/preceeded"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ucm.ecore#//UseCase/primary"/>
+    </genClasses>
+    <genClasses ecoreClass="ucm.ecore#//StepToScenarioHolderMapEntry">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucm.ecore#//StepToScenarioHolderMapEntry/value"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ucm.ecore#//StepToScenarioHolderMapEntry/key"/>
+    </genClasses>
+    <genClasses ecoreClass="ucm.ecore#//Scenario">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ucm.ecore#//Scenario/text"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute ucm.ecore#//Scenario/label"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucm.ecore#//Scenario/steps"/>
+    </genClasses>
+    <genClasses ecoreClass="ucm.ecore#//Step">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ucm.ecore#//Step/text"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute ucm.ecore#//Step/label"/>
+    </genClasses>
+    <genClasses ecoreClass="ucm.ecore#//ScenarioHolder">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ucm.ecore#//ScenarioHolder/extensions"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ucm.ecore#//ScenarioHolder/variations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute ucm.ecore#//ScenarioHolder/branches"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -5,12 +5,6 @@
 	org.apache.servicemix.bundles.jopt-simple,\
 	org.foam.transform.utils;version=latest,\
 	org.foam.transform.ucm2lts;version=latest,\
-	org.foam.models.foamannot;version=latest,\
-	org.foam.models.graphviz;version=latest,\
-	org.foam.models.lts;version=latest,\
-	org.foam.models.traceability;version=latest,\
-	org.foam.models.ucm;version=latest,\
-	org.foam.models.verification;version=latest,\
 	org.foam.transform.cntexlang2cntex;version=latest,\
 	org.foam.transform.dot2dotlang;version=latest,\
 	org.foam.transform.lts2dot;version=latest,\
@@ -18,5 +12,22 @@
 	org.foam.transform.ucm2ucm;version=latest,\
 	org.foam.transform.tadllang2tadl;version=latest,\
 	osgi.core;version=4.3,\
-	org.foam.emf4osgi.minimal;version=latest,\
-	org.foam.emf4osgi.xmi;version=latest
+	org.eclipse.xtend.lib,\
+	org.eclipse.xtext.xbase.lib,\
+	com.google.guava,\
+	org.eclipse.xtend2.lib,\
+	org.foam.models.annotation;version=latest,\
+	org.foam.models.cntex;version=latest,\
+	org.foam.models.ctl;version=latest,\
+	org.foam.models.dot;version=latest,\
+	org.foam.models.flowannotation;version=latest,\
+	org.foam.models.foamannot;version=latest,\
+	org.foam.models.ltl;version=latest,\
+	org.foam.models.lts;version=latest,\
+	org.foam.models.propositionallogic;version=latest,\
+	org.foam.models.tadl;version=latest,\
+	org.foam.models.traceability;version=latest,\
+	org.foam.models.ucm;version=latest,\
+	org.foam.models.verification;version=latest,\
+	org.foam.emf4osgi.minimal,\
+	org.foam.emf4osgi.xmi

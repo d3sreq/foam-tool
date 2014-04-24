@@ -5,8 +5,15 @@
 -resolve.effective: active
 
 -runbundles: com.google.guava;version='[11.0.2,11.0.3)',\
+	com.google.inject;version='[3.0.0,3.0.1)',\
+	com.ibm.icu;version='[4.8.0,4.8.1)',\
+	javax.inject;version='[1.0.0,1.0.1)',\
 	javax.servlet;version='[2.5.0,2.5.1)',\
+	org.antlr.runtime;version='[3.2.0,3.2.1)',\
+	org.apache.commons.cli;version='[1.2.0,1.2.1)',\
+	org.apache.commons.io;version='[2.0.1,2.0.2)',\
 	org.apache.commons.lang;version='[2.6.0,2.6.1)',\
+	org.apache.commons.logging;version='[1.1.1,1.1.2)',\
 	org.apache.felix.configadmin;version='[1.6.0,1.6.1)',\
 	org.apache.felix.gogo.command;version='[0.12.0,0.12.1)',\
 	org.apache.felix.gogo.runtime;version='[0.10.0,0.10.1)',\
@@ -16,6 +23,7 @@
 	org.apache.felix.metatype;version='[1.0.4,1.0.5)',\
 	org.apache.felix.scr;version='[1.6.2,1.6.3)',\
 	org.apache.felix.webconsole;version='[3.1.8,3.1.9)',\
+	org.apache.log4j;version='[1.2.15,1.2.16)',\
 	org.apache.servicemix.bundles.jopt-simple;version='[4.6.0,4.6.1)',\
 	org.eclipse.xtend.lib;version='[2.4.3,2.4.4)',\
 	org.eclipse.xtext.xbase.lib;version='[2.4.3,2.4.4)',\
@@ -25,12 +33,20 @@
 	org.foam.cli.tools.lts2nusmv;version=latest,\
 	org.foam.cli.tools.nusmv;version=latest,\
 	org.foam.cli.tools.renderlts;version=latest,\
+	org.foam.cli.tools.report;version=latest,\
 	org.foam.cli.tools.ucm2lts;version=latest,\
 	org.foam.emf4osgi.minimal;version=latest,\
 	org.foam.emf4osgi.xmi;version=latest,\
+	org.foam.models.annotation;version=latest,\
+	org.foam.models.cntex;version=latest,\
+	org.foam.models.ctl;version=latest,\
+	org.foam.models.dot;version=latest,\
+	org.foam.models.flowannotation;version=latest,\
 	org.foam.models.foamannot;version=latest,\
-	org.foam.models.graphviz;version=latest,\
+	org.foam.models.ltl;version=latest,\
 	org.foam.models.lts;version=latest,\
+	org.foam.models.propositionallogic;version=latest,\
+	org.foam.models.tadl;version=latest,\
 	org.foam.models.traceability;version=latest,\
 	org.foam.models.ucm;version=latest,\
 	org.foam.models.verification;version=latest,\
@@ -38,8 +54,14 @@
 	org.foam.transform.dot2dotlang;version=latest,\
 	org.foam.transform.lts2dot;version=latest,\
 	org.foam.transform.lts2nusmvlang;version=latest,\
+	org.foam.transform.tadllang2tadl;version=latest,\
+	org.foam.transform.todo-transformation.ctllang2ctl;version=latest,\
+	org.foam.transform.todo-transformation.ltllang2ltl;version=latest,\
+	org.foam.transform.todo-transformation.propositionallogiclang2propositionallogic;version=latest,\
 	org.foam.transform.ucm2lts;version=latest,\
+	org.foam.transform.ucm2ucm;version=latest,\
 	org.foam.transform.utils;version=latest,\
+	org.foam.xtext4osgi;version=latest,\
 	osgi.cmpn;version='[5.0.0,5.0.1)',\
 	osgi.enterprise;version='[4.2.0,4.2.1)',\
 	osgi.residential;version='[4.3.0,4.3.1)'
@@ -53,7 +75,9 @@
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.log)',\
 	osgi.identity;filter:='(&(osgi.identity=osgi.cmpn)(version>=4.2))',\
 	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=1.6.0))',\
+	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.report)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher)',\
+	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher.api)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.ce2xmi)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.lts2nusmv)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.nusmv)',\

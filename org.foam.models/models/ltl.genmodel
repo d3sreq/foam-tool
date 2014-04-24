@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
+    modelDirectory="/org.foam.models/src/emf-gen" modelPluginID="org.foam.models"
+    modelName="Ltl" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    testsDirectory="/org.foam.models/src/tests" importerID="org.eclipse.emf.importer.ecore"
+    bundleManifest="false" complianceLevel="7.0" copyrightFields="false" usedGenPackages="propositionallogic.genmodel#//propositionallogic"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>ltl.ecore</foreignModel>
+  <genPackages prefix="Ltl" basePackage="org.foam" disposableProviderFactory="true"
+      adapterFactory="false" ecorePackage="ltl.ecore#/">
+    <genClasses ecoreClass="ltl.ecore#//Globally"/>
+    <genClasses ecoreClass="ltl.ecore#//Future"/>
+    <genClasses ecoreClass="ltl.ecore#//Next"/>
+    <genClasses ecoreClass="ltl.ecore#//Until"/>
+    <genClasses ecoreClass="ltl.ecore#//Historically"/>
+    <genClasses ecoreClass="ltl.ecore#//Once"/>
+    <genClasses ecoreClass="ltl.ecore#//Releases"/>
+    <genClasses ecoreClass="ltl.ecore#//Since"/>
+    <genClasses ecoreClass="ltl.ecore#//Triggered"/>
+  </genPackages>
+</genmodel:GenModel>

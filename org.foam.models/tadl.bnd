@@ -1,0 +1,4 @@
+Bundle-Name: FOAM Model (TADL)
+Bundle-Version: 1.0.0
+Export-Package: org.foam.tadl
+Private-Package: org.foam.tadl.impl

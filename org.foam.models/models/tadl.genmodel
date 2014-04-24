@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.foam.models/src/emf-gen" modelPluginID="org.foam.models"
+    modelName="Tadl" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    testsDirectory="/org.foam.models/src/tests" importerID="org.eclipse.emf.importer.ecore"
+    bundleManifest="false" complianceLevel="7.0" copyrightFields="false" usedGenPackages="annotation.genmodel#//annotation ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore propositionallogic.genmodel#//propositionallogic"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>tadl.ecore</foreignModel>
+  <genPackages prefix="Tadl" basePackage="org.foam" disposableProviderFactory="true"
+      adapterFactory="false" ecorePackage="tadl.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="tadl.ecore#//FormulaType">
+      <genEnumLiterals ecoreEnumLiteral="tadl.ecore#//FormulaType/LTL"/>
+      <genEnumLiterals ecoreEnumLiteral="tadl.ecore#//FormulaType/CTL"/>
+    </genEnums>
+    <genClasses ecoreClass="tadl.ecore#//Template">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tadl.ecore#//Template/formulaHolders"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tadl.ecore#//Template/variableDefinitions"/>
+    </genClasses>
+    <genClasses ecoreClass="tadl.ecore#//Group">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadl.ecore#//Group/qualifier"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadl.ecore#//Group/template"/>
+    </genClasses>
+    <genClasses ecoreClass="tadl.ecore#//TemporalAnnotation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadl.ecore#//TemporalAnnotation/group"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference tadl.ecore#//TemporalAnnotation/variableDefinition"/>
+    </genClasses>
+    <genClasses ecoreClass="tadl.ecore#//GroupAnnotation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tadl.ecore#//GroupAnnotation/group"/>
+    </genClasses>
+    <genClasses ecoreClass="tadl.ecore#//FormulaHolder">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadl.ecore#//FormulaHolder/comment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute tadl.ecore#//FormulaHolder/formulaType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference tadl.ecore#//FormulaHolder/formula"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

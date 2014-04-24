@@ -1,4 +1,4 @@
+Bundle-Name: FOAM Model (Traceability between UCM and LTS)
 Bundle-Version: 1.0.0
-Export-Package: org.foam.traceability,\
-	org.foam.traceability.impl,\
-	org.foam.traceability.util
+Export-Package: org.foam.traceability
+Private-Package: org.foam.traceability.impl

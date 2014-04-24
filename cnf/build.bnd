@@ -36,7 +36,8 @@
 
 ## Bnd Options
 #-sources:              true
--sourcepath:           ${project}/src, ${project}/xtend-gen
+#-sourcepath:           ${project}/src
+#-sourcepath:           ${project}/src/java, ${project}/src/emf-gen, ${project}/src/xtend-gen
 
 
 ## Properties from ext/*.bnd can be referenced in order to extend them. For

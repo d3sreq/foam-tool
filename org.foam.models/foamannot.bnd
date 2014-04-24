@@ -1,8 +1,5 @@
 Bundle-Version: 1.0.0
-Export-Package: org.foam.annotation,\
-	org.foam.annotation.impl,\
-	org.foam.annotation.util,\
-	org.foam.ctl,\
+Export-Package: org.foam.ctl,\
 	org.foam.ctl.impl,\
 	org.foam.ctl.util,\
 	org.foam.flowannotation,\

@@ -1,0 +1,3 @@
+Bundle-Version: 1.0.0
+Export-Package: org.foam.propositionallogic
+Private-Package: org.foam.propositionallogic.impl

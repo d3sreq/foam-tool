@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.foam.models/src/emf-gen" modelPluginID="org.foam.models"
+    modelName="Propositionallogic" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    testsDirectory="/org.foam.models/src/tests" importerID="org.eclipse.emf.importer.ecore"
+    bundleManifest="false" complianceLevel="7.0" copyrightFields="false" operationReflection="true"
+    importOrganizing="true">
+  <foreignModel>propositionallogic.ecore</foreignModel>
+  <genPackages prefix="Propositionallogic" basePackage="org.foam" disposableProviderFactory="true"
+      adapterFactory="false" contentTypeIdentifier="" ecorePackage="propositionallogic.ecore#/">
+    <genClasses ecoreClass="propositionallogic.ecore#//VariableDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute propositionallogic.ecore#//VariableDefinition/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="propositionallogic.ecore#//Formula"/>
+    <genClasses image="false" ecoreClass="propositionallogic.ecore#//UnaryFormula">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference propositionallogic.ecore#//UnaryFormula/formula"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="propositionallogic.ecore#//BinaryFormula">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference propositionallogic.ecore#//BinaryFormula/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference propositionallogic.ecore#//BinaryFormula/right"/>
+    </genClasses>
+    <genClasses ecoreClass="propositionallogic.ecore#//Not"/>
+    <genClasses ecoreClass="propositionallogic.ecore#//And"/>
+    <genClasses ecoreClass="propositionallogic.ecore#//Or"/>
+    <genClasses ecoreClass="propositionallogic.ecore#//Implication"/>
+    <genClasses ecoreClass="propositionallogic.ecore#//Equivalence"/>
+    <genClasses ecoreClass="propositionallogic.ecore#//VariableUse">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference propositionallogic.ecore#//VariableUse/variableDefinition"/>
+    </genClasses>
+    <genClasses ecoreClass="propositionallogic.ecore#//True"/>
+    <genClasses ecoreClass="propositionallogic.ecore#//False"/>
+  </genPackages>
+</genmodel:GenModel>

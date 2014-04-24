@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.foam.models/src/emf-gen" modelPluginID="org.foam.models"
+    modelName="Traceability" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    testsDirectory="/org.foam.models/src/tests" importerID="org.eclipse.emf.importer.ecore"
+    bundleManifest="false" complianceLevel="7.0" copyrightFields="false" usedGenPackages="annotation.genmodel#//annotation ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore lts.genmodel#//lts propositionallogic.genmodel#//propositionallogic tadl.genmodel#//tadl ucm.genmodel#//ucm"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>traceability.ecore</foreignModel>
+  <genPackages prefix="Traceability" basePackage="org.foam" disposableProviderFactory="true"
+      adapterFactory="false" ecorePackage="traceability.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="traceability.ecore#//StateType">
+      <genEnumLiterals ecoreEnumLiteral="traceability.ecore#//StateType/IN"/>
+      <genEnumLiterals ecoreEnumLiteral="traceability.ecore#//StateType/VAR"/>
+      <genEnumLiterals ecoreEnumLiteral="traceability.ecore#//StateType/JMP"/>
+      <genEnumLiterals ecoreEnumLiteral="traceability.ecore#//StateType/EXT"/>
+      <genEnumLiterals ecoreEnumLiteral="traceability.ecore#//StateType/OUT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="traceability.ecore#//OverviewTransitionType">
+      <genEnumLiterals ecoreEnumLiteral="traceability.ecore#//OverviewTransitionType/PRECEDENCE"/>
+      <genEnumLiterals ecoreEnumLiteral="traceability.ecore#//OverviewTransitionType/INCLUDE"/>
+    </genEnums>
+    <genClasses ecoreClass="traceability.ecore#//StepMappingAnnotation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference traceability.ecore#//StepMappingAnnotation/step"/>
+    </genClasses>
+    <genClasses ecoreClass="traceability.ecore#//StateTypeMappingAnnotation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute traceability.ecore#//StateTypeMappingAnnotation/stateType"/>
+    </genClasses>
+    <genClasses ecoreClass="traceability.ecore#//UseCaseMappingAnnotation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference traceability.ecore#//UseCaseMappingAnnotation/useCase"/>
+    </genClasses>
+    <genClasses ecoreClass="traceability.ecore#//OverviewTransitionTypeAnnotation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute traceability.ecore#//OverviewTransitionTypeAnnotation/overviewTransitionType"/>
+    </genClasses>
+    <genClasses ecoreClass="traceability.ecore#//StateMappingAnnotation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference traceability.ecore#//StateMappingAnnotation/state"/>
+    </genClasses>
+    <genClasses ecoreClass="traceability.ecore#//FormulaIdentificationAnnotation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference traceability.ecore#//FormulaIdentificationAnnotation/group"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference traceability.ecore#//FormulaIdentificationAnnotation/formulaHolder"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

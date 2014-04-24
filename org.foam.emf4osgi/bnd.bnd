@@ -1,4 +1,3 @@
-
 # Edit this manually after you copied a newer
 # version of EMF to the libs directory
 # ====================
@@ -27,4 +26,4 @@ Original-EMF-XMI:		${lib_xmi}
 -sourcepath:
 -buildpath: ${libpath}/org.eclipse.emf.ecore_${ecore-version}.jar;version=file,\
 	${libpath}/org.eclipse.emf.common_${common-version}.jar;version=file,\
-	${libpath}/org.eclipse.emf.ecore.xmi_${xmi-version}.jar;version=file
+	${libpath}/org.eclipse.emf.ecore.xmi_${xmi-version}.jar;version=file	

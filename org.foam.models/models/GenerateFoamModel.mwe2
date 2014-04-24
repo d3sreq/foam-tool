@@ -1,0 +1,113 @@
+module GenerateUcm
+
+import org.eclipse.emf.mwe.utils.StandaloneSetup
+import org.eclipse.emf.mwe2.ecore.EcoreGenerator
+import org.eclipse.emf.mwe2.runtime.workflow.Workflow
+import org.eclipse.emf.mwe.utils.DirectoryCleaner
+
+// ================================================================
+var SRC_JAVA	= "src/java"
+var SRC_XTEND	= "src/xtend-gen"
+var SRC_EMF		= "src/emf-gen"
+var MODELS		= "platform:/resource/org.foam.models/models"
+// ================================================================
+
+Workflow {
+	bean = StandaloneSetup {
+		scanClassPath = true
+		platformUri = ".."
+	}
+
+	component = DirectoryCleaner {
+		directory = SRC_EMF
+	}
+
+	component = EcoreGenerator {
+		genModel = "${MODELS}/annotation.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+
+	component = EcoreGenerator {
+		genModel = "${MODELS}/cntex.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+
+	component = EcoreGenerator {
+		genModel = "${MODELS}/ctl.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+
+	component = EcoreGenerator {
+		genModel = "${MODELS}/dot.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+	component = EcoreGenerator {
+		genModel = "${MODELS}/flowannotation.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+	component = EcoreGenerator {
+		genModel = "${MODELS}/ltl.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+	component = EcoreGenerator {
+		genModel = "${MODELS}/lts.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+	component = EcoreGenerator {
+		genModel = "${MODELS}/propositionallogic.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+	component = EcoreGenerator {
+		genModel = "${MODELS}/tadl.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+	component = EcoreGenerator {
+		genModel = "${MODELS}/traceability.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+	component = EcoreGenerator {
+		genModel = "${MODELS}/ucm.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+
+	component = EcoreGenerator {
+		genModel = "${MODELS}/verification.genmodel"
+		srcPath = SRC_JAVA
+		srcPath = SRC_XTEND
+		generateEdit = false
+		generateEditor = false
+	}
+}
