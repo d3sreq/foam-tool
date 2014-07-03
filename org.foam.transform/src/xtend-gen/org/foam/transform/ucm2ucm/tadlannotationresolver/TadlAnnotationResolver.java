@@ -26,8 +26,8 @@ public class TadlAnnotationResolver {
   private final TadlFactory tadlFac = TadlFactory.eINSTANCE;
   
   public void resolveAnnotations(final UseCaseModel useCaseModel, final Collection<Template> templates) {
-    final HashMap<String,Template> varDefName2Template = new HashMap<String, Template>();
-    final HashMap<String,VariableDefinition> varDefName2VarDef = new HashMap<String, VariableDefinition>();
+    final HashMap<String, Template> varDefName2Template = new HashMap<String, Template>();
+    final HashMap<String, VariableDefinition> varDefName2VarDef = new HashMap<String, VariableDefinition>();
     for (final Template template : templates) {
       EList<VariableDefinition> _variableDefinitions = template.getVariableDefinitions();
       for (final VariableDefinition varDef : _variableDefinitions) {
@@ -39,7 +39,7 @@ public class TadlAnnotationResolver {
         }
       }
     }
-    final HashMap<String,Group> qualifier2Group = new HashMap<String, Group>();
+    final HashMap<String, Group> qualifier2Group = new HashMap<String, Group>();
     EList<UseCase> _useCases = useCaseModel.getUseCases();
     for (final UseCase useCase : _useCases) {
       {
@@ -58,7 +58,7 @@ public class TadlAnnotationResolver {
     }
   }
   
-  private Annotation resolveAnnotation(final UnknownAnnotation annotation, final Map<String,Template> varDefName2Template, final Map<String,VariableDefinition> varDefName2VarDef, final Map<String,Group> qualifier2Group, final UseCaseModel useCaseModel) {
+  private Annotation resolveAnnotation(final UnknownAnnotation annotation, final Map<String, Template> varDefName2Template, final Map<String, VariableDefinition> varDefName2VarDef, final Map<String, Group> qualifier2Group, final UseCaseModel useCaseModel) {
     EList<String> _parts = annotation.getParts();
     int _size = _parts.size();
     boolean _notEquals = (_size != 2);

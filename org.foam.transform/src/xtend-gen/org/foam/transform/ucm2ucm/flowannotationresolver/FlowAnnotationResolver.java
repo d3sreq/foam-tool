@@ -2,18 +2,15 @@ package org.foam.transform.ucm2ucm.flowannotationresolver;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
-import com.google.inject.Injector;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
@@ -28,18 +25,13 @@ import org.foam.flowannotation.Mark;
 import org.foam.flowannotation.VariableDefinitionAnnotation;
 import org.foam.propositionallogic.Formula;
 import org.foam.propositionallogic.PropositionallogicFactory;
-import org.foam.propositionallogic.PropositionallogicPackage;
 import org.foam.propositionallogic.VariableDefinition;
-import org.foam.propositionallogic.VariableUse;
 import org.foam.ucm.Scenario;
 import org.foam.ucm.ScenarioHolder;
 import org.foam.ucm.Step;
 import org.foam.ucm.UseCase;
 import org.foam.ucm.UseCaseModel;
 import org.foam.ucm.util.UcmUtils;
-import transformation.propositionallogiclang2propositionallogic.PropositionalLogicXtextStandaloneSetup;
-import transformation.propositionallogiclang2propositionallogic.parser.antlr.PropositionalLogicXtextParser;
-import transformation.propositionallogiclang2propositionallogic.propositionalLogicXtext.RuleVariableUse;
 
 @SuppressWarnings("all")
 public class FlowAnnotationResolver {
@@ -49,33 +41,29 @@ public class FlowAnnotationResolver {
   
   private final PropositionallogicFactory propLogicFactory = PropositionallogicFactory.eINSTANCE;
   
-  private final PropositionalLogicXtextParser propLogicParser;
+  private final /* PropositionalLogicXtextParser */Object propLogicParser;
   
   public FlowAnnotationResolver() {
-    boolean _containsKey = EPackage.Registry.INSTANCE.containsKey(PropositionallogicPackage.eNS_URI);
-    boolean _not = (!_containsKey);
-    if (_not) {
-      EPackage.Registry.INSTANCE.put(PropositionallogicPackage.eNS_URI, PropositionallogicPackage.eINSTANCE);
-    }
-    PropositionalLogicXtextStandaloneSetup _propositionalLogicXtextStandaloneSetup = new PropositionalLogicXtextStandaloneSetup();
-    final Injector propLogicInjector = _propositionalLogicXtextStandaloneSetup.createInjectorAndDoEMFRegistration();
-    PropositionalLogicXtextParser _instance = propLogicInjector.<PropositionalLogicXtextParser>getInstance(PropositionalLogicXtextParser.class);
-    this.propLogicParser = _instance;
+    throw new Error("Unresolved compilation problems:"
+      + "\nPropositionalLogicXtextStandaloneSetup cannot be resolved."
+      + "\nThe method or field PropositionalLogicXtextParser is undefined for the type FlowAnnotationResolver"
+      + "\ncreateInjectorAndDoEMFRegistration cannot be resolved"
+      + "\ngetInstance cannot be resolved");
   }
   
   public void resolveAnnotations(final UseCaseModel useCaseModel) {
-    final HashMap<String,UseCase> id2Uc = new HashMap<String, UseCase>();
+    final HashMap<String, UseCase> id2Uc = new HashMap<String, UseCase>();
     final EList<UseCase> allUseCases = useCaseModel.getUseCases();
-    final Procedure1<UseCase> _function = new Procedure1<UseCase>() {
-      public void apply(final UseCase it) {
+    final Consumer<UseCase> _function = new Consumer<UseCase>() {
+      public void accept(final UseCase it) {
         String _id = it.getId();
         id2Uc.put(_id, it);
       }
     };
-    IterableExtensions.<UseCase>forEach(allUseCases, _function);
+    allUseCases.forEach(_function);
     for (final UseCase useCase : allUseCases) {
       {
-        final Map<String,Step> id2Step = this.getId2Step(useCase);
+        final Map<String, Step> id2Step = this.getId2Step(useCase);
         final Iterable<Annotation> allUseCaseAnnotations = UcmUtils.getStepAnnotations(useCase);
         final Iterable<UnknownAnnotation> allUnknownAnnotations = Iterables.<UnknownAnnotation>filter(allUseCaseAnnotations, UnknownAnnotation.class);
         for (final UnknownAnnotation annotation : allUnknownAnnotations) {
@@ -91,20 +79,20 @@ public class FlowAnnotationResolver {
     }
   }
   
-  private Annotation resolveAnnotation(final UnknownAnnotation annotation, final HashMap<String,UseCase> id2Uc, final Map<String,Step> id2Step, final UseCaseModel useCaseModel) {
-    final Map<String,VariableDefinition> varName2VarDef = this.getVarName2VarDef(useCaseModel);
+  private Annotation resolveAnnotation(final UnknownAnnotation annotation, final HashMap<String, UseCase> id2Uc, final Map<String, Step> id2Step, final UseCaseModel useCaseModel) {
+    final Map<String, VariableDefinition> varName2VarDef = this.getVarName2VarDef(useCaseModel);
     Annotation _switchResult = null;
     EList<String> _parts = annotation.getParts();
     String _head = IterableExtensions.<String>head(_parts);
     boolean _matched = false;
     if (!_matched) {
-      if (Objects.equal(_head,"abort")) {
+      if (Objects.equal(_head, "abort")) {
         _matched=true;
         _switchResult = this.flowannotationFactory.createAbort();
       }
     }
     if (!_matched) {
-      if (Objects.equal(_head,"include")) {
+      if (Objects.equal(_head, "include")) {
         _matched=true;
         Include _createInclude = this.flowannotationFactory.createInclude();
         final Procedure1<Include> _function = new Procedure1<Include>() {
@@ -119,7 +107,7 @@ public class FlowAnnotationResolver {
       }
     }
     if (!_matched) {
-      if (Objects.equal(_head,"goto")) {
+      if (Objects.equal(_head, "goto")) {
         _matched=true;
         Goto _createGoto = this.flowannotationFactory.createGoto();
         final Procedure1<Goto> _function_1 = new Procedure1<Goto>() {
@@ -134,7 +122,7 @@ public class FlowAnnotationResolver {
       }
     }
     if (!_matched) {
-      if (Objects.equal(_head,"guard")) {
+      if (Objects.equal(_head, "guard")) {
         _matched=true;
         Guard _xblockexpression = null;
         {
@@ -155,7 +143,7 @@ public class FlowAnnotationResolver {
       }
     }
     if (!_matched) {
-      if (Objects.equal(_head,"mark")) {
+      if (Objects.equal(_head, "mark")) {
         _matched=true;
         Mark _createMark = this.flowannotationFactory.createMark();
         final Procedure1<Mark> _function_2 = new Procedure1<Mark>() {
@@ -179,79 +167,42 @@ public class FlowAnnotationResolver {
   }
   
   private Formula getFormula(final String text) {
-    final IParseResult parseResult = this.propLogicParser.doParse(text);
-    EObject _rootASTElement = parseResult.getRootASTElement();
-    return ((Formula) _rootASTElement);
+    throw new Error("Unresolved compilation problems:"
+      + "\ndoParse cannot be resolved"
+      + "\nrootASTElement cannot be resolved");
   }
   
-  private void resolveVariables(final EObject container, final Map<String,VariableDefinition> varName2VarDef, final UseCaseModel useCaseModel) {
-    final List<RuleVariableUse> ruleVars = EcoreUtil2.<RuleVariableUse>getAllContentsOfType(container, RuleVariableUse.class);
-    for (final RuleVariableUse ruleVar : ruleVars) {
-      {
-        StringConcatenation _builder = new StringConcatenation();
-        _builder.append(FlowAnnotationResolver.MARK_PREFIX, "");
-        String _variable = ruleVar.getVariable();
-        _builder.append(_variable, "");
-        final String varName = _builder.toString();
-        boolean _containsKey = varName2VarDef.containsKey(varName);
-        boolean _not = (!_containsKey);
-        if (_not) {
-          VariableDefinition _createVariableDefinition = this.propLogicFactory.createVariableDefinition();
-          final Procedure1<VariableDefinition> _function = new Procedure1<VariableDefinition>() {
-            public void apply(final VariableDefinition it) {
-              it.setName(varName);
-            }
-          };
-          final VariableDefinition varDef = ObjectExtensions.<VariableDefinition>operator_doubleArrow(_createVariableDefinition, _function);
-          varName2VarDef.put(varName, varDef);
-          EList<Annotation> _annotations = useCaseModel.getAnnotations();
-          VariableDefinitionAnnotation _createVariableDefinitionAnnotation = this.flowannotationFactory.createVariableDefinitionAnnotation();
-          final Procedure1<VariableDefinitionAnnotation> _function_1 = new Procedure1<VariableDefinitionAnnotation>() {
-            public void apply(final VariableDefinitionAnnotation it) {
-              it.setVariableDefinition(varDef);
-            }
-          };
-          VariableDefinitionAnnotation _doubleArrow = ObjectExtensions.<VariableDefinitionAnnotation>operator_doubleArrow(_createVariableDefinitionAnnotation, _function_1);
-          _annotations.add(_doubleArrow);
-        }
-        VariableUse _createVariableUse = this.propLogicFactory.createVariableUse();
-        final Procedure1<VariableUse> _function_2 = new Procedure1<VariableUse>() {
-          public void apply(final VariableUse it) {
-            VariableDefinition _get = varName2VarDef.get(varName);
-            it.setVariableDefinition(_get);
-          }
-        };
-        final VariableUse varUse = ObjectExtensions.<VariableUse>operator_doubleArrow(_createVariableUse, _function_2);
-        EcoreUtil2.replace(ruleVar, varUse);
-      }
-    }
+  private void resolveVariables(final EObject container, final Map<String, VariableDefinition> varName2VarDef, final UseCaseModel useCaseModel) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method or field RuleVariableUse is undefined for the type FlowAnnotationResolver"
+      + "\nThe method variable is undefined for the type FlowAnnotationResolver");
   }
   
-  private Map<String,VariableDefinition> getVarName2VarDef(final UseCaseModel useCaseModel) {
-    HashMap<String,VariableDefinition> _xblockexpression = null;
+  private Map<String, VariableDefinition> getVarName2VarDef(final UseCaseModel useCaseModel) {
+    HashMap<String, VariableDefinition> _xblockexpression = null;
     {
-      final HashMap<String,VariableDefinition> varName2VarDef = new HashMap<String, VariableDefinition>();
+      final HashMap<String, VariableDefinition> varName2VarDef = new HashMap<String, VariableDefinition>();
       EList<Annotation> _annotations = useCaseModel.getAnnotations();
       Iterable<VariableDefinitionAnnotation> _filter = Iterables.<VariableDefinitionAnnotation>filter(_annotations, VariableDefinitionAnnotation.class);
-      final Function1<VariableDefinitionAnnotation,VariableDefinition> _function = new Function1<VariableDefinitionAnnotation,VariableDefinition>() {
+      final Function1<VariableDefinitionAnnotation, VariableDefinition> _function = new Function1<VariableDefinitionAnnotation, VariableDefinition>() {
         public VariableDefinition apply(final VariableDefinitionAnnotation it) {
           return it.getVariableDefinition();
         }
       };
       final Iterable<VariableDefinition> varDefs = IterableExtensions.<VariableDefinitionAnnotation, VariableDefinition>map(_filter, _function);
-      final Procedure1<VariableDefinition> _function_1 = new Procedure1<VariableDefinition>() {
-        public void apply(final VariableDefinition it) {
+      final Consumer<VariableDefinition> _function_1 = new Consumer<VariableDefinition>() {
+        public void accept(final VariableDefinition it) {
           String _name = it.getName();
           varName2VarDef.put(_name, it);
         }
       };
-      IterableExtensions.<VariableDefinition>forEach(varDefs, _function_1);
+      varDefs.forEach(_function_1);
       _xblockexpression = varName2VarDef;
     }
     return _xblockexpression;
   }
   
-  private VariableDefinition findOrAddVariableDefinition(final String variableName, final Map<String,VariableDefinition> varName2VarDef, final UseCaseModel useCaseModel) {
+  private VariableDefinition findOrAddVariableDefinition(final String variableName, final Map<String, VariableDefinition> varName2VarDef, final UseCaseModel useCaseModel) {
     VariableDefinition _xblockexpression = null;
     {
       boolean _containsKey = varName2VarDef.containsKey(variableName);
@@ -280,40 +231,40 @@ public class FlowAnnotationResolver {
     return _xblockexpression;
   }
   
-  private Map<String,Step> getId2Step(final UseCase useCase) {
-    HashMap<String,Step> _xblockexpression = null;
+  private Map<String, Step> getId2Step(final UseCase useCase) {
+    HashMap<String, Step> _xblockexpression = null;
     {
-      final HashMap<String,Step> result = new HashMap<String, Step>();
+      final HashMap<String, Step> result = new HashMap<String, Step>();
       Scenario _mainScenario = useCase.getMainScenario();
       EList<Step> _steps = _mainScenario.getSteps();
-      final Procedure1<Step> _function = new Procedure1<Step>() {
-        public void apply(final Step it) {
+      final Consumer<Step> _function = new Consumer<Step>() {
+        public void accept(final Step it) {
           String _label = it.getLabel();
           result.put(_label, it);
         }
       };
-      IterableExtensions.<Step>forEach(_steps, _function);
-      EMap<Step,ScenarioHolder> _branches = useCase.getBranches();
+      _steps.forEach(_function);
+      EMap<Step, ScenarioHolder> _branches = useCase.getBranches();
       Collection<ScenarioHolder> _values = _branches.values();
       for (final ScenarioHolder holder : _values) {
         {
           EList<Scenario> _extensions = holder.getExtensions();
           EList<Scenario> _variations = holder.getVariations();
           final Iterable<Scenario> scenarios = Iterables.<Scenario>concat(_extensions, _variations);
-          final Function1<Scenario,EList<Step>> _function_1 = new Function1<Scenario,EList<Step>>() {
+          final Function1<Scenario, EList<Step>> _function_1 = new Function1<Scenario, EList<Step>>() {
             public EList<Step> apply(final Scenario it) {
               return it.getSteps();
             }
           };
           Iterable<EList<Step>> _map = IterableExtensions.<Scenario, EList<Step>>map(scenarios, _function_1);
           final Iterable<Step> steps = Iterables.<Step>concat(_map);
-          final Procedure1<Step> _function_2 = new Procedure1<Step>() {
-            public void apply(final Step it) {
+          final Consumer<Step> _function_2 = new Consumer<Step>() {
+            public void accept(final Step it) {
               String _label = it.getLabel();
               result.put(_label, it);
             }
           };
-          IterableExtensions.<Step>forEach(steps, _function_2);
+          steps.forEach(_function_2);
         }
       }
       _xblockexpression = result;

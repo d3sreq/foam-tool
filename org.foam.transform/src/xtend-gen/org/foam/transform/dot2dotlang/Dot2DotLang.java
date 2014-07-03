@@ -69,12 +69,12 @@ public class Dot2DotLang {
       if ((node instanceof RecordNode)) {
         final RecordNode recordNode = ((RecordNode) node);
         EList<InnerNode> _innerNodes = recordNode.getInnerNodes();
-        final Function1<InnerNode,String> _function = new Function1<InnerNode,String>() {
+        final Function1<InnerNode, String> _function = new Function1<InnerNode, String>() {
           public String apply(final InnerNode it) {
             String _xblockexpression = null;
             {
               String _elvis = null;
-              EMap<String,String> _attributes = it.getAttributes();
+              EMap<String, String> _attributes = it.getAttributes();
               String _get = _attributes.get(Dot2DotLang.LABEL_ATTRIBUTE_KEY);
               if (_get != null) {
                 _elvis = _get;
@@ -95,7 +95,7 @@ public class Dot2DotLang {
           }
         };
         final String labelValue = IterableExtensions.<InnerNode>join(_innerNodes, "{", "|", "}", _function);
-        EMap<String,String> _attributes = recordNode.getAttributes();
+        EMap<String, String> _attributes = recordNode.getAttributes();
         _attributes.put(Dot2DotLang.LABEL_ATTRIBUTE_KEY, labelValue);
       }
       StringConcatenation _builder = new StringConcatenation();
@@ -134,7 +134,7 @@ public class Dot2DotLang {
     _builder.append(" [");
     _builder.newLineIfNotEmpty();
     {
-      EMap<String,String> _attributes = settings.getAttributes();
+      EMap<String, String> _attributes = settings.getAttributes();
       boolean _hasElements = false;
       for(final Map.Entry<String, String> attribute : _attributes) {
         if (!_hasElements) {
@@ -203,15 +203,15 @@ public class Dot2DotLang {
   private String createAttributeList(final AttributedItem attributedItem) {
     String _xblockexpression = null;
     {
-      EMap<String,String> _attributes = attributedItem.getAttributes();
+      EMap<String, String> _attributes = attributedItem.getAttributes();
       boolean _isEmpty = _attributes.isEmpty();
       if (_isEmpty) {
         return "";
       }
-      EMap<String,String> _attributes_1 = attributedItem.getAttributes();
-      Set<Map.Entry<String,String>> _entrySet = _attributes_1.entrySet();
-      final Function1<Map.Entry<String,String>,String> _function = new Function1<Map.Entry<String,String>,String>() {
-        public String apply(final Map.Entry<String,String> it) {
+      EMap<String, String> _attributes_1 = attributedItem.getAttributes();
+      Set<Map.Entry<String, String>> _entrySet = _attributes_1.entrySet();
+      final Function1<Map.Entry<String, String>, String> _function = new Function1<Map.Entry<String, String>, String>() {
+        public String apply(final Map.Entry<String, String> it) {
           StringConcatenation _builder = new StringConcatenation();
           String _key = it.getKey();
           _builder.append(_key, "");
@@ -223,7 +223,7 @@ public class Dot2DotLang {
           return _builder.toString();
         }
       };
-      _xblockexpression = IterableExtensions.<Map.Entry<String,String>>join(_entrySet, "[", ", ", "]", _function);
+      _xblockexpression = IterableExtensions.<Map.Entry<String, String>>join(_entrySet, "[", ", ", "]", _function);
     }
     return _xblockexpression;
   }

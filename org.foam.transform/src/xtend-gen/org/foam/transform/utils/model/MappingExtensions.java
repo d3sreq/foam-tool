@@ -9,7 +9,7 @@ public class MappingExtensions {
   /**
    * Emulates Multimap.put method.
    */
-  public static <T extends Object, V extends Object> boolean putToMultimap(final EMap<T,EList<V>> multimap, final T key, final V value) {
+  public static <T extends Object, V extends Object> boolean putToMultimap(final EMap<T, EList<V>> multimap, final T key, final V value) {
     boolean _xblockexpression = false;
     {
       boolean _contains = multimap.contains(key);

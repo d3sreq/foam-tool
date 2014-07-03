@@ -19,9 +19,9 @@ import org.foam.ucm.Step;
 @Data
 @SuppressWarnings("all")
 public class XlabelStepStateProcessor implements StateProcessor {
-  private final Map<Step,RecordNode> _step2RecordNode;
+  private final Map<Step, RecordNode> _step2RecordNode;
   
-  public Map<Step,RecordNode> getStep2RecordNode() {
+  public Map<Step, RecordNode> getStep2RecordNode() {
     return this._step2RecordNode;
   }
   
@@ -29,13 +29,13 @@ public class XlabelStepStateProcessor implements StateProcessor {
     boolean _xblockexpression = false;
     {
       final Step step = ModelUtils.getStepFromStepMappingAnnotation(state);
-      Map<Step,RecordNode> _step2RecordNode = this.getStep2RecordNode();
+      Map<Step, RecordNode> _step2RecordNode = this.getStep2RecordNode();
       final RecordNode recordNode = _step2RecordNode.get(step);
       boolean _equals = Objects.equal(recordNode, null);
       if (_equals) {
         return true;
       }
-      EMap<String,String> _attributes = recordNode.getAttributes();
+      EMap<String, String> _attributes = recordNode.getAttributes();
       String _label = step.getLabel();
       _attributes.put("xlabel", _label);
       _xblockexpression = true;
@@ -43,7 +43,7 @@ public class XlabelStepStateProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public XlabelStepStateProcessor(final Map<Step,RecordNode> step2RecordNode) {
+  public XlabelStepStateProcessor(final Map<Step, RecordNode> step2RecordNode) {
     super();
     this._step2RecordNode = step2RecordNode;
   }

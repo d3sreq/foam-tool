@@ -35,21 +35,21 @@ public class AddScenarioStateProcessor implements StateProcessor {
     return this._resultDot;
   }
   
-  private final Map<State,Graph> _state2Graph;
+  private final Map<State, Graph> _state2Graph;
   
-  public Map<State,Graph> getState2Graph() {
+  public Map<State, Graph> getState2Graph() {
     return this._state2Graph;
   }
   
-  private final Map<Scenario,Graph> _scenario2Graph;
+  private final Map<Scenario, Graph> _scenario2Graph;
   
-  public Map<Scenario,Graph> getScenario2Graph() {
+  public Map<Scenario, Graph> getScenario2Graph() {
     return this._scenario2Graph;
   }
   
-  private final Map<UseCase,Graph> _useCase2Graph;
+  private final Map<UseCase, Graph> _useCase2Graph;
   
-  public Map<UseCase,Graph> getUseCase2Graph() {
+  public Map<UseCase, Graph> getUseCase2Graph() {
     return this._useCase2Graph;
   }
   
@@ -80,7 +80,7 @@ public class AddScenarioStateProcessor implements StateProcessor {
         Graph _xblockexpression_1 = null;
         {
           final Scenario scenario = UcmUtils.getScenario(step);
-          Map<Scenario,Graph> _scenario2Graph = this.getScenario2Graph();
+          Map<Scenario, Graph> _scenario2Graph = this.getScenario2Graph();
           boolean _containsKey = _scenario2Graph.containsKey(scenario);
           boolean _not = (!_containsKey);
           if (_not) {
@@ -196,21 +196,21 @@ public class AddScenarioStateProcessor implements StateProcessor {
               }
             };
             final Graph subGraph = ObjectExtensions.<Graph>operator_doubleArrow(_createGraph, _function);
-            Map<Scenario,Graph> _scenario2Graph_1 = this.getScenario2Graph();
+            Map<Scenario, Graph> _scenario2Graph_1 = this.getScenario2Graph();
             _scenario2Graph_1.put(scenario, subGraph);
             final UseCase uc = UcmUtils.getUseCase(step);
-            Map<UseCase,Graph> _useCase2Graph = this.getUseCase2Graph();
+            Map<UseCase, Graph> _useCase2Graph = this.getUseCase2Graph();
             final Graph ucGraph = _useCase2Graph.get(uc);
             EList<Statement> _statements = ucGraph.getStatements();
             _statements.add(subGraph);
           }
-          Map<Scenario,Graph> _scenario2Graph_2 = this.getScenario2Graph();
+          Map<Scenario, Graph> _scenario2Graph_2 = this.getScenario2Graph();
           _xblockexpression_1 = _scenario2Graph_2.get(scenario);
         }
         _xifexpression = _xblockexpression_1;
       }
       final Graph graphForNode = _xifexpression;
-      Map<State,Graph> _state2Graph = this.getState2Graph();
+      Map<State, Graph> _state2Graph = this.getState2Graph();
       _xblockexpression = _state2Graph.put(state, graphForNode);
     }
     return _xblockexpression;
@@ -225,8 +225,7 @@ public class AddScenarioStateProcessor implements StateProcessor {
     boolean _xblockexpression = false;
     {
       final EObject container = scenario.eContainer();
-      boolean _not = (!(container instanceof ScenarioHolder));
-      if (_not) {
+      if ((!(container instanceof ScenarioHolder))) {
         return false;
       }
       final ScenarioHolder scenHolder = ((ScenarioHolder) container);
@@ -240,8 +239,7 @@ public class AddScenarioStateProcessor implements StateProcessor {
     boolean _xblockexpression = false;
     {
       final EObject container = scenario.eContainer();
-      boolean _not = (!(container instanceof ScenarioHolder));
-      if (_not) {
+      if ((!(container instanceof ScenarioHolder))) {
         return false;
       }
       final ScenarioHolder scenHolder = ((ScenarioHolder) container);
@@ -251,7 +249,7 @@ public class AddScenarioStateProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public AddScenarioStateProcessor(final Graph resultDot, final Map<State,Graph> state2Graph, final Map<Scenario,Graph> scenario2Graph, final Map<UseCase,Graph> useCase2Graph) {
+  public AddScenarioStateProcessor(final Graph resultDot, final Map<State, Graph> state2Graph, final Map<Scenario, Graph> scenario2Graph, final Map<UseCase, Graph> useCase2Graph) {
     super();
     this._resultDot = resultDot;
     this._state2Graph = state2Graph;

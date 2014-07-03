@@ -24,7 +24,7 @@ public class BasicModelValidationException extends RuntimeException {
   public String getMessage() {
     Diagnostic _diagnostic = this.getDiagnostic();
     List<Diagnostic> _children = _diagnostic.getChildren();
-    final Function1<Diagnostic,String> _function = new Function1<Diagnostic,String>() {
+    final Function1<Diagnostic, String> _function = new Function1<Diagnostic, String>() {
       public String apply(final Diagnostic it) {
         return it.getMessage();
       }

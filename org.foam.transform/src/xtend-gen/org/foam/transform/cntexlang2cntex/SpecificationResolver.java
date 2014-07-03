@@ -26,33 +26,33 @@ import org.foam.traceability.TraceabilityFactory;
 public class SpecificationResolver {
   private final TraceabilityFactory fac = TraceabilityFactory.eINSTANCE;
   
-  public void transform(final CounterExample counterExample, final List<Pair<FormulaHolder,Group>> holderGroupList) {
-    final Function1<Pair<FormulaHolder,Group>,Boolean> _function = new Function1<Pair<FormulaHolder,Group>,Boolean>() {
-      public Boolean apply(final Pair<FormulaHolder,Group> it) {
+  public void transform(final CounterExample counterExample, final List<Pair<FormulaHolder, Group>> holderGroupList) {
+    final Function1<Pair<FormulaHolder, Group>, Boolean> _function = new Function1<Pair<FormulaHolder, Group>, Boolean>() {
+      public Boolean apply(final Pair<FormulaHolder, Group> it) {
         FormulaHolder _key = it.getKey();
         FormulaType _formulaType = _key.getFormulaType();
         return Boolean.valueOf(Objects.equal(_formulaType, FormulaType.CTL));
       }
     };
-    final Iterable<Pair<FormulaHolder,Group>> ctlFormulas = IterableExtensions.<Pair<FormulaHolder,Group>>filter(holderGroupList, _function);
-    final Function1<Pair<FormulaHolder,Group>,Boolean> _function_1 = new Function1<Pair<FormulaHolder,Group>,Boolean>() {
-      public Boolean apply(final Pair<FormulaHolder,Group> it) {
+    final Iterable<Pair<FormulaHolder, Group>> ctlFormulas = IterableExtensions.<Pair<FormulaHolder, Group>>filter(holderGroupList, _function);
+    final Function1<Pair<FormulaHolder, Group>, Boolean> _function_1 = new Function1<Pair<FormulaHolder, Group>, Boolean>() {
+      public Boolean apply(final Pair<FormulaHolder, Group> it) {
         FormulaHolder _key = it.getKey();
         FormulaType _formulaType = _key.getFormulaType();
         return Boolean.valueOf(Objects.equal(_formulaType, FormulaType.LTL));
       }
     };
-    final Iterable<Pair<FormulaHolder,Group>> ltlFormulas = IterableExtensions.<Pair<FormulaHolder,Group>>filter(holderGroupList, _function_1);
-    Iterable<Pair<FormulaHolder,Group>> _plus = Iterables.<Pair<FormulaHolder,Group>>concat(ctlFormulas, ltlFormulas);
-    final List<Pair<FormulaHolder,Group>> reorderedFormulaHolders = IterableExtensions.<Pair<FormulaHolder,Group>>toList(_plus);
+    final Iterable<Pair<FormulaHolder, Group>> ltlFormulas = IterableExtensions.<Pair<FormulaHolder, Group>>filter(holderGroupList, _function_1);
+    Iterable<Pair<FormulaHolder, Group>> _plus = Iterables.<Pair<FormulaHolder, Group>>concat(ctlFormulas, ltlFormulas);
+    final List<Pair<FormulaHolder, Group>> reorderedFormulaHolders = IterableExtensions.<Pair<FormulaHolder, Group>>toList(_plus);
     EList<Specification> _specifications = counterExample.getSpecifications();
-    final Procedure2<Specification,Integer> _function_2 = new Procedure2<Specification,Integer>() {
+    final Procedure2<Specification, Integer> _function_2 = new Procedure2<Specification, Integer>() {
       public void apply(final Specification spec, final Integer i) {
         EList<Annotation> _annotations = spec.getAnnotations();
         FormulaIdentificationAnnotation _createFormulaIdentificationAnnotation = SpecificationResolver.this.fac.createFormulaIdentificationAnnotation();
         final Procedure1<FormulaIdentificationAnnotation> _function = new Procedure1<FormulaIdentificationAnnotation>() {
           public void apply(final FormulaIdentificationAnnotation it) {
-            final Pair<FormulaHolder,Group> pair = reorderedFormulaHolders.get((i).intValue());
+            final Pair<FormulaHolder, Group> pair = reorderedFormulaHolders.get((i).intValue());
             FormulaHolder _key = pair.getKey();
             it.setFormulaHolder(_key);
             Group _value = pair.getValue();

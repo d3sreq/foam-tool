@@ -81,8 +81,7 @@ public class ExistsNextImpl extends MinimalEObjectImpl.Container implements Exis
 	{
 		Formula oldFormula = formula;
 		formula = newFormula;
-		if (eNotificationRequired())
-		{
+		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, CtlPackage.EXISTS_NEXT__FORMULA, oldFormula, newFormula);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -96,8 +95,7 @@ public class ExistsNextImpl extends MinimalEObjectImpl.Container implements Exis
 	 */
 	public void setFormula(Formula newFormula)
 	{
-		if (newFormula != formula)
-		{
+		if (newFormula != formula) {
 			NotificationChain msgs = null;
 			if (formula != null)
 				msgs = ((InternalEObject)formula).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - CtlPackage.EXISTS_NEXT__FORMULA, null, msgs);
@@ -118,8 +116,7 @@ public class ExistsNextImpl extends MinimalEObjectImpl.Container implements Exis
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case CtlPackage.EXISTS_NEXT__FORMULA:
 				return basicSetFormula(null, msgs);
 		}
@@ -134,8 +131,7 @@ public class ExistsNextImpl extends MinimalEObjectImpl.Container implements Exis
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case CtlPackage.EXISTS_NEXT__FORMULA:
 				return getFormula();
 		}
@@ -150,8 +146,7 @@ public class ExistsNextImpl extends MinimalEObjectImpl.Container implements Exis
 	@Override
 	public void eSet(int featureID, Object newValue)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case CtlPackage.EXISTS_NEXT__FORMULA:
 				setFormula((Formula)newValue);
 				return;
@@ -167,8 +162,7 @@ public class ExistsNextImpl extends MinimalEObjectImpl.Container implements Exis
 	@Override
 	public void eUnset(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case CtlPackage.EXISTS_NEXT__FORMULA:
 				setFormula((Formula)null);
 				return;
@@ -184,8 +178,7 @@ public class ExistsNextImpl extends MinimalEObjectImpl.Container implements Exis
 	@Override
 	public boolean eIsSet(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case CtlPackage.EXISTS_NEXT__FORMULA:
 				return formula != null;
 		}

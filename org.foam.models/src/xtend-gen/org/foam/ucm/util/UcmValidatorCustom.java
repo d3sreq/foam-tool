@@ -27,7 +27,7 @@ import org.foam.ucm.util.UcmValidator;
 
 @SuppressWarnings("all")
 public class UcmValidatorCustom extends UcmValidator {
-  public boolean validateUseCase_PrecedenceWithoutCycle(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateUseCase_PrecedenceWithoutCycle(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       final Set<UseCase> preceededTransitively = UcmUtils.getPreceededTransitively(useCase);
@@ -41,7 +41,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  public boolean validateUseCase_IncludeWithoutCycle(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateUseCase_IncludeWithoutCycle(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       final Set<UseCase> includedUseCases = UcmUtils.getIncludedTransitively(useCase);
@@ -55,7 +55,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  public boolean validateUseCase_IncludedIsSubsetOfPreceeded(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateUseCase_IncludedIsSubsetOfPreceeded(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       Set<UseCase> _includedTransitively = UcmUtils.getIncludedTransitively(useCase);
@@ -79,7 +79,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  public boolean validateUseCase_NoAbortInMainScenario(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateUseCase_NoAbortInMainScenario(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       Scenario _mainScenario = useCase.getMainScenario();
@@ -96,7 +96,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  public boolean validateUseCase_NoGotoInMainScenario(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateUseCase_NoGotoInMainScenario(final UseCase useCase, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       Scenario _mainScenario = useCase.getMainScenario();
@@ -113,7 +113,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  public boolean validateScenario_AbortOnlyAtScenarioEnd(final Scenario scenario, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateScenario_AbortOnlyAtScenarioEnd(final Scenario scenario, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       EList<Step> _steps = scenario.getSteps();
@@ -143,7 +143,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  public boolean validateScenario_GotoOnlyAtScenarioEnd(final Scenario scenario, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateScenario_GotoOnlyAtScenarioEnd(final Scenario scenario, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       EList<Step> _steps = scenario.getSteps();
@@ -173,7 +173,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  public boolean validateScenario_OnlyOneOfAbortGotoAtScenarioEnd(final Scenario scenario, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateScenario_OnlyOneOfAbortGotoAtScenarioEnd(final Scenario scenario, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       EList<Step> _steps = scenario.getSteps();
@@ -201,7 +201,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  public boolean validateScenario_GuardOnlyAtScenarioStart(final Scenario scenario, final DiagnosticChain diagnostics, final Map<Object,Object> context) {
+  public boolean validateScenario_GuardOnlyAtScenarioStart(final Scenario scenario, final DiagnosticChain diagnostics, final Map<Object, Object> context) {
     boolean _xblockexpression = false;
     {
       EList<Step> _steps = scenario.getSteps();
@@ -231,7 +231,7 @@ public class UcmValidatorCustom extends UcmValidator {
     return _xblockexpression;
   }
   
-  private void addDiagnostics(final DiagnosticChain diagnostics, final EObject eObject, final Map<Object,Object> context, final String errorLabelId) {
+  private void addDiagnostics(final DiagnosticChain diagnostics, final EObject eObject, final Map<Object, Object> context, final String errorLabelId) {
     boolean _notEquals = (!Objects.equal(diagnostics, null));
     if (_notEquals) {
       String _objectLabel = EObjectValidator.getObjectLabel(eObject, context);

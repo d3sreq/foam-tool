@@ -150,7 +150,7 @@ public class UseCasePage implements Page {
     _builder.append("\t");
     _builder.newLine();
     {
-      EMap<Step,ScenarioHolder> _branches = useCase.getBranches();
+      EMap<Step, ScenarioHolder> _branches = useCase.getBranches();
       for(final Map.Entry<Step, ScenarioHolder> branch : _branches) {
         {
           ScenarioHolder _value = branch.getValue();
@@ -202,7 +202,7 @@ public class UseCasePage implements Page {
   }
   
   private String preparePreceededList(final List<UseCase> preceeded) {
-    final Function1<UseCase,String> _function = new Function1<UseCase,String>() {
+    final Function1<UseCase, String> _function = new Function1<UseCase, String>() {
       public String apply(final UseCase it) {
         StringConcatenation _builder = new StringConcatenation();
         _builder.append("<a href=\"../");
@@ -289,7 +289,7 @@ public class UseCasePage implements Page {
   private CharSequence printBranchCss(final UseCase useCase) {
     StringConcatenation _builder = new StringConcatenation();
     {
-      EMap<Step,ScenarioHolder> _branches = useCase.getBranches();
+      EMap<Step, ScenarioHolder> _branches = useCase.getBranches();
       for(final Map.Entry<Step, ScenarioHolder> branch : _branches) {
         {
           ScenarioHolder _value = branch.getValue();

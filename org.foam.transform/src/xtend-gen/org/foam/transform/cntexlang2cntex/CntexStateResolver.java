@@ -2,6 +2,7 @@ package org.foam.transform.cntexlang2cntex;
 
 import com.google.common.base.Objects;
 import java.util.HashMap;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -32,15 +33,15 @@ public class CntexStateResolver {
    * states from given Automaton.
    */
   public void transform(final CounterExample counterExample, final Automaton automaton) {
-    final HashMap<String,State> id2State = new HashMap<String, State>();
+    final HashMap<String, State> id2State = new HashMap<String, State>();
     EList<State> _states = automaton.getStates();
-    final Procedure1<State> _function = new Procedure1<State>() {
-      public void apply(final State it) {
+    final Consumer<State> _function = new Consumer<State>() {
+      public void accept(final State it) {
         String _id = it.getId();
         id2State.put(_id, it);
       }
     };
-    IterableExtensions.<State>forEach(_states, _function);
+    _states.forEach(_function);
     EList<Specification> _specifications = counterExample.getSpecifications();
     for (final Specification specification : _specifications) {
       Trace _trace = specification.getTrace();
@@ -51,7 +52,7 @@ public class CntexStateResolver {
         for (final CntExState cntExState : _states_1) {
           {
             EList<CntExAssignment> _assignments = cntExState.getAssignments();
-            final Function1<CntExAssignment,Boolean> _function_1 = new Function1<CntExAssignment,Boolean>() {
+            final Function1<CntExAssignment, Boolean> _function_1 = new Function1<CntExAssignment, Boolean>() {
               public Boolean apply(final CntExAssignment it) {
                 String _variableName = it.getVariableName();
                 return Boolean.valueOf(Objects.equal(_variableName, CntexStateResolver.STATE_ID));

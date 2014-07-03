@@ -1,0 +1,10 @@
+-buildpath:  \
+	org.foam.models.propositionallogic;version=latest
+
+Bundle-Version: 1.0.0
+Export-Package:  \
+	org.foam.xtext.plogic,\
+	org.foam.xtext.plogic.services,\
+	org.foam.xtext.plogic.parser.antlr
+Private-Package:  \
+	org.foam.xtext.plogic.parser.antlr.internal

@@ -24,9 +24,9 @@ import org.foam.ucm.UseCase;
 @Data
 @SuppressWarnings("all")
 public class GreenSuccessStateProcessor implements StateProcessor {
-  private final Map<Step,RecordNode> _step2RecordNode;
+  private final Map<Step, RecordNode> _step2RecordNode;
   
-  public Map<Step,RecordNode> getStep2RecordNode() {
+  public Map<Step, RecordNode> getStep2RecordNode() {
     return this._step2RecordNode;
   }
   
@@ -49,9 +49,9 @@ public class GreenSuccessStateProcessor implements StateProcessor {
           _and = _equals;
         }
         if (_and) {
-          Map<Step,RecordNode> _step2RecordNode = this.getStep2RecordNode();
+          Map<Step, RecordNode> _step2RecordNode = this.getStep2RecordNode();
           final RecordNode recordNode = _step2RecordNode.get(step);
-          EMap<String,String> _attributes = recordNode.getAttributes();
+          EMap<String, String> _attributes = recordNode.getAttributes();
           _attributes.put("fillcolor", "#ccebc5");
         }
       }
@@ -60,7 +60,7 @@ public class GreenSuccessStateProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public GreenSuccessStateProcessor(final Map<Step,RecordNode> step2RecordNode) {
+  public GreenSuccessStateProcessor(final Map<Step, RecordNode> step2RecordNode) {
     super();
     this._step2RecordNode = step2RecordNode;
   }

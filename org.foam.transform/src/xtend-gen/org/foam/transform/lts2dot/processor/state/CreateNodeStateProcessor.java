@@ -33,21 +33,21 @@ import org.foam.ucm.util.UcmUtils;
 @Data
 @SuppressWarnings("all")
 public class CreateNodeStateProcessor implements StateProcessor {
-  private final Map<State,Node> _state2Node;
+  private final Map<State, Node> _state2Node;
   
-  public Map<State,Node> getState2Node() {
+  public Map<State, Node> getState2Node() {
     return this._state2Node;
   }
   
-  private final Map<Step,RecordNode> _step2RecordNode;
+  private final Map<Step, RecordNode> _step2RecordNode;
   
-  public Map<Step,RecordNode> getStep2RecordNode() {
+  public Map<Step, RecordNode> getStep2RecordNode() {
     return this._step2RecordNode;
   }
   
-  private final Map<State,Graph> _state2Graph;
+  private final Map<State, Graph> _state2Graph;
   
-  public Map<State,Graph> getState2Graph() {
+  public Map<State, Graph> getState2Graph() {
     return this._state2Graph;
   }
   
@@ -95,9 +95,9 @@ public class CreateNodeStateProcessor implements StateProcessor {
         }
       };
       final Node node = ObjectExtensions.<Node>operator_doubleArrow(_createNode, _function);
-      Map<State,Node> _state2Node = this.getState2Node();
+      Map<State, Node> _state2Node = this.getState2Node();
       _state2Node.put(state, node);
-      Map<State,Graph> _state2Graph = this.getState2Graph();
+      Map<State, Graph> _state2Graph = this.getState2Graph();
       Graph _get = _state2Graph.get(state);
       EList<Statement> _statements = _get.getStatements();
       _xblockexpression = _statements.add(node);
@@ -108,7 +108,7 @@ public class CreateNodeStateProcessor implements StateProcessor {
   public Node addRecordNode(final State state, final StateType stateType, final Step step) {
     Node _xblockexpression = null;
     {
-      Map<Step,RecordNode> _step2RecordNode = this.getStep2RecordNode();
+      Map<Step, RecordNode> _step2RecordNode = this.getStep2RecordNode();
       boolean _containsKey = _step2RecordNode.containsKey(step);
       boolean _not = (!_containsKey);
       if (_not) {
@@ -123,22 +123,22 @@ public class CreateNodeStateProcessor implements StateProcessor {
             String _label = step.getLabel();
             _builder.append(_label, "");
             it.setId(_builder.toString());
-            EMap<String,String> _attributes = it.getAttributes();
+            EMap<String, String> _attributes = it.getAttributes();
             String _text = step.getText();
             _attributes.put(CreateNodeStateProcessor.TOOLTIP_ATTRIBUTE_MAP_KEY, _text);
-            EMap<String,String> _attributes_1 = it.getAttributes();
+            EMap<String, String> _attributes_1 = it.getAttributes();
             _attributes_1.put(CreateNodeStateProcessor.WIDTH_ATTRIBUTE_MAP_KEY, "0.0");
           }
         };
         final RecordNode recordNode = ObjectExtensions.<RecordNode>operator_doubleArrow(_createRecordNode, _function);
-        Map<Step,RecordNode> _step2RecordNode_1 = this.getStep2RecordNode();
+        Map<Step, RecordNode> _step2RecordNode_1 = this.getStep2RecordNode();
         _step2RecordNode_1.put(step, recordNode);
-        Map<State,Graph> _state2Graph = this.getState2Graph();
+        Map<State, Graph> _state2Graph = this.getState2Graph();
         Graph _get = _state2Graph.get(state);
         EList<Statement> _statements = _get.getStatements();
         _statements.add(recordNode);
       }
-      Map<Step,RecordNode> _step2RecordNode_2 = this.getStep2RecordNode();
+      Map<Step, RecordNode> _step2RecordNode_2 = this.getStep2RecordNode();
       final RecordNode recordNode_1 = _step2RecordNode_2.get(step);
       DotFactory _dotFactory_1 = this.getDotFactory();
       InnerNode _createInnerNode = _dotFactory_1.createInnerNode();
@@ -152,7 +152,7 @@ public class CreateNodeStateProcessor implements StateProcessor {
       EList<InnerNode> _innerNodes = recordNode_1.getInnerNodes();
       _innerNodes.add(innerNode);
       this.increaseRecordNodeWidth(recordNode_1);
-      Map<State,Node> _state2Node = this.getState2Node();
+      Map<State, Node> _state2Node = this.getState2Node();
       _xblockexpression = _state2Node.put(state, innerNode);
     }
     return _xblockexpression;
@@ -161,18 +161,18 @@ public class CreateNodeStateProcessor implements StateProcessor {
   private String increaseRecordNodeWidth(final RecordNode node) {
     String _xblockexpression = null;
     {
-      EMap<String,String> _attributes = node.getAttributes();
+      EMap<String, String> _attributes = node.getAttributes();
       String _get = _attributes.get(CreateNodeStateProcessor.WIDTH_ATTRIBUTE_MAP_KEY);
       final Double currentWidth = Double.valueOf(_get);
       final double newWidth = ((currentWidth).doubleValue() + CreateNodeStateProcessor.WIDTH_INCREMENT);
-      EMap<String,String> _attributes_1 = node.getAttributes();
+      EMap<String, String> _attributes_1 = node.getAttributes();
       String _string = Double.valueOf(newWidth).toString();
       _xblockexpression = _attributes_1.put(CreateNodeStateProcessor.WIDTH_ATTRIBUTE_MAP_KEY, _string);
     }
     return _xblockexpression;
   }
   
-  public CreateNodeStateProcessor(final Map<State,Node> state2Node, final Map<Step,RecordNode> step2RecordNode, final Map<State,Graph> state2Graph) {
+  public CreateNodeStateProcessor(final Map<State, Node> state2Node, final Map<Step, RecordNode> step2RecordNode, final Map<State, Graph> state2Graph) {
     super();
     this._state2Node = state2Node;
     this._step2RecordNode = step2RecordNode;

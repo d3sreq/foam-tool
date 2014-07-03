@@ -34,9 +34,9 @@ import org.foam.transform.lts2nusmvlang.DummyMap;
 
 @SuppressWarnings("all")
 public class NuSMVFormulaRenderer {
-  private final Map<String,String> varNameMapping;
+  private final Map<String, String> varNameMapping;
   
-  public NuSMVFormulaRenderer(final Map<String,String> varNameMapping) {
+  public NuSMVFormulaRenderer(final Map<String, String> varNameMapping) {
     this.varNameMapping = varNameMapping;
   }
   

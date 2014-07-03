@@ -23,9 +23,9 @@ import org.foam.transform.lts2dot.processor.state.StateProcessor;
 @Data
 @SuppressWarnings("all")
 public class BulletInnerNodeStateProcessor implements StateProcessor {
-  private final Map<State,Node> _state2Node;
+  private final Map<State, Node> _state2Node;
   
-  public Map<State,Node> getState2Node() {
+  public Map<State, Node> getState2Node() {
     return this._state2Node;
   }
   
@@ -34,9 +34,9 @@ public class BulletInnerNodeStateProcessor implements StateProcessor {
     {
       boolean _hasJmp = this.hasJmp(state);
       if (_hasJmp) {
-        Map<State,Node> _state2Node = this.getState2Node();
+        Map<State, Node> _state2Node = this.getState2Node();
         Node _get = _state2Node.get(state);
-        EMap<String,String> _attributes = _get.getAttributes();
+        EMap<String, String> _attributes = _get.getAttributes();
         _attributes.put("label", "&bull;");
       }
       _xblockexpression = true;
@@ -65,7 +65,7 @@ public class BulletInnerNodeStateProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public BulletInnerNodeStateProcessor(final Map<State,Node> state2Node) {
+  public BulletInnerNodeStateProcessor(final Map<State, Node> state2Node) {
     super();
     this._state2Node = state2Node;
   }

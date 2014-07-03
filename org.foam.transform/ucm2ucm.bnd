@@ -3,3 +3,4 @@ Export-Package: \
 	org.foam.transform.ucm2ucm,\
 	org.foam.transform.ucm2ucm.tadlannotationresolver,\
 	org.foam.transform.ucm2ucm.flowannotationresolver
+Service-Component: *

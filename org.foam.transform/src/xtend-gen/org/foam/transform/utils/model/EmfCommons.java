@@ -22,7 +22,7 @@ import org.foam.transform.utils.model.BasicModelValidationException;
 public class EmfCommons {
   public static void registerAsteriskInExtensionToFactory() {
     final Resource.Factory.Registry registry = Resource.Factory.Registry.INSTANCE;
-    final Map<String,Object> extensionToFactoryMap = registry.getExtensionToFactoryMap();
+    final Map<String, Object> extensionToFactoryMap = registry.getExtensionToFactoryMap();
     XMIResourceFactoryImpl _xMIResourceFactoryImpl = new XMIResourceFactoryImpl();
     extensionToFactoryMap.put("*", _xMIResourceFactoryImpl);
   }
@@ -50,7 +50,7 @@ public class EmfCommons {
   public static EObject readModel(final InputStream inputStreamWithXmi) {
     try {
       final XMIResourceImpl xmiResource = new XMIResourceImpl();
-      Map<Object,Object> _emptyMap = CollectionLiterals.<Object, Object>emptyMap();
+      Map<Object, Object> _emptyMap = CollectionLiterals.<Object, Object>emptyMap();
       xmiResource.load(inputStreamWithXmi, _emptyMap);
       EList<EObject> _contents = xmiResource.getContents();
       return IterableExtensions.<EObject>head(_contents);

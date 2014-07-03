@@ -47,7 +47,6 @@ import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang
 import org.foam.transform.tadllang2tadl.TadlLang2Tadl
 import org.foam.transform.ucm2lts.Ucm2LtsFacade
 import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph
-import org.foam.transform.ucm2ucm.UcmLang2Ucm
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizUtils
@@ -60,6 +59,7 @@ import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService
 
 import static extension org.foam.cli.tools.report.utils.Utils.*
+import org.foam.transform.ucm2ucm.UcmLang2UcmService
 
 @Component
 class ReportApplication implements IExecutableTool {
@@ -67,6 +67,11 @@ class ReportApplication implements IExecutableTool {
 	private LogService logService
 	@Reference def void setLogService(LogService logService) {
 		this.logService = logService
+	}
+	
+	private UcmLang2UcmService ucmLang2UcmService
+	@Reference def void setUcmLang2Ucm(UcmLang2UcmService serviceRef) {
+		this.ucmLang2UcmService = serviceRef
 	}
 	
 	def info(CharSequence message) {
@@ -319,7 +324,7 @@ class ReportApplication implements IExecutableTool {
 		val texts = readTexts(inputDirName)
 		
 		'''Running the transformation'''.info		
-		val useCaseModel = new UcmLang2Ucm().transform(texts)
+		val useCaseModel = ucmLang2UcmService.transform(texts)
 
 		'''Resolving FLOW annotations'''.info
 		new FlowAnnotationResolver().resolveAnnotations(useCaseModel)

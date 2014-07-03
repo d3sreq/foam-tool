@@ -37,7 +37,7 @@ public class HasStateTypeMappingAnnotation implements Predicate<State> {
     boolean _xblockexpression = false;
     {
       EList<Annotation> _annotations = state.getAnnotations();
-      final Function1<Annotation,Boolean> _function = new Function1<Annotation,Boolean>() {
+      final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
         public Boolean apply(final Annotation it) {
           return Boolean.valueOf((it instanceof StateTypeMappingAnnotation));
         }

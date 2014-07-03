@@ -1,0 +1,4 @@
+-buildpath: bin_test
+-sourcepath: test/java, test/xtend-gen
+Fragment-Host: org.foam.transform.ucm2lts
+Export-Package: org.foam.transform.ucm2lts

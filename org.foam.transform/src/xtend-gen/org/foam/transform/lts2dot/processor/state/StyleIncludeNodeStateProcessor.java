@@ -25,9 +25,9 @@ public class StyleIncludeNodeStateProcessor implements StateProcessor {
     return this._dotFactory;
   }
   
-  private final Map<State,Node> _state2Node;
+  private final Map<State, Node> _state2Node;
   
-  public Map<State,Node> getState2Node() {
+  public Map<State, Node> getState2Node() {
     return this._state2Node;
   }
   
@@ -40,7 +40,7 @@ public class StyleIncludeNodeStateProcessor implements StateProcessor {
       boolean _not = (!_isEmpty);
       if (_not) {
         final UseCaseMappingAnnotation annotation = IterableExtensions.<UseCaseMappingAnnotation>head(useCaseMappingAnnotations);
-        Map<State,Node> _state2Node = this.getState2Node();
+        Map<State, Node> _state2Node = this.getState2Node();
         final Node node = _state2Node.get(state);
         final UseCase useCase = annotation.getUseCase();
         final String id = useCase.getId();
@@ -50,9 +50,9 @@ public class StyleIncludeNodeStateProcessor implements StateProcessor {
         String _name = useCase.getName();
         _builder.append(_name, "");
         final String label = _builder.toString();
-        EMap<String,String> _attributes = node.getAttributes();
+        EMap<String, String> _attributes = node.getAttributes();
         _attributes.put("label", label);
-        EMap<String,String> _attributes_1 = node.getAttributes();
+        EMap<String, String> _attributes_1 = node.getAttributes();
         StringConcatenation _builder_1 = new StringConcatenation();
         _builder_1.append("../");
         _builder_1.append(id, "");
@@ -60,13 +60,13 @@ public class StyleIncludeNodeStateProcessor implements StateProcessor {
         _builder_1.append(id, "");
         _builder_1.append(".html");
         _attributes_1.put("URL", _builder_1.toString());
-        EMap<String,String> _attributes_2 = node.getAttributes();
+        EMap<String, String> _attributes_2 = node.getAttributes();
         _attributes_2.put("target", "_top");
-        EMap<String,String> _attributes_3 = node.getAttributes();
+        EMap<String, String> _attributes_3 = node.getAttributes();
         _attributes_3.put("shape", "box");
-        EMap<String,String> _attributes_4 = node.getAttributes();
+        EMap<String, String> _attributes_4 = node.getAttributes();
         _attributes_4.put("height", "0.5");
-        EMap<String,String> _attributes_5 = node.getAttributes();
+        EMap<String, String> _attributes_5 = node.getAttributes();
         _attributes_5.put("fillcolor", "#fed9a6");
       }
       _xblockexpression = true;
@@ -74,7 +74,7 @@ public class StyleIncludeNodeStateProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public StyleIncludeNodeStateProcessor(final Map<State,Node> state2Node) {
+  public StyleIncludeNodeStateProcessor(final Map<State, Node> state2Node) {
     super();
     this._state2Node = state2Node;
   }

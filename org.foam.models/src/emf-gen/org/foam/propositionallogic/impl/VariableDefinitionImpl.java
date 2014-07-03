@@ -99,8 +99,7 @@ public class VariableDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.VARIABLE_DEFINITION__NAME:
 				return getName();
 		}
@@ -115,8 +114,7 @@ public class VariableDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eSet(int featureID, Object newValue)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.VARIABLE_DEFINITION__NAME:
 				setName((String)newValue);
 				return;
@@ -132,8 +130,7 @@ public class VariableDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public void eUnset(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.VARIABLE_DEFINITION__NAME:
 				setName(NAME_EDEFAULT);
 				return;
@@ -149,8 +146,7 @@ public class VariableDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	@Override
 	public boolean eIsSet(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.VARIABLE_DEFINITION__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}

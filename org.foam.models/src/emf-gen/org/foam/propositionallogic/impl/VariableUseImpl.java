@@ -67,12 +67,10 @@ public class VariableUseImpl extends MinimalEObjectImpl.Container implements Var
 	 */
 	public VariableDefinition getVariableDefinition()
 	{
-		if (variableDefinition != null && variableDefinition.eIsProxy())
-		{
+		if (variableDefinition != null && variableDefinition.eIsProxy()) {
 			InternalEObject oldVariableDefinition = (InternalEObject)variableDefinition;
 			variableDefinition = (VariableDefinition)eResolveProxy(oldVariableDefinition);
-			if (variableDefinition != oldVariableDefinition)
-			{
+			if (variableDefinition != oldVariableDefinition) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, PropositionallogicPackage.VARIABLE_USE__VARIABLE_DEFINITION, oldVariableDefinition, variableDefinition));
 			}
@@ -111,8 +109,7 @@ public class VariableUseImpl extends MinimalEObjectImpl.Container implements Var
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.VARIABLE_USE__VARIABLE_DEFINITION:
 				if (resolve) return getVariableDefinition();
 				return basicGetVariableDefinition();
@@ -128,8 +125,7 @@ public class VariableUseImpl extends MinimalEObjectImpl.Container implements Var
 	@Override
 	public void eSet(int featureID, Object newValue)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.VARIABLE_USE__VARIABLE_DEFINITION:
 				setVariableDefinition((VariableDefinition)newValue);
 				return;
@@ -145,8 +141,7 @@ public class VariableUseImpl extends MinimalEObjectImpl.Container implements Var
 	@Override
 	public void eUnset(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.VARIABLE_USE__VARIABLE_DEFINITION:
 				setVariableDefinition((VariableDefinition)null);
 				return;
@@ -162,8 +157,7 @@ public class VariableUseImpl extends MinimalEObjectImpl.Container implements Var
 	@Override
 	public boolean eIsSet(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.VARIABLE_USE__VARIABLE_DEFINITION:
 				return variableDefinition != null;
 		}

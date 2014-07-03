@@ -166,7 +166,7 @@ public class ErrorPage implements Page {
     Group _group = this.getGroup();
     Template _template = _group.getTemplate();
     EList<VariableDefinition> _variableDefinitions = _template.getVariableDefinitions();
-    final Function1<VariableDefinition,String> _function = new Function1<VariableDefinition,String>() {
+    final Function1<VariableDefinition, String> _function = new Function1<VariableDefinition, String>() {
       public String apply(final VariableDefinition it) {
         return it.getName();
       }
@@ -277,7 +277,7 @@ public class ErrorPage implements Page {
       Specification _specification = this.getSpecification();
       Trace _trace = _specification.getTrace();
       final StepTrace stepTrace = this.trace2StepTrace(_trace);
-      final HashMap<Step,Iterable<TemporalAnnotation>> step2TempAnnotations = this.createStep2TempAnnotationMap(stepTrace);
+      final HashMap<Step, Iterable<TemporalAnnotation>> step2TempAnnotations = this.createStep2TempAnnotationMap(stepTrace);
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("<div>");
       _builder.newLine();
@@ -418,16 +418,16 @@ public class ErrorPage implements Page {
     return _builder;
   }
   
-  private HashMap<Step,Iterable<TemporalAnnotation>> createStep2TempAnnotationMap(final StepTrace stepTrace) {
-    HashMap<Step,Iterable<TemporalAnnotation>> _xblockexpression = null;
+  private HashMap<Step, Iterable<TemporalAnnotation>> createStep2TempAnnotationMap(final StepTrace stepTrace) {
+    HashMap<Step, Iterable<TemporalAnnotation>> _xblockexpression = null;
     {
-      final HashMap<Step,Iterable<TemporalAnnotation>> result = new HashMap<Step, Iterable<TemporalAnnotation>>();
+      final HashMap<Step, Iterable<TemporalAnnotation>> result = new HashMap<Step, Iterable<TemporalAnnotation>>();
       List<Step> _steps = stepTrace.getSteps();
       for (final Step step : _steps) {
         {
           EList<Annotation> _annotations = step.getAnnotations();
           Iterable<TemporalAnnotation> _filter = Iterables.<TemporalAnnotation>filter(_annotations, TemporalAnnotation.class);
-          final Function1<TemporalAnnotation,Boolean> _function = new Function1<TemporalAnnotation,Boolean>() {
+          final Function1<TemporalAnnotation, Boolean> _function = new Function1<TemporalAnnotation, Boolean>() {
             public Boolean apply(final TemporalAnnotation it) {
               Group _group = it.getGroup();
               Specification _specification = ErrorPage.this.getSpecification();

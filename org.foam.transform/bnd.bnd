@@ -1,5 +1,6 @@
 -sub: *.bnd
--buildpath: org.apache.log4j,\
+-buildpath:  \
+	org.apache.log4j,\
 	org.apache.commons.lang,\
 	osgi.cmpn,\
 	biz.aQute.bnd.annotation,\
@@ -24,4 +25,5 @@
 	com.google.guava,\
 	org.foam.emf4osgi.minimal,\
 	org.foam.emf4osgi.xmi,\
-	org.foam.xtext4osgi;version=1.1.0
+	org.foam.xtext4osgi;version=1.1.0,\
+	org.foam.xtext.plogic;version=latest

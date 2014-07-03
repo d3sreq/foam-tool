@@ -80,8 +80,7 @@ public class NotImpl extends MinimalEObjectImpl.Container implements Not
 	{
 		Formula oldFormula = formula;
 		formula = newFormula;
-		if (eNotificationRequired())
-		{
+		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PropositionallogicPackage.NOT__FORMULA, oldFormula, newFormula);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -95,8 +94,7 @@ public class NotImpl extends MinimalEObjectImpl.Container implements Not
 	 */
 	public void setFormula(Formula newFormula)
 	{
-		if (newFormula != formula)
-		{
+		if (newFormula != formula) {
 			NotificationChain msgs = null;
 			if (formula != null)
 				msgs = ((InternalEObject)formula).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - PropositionallogicPackage.NOT__FORMULA, null, msgs);
@@ -117,8 +115,7 @@ public class NotImpl extends MinimalEObjectImpl.Container implements Not
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.NOT__FORMULA:
 				return basicSetFormula(null, msgs);
 		}
@@ -133,8 +130,7 @@ public class NotImpl extends MinimalEObjectImpl.Container implements Not
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.NOT__FORMULA:
 				return getFormula();
 		}
@@ -149,8 +145,7 @@ public class NotImpl extends MinimalEObjectImpl.Container implements Not
 	@Override
 	public void eSet(int featureID, Object newValue)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.NOT__FORMULA:
 				setFormula((Formula)newValue);
 				return;
@@ -166,8 +161,7 @@ public class NotImpl extends MinimalEObjectImpl.Container implements Not
 	@Override
 	public void eUnset(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.NOT__FORMULA:
 				setFormula((Formula)null);
 				return;
@@ -183,8 +177,7 @@ public class NotImpl extends MinimalEObjectImpl.Container implements Not
 	@Override
 	public boolean eIsSet(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.NOT__FORMULA:
 				return formula != null;
 		}

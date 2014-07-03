@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
@@ -57,13 +58,13 @@ public class Lts2NuSMVLang {
     return s.getId();
   }
   
-  private final HashMap<State,List<Transition>> mapStateToTransitions = new HashMap<State, List<Transition>>();
+  private final HashMap<State, List<Transition>> mapStateToTransitions = new HashMap<State, List<Transition>>();
   
   private List<Transition> stateTransitions(final State s) {
     return this.mapStateToTransitions.get(s);
   }
   
-  private final HashMap<Transition,Guard> trans2guards = new HashMap<Transition, Guard>();
+  private final HashMap<Transition, Guard> trans2guards = new HashMap<Transition, Guard>();
   
   private void _prepareTransitionAnnotationMapping(final Automaton automaton, final Transition transition, final Guard guardAnnot) {
     Formula _formula = guardAnnot.getFormula();
@@ -107,7 +108,7 @@ public class Lts2NuSMVLang {
     this.trans2guards.put(newTransition, guardAnnot);
   }
   
-  private final HashMap<VariableDefinition,List<Transition>> markvar2trans = new HashMap<VariableDefinition, List<Transition>>();
+  private final HashMap<VariableDefinition, List<Transition>> markvar2trans = new HashMap<VariableDefinition, List<Transition>>();
   
   private void _prepareTransitionAnnotationMapping(final Automaton automaton, final Transition transition, final Mark markAnnot) {
     VariableDefinition _variableDefinition = markAnnot.getVariableDefinition();
@@ -123,7 +124,7 @@ public class Lts2NuSMVLang {
     _get.add(transition);
   }
   
-  private final HashMap<VariableDefinition,List<Pair<Action,Transition>>> actvar2acttrans = new HashMap<VariableDefinition, List<Pair<Action, Transition>>>();
+  private final HashMap<VariableDefinition, List<Pair<Action, Transition>>> actvar2acttrans = new HashMap<VariableDefinition, List<Pair<Action, Transition>>>();
   
   private void _prepareTransitionAnnotationMapping(final Automaton automaton, final Transition transition, final Action actionAnnot) {
     final State stateX = transition.getStart();
@@ -159,12 +160,12 @@ public class Lts2NuSMVLang {
     boolean _not = (!_containsKey);
     if (_not) {
       VariableDefinition _variableDefinition_1 = actionAnnot.getVariableDefinition();
-      ArrayList<Pair<Action,Transition>> _newArrayList = CollectionLiterals.<Pair<Action,Transition>>newArrayList();
+      ArrayList<Pair<Action, Transition>> _newArrayList = CollectionLiterals.<Pair<Action, Transition>>newArrayList();
       this.actvar2acttrans.put(_variableDefinition_1, _newArrayList);
     }
     VariableDefinition _variableDefinition_2 = actionAnnot.getVariableDefinition();
-    List<Pair<Action,Transition>> _get = this.actvar2acttrans.get(_variableDefinition_2);
-    Pair<Action,Transition> _mappedTo = Pair.<Action, Transition>of(actionAnnot, transition);
+    List<Pair<Action, Transition>> _get = this.actvar2acttrans.get(_variableDefinition_2);
+    Pair<Action, Transition> _mappedTo = Pair.<Action, Transition>of(actionAnnot, transition);
     _get.add(_mappedTo);
   }
   
@@ -190,14 +191,14 @@ public class Lts2NuSMVLang {
     this.guardLoopFairnessStates.add(s);
   }
   
-  private final HashMap<State,Step> state2ucstep = new HashMap<State, Step>();
+  private final HashMap<State, Step> state2ucstep = new HashMap<State, Step>();
   
   private Object _prepareStateToAnnotationMapping(final State state, final StepMappingAnnotation annot) {
     Step _step = annot.getStep();
     return this.state2ucstep.put(state, _step);
   }
   
-  private final HashMap<State,String> state2type = new HashMap<State, String>();
+  private final HashMap<State, String> state2type = new HashMap<State, String>();
   
   private Object _prepareStateToAnnotationMapping(final State state, final StateTypeMappingAnnotation annot) {
     StateType _stateType = annot.getStateType();
@@ -229,11 +230,11 @@ public class Lts2NuSMVLang {
   }
   
   public String transform(final Automaton automaton) {
-    ArrayList<Pair<FormulaHolder,Group>> _newArrayList = CollectionLiterals.<Pair<FormulaHolder,Group>>newArrayList();
+    ArrayList<Pair<FormulaHolder, Group>> _newArrayList = CollectionLiterals.<Pair<FormulaHolder, Group>>newArrayList();
     return this.transform(automaton, _newArrayList);
   }
   
-  public String transform(final Automaton automaton, final List<Pair<FormulaHolder,Group>> holderGroupList) {
+  public String transform(final Automaton automaton, final List<Pair<FormulaHolder, Group>> holderGroupList) {
     State _initState = automaton.getInitState();
     this.stateId(_initState);
     EList<Transition> _transitions = automaton.getTransitions();
@@ -263,7 +264,7 @@ public class Lts2NuSMVLang {
       _get.add(trans_1);
     }
     EList<Transition> _transitions_2 = automaton.getTransitions();
-    final HashMap<Group,Map<String,List<Transition>>> partTrans = this.partitionTransitions(_transitions_2);
+    final HashMap<Group, Map<String, List<Transition>>> partTrans = this.partitionTransitions(_transitions_2);
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("MODULE main");
     _builder.newLine();
@@ -274,7 +275,7 @@ public class Lts2NuSMVLang {
     _builder.newLine();
     _builder.append("\t");
     EList<State> _states_1 = automaton.getStates();
-    final Function1<State,String> _function = new Function1<State,String>() {
+    final Function1<State, String> _function = new Function1<State, String>() {
       public String apply(final State it) {
         return Lts2NuSMVLang.this.stateId(it);
       }
@@ -297,7 +298,7 @@ public class Lts2NuSMVLang {
     _builder.newLine();
     _builder.append("\t");
     EList<State> _states_2 = automaton.getStates();
-    final Function1<State,Boolean> _function_1 = new Function1<State,Boolean>() {
+    final Function1<State, Boolean> _function_1 = new Function1<State, Boolean>() {
       public Boolean apply(final State s) {
         boolean _or = false;
         String _literal = StateType.JMP.getLiteral();
@@ -307,7 +308,7 @@ public class Lts2NuSMVLang {
           _or = true;
         } else {
           List<Transition> _stateTransitions = Lts2NuSMVLang.this.stateTransitions(s);
-          final Function1<Transition,Boolean> _function = new Function1<Transition,Boolean>() {
+          final Function1<Transition, Boolean> _function = new Function1<Transition, Boolean>() {
             public Boolean apply(final Transition it) {
               State _end = it.getEnd();
               return Boolean.valueOf(Objects.equal(_end, s));
@@ -320,7 +321,7 @@ public class Lts2NuSMVLang {
       }
     };
     Iterable<State> _filter = IterableExtensions.<State>filter(_states_2, _function_1);
-    final Function1<State,String> _function_2 = new Function1<State,String>() {
+    final Function1<State, String> _function_2 = new Function1<State, String>() {
       public String apply(final State it) {
         return Lts2NuSMVLang.this.stateId(it);
       }
@@ -354,7 +355,7 @@ public class Lts2NuSMVLang {
         _builder.append(_stateId_1, "\t\t");
         _builder.append(" : {");
         List<Transition> _stateTransitions = this.stateTransitions(state);
-        final Function1<Transition,String> _function_3 = new Function1<Transition,String>() {
+        final Function1<Transition, String> _function_3 = new Function1<Transition, String>() {
           public String apply(final Transition it) {
             State _end = it.getEnd();
             return Lts2NuSMVLang.this.stateId(_end);
@@ -385,8 +386,8 @@ public class Lts2NuSMVLang {
               return _xifexpression;
             }
           };
-          List<Transition> _sort = IterableExtensions.<Transition>sort(_stateTransitions_1, _function_4);
-          for(final Transition trans_2 : _sort) {
+          List<Transition> _sortInplace = ListExtensions.<Transition>sortInplace(_stateTransitions_1, _function_4);
+          for(final Transition trans_2 : _sortInplace) {
             {
               boolean _isGuarded = this.isGuarded(trans_2);
               if (_isGuarded) {
@@ -521,7 +522,7 @@ public class Lts2NuSMVLang {
         _builder.append(") := case");
         _builder.newLineIfNotEmpty();
         {
-          List<Pair<Action,Transition>> _get_2 = this.actvar2acttrans.get(vardef_1);
+          List<Pair<Action, Transition>> _get_2 = this.actvar2acttrans.get(vardef_1);
           for(final Pair<Action, Transition> pair : _get_2) {
             _builder.append("\t\t");
             final Action act = pair.getKey();
@@ -574,7 +575,7 @@ public class Lts2NuSMVLang {
     _builder.append("DEFINE guardloop := s in {");
     _builder.newLine();
     _builder.append("\t");
-    final Function1<State,String> _function_5 = new Function1<State,String>() {
+    final Function1<State, String> _function_5 = new Function1<State, String>() {
       public String apply(final State it) {
         return Lts2NuSMVLang.this.stateId(it);
       }
@@ -587,11 +588,11 @@ public class Lts2NuSMVLang {
     _builder.append("};");
     _builder.newLine();
     {
-      Set<Map.Entry<Group,Map<String,List<Transition>>>> _entrySet = partTrans.entrySet();
+      Set<Map.Entry<Group, Map<String, List<Transition>>>> _entrySet = partTrans.entrySet();
       for(final Map.Entry<Group, Map<String, List<Transition>>> groupEntry : _entrySet) {
         final Group group = groupEntry.getKey();
         _builder.newLineIfNotEmpty();
-        Map<String,List<Transition>> _value = groupEntry.getValue();
+        Map<String, List<Transition>> _value = groupEntry.getValue();
         final Set<String> templateVarNames = _value.keySet();
         _builder.newLineIfNotEmpty();
         _builder.newLine();
@@ -608,7 +609,7 @@ public class Lts2NuSMVLang {
             String _qualifier_1 = group.getQualifier();
             final String nusmvVarName = this.nameService.createTadlVarName(_qualifier_1, templateVarName);
             _builder.newLineIfNotEmpty();
-            Map<String,List<Transition>> _value_1 = groupEntry.getValue();
+            Map<String, List<Transition>> _value_1 = groupEntry.getValue();
             final List<Transition> transitions = _value_1.get(templateVarName);
             _builder.newLineIfNotEmpty();
             _builder.append("VAR ");
@@ -633,7 +634,7 @@ public class Lts2NuSMVLang {
               if (_not) {
                 _builder.append("\t");
                 _builder.append("s in { ");
-                final Function1<Transition,String> _function_6 = new Function1<Transition,String>() {
+                final Function1<Transition, String> _function_6 = new Function1<Transition, String>() {
                   public String apply(final Transition it) {
                     State _start = it.getStart();
                     return Lts2NuSMVLang.this.stateId(_start);
@@ -646,7 +647,7 @@ public class Lts2NuSMVLang {
                 _builder.newLineIfNotEmpty();
                 _builder.append("\t");
                 _builder.append("s in { ");
-                final Function1<Transition,String> _function_7 = new Function1<Transition,String>() {
+                final Function1<Transition, String> _function_7 = new Function1<Transition, String>() {
                   public String apply(final Transition it) {
                     State _end = it.getEnd();
                     return Lts2NuSMVLang.this.stateId(_end);
@@ -671,7 +672,7 @@ public class Lts2NuSMVLang {
         }
         _builder.newLine();
         String _qualifier_2 = group.getQualifier();
-        final HashMap<String,String> map = this.createTemplateVar2NuSMVVarMap(_qualifier_2, templateVarNames);
+        final HashMap<String, String> map = this.createTemplateVar2NuSMVVarMap(_qualifier_2, templateVarNames);
         _builder.newLineIfNotEmpty();
         final TADLFormulaRenderer tadlRenderer = new TADLFormulaRenderer(map);
         _builder.newLineIfNotEmpty();
@@ -706,31 +707,31 @@ public class Lts2NuSMVLang {
     return _builder.toString();
   }
   
-  private void addFormulaHolderAndGroup(final FormulaHolder fh, final Group group, final List<Pair<FormulaHolder,Group>> holderGroupList) {
-    Pair<FormulaHolder,Group> _mappedTo = Pair.<FormulaHolder, Group>of(fh, group);
+  private void addFormulaHolderAndGroup(final FormulaHolder fh, final Group group, final List<Pair<FormulaHolder, Group>> holderGroupList) {
+    Pair<FormulaHolder, Group> _mappedTo = Pair.<FormulaHolder, Group>of(fh, group);
     holderGroupList.add(_mappedTo);
   }
   
-  private HashMap<String,String> createTemplateVar2NuSMVVarMap(final String qualifier, final Set<String> varNames) {
-    HashMap<String,String> _xblockexpression = null;
+  private HashMap<String, String> createTemplateVar2NuSMVVarMap(final String qualifier, final Set<String> varNames) {
+    HashMap<String, String> _xblockexpression = null;
     {
-      final HashMap<String,String> result = new HashMap<String, String>();
-      final Procedure1<String> _function = new Procedure1<String>() {
-        public void apply(final String it) {
+      final HashMap<String, String> result = new HashMap<String, String>();
+      final Consumer<String> _function = new Consumer<String>() {
+        public void accept(final String it) {
           String _createTadlVarName = Lts2NuSMVLang.this.nameService.createTadlVarName(qualifier, it);
           result.put(it, _createTadlVarName);
         }
       };
-      IterableExtensions.<String>forEach(varNames, _function);
+      varNames.forEach(_function);
       _xblockexpression = result;
     }
     return _xblockexpression;
   }
   
-  private HashMap<Group,Map<String,List<Transition>>> partitionTransitions(final Iterable<Transition> transitions) {
-    HashMap<Group,Map<String,List<Transition>>> _xblockexpression = null;
+  private HashMap<Group, Map<String, List<Transition>>> partitionTransitions(final Iterable<Transition> transitions) {
+    HashMap<Group, Map<String, List<Transition>>> _xblockexpression = null;
     {
-      final HashMap<Group,Map<String,List<Transition>>> result = new HashMap<Group, Map<String, List<Transition>>>();
+      final HashMap<Group, Map<String, List<Transition>>> result = new HashMap<Group, Map<String, List<Transition>>>();
       for (final Transition transition : transitions) {
         State _start = transition.getStart();
         EList<Annotation> _annotations = _start.getAnnotations();
@@ -741,20 +742,20 @@ public class Lts2NuSMVLang {
             boolean _containsKey = result.containsKey(group);
             boolean _not = (!_containsKey);
             if (_not) {
-              final HashMap<String,List<Transition>> varNameMap = new HashMap<String, List<Transition>>();
+              final HashMap<String, List<Transition>> varNameMap = new HashMap<String, List<Transition>>();
               result.put(group, varNameMap);
               Template _template = group.getTemplate();
               EList<VariableDefinition> _variableDefinitions = _template.getVariableDefinitions();
-              final Procedure1<VariableDefinition> _function = new Procedure1<VariableDefinition>() {
-                public void apply(final VariableDefinition it) {
+              final Consumer<VariableDefinition> _function = new Consumer<VariableDefinition>() {
+                public void accept(final VariableDefinition it) {
                   String _name = it.getName();
                   ArrayList<Transition> _newArrayList = CollectionLiterals.<Transition>newArrayList();
                   varNameMap.put(_name, _newArrayList);
                 }
               };
-              IterableExtensions.<VariableDefinition>forEach(_variableDefinitions, _function);
+              _variableDefinitions.forEach(_function);
             }
-            final Map<String,List<Transition>> varNameMap_1 = result.get(group);
+            final Map<String, List<Transition>> varNameMap_1 = result.get(group);
             VariableDefinition _variableDefinition = tempAnnot.getVariableDefinition();
             final String varName = _variableDefinition.getName();
             final List<Transition> transList = varNameMap_1.get(varName);

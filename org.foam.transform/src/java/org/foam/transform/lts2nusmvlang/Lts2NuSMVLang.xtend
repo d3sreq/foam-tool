@@ -213,7 +213,7 @@ class Lts2NuSMVLang {
 			next(s) := case
 				«FOR state : automaton.states»
 				s = «state.stateId» : {«state.stateTransitions.map[end.stateId].join(", ")»}; -- «state.type» : «state.useCaseStepText.abbreviate(NUSMV_CODE_ABBREVIATE_LENGTH, NUSMV_CODE_ABBREVIATE_LENGTH, "...")»
-					«FOR trans : state.stateTransitions.sort[a,b| if(a.guarded) -1 else 1]»
+					«FOR trans : state.stateTransitions.sortInplace[a,b| if(a.guarded) -1 else 1]»
 						«IF trans.guarded»
 							«IF "FALSE".equalsIgnoreCase(trans.guardingFormula)»
 							-- TODO: the following line can be optimized by changing the non-deterministic choice in «state.stateId»

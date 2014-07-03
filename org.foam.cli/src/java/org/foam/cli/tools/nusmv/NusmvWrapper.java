@@ -60,7 +60,7 @@ public class NusmvWrapper {
 		return process.getInputStream();
 	}
 
-	public void closeNusmvProcess() throws IOException, InterruptedException {
+	final public void closeNusmvProcess() throws IOException, InterruptedException {
 		process.getInputStream().close();
 		process.waitFor();
 	}

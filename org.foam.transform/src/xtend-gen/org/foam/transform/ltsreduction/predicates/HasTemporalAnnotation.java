@@ -13,7 +13,7 @@ import org.foam.tadl.TemporalAnnotation;
 public class HasTemporalAnnotation implements Predicate<State> {
   public boolean apply(final State state) {
     EList<Annotation> _annotations = state.getAnnotations();
-    final Function1<Annotation,Boolean> _function = new Function1<Annotation,Boolean>() {
+    final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
       public Boolean apply(final Annotation it) {
         return Boolean.valueOf((it instanceof TemporalAnnotation));
       }

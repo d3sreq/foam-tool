@@ -4,7 +4,6 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Reference;
 import com.google.common.base.Objects;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
@@ -16,7 +15,7 @@ import org.foam.cli.launcher.api.IExecutableTool;
 @Component(immediate = true, provide = LauncherComponent.class, properties = { "osgi.command.scope:String=foam", "osgi.command.function:String=run" })
 @SuppressWarnings("all")
 public class LauncherComponent {
-  private final ConcurrentHashMap<String,IExecutableTool> toolMap = new ConcurrentHashMap<String, IExecutableTool>();
+  private final ConcurrentHashMap<String, IExecutableTool> toolMap = new ConcurrentHashMap<String, IExecutableTool>();
   
   @Reference(multiple = true, optional = true, dynamic = true)
   public void addTool(final IExecutableTool tool) {
@@ -47,7 +46,7 @@ public class LauncherComponent {
     _builder.append("Available tools are:");
     _builder.newLine();
     {
-      Set<String> _keySet = this.toolMap.keySet();
+      ConcurrentHashMap.KeySetView<String, IExecutableTool> _keySet = this.toolMap.keySet();
       for(final String toolName : _keySet) {
         _builder.append(" ");
         _builder.append("- ");

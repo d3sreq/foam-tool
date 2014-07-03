@@ -19,9 +19,9 @@ import org.foam.transform.utils.model.ModelUtils;
 @Data
 @SuppressWarnings("all")
 public class CircleWithoutStateTypeProcessor implements StateProcessor {
-  private final Map<State,Node> _state2Node;
+  private final Map<State, Node> _state2Node;
   
-  public Map<State,Node> getState2Node() {
+  public Map<State, Node> getState2Node() {
     return this._state2Node;
   }
   
@@ -31,9 +31,9 @@ public class CircleWithoutStateTypeProcessor implements StateProcessor {
       StateType _stateTypeFromStateTypeMappingAnnotation = ModelUtils.getStateTypeFromStateTypeMappingAnnotation(state);
       boolean _equals = Objects.equal(_stateTypeFromStateTypeMappingAnnotation, null);
       if (_equals) {
-        Map<State,Node> _state2Node = this.getState2Node();
+        Map<State, Node> _state2Node = this.getState2Node();
         final Node node = _state2Node.get(state);
-        EMap<String,String> _attributes = node.getAttributes();
+        EMap<String, String> _attributes = node.getAttributes();
         _attributes.put("shape", "circle");
       }
       _xblockexpression = true;
@@ -41,7 +41,7 @@ public class CircleWithoutStateTypeProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public CircleWithoutStateTypeProcessor(final Map<State,Node> state2Node) {
+  public CircleWithoutStateTypeProcessor(final Map<State, Node> state2Node) {
     super();
     this._state2Node = state2Node;
   }

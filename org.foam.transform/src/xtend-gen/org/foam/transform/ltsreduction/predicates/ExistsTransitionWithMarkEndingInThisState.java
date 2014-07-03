@@ -26,7 +26,7 @@ public class ExistsTransitionWithMarkEndingInThisState implements Predicate<Stat
     this.statesWithMarkTransitionEnd = _hashSet;
     for (final Transition transition : transitions) {
       EList<Annotation> _annotations = transition.getAnnotations();
-      final Function1<Annotation,Boolean> _function = new Function1<Annotation,Boolean>() {
+      final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
         public Boolean apply(final Annotation it) {
           return Boolean.valueOf((it instanceof Mark));
         }

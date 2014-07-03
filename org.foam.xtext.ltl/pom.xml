@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>vinarek.jiri</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../../releng/parent/pom.xml</relativePath>
+	</parent>
+
+	<groupId>vinarek.jiri</groupId>
+	<artifactId>transformation.ltllang2ltl</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>eclipse-plugin</packaging>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>${project.build.directory}/emf</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<!-- Copy all EMF related sources to seperate folder that is registered 
+				as resource folder -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/emf</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src</directory>
+									<includes>
+										<include>**/*.xtext</include>
+										<include>**/*.mwe2</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.fornax.toolsupport</groupId>
+				<artifactId>fornax-oaw-m2-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>emf</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run-workflow</goal>
+						</goals>
+						<configuration>
+							<workflowEngine>mwe2</workflowEngine>
+							<workflowDescriptor>GenerateLtlXtext</workflowDescriptor>
+							<timestampFileName>emf-generator.timestamp</timestampFileName>
+							<jvmSettings>
+								<!-- <fork>true</fork> -->
+								<jvmArgs>
+									<jvmArg>-Xms100m</jvmArg>
+									<jvmArg>-Xmx700m</jvmArg>
+									<jvmArg>-XX:MaxPermSize=256m</jvmArg>
+									<!-- <jvmArg>-Dlog4j.configuration=file:${basedir}/log4j.properties</jvmArg> -->
+								</jvmArgs>
+							</jvmSettings>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>xtend-gen</directory>
+						</fileset>
+						<fileset>
+							<directory>src-gen</directory>
+						</fileset>
+						<fileset>
+							<directory>../tests/transformation.ltllang2ltl.tests/src-gen</directory>
+						</fileset>					
+						<fileset>
+							<directory>../transformation.ltllang2ltl.ui/src-gen</directory>
+						</fileset>						
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

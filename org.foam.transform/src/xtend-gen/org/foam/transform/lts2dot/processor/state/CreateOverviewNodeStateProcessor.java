@@ -29,9 +29,9 @@ public class CreateOverviewNodeStateProcessor implements StateProcessor {
     return this._resultDot;
   }
   
-  private final Map<State,Node> _state2Node;
+  private final Map<State, Node> _state2Node;
   
-  public Map<State,Node> getState2Node() {
+  public Map<State, Node> getState2Node() {
     return this._state2Node;
   }
   
@@ -54,7 +54,7 @@ public class CreateOverviewNodeStateProcessor implements StateProcessor {
         public void apply(final Node it) {
           String _id = useCase.getId();
           it.setId(_id);
-          EMap<String,String> _attributes = it.getAttributes();
+          EMap<String, String> _attributes = it.getAttributes();
           StringConcatenation _builder = new StringConcatenation();
           _builder.append("../");
           String _id_1 = it.getId();
@@ -64,10 +64,10 @@ public class CreateOverviewNodeStateProcessor implements StateProcessor {
           _builder.append(_id_2, "");
           _builder.append(".html");
           _attributes.put("URL", _builder.toString());
-          EMap<String,String> _attributes_1 = it.getAttributes();
+          EMap<String, String> _attributes_1 = it.getAttributes();
           String _name = useCase.getName();
           _attributes_1.put("tooltip", _name);
-          EMap<String,String> _attributes_2 = it.getAttributes();
+          EMap<String, String> _attributes_2 = it.getAttributes();
           _attributes_2.put("target", "_top");
         }
       };
@@ -75,14 +75,14 @@ public class CreateOverviewNodeStateProcessor implements StateProcessor {
       Graph _resultDot = this.getResultDot();
       EList<Statement> _statements = _resultDot.getStatements();
       _statements.add(node);
-      Map<State,Node> _state2Node = this.getState2Node();
+      Map<State, Node> _state2Node = this.getState2Node();
       _state2Node.put(state, node);
       _xblockexpression = true;
     }
     return _xblockexpression;
   }
   
-  public CreateOverviewNodeStateProcessor(final Graph resultDot, final Map<State,Node> state2Node) {
+  public CreateOverviewNodeStateProcessor(final Graph resultDot, final Map<State, Node> state2Node) {
     super();
     this._resultDot = resultDot;
     this._state2Node = state2Node;

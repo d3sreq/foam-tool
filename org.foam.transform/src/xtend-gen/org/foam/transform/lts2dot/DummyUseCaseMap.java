@@ -5,7 +5,7 @@ import org.foam.dot.Graph;
 import org.foam.ucm.UseCase;
 
 @SuppressWarnings("all")
-public class DummyUseCaseMap extends HashMap<UseCase,Graph> {
+public class DummyUseCaseMap extends HashMap<UseCase, Graph> {
   private final Graph graph;
   
   public DummyUseCaseMap(final Graph graph) {

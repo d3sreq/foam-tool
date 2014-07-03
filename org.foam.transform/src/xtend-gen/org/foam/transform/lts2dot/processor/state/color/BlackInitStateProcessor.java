@@ -23,9 +23,9 @@ public class BlackInitStateProcessor implements StateProcessor {
     return this._initState;
   }
   
-  private final Map<State,Node> _state2Node;
+  private final Map<State, Node> _state2Node;
   
-  public Map<State,Node> getState2Node() {
+  public Map<State, Node> getState2Node() {
     return this._state2Node;
   }
   
@@ -35,9 +35,9 @@ public class BlackInitStateProcessor implements StateProcessor {
       State _initState = this.getInitState();
       boolean _equals = Objects.equal(state, _initState);
       if (_equals) {
-        Map<State,Node> _state2Node = this.getState2Node();
+        Map<State, Node> _state2Node = this.getState2Node();
         Node _get = _state2Node.get(state);
-        EMap<String,String> _attributes = _get.getAttributes();
+        EMap<String, String> _attributes = _get.getAttributes();
         _attributes.put("fillcolor", "black");
       }
       _xblockexpression = true;
@@ -45,7 +45,7 @@ public class BlackInitStateProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public BlackInitStateProcessor(final State initState, final Map<State,Node> state2Node) {
+  public BlackInitStateProcessor(final State initState, final Map<State, Node> state2Node) {
     super();
     this._initState = initState;
     this._state2Node = state2Node;

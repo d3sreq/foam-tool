@@ -42,7 +42,7 @@ public class TadlTemplatePage implements Page {
   public String getId() {
     Template _template = this.getTemplate();
     EList<VariableDefinition> _variableDefinitions = _template.getVariableDefinitions();
-    final Function1<VariableDefinition,String> _function = new Function1<VariableDefinition,String>() {
+    final Function1<VariableDefinition, String> _function = new Function1<VariableDefinition, String>() {
       public String apply(final VariableDefinition it) {
         return it.getName();
       }
@@ -109,7 +109,7 @@ public class TadlTemplatePage implements Page {
       TADLFormulaRenderer _renderer_1 = this.getRenderer();
       Template _template_1 = this.getTemplate();
       EList<FormulaHolder> _formulaHolders_1 = _template_1.getFormulaHolders();
-      final Function1<FormulaHolder,Formula> _function = new Function1<FormulaHolder,Formula>() {
+      final Function1<FormulaHolder, Formula> _function = new Function1<FormulaHolder, Formula>() {
         public Formula apply(final FormulaHolder it) {
           return it.getFormula();
         }

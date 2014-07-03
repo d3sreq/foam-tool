@@ -37,9 +37,9 @@ public class AddUseCaseStateProcessor implements StateProcessor {
     return this._resultDot;
   }
   
-  private final Map<UseCase,Graph> _useCase2Graph;
+  private final Map<UseCase, Graph> _useCase2Graph;
   
-  public Map<UseCase,Graph> getUseCase2Graph() {
+  public Map<UseCase, Graph> getUseCase2Graph() {
     return this._useCase2Graph;
   }
   
@@ -69,7 +69,7 @@ public class AddUseCaseStateProcessor implements StateProcessor {
         {
           final UseCase useCase = UcmUtils.getUseCase(step);
           boolean _xifexpression_1 = false;
-          Map<UseCase,Graph> _useCase2Graph = this.getUseCase2Graph();
+          Map<UseCase, Graph> _useCase2Graph = this.getUseCase2Graph();
           boolean _containsKey = _useCase2Graph.containsKey(useCase);
           boolean _not = (!_containsKey);
           if (_not) {
@@ -101,7 +101,7 @@ public class AddUseCaseStateProcessor implements StateProcessor {
                 }
               };
               final Graph subGraph = ObjectExtensions.<Graph>operator_doubleArrow(_createGraph, _function);
-              Map<UseCase,Graph> _useCase2Graph_1 = this.getUseCase2Graph();
+              Map<UseCase, Graph> _useCase2Graph_1 = this.getUseCase2Graph();
               _useCase2Graph_1.put(useCase, subGraph);
               Graph _resultDot = this.getResultDot();
               EList<Statement> _statements = _resultDot.getStatements();
@@ -118,7 +118,7 @@ public class AddUseCaseStateProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public AddUseCaseStateProcessor(final Graph resultDot, final Map<UseCase,Graph> useCase2Graph) {
+  public AddUseCaseStateProcessor(final Graph resultDot, final Map<UseCase, Graph> useCase2Graph) {
     super();
     this._resultDot = resultDot;
     this._useCase2Graph = useCase2Graph;

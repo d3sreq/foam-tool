@@ -28,7 +28,7 @@ public class MoveAnnotationsWithTypeListener implements StateReducedEventListene
     Transition _removedToStateTransition = stateReducedEvent.getRemovedToStateTransition();
     EList<Annotation> _annotations_1 = _removedToStateTransition.getAnnotations();
     final Iterable<Annotation> annotations = Iterables.<Annotation>concat(_annotations, _annotations_1);
-    final Function1<Annotation,Boolean> _function = new Function1<Annotation,Boolean>() {
+    final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
       public Boolean apply(final Annotation it) {
         Class<? extends Annotation> _class = it.getClass();
         return Boolean.valueOf(MoveAnnotationsWithTypeListener.this.annotationType.isAssignableFrom(_class));

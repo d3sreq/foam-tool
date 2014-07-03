@@ -34,7 +34,8 @@ import org.foam.transform.utils.model.EmfCommons;
 import org.foam.verification.VerificationPackage;
 import org.osgi.service.log.LogService;
 
-@Component
+@Component(enabled = false)
+@Deprecated
 @SuppressWarnings("all")
 public class RenderLTS implements IExecutableTool {
   private final static String XMI_OverviewGraphTemplate = "org/foam/cli/tools/renderlts/OverviewGraphTemplate.xmi";

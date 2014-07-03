@@ -36,9 +36,9 @@ public class CreateOverviewEdgeTransitionProcessor implements TransitionProcesso
     return this._resultDot;
   }
   
-  private final Map<State,Node> _state2Node;
+  private final Map<State, Node> _state2Node;
   
-  public Map<State,Node> getState2Node() {
+  public Map<State, Node> getState2Node() {
     return this._state2Node;
   }
   
@@ -59,19 +59,19 @@ public class CreateOverviewEdgeTransitionProcessor implements TransitionProcesso
       Edge _createEdge = _dotFactory.createEdge();
       final Procedure1<Edge> _function = new Procedure1<Edge>() {
         public void apply(final Edge it) {
-          Map<State,Node> _state2Node = CreateOverviewEdgeTransitionProcessor.this.getState2Node();
+          Map<State, Node> _state2Node = CreateOverviewEdgeTransitionProcessor.this.getState2Node();
           State _start = transition.getStart();
           Node _get = _state2Node.get(_start);
           it.setSource(_get);
-          Map<State,Node> _state2Node_1 = CreateOverviewEdgeTransitionProcessor.this.getState2Node();
+          Map<State, Node> _state2Node_1 = CreateOverviewEdgeTransitionProcessor.this.getState2Node();
           State _end = transition.getEnd();
           Node _get_1 = _state2Node_1.get(_end);
           it.setTarget(_get_1);
           boolean _equals = Objects.equal(transitionType, OverviewTransitionType.INCLUDE);
           if (_equals) {
-            EMap<String,String> _attributes = it.getAttributes();
+            EMap<String, String> _attributes = it.getAttributes();
             _attributes.put("style", "dashed");
-            EMap<String,String> _attributes_1 = it.getAttributes();
+            EMap<String, String> _attributes_1 = it.getAttributes();
             _attributes_1.put("arrowhead", "onormal");
           }
         }
@@ -85,7 +85,7 @@ public class CreateOverviewEdgeTransitionProcessor implements TransitionProcesso
     return _xblockexpression;
   }
   
-  public CreateOverviewEdgeTransitionProcessor(final Graph resultDot, final Map<State,Node> state2Node) {
+  public CreateOverviewEdgeTransitionProcessor(final Graph resultDot, final Map<State, Node> state2Node) {
     super();
     this._resultDot = resultDot;
     this._state2Node = state2Node;

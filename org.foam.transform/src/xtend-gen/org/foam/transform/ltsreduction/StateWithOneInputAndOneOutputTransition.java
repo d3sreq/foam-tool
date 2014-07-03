@@ -24,7 +24,7 @@ public class StateWithOneInputAndOneOutputTransition implements Predicate<State>
   }
   
   private Iterable<EStructuralFeature.Setting> filterSettings(final Collection<EStructuralFeature.Setting> settings, final EReference eReference) {
-    final Function1<EStructuralFeature.Setting,Boolean> _function = new Function1<EStructuralFeature.Setting,Boolean>() {
+    final Function1<EStructuralFeature.Setting, Boolean> _function = new Function1<EStructuralFeature.Setting, Boolean>() {
       public Boolean apply(final EStructuralFeature.Setting it) {
         EStructuralFeature _eStructuralFeature = it.getEStructuralFeature();
         return Boolean.valueOf(Objects.equal(_eStructuralFeature, eReference));

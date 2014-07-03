@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -30,7 +31,6 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.foam.annotation.AnnotationPackage;
 import org.foam.cli.launcher.api.IExecutableTool;
 import org.foam.cli.tools.report.SpecificationWrapper;
@@ -70,7 +70,7 @@ import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang;
 import org.foam.transform.tadllang2tadl.TadlLang2Tadl;
 import org.foam.transform.ucm2lts.Ucm2LtsFacade;
 import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph;
-import org.foam.transform.ucm2ucm.UcmLang2Ucm;
+import org.foam.transform.ucm2ucm.UcmLang2UcmService;
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver;
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver;
 import org.foam.transform.utils.graphviz.GraphvizUtils;
@@ -92,6 +92,13 @@ public class ReportApplication implements IExecutableTool {
     this.logService = logService;
   }
   
+  private UcmLang2UcmService ucmLang2UcmService;
+  
+  @Reference
+  public void setUcmLang2Ucm(final UcmLang2UcmService serviceRef) {
+    this.ucmLang2UcmService = serviceRef;
+  }
+  
   public void info(final CharSequence message) {
     String _string = message.toString();
     this.logService.log(LogService.LOG_INFO, _string);
@@ -106,14 +113,14 @@ public class ReportApplication implements IExecutableTool {
     Iterable<Specification> _xblockexpression = null;
     {
       final LinkedHashSet<SpecificationWrapper> set = new LinkedHashSet<SpecificationWrapper>();
-      final Function1<Specification,SpecificationWrapper> _function = new Function1<Specification,SpecificationWrapper>() {
+      final Function1<Specification, SpecificationWrapper> _function = new Function1<Specification, SpecificationWrapper>() {
         public SpecificationWrapper apply(final Specification it) {
           return new SpecificationWrapper(it);
         }
       };
       Iterable<SpecificationWrapper> _map = IterableExtensions.<Specification, SpecificationWrapper>map(specifications, _function);
       Iterables.<SpecificationWrapper>addAll(set, _map);
-      final Function1<SpecificationWrapper,Specification> _function_1 = new Function1<SpecificationWrapper,Specification>() {
+      final Function1<SpecificationWrapper, Specification> _function_1 = new Function1<SpecificationWrapper, Specification>() {
         public Specification apply(final SpecificationWrapper it) {
           return it.getSpecification();
         }
@@ -140,20 +147,20 @@ public class ReportApplication implements IExecutableTool {
     List<MenuCategory> _categories_1 = menu.getCategories();
     _categories_1.add(primaryUseCasesCategory);
     EList<UseCase> _useCases = useCaseModel.getUseCases();
-    final Function1<UseCase,Boolean> _function = new Function1<UseCase,Boolean>() {
+    final Function1<UseCase, Boolean> _function = new Function1<UseCase, Boolean>() {
       public Boolean apply(final UseCase it) {
         return Boolean.valueOf(it.isPrimary());
       }
     };
     final Iterable<UseCase> primaryUseCases = IterableExtensions.<UseCase>filter(_useCases, _function);
-    final Function1<UseCase,UseCasePage> _function_1 = new Function1<UseCase,UseCasePage>() {
+    final Function1<UseCase, UseCasePage> _function_1 = new Function1<UseCase, UseCasePage>() {
       public UseCasePage apply(final UseCase it) {
         return ReportApplication.this.createUseCasePage(it, menu, outputDirName);
       }
     };
     final Iterable<UseCasePage> primaryUseCasesPages = IterableExtensions.<UseCase, UseCasePage>map(primaryUseCases, _function_1);
     List<MenuItem> _menuItems_1 = primaryUseCasesCategory.getMenuItems();
-    final Function1<UseCasePage,MenuItem> _function_2 = new Function1<UseCasePage,MenuItem>() {
+    final Function1<UseCasePage, MenuItem> _function_2 = new Function1<UseCasePage, MenuItem>() {
       public MenuItem apply(final UseCasePage it) {
         return ReportApplication.this.createUseCaseMenuItem(it, menu);
       }
@@ -165,21 +172,21 @@ public class ReportApplication implements IExecutableTool {
     List<MenuCategory> _categories_2 = menu.getCategories();
     _categories_2.add(nonPrimaryUseCasesCategory);
     EList<UseCase> _useCases_1 = useCaseModel.getUseCases();
-    final Function1<UseCase,Boolean> _function_3 = new Function1<UseCase,Boolean>() {
+    final Function1<UseCase, Boolean> _function_3 = new Function1<UseCase, Boolean>() {
       public Boolean apply(final UseCase it) {
         boolean _isPrimary = it.isPrimary();
         return Boolean.valueOf((!_isPrimary));
       }
     };
     final Iterable<UseCase> nonPrimaryUseCases = IterableExtensions.<UseCase>filter(_useCases_1, _function_3);
-    final Function1<UseCase,UseCasePage> _function_4 = new Function1<UseCase,UseCasePage>() {
+    final Function1<UseCase, UseCasePage> _function_4 = new Function1<UseCase, UseCasePage>() {
       public UseCasePage apply(final UseCase it) {
         return ReportApplication.this.createUseCasePage(it, menu, outputDirName);
       }
     };
     final Iterable<UseCasePage> nonPrimaryUseCasesPages = IterableExtensions.<UseCase, UseCasePage>map(nonPrimaryUseCases, _function_4);
     List<MenuItem> _menuItems_2 = nonPrimaryUseCasesCategory.getMenuItems();
-    final Function1<UseCasePage,MenuItem> _function_5 = new Function1<UseCasePage,MenuItem>() {
+    final Function1<UseCasePage, MenuItem> _function_5 = new Function1<UseCasePage, MenuItem>() {
       public MenuItem apply(final UseCasePage it) {
         return ReportApplication.this.createUseCaseMenuItem(it, menu);
       }
@@ -190,14 +197,14 @@ public class ReportApplication implements IExecutableTool {
     final MenuCategory tadlCategory = new MenuCategory("TADL definitions");
     List<MenuCategory> _categories_3 = menu.getCategories();
     _categories_3.add(tadlCategory);
-    final Function1<Template,TadlTemplatePage> _function_6 = new Function1<Template,TadlTemplatePage>() {
+    final Function1<Template, TadlTemplatePage> _function_6 = new Function1<Template, TadlTemplatePage>() {
       public TadlTemplatePage apply(final Template it) {
         return ReportApplication.this.createTadlTemplatePage(it, menu);
       }
     };
     final Iterable<TadlTemplatePage> tadlPages = IterableExtensions.<Template, TadlTemplatePage>map(templates, _function_6);
     List<MenuItem> _menuItems_3 = tadlCategory.getMenuItems();
-    final Function1<TadlTemplatePage,MenuItem> _function_7 = new Function1<TadlTemplatePage,MenuItem>() {
+    final Function1<TadlTemplatePage, MenuItem> _function_7 = new Function1<TadlTemplatePage, MenuItem>() {
       public MenuItem apply(final TadlTemplatePage it) {
         return ReportApplication.this.createTadlPageMenuItem(it, menu);
       }
@@ -208,15 +215,15 @@ public class ReportApplication implements IExecutableTool {
     final MenuCategory errorsCategory = new MenuCategory("Errors");
     List<MenuCategory> _categories_4 = menu.getCategories();
     _categories_4.add(errorsCategory);
-    final HashMap<Group,List<Specification>> group2Specification = this.partitionByGroup(specifications);
-    final Function1<Specification,ErrorPage> _function_8 = new Function1<Specification,ErrorPage>() {
+    final HashMap<Group, List<Specification>> group2Specification = this.partitionByGroup(specifications);
+    final Function1<Specification, ErrorPage> _function_8 = new Function1<Specification, ErrorPage>() {
       public ErrorPage apply(final Specification it) {
         return ReportApplication.this.createErrorPage(it, menu, group2Specification);
       }
     };
     final Iterable<ErrorPage> errorPages = IterableExtensions.<Specification, ErrorPage>map(specifications, _function_8);
     List<MenuItem> _menuItems_4 = errorsCategory.getMenuItems();
-    final Function1<ErrorPage,MenuItem> _function_9 = new Function1<ErrorPage,MenuItem>() {
+    final Function1<ErrorPage, MenuItem> _function_9 = new Function1<ErrorPage, MenuItem>() {
       public MenuItem apply(final ErrorPage it) {
         return ReportApplication.this.createErrorPageMenuItem(it, menu);
       }
@@ -228,26 +235,26 @@ public class ReportApplication implements IExecutableTool {
     _builder_1.append("Writing pages to disk");
     this.info(_builder_1);
     List<MenuCategory> _categories_5 = menu.getCategories();
-    final Function1<MenuCategory,List<MenuItem>> _function_10 = new Function1<MenuCategory,List<MenuItem>>() {
+    final Function1<MenuCategory, List<MenuItem>> _function_10 = new Function1<MenuCategory, List<MenuItem>>() {
       public List<MenuItem> apply(final MenuCategory it) {
         return it.getMenuItems();
       }
     };
     List<List<MenuItem>> _map_4 = ListExtensions.<MenuCategory, List<MenuItem>>map(_categories_5, _function_10);
     Iterable<MenuItem> _flatten = Iterables.<MenuItem>concat(_map_4);
-    final Procedure1<MenuItem> _function_11 = new Procedure1<MenuItem>() {
-      public void apply(final MenuItem it) {
+    final Consumer<MenuItem> _function_11 = new Consumer<MenuItem>() {
+      public void accept(final MenuItem it) {
         Page _page = it.getPage();
         ReportApplication.this.writePage(_page, outputDirName);
       }
     };
-    IterableExtensions.<MenuItem>forEach(_flatten, _function_11);
+    _flatten.forEach(_function_11);
   }
   
-  private HashMap<Group,List<Specification>> partitionByGroup(final Iterable<Specification> specifications) {
-    HashMap<Group,List<Specification>> _xblockexpression = null;
+  private HashMap<Group, List<Specification>> partitionByGroup(final Iterable<Specification> specifications) {
+    HashMap<Group, List<Specification>> _xblockexpression = null;
     {
-      final HashMap<Group,List<Specification>> result = new HashMap<Group, List<Specification>>();
+      final HashMap<Group, List<Specification>> result = new HashMap<Group, List<Specification>>();
       for (final Specification specification : specifications) {
         {
           final Group group = Utils.getGroup(specification);
@@ -266,7 +273,7 @@ public class ReportApplication implements IExecutableTool {
     return _xblockexpression;
   }
   
-  private String getErrorPageOrderId(final Specification specification, final Map<Group,List<Specification>> partitionByGroup) {
+  private String getErrorPageOrderId(final Specification specification, final Map<Group, List<Specification>> partitionByGroup) {
     Group _group = Utils.getGroup(specification);
     final List<Specification> list = partitionByGroup.get(_group);
     int _size = list.size();
@@ -355,7 +362,7 @@ public class ReportApplication implements IExecutableTool {
     return new TadlTemplatePage(menu, template);
   }
   
-  private ErrorPage createErrorPage(final Specification specification, final Menu menu, final Map<Group,List<Specification>> group2Specifications) {
+  private ErrorPage createErrorPage(final Specification specification, final Menu menu, final Map<Group, List<Specification>> group2Specifications) {
     ErrorPage _xblockexpression = null;
     {
       final String orderId = this.getErrorPageOrderId(specification, group2Specifications);
@@ -516,13 +523,13 @@ public class ReportApplication implements IExecutableTool {
   
   private Iterable<CounterExample> getCounterExamples(final UseCaseModel useCaseModel) {
     EList<UseCase> _useCases = useCaseModel.getUseCases();
-    final Function1<UseCase,Boolean> _function = new Function1<UseCase,Boolean>() {
+    final Function1<UseCase, Boolean> _function = new Function1<UseCase, Boolean>() {
       public Boolean apply(final UseCase it) {
         return Boolean.valueOf(it.isPrimary());
       }
     };
     Iterable<UseCase> _filter = IterableExtensions.<UseCase>filter(_useCases, _function);
-    final Function1<UseCase,CounterExample> _function_1 = new Function1<UseCase,CounterExample>() {
+    final Function1<UseCase, CounterExample> _function_1 = new Function1<UseCase, CounterExample>() {
       public CounterExample apply(final UseCase useCase) {
         CounterExample _xblockexpression = null;
         {
@@ -536,7 +543,7 @@ public class ReportApplication implements IExecutableTool {
           StringConcatenation _builder_1 = new StringConcatenation();
           _builder_1.append("transforming LTS to NuSMV code");
           ReportApplication.this.info(_builder_1);
-          final List<Pair<FormulaHolder,Group>> holderGroupList = CollectionLiterals.<Pair<FormulaHolder,Group>>newArrayList();
+          final List<Pair<FormulaHolder, Group>> holderGroupList = CollectionLiterals.<Pair<FormulaHolder, Group>>newArrayList();
           Lts2NuSMVLang _lts2NuSMVLang = new Lts2NuSMVLang();
           final String code = _lts2NuSMVLang.transform(automaton, holderGroupList);
           StringConcatenation _builder_2 = new StringConcatenation();
@@ -594,8 +601,7 @@ public class ReportApplication implements IExecutableTool {
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("Running the transformation");
       this.info(_builder_1);
-      UcmLang2Ucm _ucmLang2Ucm = new UcmLang2Ucm();
-      final UseCaseModel useCaseModel = _ucmLang2Ucm.transform(texts);
+      final UseCaseModel useCaseModel = this.ucmLang2UcmService.transform(texts);
       StringConcatenation _builder_2 = new StringConcatenation();
       _builder_2.append("Resolving FLOW annotations");
       this.info(_builder_2);
@@ -616,7 +622,7 @@ public class ReportApplication implements IExecutableTool {
       _builder.append("\" and parsing");
       this.info(_builder);
       final List<String> texts = this.readTexts(tadlDirName);
-      final Function1<String,Template> _function = new Function1<String,Template>() {
+      final Function1<String, Template> _function = new Function1<String, Template>() {
         public Template apply(final String it) {
           return tadlLang2Tadl.parse(it);
         }
@@ -653,7 +659,7 @@ public class ReportApplication implements IExecutableTool {
     {
       final File dir = new File(inputDir);
       File[] _listFiles = dir.listFiles();
-      final Function1<File,String> _function = new Function1<File,String>() {
+      final Function1<File, String> _function = new Function1<File, String>() {
         public String apply(final File it) {
           try {
             return Files.toString(it, Charsets.UTF_8);
@@ -743,26 +749,26 @@ public class ReportApplication implements IExecutableTool {
       StringConcatenation _builder_2 = new StringConcatenation();
       _builder_2.append("Validating input TADL templates");
       this.info(_builder_2);
-      final Procedure1<Template> _function = new Procedure1<Template>() {
-        public void apply(final Template it) {
+      final Consumer<Template> _function = new Consumer<Template>() {
+        public void accept(final Template it) {
           EmfCommons.basicValidate(it);
         }
       };
-      IterableExtensions.<Template>forEach(templates, _function);
+      templates.forEach(_function);
       this.resolveTadlAnnotations(useCaseModel, templates);
       StringConcatenation _builder_3 = new StringConcatenation();
       _builder_3.append("Validating UseCaseModel with resolved TADL annotations");
       this.info(_builder_3);
       EmfCommons.basicValidate(useCaseModel);
       final Iterable<CounterExample> counterExamples = this.getCounterExamples(useCaseModel);
-      final Function1<CounterExample,EList<Specification>> _function_1 = new Function1<CounterExample,EList<Specification>>() {
+      final Function1<CounterExample, EList<Specification>> _function_1 = new Function1<CounterExample, EList<Specification>>() {
         public EList<Specification> apply(final CounterExample it) {
           return it.getSpecifications();
         }
       };
       Iterable<EList<Specification>> _map = IterableExtensions.<CounterExample, EList<Specification>>map(counterExamples, _function_1);
       Iterable<Specification> _flatten = Iterables.<Specification>concat(_map);
-      final Function1<Specification,Boolean> _function_2 = new Function1<Specification,Boolean>() {
+      final Function1<Specification, Boolean> _function_2 = new Function1<Specification, Boolean>() {
         public Boolean apply(final Specification it) {
           Trace _trace = it.getTrace();
           return Boolean.valueOf((!Objects.equal(_trace, null)));
@@ -773,12 +779,12 @@ public class ReportApplication implements IExecutableTool {
       StringConcatenation _builder_4 = new StringConcatenation();
       _builder_4.append("Validating error specifications");
       this.info(_builder_4);
-      final Procedure1<Specification> _function_3 = new Procedure1<Specification>() {
-        public void apply(final Specification it) {
+      final Consumer<Specification> _function_3 = new Consumer<Specification>() {
+        public void accept(final Specification it) {
           EmfCommons.basicValidate(it);
         }
       };
-      IterableExtensions.<Specification>forEach(specifications, _function_3);
+      specifications.forEach(_function_3);
       this.createReport(useCaseModel, templates, specifications, outputDirName);
       this.info("done.");
     } catch (Throwable _e) {

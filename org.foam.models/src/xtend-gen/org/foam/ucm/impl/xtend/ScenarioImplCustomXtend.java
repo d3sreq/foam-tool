@@ -23,7 +23,7 @@ public class ScenarioImplCustomXtend {
         if (scenarioParent instanceof ScenarioHolder) {
           _matched=true;
           FeatureMap _branches = ((ScenarioHolder)scenarioParent).getBranches();
-          final Function1<FeatureMap.Entry,Object> _function = new Function1<FeatureMap.Entry,Object>() {
+          final Function1<FeatureMap.Entry, Object> _function = new Function1<FeatureMap.Entry, Object>() {
             public Object apply(final FeatureMap.Entry it) {
               return it.getValue();
             }
@@ -32,7 +32,7 @@ public class ScenarioImplCustomXtend {
           int _indexOf = scenarios.indexOf(scenario);
           final String letter = ScenarioImplCustomXtend.getLetter(_indexOf);
           EObject _eContainer = ((ScenarioHolder)scenarioParent).eContainer();
-          final Step step = ((Map.Entry<Step,ScenarioHolder>) _eContainer).getKey();
+          final Step step = ((Map.Entry<Step, ScenarioHolder>) _eContainer).getKey();
           StringConcatenation _builder = new StringConcatenation();
           String _label = step.getLabel();
           _builder.append(_label, "");

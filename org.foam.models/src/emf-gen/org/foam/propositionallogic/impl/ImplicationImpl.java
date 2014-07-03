@@ -91,8 +91,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	{
 		Formula oldLeft = left;
 		left = newLeft;
-		if (eNotificationRequired())
-		{
+		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PropositionallogicPackage.IMPLICATION__LEFT, oldLeft, newLeft);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -106,8 +105,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	 */
 	public void setLeft(Formula newLeft)
 	{
-		if (newLeft != left)
-		{
+		if (newLeft != left) {
 			NotificationChain msgs = null;
 			if (left != null)
 				msgs = ((InternalEObject)left).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - PropositionallogicPackage.IMPLICATION__LEFT, null, msgs);
@@ -139,8 +137,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	{
 		Formula oldRight = right;
 		right = newRight;
-		if (eNotificationRequired())
-		{
+		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PropositionallogicPackage.IMPLICATION__RIGHT, oldRight, newRight);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -154,8 +151,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	 */
 	public void setRight(Formula newRight)
 	{
-		if (newRight != right)
-		{
+		if (newRight != right) {
 			NotificationChain msgs = null;
 			if (right != null)
 				msgs = ((InternalEObject)right).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - PropositionallogicPackage.IMPLICATION__RIGHT, null, msgs);
@@ -176,8 +172,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.IMPLICATION__LEFT:
 				return basicSetLeft(null, msgs);
 			case PropositionallogicPackage.IMPLICATION__RIGHT:
@@ -194,8 +189,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.IMPLICATION__LEFT:
 				return getLeft();
 			case PropositionallogicPackage.IMPLICATION__RIGHT:
@@ -212,8 +206,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	@Override
 	public void eSet(int featureID, Object newValue)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.IMPLICATION__LEFT:
 				setLeft((Formula)newValue);
 				return;
@@ -232,8 +225,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	@Override
 	public void eUnset(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.IMPLICATION__LEFT:
 				setLeft((Formula)null);
 				return;
@@ -252,8 +244,7 @@ public class ImplicationImpl extends MinimalEObjectImpl.Container implements Imp
 	@Override
 	public boolean eIsSet(int featureID)
 	{
-		switch (featureID)
-		{
+		switch (featureID) {
 			case PropositionallogicPackage.IMPLICATION__LEFT:
 				return left != null;
 			case PropositionallogicPackage.IMPLICATION__RIGHT:

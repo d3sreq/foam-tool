@@ -39,7 +39,7 @@ public interface CtlPackage extends EPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "ctl";
+	String eNS_URI = "http://foam.org/models/ctl";
 
 	/**
 	 * The package namespace name.

@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.foam.ctl.AllFinally;
 import org.foam.ctl.AllGlobally;
 import org.foam.ctl.AllNext;
@@ -47,9 +47,9 @@ import org.foam.transform.lts2nusmvlang.DummyMap;
 
 @SuppressWarnings("all")
 public class TADLFormulaRenderer {
-  private final Map<String,String> varNameMapping;
+  private final Map<String, String> varNameMapping;
   
-  public TADLFormulaRenderer(final Map<String,String> varNameMapping) {
+  public TADLFormulaRenderer(final Map<String, String> varNameMapping) {
     this.varNameMapping = varNameMapping;
   }
   
@@ -62,13 +62,13 @@ public class TADLFormulaRenderer {
     Iterable<String> _xblockexpression = null;
     {
       final HashSet<EClass> collected = new HashSet<EClass>();
-      final Procedure1<Formula> _function = new Procedure1<Formula>() {
-        public void apply(final Formula it) {
+      final Consumer<Formula> _function = new Consumer<Formula>() {
+        public void accept(final Formula it) {
           TADLFormulaRenderer.this.collect(it, collected);
         }
       };
-      IterableExtensions.<Formula>forEach(list, _function);
-      final Function1<EClass,String> _function_1 = new Function1<EClass,String>() {
+      list.forEach(_function);
+      final Function1<EClass, String> _function_1 = new Function1<EClass, String>() {
         public String apply(final EClass it) {
           return TADLFormulaRenderer.this.operator2Description.get(it);
         }
@@ -98,7 +98,7 @@ public class TADLFormulaRenderer {
   protected void _collect(final Formula f, final Set<EClass> collected) {
   }
   
-  private final HashMap<EClass,String> operator2Description = CollectionLiterals.<EClass, String>newHashMap(
+  private final HashMap<EClass, String> operator2Description = CollectionLiterals.<EClass, String>newHashMap(
     Pair.<EClass, String>of(LtlPackage.Literals.NEXT, "LTL: X(f) = \'Next\', i.e. f holds in the next use-case step."), 
     Pair.<EClass, String>of(LtlPackage.Literals.GLOBALLY, "LTL: G(f) = \'Globally\', i.e. f holds in all steps."), 
     Pair.<EClass, String>of(LtlPackage.Literals.FUTURE, "LTL: F(f) = \'Future\', i.e. there is a step in future where f holds."), 

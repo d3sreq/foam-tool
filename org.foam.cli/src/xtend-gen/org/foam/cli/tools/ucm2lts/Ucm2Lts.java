@@ -143,7 +143,7 @@ public class Ucm2Lts implements IExecutableTool {
             }
             final String ucId = _xifexpression_4;
             EList<UseCase> _useCases = useCaseModel.getUseCases();
-            final Function1<UseCase,Boolean> _function = new Function1<UseCase,Boolean>() {
+            final Function1<UseCase, Boolean> _function = new Function1<UseCase, Boolean>() {
               public Boolean apply(final UseCase it) {
                 boolean _and = false;
                 String _id = it.getId();
@@ -182,7 +182,7 @@ public class Ucm2Lts implements IExecutableTool {
               }
               final String ucId = _xifexpression_5;
               EList<UseCase> _useCases = useCaseModel.getUseCases();
-              final Function1<UseCase,Boolean> _function = new Function1<UseCase,Boolean>() {
+              final Function1<UseCase, Boolean> _function = new Function1<UseCase, Boolean>() {
                 public Boolean apply(final UseCase it) {
                   boolean _and = false;
                   String _id = it.getId();

@@ -28,16 +28,13 @@ public class CtlFactoryImpl extends EFactoryImpl implements CtlFactory
 	 */
 	public static CtlFactory init()
 	{
-		try
-		{
+		try {
 			CtlFactory theCtlFactory = (CtlFactory)EPackage.Registry.INSTANCE.getEFactory(CtlPackage.eNS_URI);
-			if (theCtlFactory != null)
-			{
+			if (theCtlFactory != null) {
 				return theCtlFactory;
 			}
 		}
-		catch (Exception exception)
-		{
+		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new CtlFactoryImpl();
@@ -62,8 +59,7 @@ public class CtlFactoryImpl extends EFactoryImpl implements CtlFactory
 	@Override
 	public EObject create(EClass eClass)
 	{
-		switch (eClass.getClassifierID())
-		{
+		switch (eClass.getClassifierID()) {
 			case CtlPackage.ALL_UNTIL: return createAllUntil();
 			case CtlPackage.EXISTS_UNTIL: return createExistsUntil();
 			case CtlPackage.ALL_GLOBALLY: return createAllGlobally();

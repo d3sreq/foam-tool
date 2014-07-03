@@ -29,7 +29,7 @@ public class Ucm2LtsOverviewGraph {
     Automaton _xblockexpression = null;
     {
       final Automaton result = this.ltsFac.createAutomaton();
-      final HashMap<UseCase,State> useCase2State = new HashMap<UseCase, State>();
+      final HashMap<UseCase, State> useCase2State = new HashMap<UseCase, State>();
       final EList<UseCase> allUseCases = ucm.getUseCases();
       for (final UseCase useCase : allUseCases) {
         {

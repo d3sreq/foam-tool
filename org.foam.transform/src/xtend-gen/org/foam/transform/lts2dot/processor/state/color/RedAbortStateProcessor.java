@@ -28,9 +28,9 @@ import org.foam.ucm.util.UcmUtils;
 @Data
 @SuppressWarnings("all")
 public class RedAbortStateProcessor implements StateProcessor {
-  private final Map<Step,RecordNode> _step2RecordNode;
+  private final Map<Step, RecordNode> _step2RecordNode;
   
-  public Map<Step,RecordNode> getStep2RecordNode() {
+  public Map<Step, RecordNode> getStep2RecordNode() {
     return this._step2RecordNode;
   }
   
@@ -45,17 +45,17 @@ public class RedAbortStateProcessor implements StateProcessor {
         if (_notEquals_1) {
           final Predicate<Object> isAbort = Predicates.instanceOf(Abort.class);
           EList<Annotation> _annotations = step.getAnnotations();
-          final Iterable<Annotation> aborts = IterableExtensions.<Annotation>filter(_annotations, new Function1<Annotation,Boolean>() {
-              public Boolean apply(Annotation arg0) {
-                return isAbort.apply(arg0);
+          final Iterable<Annotation> aborts = IterableExtensions.<Annotation>filter(_annotations, new Function1<Annotation, Boolean>() {
+              public Boolean apply(Annotation p) {
+                return isAbort.apply(p);
               }
           });
           boolean _isEmpty = IterableExtensions.isEmpty(aborts);
           boolean _not = (!_isEmpty);
           if (_not) {
-            Map<Step,RecordNode> _step2RecordNode = this.getStep2RecordNode();
+            Map<Step, RecordNode> _step2RecordNode = this.getStep2RecordNode();
             final RecordNode recordNode = _step2RecordNode.get(step);
-            EMap<String,String> _attributes = recordNode.getAttributes();
+            EMap<String, String> _attributes = recordNode.getAttributes();
             _attributes.put("fillcolor", "#fbb4ae");
           }
         }
@@ -65,7 +65,7 @@ public class RedAbortStateProcessor implements StateProcessor {
     return _xblockexpression;
   }
   
-  public RedAbortStateProcessor(final Map<Step,RecordNode> step2RecordNode) {
+  public RedAbortStateProcessor(final Map<Step, RecordNode> step2RecordNode) {
     super();
     this._step2RecordNode = step2RecordNode;
   }

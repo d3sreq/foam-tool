@@ -42,9 +42,9 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
     return this._resultDot;
   }
   
-  private final Map<State,Node> _state2Node;
+  private final Map<State, Node> _state2Node;
   
-  public Map<State,Node> getState2Node() {
+  public Map<State, Node> getState2Node() {
     return this._state2Node;
   }
   
@@ -61,11 +61,11 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
       Edge _createEdge = _dotFactory.createEdge();
       final Procedure1<Edge> _function = new Procedure1<Edge>() {
         public void apply(final Edge it) {
-          Map<State,Node> _state2Node = CreateEdgeTransitionProcessor.this.getState2Node();
+          Map<State, Node> _state2Node = CreateEdgeTransitionProcessor.this.getState2Node();
           State _start = transition.getStart();
           Node _get = _state2Node.get(_start);
           it.setSource(_get);
-          Map<State,Node> _state2Node_1 = CreateEdgeTransitionProcessor.this.getState2Node();
+          Map<State, Node> _state2Node_1 = CreateEdgeTransitionProcessor.this.getState2Node();
           State _end = transition.getEnd();
           Node _get_1 = _state2Node_1.get(_end);
           it.setTarget(_get_1);
@@ -73,7 +73,7 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
           final Step step = ModelUtils.getStepFromStepMappingAnnotation(_start_1);
           boolean _notEquals = (!Objects.equal(step, null));
           if (_notEquals) {
-            EMap<String,String> _attributes = it.getAttributes();
+            EMap<String, String> _attributes = it.getAttributes();
             StringConcatenation _builder = new StringConcatenation();
             _builder.append("#");
             UseCase _useCase = UcmUtils.getUseCase(step);
@@ -88,9 +88,9 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
           Iterable<Action> _filter = Iterables.<Action>filter(_annotations, Action.class);
           for (final Action action : _filter) {
             {
-              EMap<String,String> _attributes_1 = it.getAttributes();
+              EMap<String, String> _attributes_1 = it.getAttributes();
               _attributes_1.put("color", "blueviolet");
-              EMap<String,String> _attributes_2 = it.getAttributes();
+              EMap<String, String> _attributes_2 = it.getAttributes();
               _attributes_2.put("fontcolor", "blueviolet");
               StringConcatenation _builder_1 = new StringConcatenation();
               _builder_1.append("action: ");
@@ -107,9 +107,9 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
           Iterable<Guard> _filter_1 = Iterables.<Guard>filter(_annotations_1, Guard.class);
           for (final Guard guard : _filter_1) {
             {
-              EMap<String,String> _attributes_1 = it.getAttributes();
+              EMap<String, String> _attributes_1 = it.getAttributes();
               _attributes_1.put("color", "blueviolet");
-              EMap<String,String> _attributes_2 = it.getAttributes();
+              EMap<String, String> _attributes_2 = it.getAttributes();
               _attributes_2.put("fontcolor", "blueviolet");
               Formula _formula = guard.getFormula();
               String _plus = ("guard: " + _formula);
@@ -128,9 +128,9 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
   }
   
   public void addTooltip(final Edge edge, final String tooltipStr) {
-    EMap<String,String> _attributes = edge.getAttributes();
+    EMap<String, String> _attributes = edge.getAttributes();
     final String tooltipAttr = _attributes.get("tooltip");
-    EMap<String,String> _attributes_1 = edge.getAttributes();
+    EMap<String, String> _attributes_1 = edge.getAttributes();
     StringConcatenation _builder = new StringConcatenation();
     {
       boolean _notEquals = (!Objects.equal(tooltipAttr, null));
@@ -144,7 +144,7 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
       "tooltip", _builder.toString());
   }
   
-  public CreateEdgeTransitionProcessor(final Graph resultDot, final Map<State,Node> state2Node) {
+  public CreateEdgeTransitionProcessor(final Graph resultDot, final Map<State, Node> state2Node) {
     super();
     this._resultDot = resultDot;
     this._state2Node = state2Node;

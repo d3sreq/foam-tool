@@ -85,8 +85,7 @@ public class CntexLang2Cntex {
           StringConcatenation _builder = new StringConcatenation();
           _builder.append("Expected documentation comment but was: ");
           _builder.append(line, "");
-          int _minus = (-1);
-          throw new ParseException(_builder.toString(), _minus);
+          throw new ParseException(_builder.toString(), (-1));
         }
         final Specification result = this.cntexFactory.createSpecification();
         final String isCorrect = matcher.group(2);
@@ -102,8 +101,7 @@ public class CntexLang2Cntex {
           StringConcatenation _builder_1 = new StringConcatenation();
           _builder_1.append("Expected documentation comment ends with \'true\'/\'false\': ");
           _builder_1.append(line, "");
-          int _minus_1 = (-1);
-          throw new ParseException(_builder_1.toString(), _minus_1);
+          throw new ParseException(_builder_1.toString(), (-1));
         }
         boolean _equals = Objects.equal(isCorrect, "false");
         if (_equals) {
@@ -132,8 +130,7 @@ public class CntexLang2Cntex {
         _builder.append(regexp, "");
         _builder.append("\" but was: ");
         _builder.append(line, "");
-        int _minus = (-1);
-        throw new ParseException(_builder.toString(), _minus);
+        throw new ParseException(_builder.toString(), (-1));
       }
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -174,8 +171,7 @@ public class CntexLang2Cntex {
                   _states.add(state);
                   if (nextStateIsLoopStart) {
                     nextStateIsLoopStart = false;
-                    boolean _not_1 = (!firstLoopProcessed);
-                    if (_not_1) {
+                    if ((!firstLoopProcessed)) {
                       result.setLoopStart(state);
                       firstLoopProcessed = true;
                     }
@@ -189,8 +185,7 @@ public class CntexLang2Cntex {
                     _builder.append("Unexpected line while parsing trace: \"");
                     _builder.append(line, "");
                     _builder.append("\"");
-                    int _minus = (-1);
-                    throw new ParseException(_builder.toString(), _minus);
+                    throw new ParseException(_builder.toString(), (-1));
                   }
                 }
               }

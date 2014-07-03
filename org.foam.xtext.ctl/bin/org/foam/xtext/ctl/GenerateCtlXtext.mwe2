@@ -1,0 +1,48 @@
+module GenerateCtlXtext
+
+import org.eclipse.emf.mwe.utils.*
+import org.eclipse.xtext.generator.*
+import org.eclipse.xtext.ui.generator.*
+
+var grammarURI = "classpath:/org/foam/xtext/ctl/CtlXtext.xtext"
+var projectName = "org.foam.xtext.ctl"
+var runtimeProject = "../${projectName}"
+
+Workflow {
+	bean = StandaloneSetup {
+		scanClassPath  = true
+		platformUri = "${runtimeProject}/.."
+		
+//		registerGeneratedEPackage = "org.foam.propositionallogic.PropositionallogicPackage"
+		registerEcoreFile = "platform:/resource/org.foam.models/models/propositionallogic.ecore"
+
+		registerGeneratedEPackage = "org.foam.ctl.CtlPackage"
+//		registerEcoreFile = "platform:/resource/org.foam.models/models/ctl.ecore"
+	}
+
+	component = DirectoryCleaner {
+		directory = "${runtimeProject}/src-gen"
+	}
+
+	component = Generator {
+		projectNameRt = projectName
+		language = {
+
+			uri = grammarURI
+
+			// Java API to access grammar elements (required by several other fragments)
+			fragment = grammarAccess.GrammarAccessFragment {}
+
+			// the Antlr parser
+			fragment = parser.antlr.XtextAntlrGeneratorFragment {}
+
+			// scoping and exporting API
+			fragment = scoping.ImportURIScopingFragment {}
+			fragment = exporting.SimpleNamesFragment {}
+			
+			// the Ecore2Xtext specific terminal converter
+			fragment = ecore2xtext.Ecore2XtextValueConverterServiceFragment {}
+		}
+	}
+}
+

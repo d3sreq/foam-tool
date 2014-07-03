@@ -26,15 +26,15 @@ public class UcmUtils {
   public static Iterable<Annotation> getStepAnnotations(final UseCase useCase) {
     Iterable<Annotation> _xblockexpression = null;
     {
-      EMap<Step,ScenarioHolder> _branches = useCase.getBranches();
+      EMap<Step, ScenarioHolder> _branches = useCase.getBranches();
       final Collection<ScenarioHolder> holders = _branches.values();
-      final Function1<ScenarioHolder,EList<Scenario>> _function = new Function1<ScenarioHolder,EList<Scenario>>() {
+      final Function1<ScenarioHolder, EList<Scenario>> _function = new Function1<ScenarioHolder, EList<Scenario>>() {
         public EList<Scenario> apply(final ScenarioHolder it) {
           return it.getExtensions();
         }
       };
       final Iterable<EList<Scenario>> extScenarioLists = IterableExtensions.<ScenarioHolder, EList<Scenario>>map(holders, _function);
-      final Function1<ScenarioHolder,EList<Scenario>> _function_1 = new Function1<ScenarioHolder,EList<Scenario>>() {
+      final Function1<ScenarioHolder, EList<Scenario>> _function_1 = new Function1<ScenarioHolder, EList<Scenario>>() {
         public EList<Scenario> apply(final ScenarioHolder it) {
           return it.getVariations();
         }
@@ -45,7 +45,7 @@ public class UcmUtils {
       Scenario _mainScenario = useCase.getMainScenario();
       List<Scenario> _singletonList = Collections.<Scenario>singletonList(_mainScenario);
       final Iterable<Scenario> allScenarios = Iterables.<Scenario>concat(_flatten, _singletonList);
-      final Function1<Scenario,Iterable<Annotation>> _function_2 = new Function1<Scenario,Iterable<Annotation>>() {
+      final Function1<Scenario, Iterable<Annotation>> _function_2 = new Function1<Scenario, Iterable<Annotation>>() {
         public Iterable<Annotation> apply(final Scenario it) {
           return UcmUtils.getStepAnnotations(it);
         }
@@ -58,7 +58,7 @@ public class UcmUtils {
   
   public static Iterable<Annotation> getStepAnnotations(final Scenario scenario) {
     EList<Step> _steps = scenario.getSteps();
-    final Function1<Step,EList<Annotation>> _function = new Function1<Step,EList<Annotation>>() {
+    final Function1<Step, EList<Annotation>> _function = new Function1<Step, EList<Annotation>>() {
       public EList<Annotation> apply(final Step it) {
         return it.getAnnotations();
       }
@@ -69,7 +69,7 @@ public class UcmUtils {
   
   public static Iterable<Step> allSteps(final UseCase useCase) {
     Iterable<Scenario> _allScenarios = UcmUtils.allScenarios(useCase);
-    final Function1<Scenario,EList<Step>> _function = new Function1<Scenario,EList<Step>>() {
+    final Function1<Scenario, EList<Step>> _function = new Function1<Scenario, EList<Step>>() {
       public EList<Step> apply(final Scenario it) {
         return it.getSteps();
       }
@@ -81,12 +81,12 @@ public class UcmUtils {
   public static Iterable<Scenario> allScenarios(final UseCase useCase) {
     Scenario _mainScenario = useCase.getMainScenario();
     List<Scenario> _singletonList = Collections.<Scenario>singletonList(_mainScenario);
-    EMap<Step,ScenarioHolder> _branches = useCase.getBranches();
+    EMap<Step, ScenarioHolder> _branches = useCase.getBranches();
     Collection<ScenarioHolder> _values = _branches.values();
-    final Function1<ScenarioHolder,List<Scenario>> _function = new Function1<ScenarioHolder,List<Scenario>>() {
+    final Function1<ScenarioHolder, List<Scenario>> _function = new Function1<ScenarioHolder, List<Scenario>>() {
       public List<Scenario> apply(final ScenarioHolder it) {
         FeatureMap _branches = it.getBranches();
-        final Function1<FeatureMap.Entry,Scenario> _function = new Function1<FeatureMap.Entry,Scenario>() {
+        final Function1<FeatureMap.Entry, Scenario> _function = new Function1<FeatureMap.Entry, Scenario>() {
           public Scenario apply(final FeatureMap.Entry it) {
             Object _value = it.getValue();
             return ((Scenario) _value);
@@ -125,11 +125,11 @@ public class UcmUtils {
   
   public static Set<UseCase> getIncluded(final UseCase useCase) {
     Iterable<Step> _allSteps = UcmUtils.allSteps(useCase);
-    final Function1<Step,Iterable<UseCase>> _function = new Function1<Step,Iterable<UseCase>>() {
+    final Function1<Step, Iterable<UseCase>> _function = new Function1<Step, Iterable<UseCase>>() {
       public Iterable<UseCase> apply(final Step it) {
         EList<Annotation> _annotations = it.getAnnotations();
         Iterable<Include> _filter = Iterables.<Include>filter(_annotations, Include.class);
-        final Function1<Include,UseCase> _function = new Function1<Include,UseCase>() {
+        final Function1<Include, UseCase> _function = new Function1<Include, UseCase>() {
           public UseCase apply(final Include it) {
             return it.getInlinedUseCase();
           }
