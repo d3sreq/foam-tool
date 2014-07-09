@@ -1,6 +1,15 @@
 -buildpath:  \
-	org.foam.models.propositionallogic;version=latest
-
+	org.antlr.runtime,\
+	org.eclipse.emf.mwe.core,\
+	org.eclipse.emf.mwe.utils,\
+	org.eclipse.emf.mwe2.launch,\
+	org.eclipse.emf.mwe2.runtime,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.common,\
+	com.google.inject,\
+	com.ibm.icu,\
+	org.foam.models.propositionallogic;version=latest,\
+	org.objectweb.asm
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.plogic,\
