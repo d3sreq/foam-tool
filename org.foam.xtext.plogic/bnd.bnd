@@ -1,26 +1,24 @@
 -buildpath:  \
-	org.antlr.runtime,\
-	org.eclipse.emf.mwe.core,\
-	org.eclipse.emf.mwe.utils,\
-	org.eclipse.emf.mwe2.launch,\
-	org.eclipse.emf.mwe2.runtime,\
-	org.eclipse.emf.ecore,\
-	org.eclipse.emf.common,\
 	com.google.inject,\
 	com.ibm.icu,\
-	org.foam.models.propositionallogic;version=latest,\
-	org.objectweb.asm,\
-	org.eclipse.xtext.generator,\
-	org.eclipse.xtext,\
-	org.eclipse.emf.codegen.ecore,\
+	org.antlr.runtime,\
 	org.eclipse.emf.codegen,\
+	org.eclipse.emf.codegen.ecore,\
+	org.eclipse.emf.common,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.mwe2.launch,\
+	org.eclipse.emf.mwe2.runtime,\
+	org.eclipse.emf.mwe.core,\
+	org.eclipse.emf.mwe.utils,\
 	org.eclipse.xpand,\
 	org.eclipse.xtend,\
-	org.eclipse.xtext.util
+	org.eclipse.xtext,\
+	org.eclipse.xtext.generator,\
+	org.eclipse.xtext.util,\
+	org.foam.models.propositionallogic;version=latest,\
+	org.objectweb.asm
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.plogic,\
 	org.foam.xtext.plogic.services,\
 	org.foam.xtext.plogic.parser.antlr
-Private-Package:  \
-	org.foam.xtext.plogic.parser.antlr.internal
