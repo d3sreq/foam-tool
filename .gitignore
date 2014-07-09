@@ -1,3 +1,9 @@
 /.gradle/
 /reports/
 /generated/
+/org.foam.xtext.plogic/generated
+/org.foam.xtext.plogic/plugin.xml_gen
+/org.foam.xtext.plogic/model/
+/org.foam.xtext.plogic/src-gen/
+
+
