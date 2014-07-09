@@ -9,7 +9,14 @@
 	com.google.inject,\
 	com.ibm.icu,\
 	org.foam.models.propositionallogic;version=latest,\
-	org.objectweb.asm
+	org.objectweb.asm,\
+	org.eclipse.xtext.generator,\
+	org.eclipse.xtext,\
+	org.eclipse.emf.codegen.ecore,\
+	org.eclipse.emf.codegen,\
+	org.eclipse.xpand,\
+	org.eclipse.xtend,\
+	org.eclipse.xtext.util
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.plogic,\
