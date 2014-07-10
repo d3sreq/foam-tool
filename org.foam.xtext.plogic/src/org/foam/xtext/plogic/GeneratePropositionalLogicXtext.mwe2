@@ -44,17 +44,17 @@ Workflow {
 		pathRtProject = runtimeProject
 		projectNameRt = projectName
 		encoding = encoding
-		language = auto-inject {
+		language = {
 			uri = grammarURI
 
 			// Java API to access grammar elements (required by several other fragments)
-			fragment = grammarAccess.GrammarAccessFragment auto-inject {}
+			fragment = grammarAccess.GrammarAccessFragment {}
 			
 			// generates Java API for the generated EPackages
-			fragment = ecore.EMFGeneratorFragment auto-inject {}
+			fragment = ecore.EMFGeneratorFragment {}
 
 			// the Antlr parser
-			fragment = parser.antlr.XtextAntlrGeneratorFragment auto-inject {}
+			fragment = parser.antlr.XtextAntlrGeneratorFragment {}
 		}
 	}
 	
