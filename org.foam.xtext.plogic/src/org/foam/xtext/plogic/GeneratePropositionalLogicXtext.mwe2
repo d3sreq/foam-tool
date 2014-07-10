@@ -5,7 +5,6 @@ import org.eclipse.xtext.generator.*
 import org.eclipse.xtext.ui.generator.*
 
 var grammarURI = "classpath:/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
-var fileExtensions = "plogic"
 var projectName = "org.foam.xtext.plogic"
 var runtimeProject = "../${projectName}"
 var encoding = "UTF-8"
