@@ -39,7 +39,7 @@ public interface LtlPackage extends EPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "ltl";
+	String eNS_URI = "http://foam.org/models/ltl";
 
 	/**
 	 * The package namespace name.

@@ -22,7 +22,7 @@ import org.foam.ucm.UcmPackage;
 import org.foam.ucm.UseCase;
 import org.foam.ucm.UseCaseModel;
 
-import org.foam.ucm.util.UcmValidatorCustom;
+import org.foam.ucm.util.UcmValidator;
 
 /**
  * <!-- begin-user-doc -->
@@ -138,7 +138,7 @@ public class UcmPackageImpl extends EPackageImpl implements UcmPackage
 			 {
 				 public EValidator getEValidator()
 				 {
-					 return UcmValidatorCustom.INSTANCE;
+					 return UcmValidator.INSTANCE;
 				 }
 			 });
 

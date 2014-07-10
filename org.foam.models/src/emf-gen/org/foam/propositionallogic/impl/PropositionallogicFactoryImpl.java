@@ -28,13 +28,16 @@ public class PropositionallogicFactoryImpl extends EFactoryImpl implements Propo
 	 */
 	public static PropositionallogicFactory init()
 	{
-		try {
+		try
+		{
 			PropositionallogicFactory thePropositionallogicFactory = (PropositionallogicFactory)EPackage.Registry.INSTANCE.getEFactory(PropositionallogicPackage.eNS_URI);
-			if (thePropositionallogicFactory != null) {
+			if (thePropositionallogicFactory != null)
+			{
 				return thePropositionallogicFactory;
 			}
 		}
-		catch (Exception exception) {
+		catch (Exception exception)
+		{
 			EcorePlugin.INSTANCE.log(exception);
 		}
 		return new PropositionallogicFactoryImpl();
@@ -59,7 +62,8 @@ public class PropositionallogicFactoryImpl extends EFactoryImpl implements Propo
 	@Override
 	public EObject create(EClass eClass)
 	{
-		switch (eClass.getClassifierID()) {
+		switch (eClass.getClassifierID())
+		{
 			case PropositionallogicPackage.VARIABLE_DEFINITION: return createVariableDefinition();
 			case PropositionallogicPackage.NOT: return createNot();
 			case PropositionallogicPackage.AND: return createAnd();

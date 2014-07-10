@@ -1,0 +1,22 @@
+-buildpath:  \
+	com.google.inject,\
+	com.ibm.icu,\
+	org.antlr.runtime,\
+	org.eclipse.emf.codegen,\
+	org.eclipse.emf.codegen.ecore,\
+	org.eclipse.emf.common,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.mwe2.launch,\
+	org.eclipse.emf.mwe2.runtime,\
+	org.eclipse.emf.mwe.core,\
+	org.eclipse.emf.mwe.utils,\
+	org.eclipse.xpand,\
+	org.eclipse.xtend,\
+	org.eclipse.xtext,\
+	org.eclipse.xtext.generator,\
+	org.eclipse.xtext.util,\
+	org.foam.models.ctl;version=latest,\
+	org.objectweb.asm,\
+	org.foam.xtext.plogic;version=latest
+Bundle-Version: 1.0.0
+

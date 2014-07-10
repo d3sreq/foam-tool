@@ -91,7 +91,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	{
 		Formula oldLeft = left;
 		left = newLeft;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
+		{
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PropositionallogicPackage.AND__LEFT, oldLeft, newLeft);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -105,7 +106,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	 */
 	public void setLeft(Formula newLeft)
 	{
-		if (newLeft != left) {
+		if (newLeft != left)
+		{
 			NotificationChain msgs = null;
 			if (left != null)
 				msgs = ((InternalEObject)left).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - PropositionallogicPackage.AND__LEFT, null, msgs);
@@ -137,7 +139,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	{
 		Formula oldRight = right;
 		right = newRight;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
+		{
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, PropositionallogicPackage.AND__RIGHT, oldRight, newRight);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -151,7 +154,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	 */
 	public void setRight(Formula newRight)
 	{
-		if (newRight != right) {
+		if (newRight != right)
+		{
 			NotificationChain msgs = null;
 			if (right != null)
 				msgs = ((InternalEObject)right).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - PropositionallogicPackage.AND__RIGHT, null, msgs);
@@ -172,7 +176,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case PropositionallogicPackage.AND__LEFT:
 				return basicSetLeft(null, msgs);
 			case PropositionallogicPackage.AND__RIGHT:
@@ -189,7 +194,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case PropositionallogicPackage.AND__LEFT:
 				return getLeft();
 			case PropositionallogicPackage.AND__RIGHT:
@@ -206,7 +212,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	@Override
 	public void eSet(int featureID, Object newValue)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case PropositionallogicPackage.AND__LEFT:
 				setLeft((Formula)newValue);
 				return;
@@ -225,7 +232,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	@Override
 	public void eUnset(int featureID)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case PropositionallogicPackage.AND__LEFT:
 				setLeft((Formula)null);
 				return;
@@ -244,7 +252,8 @@ public class AndImpl extends MinimalEObjectImpl.Container implements And
 	@Override
 	public boolean eIsSet(int featureID)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case PropositionallogicPackage.AND__LEFT:
 				return left != null;
 			case PropositionallogicPackage.AND__RIGHT:

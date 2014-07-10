@@ -39,7 +39,7 @@ public interface PropositionallogicPackage extends EPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "propositionallogic";
+	String eNS_URI = "http://foam.org/models/propositionallogic";
 
 	/**
 	 * The package namespace name.

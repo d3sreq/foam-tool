@@ -92,7 +92,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	{
 		Formula oldLeft = left;
 		left = newLeft;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
+		{
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, CtlPackage.ALL_UNTIL__LEFT, oldLeft, newLeft);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -106,7 +107,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	 */
 	public void setLeft(Formula newLeft)
 	{
-		if (newLeft != left) {
+		if (newLeft != left)
+		{
 			NotificationChain msgs = null;
 			if (left != null)
 				msgs = ((InternalEObject)left).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - CtlPackage.ALL_UNTIL__LEFT, null, msgs);
@@ -138,7 +140,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	{
 		Formula oldRight = right;
 		right = newRight;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
+		{
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, CtlPackage.ALL_UNTIL__RIGHT, oldRight, newRight);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -152,7 +155,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	 */
 	public void setRight(Formula newRight)
 	{
-		if (newRight != right) {
+		if (newRight != right)
+		{
 			NotificationChain msgs = null;
 			if (right != null)
 				msgs = ((InternalEObject)right).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - CtlPackage.ALL_UNTIL__RIGHT, null, msgs);
@@ -173,7 +177,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_UNTIL__LEFT:
 				return basicSetLeft(null, msgs);
 			case CtlPackage.ALL_UNTIL__RIGHT:
@@ -190,7 +195,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_UNTIL__LEFT:
 				return getLeft();
 			case CtlPackage.ALL_UNTIL__RIGHT:
@@ -207,7 +213,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	@Override
 	public void eSet(int featureID, Object newValue)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_UNTIL__LEFT:
 				setLeft((Formula)newValue);
 				return;
@@ -226,7 +233,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	@Override
 	public void eUnset(int featureID)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_UNTIL__LEFT:
 				setLeft((Formula)null);
 				return;
@@ -245,7 +253,8 @@ public class AllUntilImpl extends MinimalEObjectImpl.Container implements AllUnt
 	@Override
 	public boolean eIsSet(int featureID)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_UNTIL__LEFT:
 				return left != null;
 			case CtlPackage.ALL_UNTIL__RIGHT:

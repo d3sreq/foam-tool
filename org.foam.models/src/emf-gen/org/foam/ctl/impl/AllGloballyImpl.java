@@ -81,7 +81,8 @@ public class AllGloballyImpl extends MinimalEObjectImpl.Container implements All
 	{
 		Formula oldFormula = formula;
 		formula = newFormula;
-		if (eNotificationRequired()) {
+		if (eNotificationRequired())
+		{
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, CtlPackage.ALL_GLOBALLY__FORMULA, oldFormula, newFormula);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
@@ -95,7 +96,8 @@ public class AllGloballyImpl extends MinimalEObjectImpl.Container implements All
 	 */
 	public void setFormula(Formula newFormula)
 	{
-		if (newFormula != formula) {
+		if (newFormula != formula)
+		{
 			NotificationChain msgs = null;
 			if (formula != null)
 				msgs = ((InternalEObject)formula).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - CtlPackage.ALL_GLOBALLY__FORMULA, null, msgs);
@@ -116,7 +118,8 @@ public class AllGloballyImpl extends MinimalEObjectImpl.Container implements All
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_GLOBALLY__FORMULA:
 				return basicSetFormula(null, msgs);
 		}
@@ -131,7 +134,8 @@ public class AllGloballyImpl extends MinimalEObjectImpl.Container implements All
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_GLOBALLY__FORMULA:
 				return getFormula();
 		}
@@ -146,7 +150,8 @@ public class AllGloballyImpl extends MinimalEObjectImpl.Container implements All
 	@Override
 	public void eSet(int featureID, Object newValue)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_GLOBALLY__FORMULA:
 				setFormula((Formula)newValue);
 				return;
@@ -162,7 +167,8 @@ public class AllGloballyImpl extends MinimalEObjectImpl.Container implements All
 	@Override
 	public void eUnset(int featureID)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_GLOBALLY__FORMULA:
 				setFormula((Formula)null);
 				return;
@@ -178,7 +184,8 @@ public class AllGloballyImpl extends MinimalEObjectImpl.Container implements All
 	@Override
 	public boolean eIsSet(int featureID)
 	{
-		switch (featureID) {
+		switch (featureID)
+		{
 			case CtlPackage.ALL_GLOBALLY__FORMULA:
 				return formula != null;
 		}
