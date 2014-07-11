@@ -2,11 +2,11 @@
 /reports/
 
 # common
-bin/
-generated/
-src-gen/
-xtend-gen/
-emf-gen/
+**/bin/
+**/generated/
+**/src-gen/**
+**/xtend-gen/**
+**/emf-gen/**
 *RuntimeModule.java
 *StandaloneSetup.java
 .antlr-generator-3.2.0.jar
