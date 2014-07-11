@@ -96,7 +96,7 @@ public class FileUtils {
 		return str;
 	}
 
-	public static boolean copyResourcesRecursively( //
+	public static boolean copyResourcesRecursively(
 			final URL originUrl, final File destination) {
 		try {
 			final URLConnection urlConnection = originUrl.openConnection();
@@ -121,21 +121,21 @@ public class FileUtils {
 		}
 		return false;
 	}
-
-	private static boolean copyStream(final InputStream is,
-			final OutputStream os) {
+	
+	private static boolean copyStream(final InputStream is, final OutputStream os) {
 		try {
-			final byte[] buf = new byte[1024];
+			final byte[] buf = new byte[4096];
 
 			int len = 0;
 			while ((len = is.read(buf)) > 0) {
 				os.write(buf, 0, len);
 			}
-			is.close();
-			os.close();
 			return true;
 		} catch (final IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {is.close();} catch(final IOException e) {}
+			try {os.close();} catch(final IOException e) {}
 		}
 		return false;
 	}
