@@ -136,8 +136,14 @@ class ReportApplication implements IExecutableTool {
 		EmfCommons.basicValidate(useCaseModel)
 		
 		val counterExamples = getCounterExamples(useCaseModel)
-		// merge errors from counter-examples
-		val specifications = counterExamples.map[specifications].flatten.filter[trace != null].uniqueSpecifications // TODO: multiple lines
+
+		'''Merging errors from counter examples'''.debug
+		val specifications = counterExamples
+			.map[specifications]
+			.flatten
+			.filter[trace != null]
+			.uniqueSpecifications
+			
 		'''Validating error specifications'''.debug
 		specifications.forEach[EmfCommons.basicValidate(it)]
 		

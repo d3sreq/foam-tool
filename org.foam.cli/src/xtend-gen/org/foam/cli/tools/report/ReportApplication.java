@@ -213,6 +213,9 @@ public class ReportApplication implements IExecutableTool {
       this.logServiceExtension.debug(_builder_5);
       EmfCommons.basicValidate(useCaseModel);
       final Iterable<CounterExample> counterExamples = this.getCounterExamples(useCaseModel);
+      StringConcatenation _builder_6 = new StringConcatenation();
+      _builder_6.append("Merging errors from counter examples");
+      this.logServiceExtension.debug(_builder_6);
       final Function1<CounterExample, EList<Specification>> _function_1 = new Function1<CounterExample, EList<Specification>>() {
         public EList<Specification> apply(final CounterExample it) {
           return it.getSpecifications();
@@ -228,9 +231,9 @@ public class ReportApplication implements IExecutableTool {
       };
       Iterable<Specification> _filter = IterableExtensions.<Specification>filter(_flatten, _function_2);
       final Iterable<Specification> specifications = this.uniqueSpecifications(_filter);
-      StringConcatenation _builder_6 = new StringConcatenation();
-      _builder_6.append("Validating error specifications");
-      this.logServiceExtension.debug(_builder_6);
+      StringConcatenation _builder_7 = new StringConcatenation();
+      _builder_7.append("Validating error specifications");
+      this.logServiceExtension.debug(_builder_7);
       final Consumer<Specification> _function_3 = new Consumer<Specification>() {
         public void accept(final Specification it) {
           EmfCommons.basicValidate(it);
@@ -238,9 +241,9 @@ public class ReportApplication implements IExecutableTool {
       };
       specifications.forEach(_function_3);
       this.createReport(useCaseModel, templates, specifications, outputDirName);
-      StringConcatenation _builder_7 = new StringConcatenation();
-      _builder_7.append("Report generation done.");
-      this.logServiceExtension.info(_builder_7);
+      StringConcatenation _builder_8 = new StringConcatenation();
+      _builder_8.append("Report generation done.");
+      this.logServiceExtension.info(_builder_8);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

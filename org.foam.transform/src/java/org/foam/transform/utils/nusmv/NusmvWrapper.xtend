@@ -80,8 +80,8 @@ class NusmvWrapper {
 	 */
 	def openNusmvProcess(String inputFileName) {
 		
-		Preconditions.checkArgument( ! inputFileName.nullOrEmpty );
-		Preconditions.checkArgument(process != null, "Nusmv process already opened");
+		Preconditions.checkArgument( ! inputFileName.nullOrEmpty, "Invalid input file given as an input for NuSMV" );
+		Preconditions.checkArgument(process == null, "Running multiple NuSMV processes is not allowed");
 		
 		process = Runtime
 			.getRuntime
