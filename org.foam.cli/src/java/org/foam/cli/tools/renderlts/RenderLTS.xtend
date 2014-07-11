@@ -17,7 +17,7 @@ import org.foam.tadl.TadlPackage
 import org.foam.traceability.TraceabilityPackage
 import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.lts2dot.Lts2Dot
-import org.foam.transform.utils.graphviz.GraphvizUtils
+import org.foam.transform.utils.graphviz.GraphvizWrapper
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
@@ -33,6 +33,11 @@ class RenderLTS implements IExecutableTool {
 	private extension LogServiceExtension logServiceExtension
 	@Reference def void setLogService(LogService logService) {
 		logServiceExtension = new LogServiceExtension(logService)
+	}
+
+	private GraphvizWrapper graphvizWrapper
+	@Reference def void setGraphvizWrapper(GraphvizWrapper graphvizWrapper) {
+		this.graphvizWrapper = graphvizWrapper
 	}
 
 	override execute(String[] args) {
@@ -131,13 +136,13 @@ class RenderLTS implements IExecutableTool {
 
 		if( ! dotCommand.empty ) {
 	
-			GraphvizUtils.checkGraphvizVersion
+			graphvizWrapper.graphvizVersion
 
 			dotCommand.add(0, "dot")
 			dotCommand += outputFileName
 			
 			'''Running Graphviz DOT tool: «dotCommand.join(" ")»'''.info
-			Runtime.runtime.exec(dotCommand).waitFor
+			graphvizWrapper.runGraphviz(dotCommand)
 		}
 		
 		if(options.has(htmlOption)) {
@@ -155,7 +160,7 @@ class RenderLTS implements IExecutableTool {
 			''', new File('''«outputFileName».html'''), Charsets.UTF_8)
 		}
 		
-		"done".info
+		"Rendering of LTS done.".info
 	}
 	
 	override getUsage() '''

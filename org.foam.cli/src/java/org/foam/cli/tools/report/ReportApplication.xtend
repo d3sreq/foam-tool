@@ -49,7 +49,7 @@ import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph
 import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
-import org.foam.transform.utils.graphviz.GraphvizUtils
+import org.foam.transform.utils.graphviz.GraphvizWrapper
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.transform.utils.nusmv.NusmvWrapper
@@ -73,6 +73,11 @@ class ReportApplication implements IExecutableTool {
 	private NusmvWrapper nusmvWrapper
 	@Reference def void setNusmvWrapper(NusmvWrapper nusmvWrapper) {
 		this.nusmvWrapper = nusmvWrapper
+	}
+
+	private GraphvizWrapper graphvizWrapper
+	@Reference def void setGraphvizWrapper(GraphvizWrapper graphvizWrapper) {
+		this.graphvizWrapper = graphvizWrapper
 	}
 
 	private UcmLang2UcmService ucmLang2UcmService
@@ -111,10 +116,10 @@ class ReportApplication implements IExecutableTool {
 		}
 		
 		'''Checking Graphviz version'''.debug
-		val graphvizVersion = GraphvizUtils.checkGraphvizVersion
+		val graphvizVersion = graphvizWrapper.graphvizVersion
 		'''Graphviz version is «graphvizVersion»'''.info
 		
-		// model factories initialization
+		'''Model factories initialization'''.debug
 		init()
 		
 		// transformations
@@ -132,13 +137,13 @@ class ReportApplication implements IExecutableTool {
 		
 		val counterExamples = getCounterExamples(useCaseModel)
 		// merge errors from counter-examples
-		val specifications = counterExamples.map[specifications].flatten.filter[trace != null].uniqueSpecifications
+		val specifications = counterExamples.map[specifications].flatten.filter[trace != null].uniqueSpecifications // TODO: multiple lines
 		'''Validating error specifications'''.debug
 		specifications.forEach[EmfCommons.basicValidate(it)]
 		
 		createReport(useCaseModel, templates, specifications, outputDirName)
 		
-		"done.".info
+		'''Report generation done.'''.info
 	}
 	
 	override getUsage() '''
@@ -322,9 +327,9 @@ class ReportApplication implements IExecutableTool {
 							dotFileName)
 		
 		'''Creating svg image with dot: "«dotCommand.join(" ")»"'''.info
-		GraphvizUtils.runGraphviz(dotCommand)
+		graphvizWrapper.runGraphviz(dotCommand)
 		
-		imageFileName
+		return imageFileName
 	}
 	
 	def private writePage(Page page, String outputDirName) {

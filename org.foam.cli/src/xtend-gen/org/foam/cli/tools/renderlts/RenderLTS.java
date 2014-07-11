@@ -16,7 +16,6 @@ import joptsimple.OptionSpecBuilder;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -30,7 +29,7 @@ import org.foam.tadl.TadlPackage;
 import org.foam.traceability.TraceabilityPackage;
 import org.foam.transform.dot2dotlang.Dot2DotLang;
 import org.foam.transform.lts2dot.Lts2Dot;
-import org.foam.transform.utils.graphviz.GraphvizUtils;
+import org.foam.transform.utils.graphviz.GraphvizWrapper;
 import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.verification.VerificationPackage;
@@ -51,6 +50,13 @@ public class RenderLTS implements IExecutableTool {
   public void setLogService(final LogService logService) {
     LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
     this.logServiceExtension = _logServiceExtension;
+  }
+  
+  private GraphvizWrapper graphvizWrapper;
+  
+  @Reference
+  public void setGraphvizWrapper(final GraphvizWrapper graphvizWrapper) {
+    this.graphvizWrapper = graphvizWrapper;
   }
   
   public void execute(final String[] args) {
@@ -205,7 +211,7 @@ public class RenderLTS implements IExecutableTool {
       boolean _isEmpty = dotCommand.isEmpty();
       boolean _not = (!_isEmpty);
       if (_not) {
-        GraphvizUtils.checkGraphvizVersion();
+        this.graphvizWrapper.getGraphvizVersion();
         dotCommand.add(0, "dot");
         dotCommand.add(outputFileName);
         StringConcatenation _builder_11 = new StringConcatenation();
@@ -213,9 +219,7 @@ public class RenderLTS implements IExecutableTool {
         String _join = IterableExtensions.join(dotCommand, " ");
         _builder_11.append(_join, "");
         this.logServiceExtension.info(_builder_11);
-        Runtime _runtime = Runtime.getRuntime();
-        Process _exec = _runtime.exec(((String[])Conversions.unwrapArray(dotCommand, String.class)));
-        _exec.waitFor();
+        this.graphvizWrapper.runGraphviz(dotCommand);
       }
       boolean _has_8 = options.has(htmlOption);
       if (_has_8) {
@@ -251,7 +255,7 @@ public class RenderLTS implements IExecutableTool {
         File _file_2 = new File(_builder_15.toString());
         Files.write(_builder_14, _file_2, Charsets.UTF_8);
       }
-      this.logServiceExtension.info("done");
+      this.logServiceExtension.info("Rendering of LTS done.");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

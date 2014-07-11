@@ -73,7 +73,7 @@ import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph;
 import org.foam.transform.ucm2ucm.UcmLang2UcmService;
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver;
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver;
-import org.foam.transform.utils.graphviz.GraphvizUtils;
+import org.foam.transform.utils.graphviz.GraphvizWrapper;
 import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.transform.utils.nusmv.NusmvWrapper;
@@ -102,6 +102,13 @@ public class ReportApplication implements IExecutableTool {
   @Reference
   public void setNusmvWrapper(final NusmvWrapper nusmvWrapper) {
     this.nusmvWrapper = nusmvWrapper;
+  }
+  
+  private GraphvizWrapper graphvizWrapper;
+  
+  @Reference
+  public void setGraphvizWrapper(final GraphvizWrapper graphvizWrapper) {
+    this.graphvizWrapper = graphvizWrapper;
   }
   
   private UcmLang2UcmService ucmLang2UcmService;
@@ -176,21 +183,24 @@ public class ReportApplication implements IExecutableTool {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("Checking Graphviz version");
       this.logServiceExtension.debug(_builder);
-      final String graphvizVersion = GraphvizUtils.checkGraphvizVersion();
+      final String graphvizVersion = this.graphvizWrapper.getGraphvizVersion();
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("Graphviz version is ");
       _builder_1.append(graphvizVersion, "");
       this.logServiceExtension.info(_builder_1);
+      StringConcatenation _builder_2 = new StringConcatenation();
+      _builder_2.append("Model factories initialization");
+      this.logServiceExtension.debug(_builder_2);
       this.init();
       final UseCaseModel useCaseModel = this.ucmlang2Ucm(inputDirName);
-      StringConcatenation _builder_2 = new StringConcatenation();
-      _builder_2.append("Validating input UseCaseModel (with resolved flow annotations)");
-      this.logServiceExtension.debug(_builder_2);
+      StringConcatenation _builder_3 = new StringConcatenation();
+      _builder_3.append("Validating input UseCaseModel (with resolved flow annotations)");
+      this.logServiceExtension.debug(_builder_3);
       EmfCommons.basicValidate(useCaseModel);
       final List<Template> templates = this.tadlLang2Templates(tadlDirName);
-      StringConcatenation _builder_3 = new StringConcatenation();
-      _builder_3.append("Validating input TADL templates");
-      this.logServiceExtension.debug(_builder_3);
+      StringConcatenation _builder_4 = new StringConcatenation();
+      _builder_4.append("Validating input TADL templates");
+      this.logServiceExtension.debug(_builder_4);
       final Consumer<Template> _function = new Consumer<Template>() {
         public void accept(final Template it) {
           EmfCommons.basicValidate(it);
@@ -198,9 +208,9 @@ public class ReportApplication implements IExecutableTool {
       };
       templates.forEach(_function);
       this.resolveTadlAnnotations(useCaseModel, templates);
-      StringConcatenation _builder_4 = new StringConcatenation();
-      _builder_4.append("Validating UseCaseModel with resolved TADL annotations");
-      this.logServiceExtension.debug(_builder_4);
+      StringConcatenation _builder_5 = new StringConcatenation();
+      _builder_5.append("Validating UseCaseModel with resolved TADL annotations");
+      this.logServiceExtension.debug(_builder_5);
       EmfCommons.basicValidate(useCaseModel);
       final Iterable<CounterExample> counterExamples = this.getCounterExamples(useCaseModel);
       final Function1<CounterExample, EList<Specification>> _function_1 = new Function1<CounterExample, EList<Specification>>() {
@@ -218,9 +228,9 @@ public class ReportApplication implements IExecutableTool {
       };
       Iterable<Specification> _filter = IterableExtensions.<Specification>filter(_flatten, _function_2);
       final Iterable<Specification> specifications = this.uniqueSpecifications(_filter);
-      StringConcatenation _builder_5 = new StringConcatenation();
-      _builder_5.append("Validating error specifications");
-      this.logServiceExtension.debug(_builder_5);
+      StringConcatenation _builder_6 = new StringConcatenation();
+      _builder_6.append("Validating error specifications");
+      this.logServiceExtension.debug(_builder_6);
       final Consumer<Specification> _function_3 = new Consumer<Specification>() {
         public void accept(final Specification it) {
           EmfCommons.basicValidate(it);
@@ -228,7 +238,9 @@ public class ReportApplication implements IExecutableTool {
       };
       specifications.forEach(_function_3);
       this.createReport(useCaseModel, templates, specifications, outputDirName);
-      this.logServiceExtension.info("done.");
+      StringConcatenation _builder_7 = new StringConcatenation();
+      _builder_7.append("Report generation done.");
+      this.logServiceExtension.info(_builder_7);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -576,44 +588,40 @@ public class ReportApplication implements IExecutableTool {
   
   private String createImageAndImageMap(final Graph graph, final String outputDirName, final String outputFileName) {
     try {
-      String _xblockexpression = null;
-      {
-        File _file = new File(outputDirName);
-        final File imageDir = new File(_file, outputFileName);
-        imageDir.mkdir();
-        StringConcatenation _builder = new StringConcatenation();
-        _builder.append(imageDir, "");
-        _builder.append("/");
-        _builder.append(outputFileName, "");
-        final String fullOutputFileWithoutExtension = _builder.toString();
-        Dot2DotLang _dot2DotLang = new Dot2DotLang();
-        final CharSequence dotContent = _dot2DotLang.transform(graph);
-        StringConcatenation _builder_1 = new StringConcatenation();
-        _builder_1.append(fullOutputFileWithoutExtension, "");
-        _builder_1.append(".dot");
-        final String dotFileName = _builder_1.toString();
-        File _file_1 = new File(dotFileName);
-        Files.write(dotContent, _file_1, Charsets.UTF_8);
-        StringConcatenation _builder_2 = new StringConcatenation();
-        _builder_2.append(outputFileName, "");
-        _builder_2.append(".svg");
-        final String imageFileName = _builder_2.toString();
-        StringConcatenation _builder_3 = new StringConcatenation();
-        _builder_3.append(fullOutputFileWithoutExtension, "");
-        _builder_3.append(".svg");
-        final String fullImageFileName = _builder_3.toString();
-        final ArrayList<String> dotCommand = CollectionLiterals.<String>newArrayList("dot", 
-          "-Tsvg", "-o", fullImageFileName, dotFileName);
-        StringConcatenation _builder_4 = new StringConcatenation();
-        _builder_4.append("Creating svg image with dot: \"");
-        String _join = IterableExtensions.join(dotCommand, " ");
-        _builder_4.append(_join, "");
-        _builder_4.append("\"");
-        this.logServiceExtension.info(_builder_4);
-        GraphvizUtils.runGraphviz(dotCommand);
-        _xblockexpression = imageFileName;
-      }
-      return _xblockexpression;
+      File _file = new File(outputDirName);
+      final File imageDir = new File(_file, outputFileName);
+      imageDir.mkdir();
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append(imageDir, "");
+      _builder.append("/");
+      _builder.append(outputFileName, "");
+      final String fullOutputFileWithoutExtension = _builder.toString();
+      Dot2DotLang _dot2DotLang = new Dot2DotLang();
+      final CharSequence dotContent = _dot2DotLang.transform(graph);
+      StringConcatenation _builder_1 = new StringConcatenation();
+      _builder_1.append(fullOutputFileWithoutExtension, "");
+      _builder_1.append(".dot");
+      final String dotFileName = _builder_1.toString();
+      File _file_1 = new File(dotFileName);
+      Files.write(dotContent, _file_1, Charsets.UTF_8);
+      StringConcatenation _builder_2 = new StringConcatenation();
+      _builder_2.append(outputFileName, "");
+      _builder_2.append(".svg");
+      final String imageFileName = _builder_2.toString();
+      StringConcatenation _builder_3 = new StringConcatenation();
+      _builder_3.append(fullOutputFileWithoutExtension, "");
+      _builder_3.append(".svg");
+      final String fullImageFileName = _builder_3.toString();
+      final ArrayList<String> dotCommand = CollectionLiterals.<String>newArrayList("dot", 
+        "-Tsvg", "-o", fullImageFileName, dotFileName);
+      StringConcatenation _builder_4 = new StringConcatenation();
+      _builder_4.append("Creating svg image with dot: \"");
+      String _join = IterableExtensions.join(dotCommand, " ");
+      _builder_4.append(_join, "");
+      _builder_4.append("\"");
+      this.logServiceExtension.info(_builder_4);
+      this.graphvizWrapper.runGraphviz(dotCommand);
+      return imageFileName;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
