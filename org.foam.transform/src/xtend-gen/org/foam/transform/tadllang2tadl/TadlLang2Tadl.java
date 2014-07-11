@@ -1,28 +1,42 @@
 package org.foam.transform.tadllang2tadl;
 
 import com.google.common.base.Splitter;
+import com.google.inject.Injector;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.antlr.AbstractAntlrParser;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
+import org.foam.ctl.CtlPackage;
+import org.foam.ltl.LtlPackage;
 import org.foam.propositionallogic.Formula;
 import org.foam.propositionallogic.PropositionallogicFactory;
+import org.foam.propositionallogic.VariableDefinition;
+import org.foam.propositionallogic.VariableUse;
 import org.foam.tadl.FormulaHolder;
 import org.foam.tadl.FormulaType;
 import org.foam.tadl.TadlFactory;
 import org.foam.tadl.Template;
+import org.foam.xtext.ctl.CtlXtextStandaloneSetup;
+import org.foam.xtext.ctl.parser.antlr.CtlXtextParser;
+import org.foam.xtext.ltl.LtlXtextStandaloneSetup;
+import org.foam.xtext.ltl.parser.antlr.LtlXtextParser;
+import org.foam.xtext.plogic.propositionalLogicXtext.RuleVariableUse;
 
 @SuppressWarnings("all")
 public class TadlLang2Tadl {
-  private final /* CtlXtextParser */Object ctlParser;
+  private final CtlXtextParser ctlParser;
   
-  private final /* LtlXtextParser */Object ltlParser;
+  private final LtlXtextParser ltlParser;
   
   private final TadlFactory tadlFactory = TadlFactory.eINSTANCE;
   
@@ -33,15 +47,24 @@ public class TadlLang2Tadl {
   private final String FORMULA_REGEXP = "(\\w+) (.+)";
   
   public TadlLang2Tadl() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nCtlXtextStandaloneSetup cannot be resolved."
-      + "\nThe method or field CtlXtextParser is undefined for the type TadlLang2Tadl"
-      + "\nLtlXtextStandaloneSetup cannot be resolved."
-      + "\nThe method or field LtlXtextParser is undefined for the type TadlLang2Tadl"
-      + "\ncreateInjectorAndDoEMFRegistration cannot be resolved"
-      + "\ngetInstance cannot be resolved"
-      + "\ncreateInjectorAndDoEMFRegistration cannot be resolved"
-      + "\ngetInstance cannot be resolved");
+    boolean _containsKey = EPackage.Registry.INSTANCE.containsKey(CtlPackage.eNS_URI);
+    boolean _not = (!_containsKey);
+    if (_not) {
+      EPackage.Registry.INSTANCE.put(CtlPackage.eNS_URI, CtlPackage.eINSTANCE);
+    }
+    boolean _containsKey_1 = EPackage.Registry.INSTANCE.containsKey(LtlPackage.eNS_URI);
+    boolean _not_1 = (!_containsKey_1);
+    if (_not_1) {
+      EPackage.Registry.INSTANCE.put(LtlPackage.eNS_URI, LtlPackage.eINSTANCE);
+    }
+    CtlXtextStandaloneSetup _ctlXtextStandaloneSetup = new CtlXtextStandaloneSetup();
+    final Injector ctlInjector = _ctlXtextStandaloneSetup.createInjectorAndDoEMFRegistration();
+    CtlXtextParser _instance = ctlInjector.<CtlXtextParser>getInstance(CtlXtextParser.class);
+    this.ctlParser = _instance;
+    LtlXtextStandaloneSetup _ltlXtextStandaloneSetup = new LtlXtextStandaloneSetup();
+    final Injector ltlInjector = _ltlXtextStandaloneSetup.createInjectorAndDoEMFRegistration();
+    LtlXtextParser _instance_1 = ltlInjector.<LtlXtextParser>getInstance(LtlXtextParser.class);
+    this.ltlParser = _instance_1;
   }
   
   public Template parse(final CharSequence input) {
@@ -91,13 +114,40 @@ public class TadlLang2Tadl {
   }
   
   private void resolveVariables(final Template template) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field RuleVariableUse is undefined for the type TadlLang2Tadl"
-      + "\nThe method variable is undefined for the type TadlLang2Tadl");
+    final List<RuleVariableUse> ruleVars = EcoreUtil2.<RuleVariableUse>getAllContentsOfType(template, RuleVariableUse.class);
+    final HashMap<String, VariableDefinition> varName2VarDef = new HashMap<String, VariableDefinition>();
+    for (final RuleVariableUse ruleVar : ruleVars) {
+      {
+        final String varName = ruleVar.getVariable();
+        boolean _containsKey = varName2VarDef.containsKey(varName);
+        boolean _not = (!_containsKey);
+        if (_not) {
+          VariableDefinition _createVariableDefinition = this.propFactory.createVariableDefinition();
+          final Procedure1<VariableDefinition> _function = new Procedure1<VariableDefinition>() {
+            public void apply(final VariableDefinition it) {
+              it.setName(varName);
+            }
+          };
+          final VariableDefinition varDef = ObjectExtensions.<VariableDefinition>operator_doubleArrow(_createVariableDefinition, _function);
+          varName2VarDef.put(varName, varDef);
+          EList<VariableDefinition> _variableDefinitions = template.getVariableDefinitions();
+          _variableDefinitions.add(varDef);
+        }
+        VariableUse _createVariableUse = this.propFactory.createVariableUse();
+        final Procedure1<VariableUse> _function_1 = new Procedure1<VariableUse>() {
+          public void apply(final VariableUse it) {
+            VariableDefinition _get = varName2VarDef.get(varName);
+            it.setVariableDefinition(_get);
+          }
+        };
+        final VariableUse varUse = ObjectExtensions.<VariableUse>operator_doubleArrow(_createVariableUse, _function_1);
+        EcoreUtil2.replace(ruleVar, varUse);
+      }
+    }
   }
   
   private void parseFormula(final FormulaType formulaType, final String formulaBody, final String comment, final Template template) {
-    CtlXtextParser _switchResult = null;
+    AbstractAntlrParser _switchResult = null;
     if (formulaType != null) {
       switch (formulaType) {
         case CTL:

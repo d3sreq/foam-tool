@@ -30,8 +30,8 @@ public class BranchingLabeledAnnotatedText {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_branchingType== null) ? 0 : _branchingType.hashCode());
-    result = prime * result + ((_labeledAnnotatedText== null) ? 0 : _labeledAnnotatedText.hashCode());
+    result = prime * result + ((this._branchingType== null) ? 0 : this._branchingType.hashCode());
+    result = prime * result + ((this._labeledAnnotatedText== null) ? 0 : this._labeledAnnotatedText.hashCode());
     return result;
   }
   
@@ -44,15 +44,15 @@ public class BranchingLabeledAnnotatedText {
     if (getClass() != obj.getClass())
       return false;
     BranchingLabeledAnnotatedText other = (BranchingLabeledAnnotatedText) obj;
-    if (_branchingType == null) {
+    if (this._branchingType == null) {
       if (other._branchingType != null)
         return false;
-    } else if (!_branchingType.equals(other._branchingType))
+    } else if (!this._branchingType.equals(other._branchingType))
       return false;
-    if (_labeledAnnotatedText == null) {
+    if (this._labeledAnnotatedText == null) {
       if (other._labeledAnnotatedText != null)
         return false;
-    } else if (!_labeledAnnotatedText.equals(other._labeledAnnotatedText))
+    } else if (!this._labeledAnnotatedText.equals(other._labeledAnnotatedText))
       return false;
     return true;
   }

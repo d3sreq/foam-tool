@@ -1,5 +1,6 @@
 -sub: *.bnd
--buildpath: biz.aQute.bnd.annotation,\
+-buildpath:  \
+	biz.aQute.bnd.annotation,\
 	osgi.cmpn,\
 	org.apache.commons.io,\
 	org.apache.servicemix.bundles.jopt-simple,\
@@ -29,5 +30,6 @@
 	org.foam.models.traceability;version=latest,\
 	org.foam.models.ucm;version=latest,\
 	org.foam.models.verification;version=latest,\
-	org.foam.emf4osgi.minimal,\
-	org.foam.emf4osgi.xmi
+	org.eclipse.emf.common,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.ecore.xmi

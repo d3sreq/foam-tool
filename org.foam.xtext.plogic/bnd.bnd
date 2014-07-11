@@ -20,5 +20,13 @@
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.plogic,\
+	org.foam.xtext.plogic.parser.antlr,\
+	org.foam.xtext.plogic.parser.antlr.internal,\
+	org.foam.xtext.plogic.propositionalLogicXtext,\
+	org.foam.xtext.plogic.propositionalLogicXtext.impl,\
+	org.foam.xtext.plogic.propositionalLogicXtext.util,\
 	org.foam.xtext.plogic.services,\
-	org.foam.xtext.plogic.parser.antlr
+	org.foam.xtext.plogic.services,\
+	org.foam.xtext.plogic,\
+	org.foam.xtext.plogic.parser.antlr,\
+	org.foam.xtext.plogic.services

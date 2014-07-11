@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -31,6 +30,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.foam.annotation.AnnotationPackage;
 import org.foam.cli.launcher.api.IExecutableTool;
 import org.foam.cli.tools.report.SpecificationWrapper;
@@ -242,13 +242,13 @@ public class ReportApplication implements IExecutableTool {
     };
     List<List<MenuItem>> _map_4 = ListExtensions.<MenuCategory, List<MenuItem>>map(_categories_5, _function_10);
     Iterable<MenuItem> _flatten = Iterables.<MenuItem>concat(_map_4);
-    final Consumer<MenuItem> _function_11 = new Consumer<MenuItem>() {
-      public void accept(final MenuItem it) {
+    final Procedure1<MenuItem> _function_11 = new Procedure1<MenuItem>() {
+      public void apply(final MenuItem it) {
         Page _page = it.getPage();
         ReportApplication.this.writePage(_page, outputDirName);
       }
     };
-    _flatten.forEach(_function_11);
+    IterableExtensions.<MenuItem>forEach(_flatten, _function_11);
   }
   
   private HashMap<Group, List<Specification>> partitionByGroup(final Iterable<Specification> specifications) {
@@ -749,12 +749,12 @@ public class ReportApplication implements IExecutableTool {
       StringConcatenation _builder_2 = new StringConcatenation();
       _builder_2.append("Validating input TADL templates");
       this.info(_builder_2);
-      final Consumer<Template> _function = new Consumer<Template>() {
-        public void accept(final Template it) {
+      final Procedure1<Template> _function = new Procedure1<Template>() {
+        public void apply(final Template it) {
           EmfCommons.basicValidate(it);
         }
       };
-      templates.forEach(_function);
+      IterableExtensions.<Template>forEach(templates, _function);
       this.resolveTadlAnnotations(useCaseModel, templates);
       StringConcatenation _builder_3 = new StringConcatenation();
       _builder_3.append("Validating UseCaseModel with resolved TADL annotations");
@@ -779,12 +779,12 @@ public class ReportApplication implements IExecutableTool {
       StringConcatenation _builder_4 = new StringConcatenation();
       _builder_4.append("Validating error specifications");
       this.info(_builder_4);
-      final Consumer<Specification> _function_3 = new Consumer<Specification>() {
-        public void accept(final Specification it) {
+      final Procedure1<Specification> _function_3 = new Procedure1<Specification>() {
+        public void apply(final Specification it) {
           EmfCommons.basicValidate(it);
         }
       };
-      specifications.forEach(_function_3);
+      IterableExtensions.<Specification>forEach(specifications, _function_3);
       this.createReport(useCaseModel, templates, specifications, outputDirName);
       this.info("done.");
     } catch (Throwable _e) {

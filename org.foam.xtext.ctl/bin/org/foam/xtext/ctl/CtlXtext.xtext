@@ -2,7 +2,7 @@ grammar org.foam.xtext.ctl.CtlXtext with org.foam.xtext.plogic.PropositionalLogi
 
 import "http://foam.org/models/propositionallogic" // refers to an *.ecore file (here using nsURI)
 import "http://foam.org/models/ctl" // refers to an *.ecore file (here using nsURI)
-//import "http://foam.org/models/plogicXtext"
+import "http://foam.org/models/plogicXtext"
 
 //import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
@@ -17,6 +17,6 @@ RuleStart returns Formula:
 //	overwritten rule from propositionallogic to add CTL specific formulas
 RuleSimple returns Formula:
 	({AllGlobally} 'AG' | {AllFinally} 'AF' | {AllNext} 'AX'
-		| {ExistsGlobally} 'EG' | {ExistsFinally} 'EF' | {ExistsNext} 'EX') formula=RuleStart
+	| {ExistsGlobally} 'EG' | {ExistsFinally} 'EF' | {ExistsNext} 'EX') formula=RuleStart
 	| ({AllUntil} 'A' | {ExistsUntil} 'E') '[' left=RuleStart 'U' right=RuleStart ']'
 	| RuleUnaryPropositionalLogic;

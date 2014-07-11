@@ -1,7 +1,8 @@
-grammar ltllang2ltl.LtlXtext with propositionallogiclang2propositionallogic.PropositionalLogicXtext
+grammar org.foam.xtext.ltl.LtlXtext with org.foam.xtext.plogic.PropositionalLogicXtext
 
-import "ltl"
-import "propositionallogic"
+import "http://foam.org/models/propositionallogic" // refers to an *.ecore file (here using nsURI)
+import "http://foam.org/models/ltl" // refers to an *.ecore file (here using nsURI)
+import "http://foam.org/models/plogicXtext"
 
 // precedence order: 
 // - the unary operators bind stronger than the binary ones.

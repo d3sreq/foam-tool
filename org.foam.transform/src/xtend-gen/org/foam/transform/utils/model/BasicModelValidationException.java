@@ -37,7 +37,7 @@ public class BasicModelValidationException extends RuntimeException {
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + ((_diagnostic== null) ? 0 : _diagnostic.hashCode());
+    result = prime * result + ((this._diagnostic== null) ? 0 : this._diagnostic.hashCode());
     return result;
   }
   
@@ -52,10 +52,10 @@ public class BasicModelValidationException extends RuntimeException {
     if (!super.equals(obj))
       return false;
     BasicModelValidationException other = (BasicModelValidationException) obj;
-    if (_diagnostic == null) {
+    if (this._diagnostic == null) {
       if (other._diagnostic != null)
         return false;
-    } else if (!_diagnostic.equals(other._diagnostic))
+    } else if (!this._diagnostic.equals(other._diagnostic))
       return false;
     return true;
   }

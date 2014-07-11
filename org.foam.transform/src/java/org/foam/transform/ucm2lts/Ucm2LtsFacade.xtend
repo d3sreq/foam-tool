@@ -97,7 +97,7 @@ class Ucm2LtsFacade {
 		//  which states can and which cannot be reduced.
 		// It is disabled by now since verification with non-reducted LTS doesn't have big performance hit
 		// compared to reduced LTS.
-//		reduction(automaton)
+////		reduction(automaton)
 		automaton
 	}
 	

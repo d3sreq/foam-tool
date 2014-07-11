@@ -4,6 +4,7 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Reference;
 import com.google.common.base.Objects;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
@@ -46,7 +47,7 @@ public class LauncherComponent {
     _builder.append("Available tools are:");
     _builder.newLine();
     {
-      ConcurrentHashMap.KeySetView<String, IExecutableTool> _keySet = this.toolMap.keySet();
+      Set<String> _keySet = this.toolMap.keySet();
       for(final String toolName : _keySet) {
         _builder.append(" ");
         _builder.append("- ");

@@ -15,11 +15,11 @@ import org.foam.propositionallogic.VariableDefinition
 import org.foam.tadl.FormulaType
 import org.foam.tadl.TadlFactory
 import org.foam.tadl.Template
-import transformation.ctllang2ctl.CtlXtextStandaloneSetup
-import transformation.ctllang2ctl.parser.antlr.CtlXtextParser
-import transformation.ltllang2ltl.LtlXtextStandaloneSetup
-import transformation.ltllang2ltl.parser.antlr.LtlXtextParser
-import transformation.propositionallogiclang2propositionallogic.propositionalLogicXtext.RuleVariableUse
+import org.foam.xtext.ctl.CtlXtextStandaloneSetup
+import org.foam.xtext.ctl.parser.antlr.CtlXtextParser
+import org.foam.xtext.ltl.LtlXtextStandaloneSetup
+import org.foam.xtext.ltl.parser.antlr.LtlXtextParser
+import org.foam.xtext.plogic.propositionalLogicXtext.RuleVariableUse
 
 class TadlLang2Tadl {
 	

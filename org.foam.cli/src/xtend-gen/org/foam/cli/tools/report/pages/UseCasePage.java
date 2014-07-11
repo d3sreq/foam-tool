@@ -324,10 +324,10 @@ public class UseCasePage implements Page {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((__foamCommonAnnotationRenderer== null) ? 0 : __foamCommonAnnotationRenderer.hashCode());
-    result = prime * result + ((_useCase== null) ? 0 : _useCase.hashCode());
-    result = prime * result + ((_menu== null) ? 0 : _menu.hashCode());
-    result = prime * result + ((_useCaseImageLocation== null) ? 0 : _useCaseImageLocation.hashCode());
+    result = prime * result + ((this.__foamCommonAnnotationRenderer== null) ? 0 : this.__foamCommonAnnotationRenderer.hashCode());
+    result = prime * result + ((this._useCase== null) ? 0 : this._useCase.hashCode());
+    result = prime * result + ((this._menu== null) ? 0 : this._menu.hashCode());
+    result = prime * result + ((this._useCaseImageLocation== null) ? 0 : this._useCaseImageLocation.hashCode());
     return result;
   }
   
@@ -340,25 +340,25 @@ public class UseCasePage implements Page {
     if (getClass() != obj.getClass())
       return false;
     UseCasePage other = (UseCasePage) obj;
-    if (__foamCommonAnnotationRenderer == null) {
+    if (this.__foamCommonAnnotationRenderer == null) {
       if (other.__foamCommonAnnotationRenderer != null)
         return false;
-    } else if (!__foamCommonAnnotationRenderer.equals(other.__foamCommonAnnotationRenderer))
+    } else if (!this.__foamCommonAnnotationRenderer.equals(other.__foamCommonAnnotationRenderer))
       return false;
-    if (_useCase == null) {
+    if (this._useCase == null) {
       if (other._useCase != null)
         return false;
-    } else if (!_useCase.equals(other._useCase))
+    } else if (!this._useCase.equals(other._useCase))
       return false;
-    if (_menu == null) {
+    if (this._menu == null) {
       if (other._menu != null)
         return false;
-    } else if (!_menu.equals(other._menu))
+    } else if (!this._menu.equals(other._menu))
       return false;
-    if (_useCaseImageLocation == null) {
+    if (this._useCaseImageLocation == null) {
       if (other._useCaseImageLocation != null)
         return false;
-    } else if (!_useCaseImageLocation.equals(other._useCaseImageLocation))
+    } else if (!this._useCaseImageLocation.equals(other._useCaseImageLocation))
       return false;
     return true;
   }

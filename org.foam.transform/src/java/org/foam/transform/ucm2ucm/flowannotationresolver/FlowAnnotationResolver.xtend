@@ -15,11 +15,11 @@ import org.foam.propositionallogic.VariableDefinition
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
-import transformation.propositionallogiclang2propositionallogic.PropositionalLogicXtextStandaloneSetup
-import transformation.propositionallogiclang2propositionallogic.parser.antlr.PropositionalLogicXtextParser
-import transformation.propositionallogiclang2propositionallogic.propositionalLogicXtext.RuleVariableUse
 
 import static extension org.foam.ucm.util.UcmUtils.*
+import org.foam.xtext.plogic.parser.antlr.PropositionalLogicXtextParser
+import org.foam.xtext.plogic.PropositionalLogicXtextStandaloneSetup
+import org.foam.xtext.plogic.propositionalLogicXtext.RuleVariableUse
 
 class FlowAnnotationResolver {
 	private static val MARK_PREFIX = "mark_"

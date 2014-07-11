@@ -448,13 +448,13 @@ public class ErrorPage implements Page {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_menu== null) ? 0 : _menu.hashCode());
-    result = prime * result + ((_specification== null) ? 0 : _specification.hashCode());
-    result = prime * result + ((_formulaHolder== null) ? 0 : _formulaHolder.hashCode());
-    result = prime * result + ((_group== null) ? 0 : _group.hashCode());
-    result = prime * result + ((_orderId== null) ? 0 : _orderId.hashCode());
-    result = prime * result + ((_renderer== null) ? 0 : _renderer.hashCode());
-    result = prime * result + ((__foamCommonAnnotationRenderer== null) ? 0 : __foamCommonAnnotationRenderer.hashCode());
+    result = prime * result + ((this._menu== null) ? 0 : this._menu.hashCode());
+    result = prime * result + ((this._specification== null) ? 0 : this._specification.hashCode());
+    result = prime * result + ((this._formulaHolder== null) ? 0 : this._formulaHolder.hashCode());
+    result = prime * result + ((this._group== null) ? 0 : this._group.hashCode());
+    result = prime * result + ((this._orderId== null) ? 0 : this._orderId.hashCode());
+    result = prime * result + ((this._renderer== null) ? 0 : this._renderer.hashCode());
+    result = prime * result + ((this.__foamCommonAnnotationRenderer== null) ? 0 : this.__foamCommonAnnotationRenderer.hashCode());
     return result;
   }
   
@@ -467,40 +467,40 @@ public class ErrorPage implements Page {
     if (getClass() != obj.getClass())
       return false;
     ErrorPage other = (ErrorPage) obj;
-    if (_menu == null) {
+    if (this._menu == null) {
       if (other._menu != null)
         return false;
-    } else if (!_menu.equals(other._menu))
+    } else if (!this._menu.equals(other._menu))
       return false;
-    if (_specification == null) {
+    if (this._specification == null) {
       if (other._specification != null)
         return false;
-    } else if (!_specification.equals(other._specification))
+    } else if (!this._specification.equals(other._specification))
       return false;
-    if (_formulaHolder == null) {
+    if (this._formulaHolder == null) {
       if (other._formulaHolder != null)
         return false;
-    } else if (!_formulaHolder.equals(other._formulaHolder))
+    } else if (!this._formulaHolder.equals(other._formulaHolder))
       return false;
-    if (_group == null) {
+    if (this._group == null) {
       if (other._group != null)
         return false;
-    } else if (!_group.equals(other._group))
+    } else if (!this._group.equals(other._group))
       return false;
-    if (_orderId == null) {
+    if (this._orderId == null) {
       if (other._orderId != null)
         return false;
-    } else if (!_orderId.equals(other._orderId))
+    } else if (!this._orderId.equals(other._orderId))
       return false;
-    if (_renderer == null) {
+    if (this._renderer == null) {
       if (other._renderer != null)
         return false;
-    } else if (!_renderer.equals(other._renderer))
+    } else if (!this._renderer.equals(other._renderer))
       return false;
-    if (__foamCommonAnnotationRenderer == null) {
+    if (this.__foamCommonAnnotationRenderer == null) {
       if (other.__foamCommonAnnotationRenderer != null)
         return false;
-    } else if (!__foamCommonAnnotationRenderer.equals(other.__foamCommonAnnotationRenderer))
+    } else if (!this.__foamCommonAnnotationRenderer.equals(other.__foamCommonAnnotationRenderer))
       return false;
     return true;
   }
