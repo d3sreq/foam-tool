@@ -1,10 +1,9 @@
 package org.foam.build
 
-import org.eclipse.emf.mwe.utils.StandaloneSetup
-import org.eclipse.emf.mwe.utils.DirectoryCleaner
-import org.eclipse.emf.mwe2.ecore.EcoreGenerator
 import java.io.File
-import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.mwe.utils.DirectoryCleaner
+import org.eclipse.emf.mwe.utils.StandaloneSetup
+import org.eclipse.emf.mwe2.ecore.EcoreGenerator
 
 class GenerateFoamModels {
 	static val SRC_JAVA	= "src/java"
