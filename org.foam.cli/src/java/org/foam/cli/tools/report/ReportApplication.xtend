@@ -51,7 +51,6 @@ import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizUtils
 import org.foam.transform.utils.modeling.EmfCommons
-import org.foam.transform.utils.nusmv.NuSmvUtils
 import org.foam.transform.utils.nusmv.NusmvWrapper
 import org.foam.ucm.UcmPackage
 import org.foam.ucm.UseCase
@@ -370,15 +369,14 @@ class ReportApplication implements IExecutableTool {
 			'''running NuSMV verification'''.info
 			
 			try {
-				//TODO:change this to use the nusmvWrapper OSGi service instead of NuSmvUtilsl
-				'''NuSMV versions is «NuSmvUtils.checkNuSmvVersion»'''.info
+				'''NuSMV versions is «nusmvWrapper.nusmvVersion»'''.info
 			} catch(Exception e) {
 				e.message.error
 				"Verification skipped - empty counter example was generated".error
 				return CntexFactory.eINSTANCE.createCounterExample
 			}
 			
-			val cntexCode = NuSmvUtils.runNuSMV(code)
+			val cntexCode = nusmvWrapper.runNusmvOnCode(code)
 			
 			// parse counter example code -> CounterExample
 			'''parsing counter example code to CounterExample'''.info

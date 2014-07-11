@@ -74,7 +74,6 @@ import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver;
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver;
 import org.foam.transform.utils.graphviz.GraphvizUtils;
 import org.foam.transform.utils.modeling.EmfCommons;
-import org.foam.transform.utils.nusmv.NuSmvUtils;
 import org.foam.transform.utils.nusmv.NusmvWrapper;
 import org.foam.ucm.UcmPackage;
 import org.foam.ucm.UseCase;
@@ -689,8 +688,8 @@ public class ReportApplication implements IExecutableTool {
           try {
             StringConcatenation _builder_3 = new StringConcatenation();
             _builder_3.append("NuSMV versions is ");
-            String _checkNuSmvVersion = NuSmvUtils.checkNuSmvVersion();
-            _builder_3.append(_checkNuSmvVersion, "");
+            String _nusmvVersion = ReportApplication.this.nusmvWrapper.getNusmvVersion();
+            _builder_3.append(_nusmvVersion, "");
             ReportApplication.this.info(_builder_3);
           } catch (final Throwable _t) {
             if (_t instanceof Exception) {
@@ -703,7 +702,7 @@ public class ReportApplication implements IExecutableTool {
               throw Exceptions.sneakyThrow(_t);
             }
           }
-          final String cntexCode = NuSmvUtils.runNuSMV(code);
+          final String cntexCode = ReportApplication.this.nusmvWrapper.runNusmvOnCode(code);
           StringConcatenation _builder_4 = new StringConcatenation();
           _builder_4.append("parsing counter example code to CounterExample");
           ReportApplication.this.info(_builder_4);
