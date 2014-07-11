@@ -27,6 +27,7 @@ Export-Package:  \
 	org.foam.xtext.plogic.propositionalLogicXtext.impl,\
 	org.foam.xtext.plogic.propositionalLogicXtext.util,\
 	org.foam.xtext.plogic.services,\
+	org.foam.xtext.plogic.serializer,\
 	org.foam.xtext.plogic.services,\
 	org.foam.xtext.plogic,\
 	org.foam.xtext.plogic.parser.antlr,\
