@@ -34,7 +34,7 @@ class Menu {
 @Data
 class MenuCategory {
 	val String name
-	val List<MenuItem> menuItems = #[]
+	val List<MenuItem> menuItems = newArrayList
 	
 	val naturalOrderComparator = new NaturalOrderComparator
 	

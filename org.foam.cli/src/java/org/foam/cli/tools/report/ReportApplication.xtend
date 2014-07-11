@@ -7,7 +7,6 @@ import com.google.common.base.Objects
 import com.google.common.base.Preconditions
 import com.google.common.io.Files
 import java.io.File
-import java.net.URL
 import java.util.HashMap
 import java.util.LinkedHashSet
 import java.util.List
@@ -15,6 +14,7 @@ import java.util.Map
 import joptsimple.OptionParser
 import org.foam.annotation.AnnotationPackage
 import org.foam.cli.launcher.api.IExecutableTool
+import org.foam.cli.tools.nusmv.NusmvWrapper
 import org.foam.cli.tools.report.pages.ErrorPage
 import org.foam.cli.tools.report.pages.Menu
 import org.foam.cli.tools.report.pages.MenuCategory
@@ -47,6 +47,7 @@ import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang
 import org.foam.transform.tadllang2tadl.TadlLang2Tadl
 import org.foam.transform.ucm2lts.Ucm2LtsFacade
 import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph
+import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizUtils
@@ -56,14 +57,19 @@ import org.foam.ucm.UcmPackage
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 import org.foam.verification.VerificationPackage
+import org.osgi.framework.FrameworkUtil
 import org.osgi.service.log.LogService
 
 import static extension org.foam.cli.tools.report.utils.Utils.*
-import org.foam.transform.ucm2ucm.UcmLang2UcmService
 
 @Component
 class ReportApplication implements IExecutableTool {
 	
+	private NusmvWrapper nusmvWrapper
+	@Reference def void setNusmvWrapper(NusmvWrapper nusmvWrapper) {
+		this.nusmvWrapper = nusmvWrapper
+	}
+
 	private LogService logService
 	@Reference def void setLogService(LogService logService) {
 		this.logService = logService
@@ -82,6 +88,70 @@ class ReportApplication implements IExecutableTool {
 		logService.log(LogService.LOG_ERROR, message.toString)
 	}
 	
+	override execute(String[] args) {
+		// parse options
+		val optionParser = new OptionParser
+		val inputOption = optionParser.accepts("i", "input dir").withRequiredArg.describedAs("directory with textual use cases")
+		val tadlOption = optionParser.accepts("t", "tadl input dir").withRequiredArg.describedAs("directory with textual tadl definitions")
+		val outputOption = optionParser.accepts("o", "output dir").withOptionalArg.describedAs("output directory for html report")
+		optionParser.acceptsAll(newArrayList("h", "?"), "show help")
+		
+		val options = optionParser.parse(args)
+		
+		val inputDirName = if (options.has(inputOption) && options.hasArgument(inputOption)) {
+			inputOption.value(options)
+		} else {
+			optionParser.printHelpOn(System.out)
+			return
+		}
+		
+		val tadlDirName = if (options.has(tadlOption) && options.hasArgument(tadlOption)) {
+			tadlOption.value(options)
+		} else {
+			optionParser.printHelpOn(System.out)
+			return
+		}
+		
+		val outputDirName = if (options.has(outputOption) && options.hasArgument(outputOption)) {
+			outputOption.value(options)
+		} else {
+			"report"
+		}
+		
+		'''Checking Graphviz version'''.info
+		GraphvizUtils.checkGraphvizVersion
+		
+		// model factories initialization
+		init()
+		
+		// transformations
+		val useCaseModel = ucmlang2Ucm(inputDirName)
+		'''Validating input UseCaseModel (with resolved flow annotations)'''.info
+		EmfCommons.basicValidate(useCaseModel)
+		
+		val templates = tadlLang2Templates(tadlDirName)
+		'''Validating input TADL templates'''.info
+		templates.forEach[EmfCommons.basicValidate(it)]
+		
+		resolveTadlAnnotations(useCaseModel, templates)
+		'''Validating UseCaseModel with resolved TADL annotations'''.info
+		EmfCommons.basicValidate(useCaseModel)
+		
+		val counterExamples = getCounterExamples(useCaseModel)
+		// merge errors from counter-examples
+		val specifications = counterExamples.map[specifications].flatten.filter[trace != null].uniqueSpecifications
+		'''Validating error specifications'''.info
+		specifications.forEach[EmfCommons.basicValidate(it)]
+		
+		createReport(useCaseModel, templates, specifications, outputDirName)
+		
+		"done.".info 
+	}
+	
+	override getUsage() '''
+	Runs the whole FOAM workflow and generates an HTML report. 
+	'''
+
 	def private uniqueSpecifications(Iterable<Specification> specifications) {
 		// LinkedHashSet to retain order of specifications
 		// repeated executions of report generation should
@@ -173,7 +243,7 @@ class ReportApplication implements IExecutableTool {
 		EmfCommons.basicValidate(automaton)
 		
 		// load XMI from bundle
-		val overviewGraphTemplate = new URL("platform:/plugin/cli.report/resources/data/dot/OverviewGraphTemplate.xmi").openConnection.inputStream
+		val overviewGraphTemplate = FrameworkUtil.getBundle(class).getResource("/report/dot/OverviewGraphTemplate.xmi").openStream
 		val initGraph = EmfCommons.readModel(overviewGraphTemplate) as Graph
 		
 		'''Validating init overview DOT graph'''.info
@@ -197,7 +267,7 @@ class ReportApplication implements IExecutableTool {
 		
 		// TODO - optimize - read init graph only once and then copy it
 		// load XMI from bundle
-		val graphTemplate = new URL("platform:/plugin/cli.report/resources/data/dot/GraphTemplate.xmi").openConnection.inputStream
+		val graphTemplate = FrameworkUtil.getBundle(class).getResource("/report/dot/GraphTemplate.xmi").openStream
 		val initGraph = EmfCommons.readModel(graphTemplate) as Graph
 
 		'''Validating init DOT graph'''.info
@@ -300,6 +370,7 @@ class ReportApplication implements IExecutableTool {
 			'''running NuSMV verification'''.info
 			
 			try {
+				//TODO:change this to use the nusmvWrapper OSGi service instead of NuSmvUtilsl
 				'''NuSMV versions is «NuSmvUtils.checkNuSmvVersion»'''.info
 			} catch(Exception e) {
 				e.message.error
@@ -338,7 +409,11 @@ class ReportApplication implements IExecutableTool {
 		'''Reading TADL definitions from file "«tadlDirName»" and parsing'''.info
 		val texts = readTexts(tadlDirName)
 		 
-		texts.map[tadlLang2Tadl.parse(it)]
+		val templates = texts.map[tadlLang2Tadl.parse(it)]
+		
+		'''TADL files resolved'''.info
+		
+		return templates
 	}
 	
 	def private resolveTadlAnnotations(UseCaseModel useCaseModel, List<Template> templates) {
@@ -348,7 +423,7 @@ class ReportApplication implements IExecutableTool {
 	
 	def private copyWebFiles(String outputDir) {
 		'''Copying template web files to outputDir'''.info
-		FileUtils.bundleCopy("resources/data/web", outputDir)		
+		FileUtils.bundleCopy("report/web", outputDir)
 	}
 	
 	/**
@@ -358,70 +433,6 @@ class ReportApplication implements IExecutableTool {
 		val dir = new File(inputDir)
 		dir.listFiles.map[Files.toString(it, Charsets.UTF_8)]
 	}
-	
-	override execute(String[] args) {
-		// parse options
-		val optionParser = new OptionParser
-		val inputOption = optionParser.accepts("i", "input dir").withRequiredArg.describedAs("directory with textual use cases")
-		val tadlOption = optionParser.accepts("t", "tadl input dir").withRequiredArg.describedAs("directory with textual tadl definitions")
-		val outputOption = optionParser.accepts("o", "output dir").withOptionalArg.describedAs("output directory for html report")
-		optionParser.acceptsAll(newArrayList("h", "?"), "show help")
-		
-		val options = optionParser.parse(args)
-		
-		val inputDirName = if (options.has(inputOption) && options.hasArgument(inputOption)) {
-			inputOption.value(options)
-		} else {
-			optionParser.printHelpOn(System.out)
-			return
-		}
-		
-		val tadlDirName = if (options.has(tadlOption) && options.hasArgument(tadlOption)) {
-			tadlOption.value(options)
-		} else {
-			optionParser.printHelpOn(System.out)
-			return
-		}
-		
-		val outputDirName = if (options.has(outputOption) && options.hasArgument(outputOption)) {
-			outputOption.value(options)
-		} else {
-			"report"
-		}
-		
-		'''Checking Graphviz version'''.info
-		GraphvizUtils.checkGraphvizVersion
-		
-		// model factories initialization
-		init()		
-		
-		// transformations
-		val useCaseModel = ucmlang2Ucm(inputDirName)
-		'''Validating input UseCaseModel (with resolved flow annotations)'''.info
-		EmfCommons.basicValidate(useCaseModel)
-		
-		val templates = tadlLang2Templates(tadlDirName)
-		'''Validating input TADL templates'''.info
-		templates.forEach[EmfCommons.basicValidate(it)]
-		
-		resolveTadlAnnotations(useCaseModel, templates)
-		'''Validating UseCaseModel with resolved TADL annotations'''.info
-		EmfCommons.basicValidate(useCaseModel)
-		
-		val counterExamples = getCounterExamples(useCaseModel)
-		// merge errors from counter-examples
-		val specifications = counterExamples.map[specifications].flatten.filter[trace != null].uniqueSpecifications
-		'''Validating error specifications'''.info
-		specifications.forEach[EmfCommons.basicValidate(it)]
-		
-		createReport(useCaseModel, templates, specifications, outputDirName)
-		
-		"done.".info 
-	}
-	
-	override getUsage() '''
-	Runs the whole FOAM workflow and generates an HTML report. 
-	'''
 }
 
 /**

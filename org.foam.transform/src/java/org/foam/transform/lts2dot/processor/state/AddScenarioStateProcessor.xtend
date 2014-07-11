@@ -40,7 +40,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 			val scenario = UcmUtils::getScenario(step)
 			if (!scenario2Graph.containsKey(scenario)) {
 				val subGraph = dotFactory.createGraph => [
-					id = '''«scenario.useCase.id» «scenario.label»'''
+					id = '''«scenario.useCase.id»_«scenario.label»''' // assert: id does not contain spaces
 
 					if (!scenario.isMainScenario) {
 						statements += dotFactory.createAssignment => [

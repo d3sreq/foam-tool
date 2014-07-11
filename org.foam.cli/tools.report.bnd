@@ -3,3 +3,4 @@ Export-Package: org.foam.cli.tools.report,\
 	org.foam.cli.tools.report.pages,\
 	org.foam.cli.tools.report.utils
 Service-Component: *
+Include-Resource: resources/
