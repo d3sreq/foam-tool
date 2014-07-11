@@ -1,4 +1,4 @@
-package org.foam.xtext.plogic
+package build
 
 import java.io.File
 import org.eclipse.emf.mwe.utils.DirectoryCleaner
@@ -85,6 +85,7 @@ class GeneratePlogicXtext {
 		]
 		
 	    new File("plugin.xml").delete
+	    new File("plugin.xml_gen").delete
 
 	}
 	
