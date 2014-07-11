@@ -17,10 +17,13 @@
 	org.eclipse.xtext.util,\
 	org.foam.models.ctl;version=latest,\
 	org.objectweb.asm,\
-	org.foam.xtext.plogic;version=latest
+	org.foam.xtext.plogic;version=latest,\
+	org.eclipse.xtext.xbase.lib,\
+	org.foam.models.propositionallogic;version=latest
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.ctl,\
 	org.foam.xtext.ctl.services,\
 	org.foam.xtext.ctl.parser.antlr,\
-	org.foam.xtext.ctl.parser.antlr.internal
+	org.foam.xtext.ctl.parser.antlr.internal,\
+	org.foam.xtext.ctl.serializer
