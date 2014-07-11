@@ -34,6 +34,8 @@ class GeneratePlogicXtext {
 			directory = '''«runtimeProject»/src-gen'''
 			invoke = null
 		]
+		
+		new File("src-gen").mkdir
 			
 		new DirectoryCleaner => [
 	    	directory = '''«runtimeProject»/model/generated'''
