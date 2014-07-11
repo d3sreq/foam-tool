@@ -18,35 +18,44 @@ import java.util.jar.JarFile;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 
+import com.google.common.base.Preconditions;
+
 /**
  * From
  * http://stackoverflow.com/questions/1386809/copy-directory-from-a-jar-file
  */
 public class FileUtils {
+	
 	public static boolean copyFile(final File toCopy, final File destFile) {
 		try {
-			return FileUtils.copyStream(new FileInputStream(toCopy),
+			
+			return FileUtils.copyStream(
+					new FileInputStream(toCopy),
 					new FileOutputStream(destFile));
+			
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
 
-	private static boolean copyFilesRecusively(final File toCopy,
-			final File destDir) {
-		assert destDir.isDirectory();
+	private static boolean copyFilesRecusively(final File srcFileOrDir, final File destDir) {
+		
+		Preconditions.checkArgument(srcFileOrDir.canRead());
+		Preconditions.checkArgument(destDir.isDirectory());
 
-		if (!toCopy.isDirectory()) {
-			return FileUtils.copyFile(toCopy,
-					new File(destDir, toCopy.getName()));
+		if ( ! srcFileOrDir.isDirectory() ) {
+			// the source is a regular file
+			final File dstFile = new File(destDir, srcFileOrDir.getName());
+			return FileUtils.copyFile(srcFileOrDir, dstFile);
 		} else {
-			final File newDestDir = new File(destDir, toCopy.getName());
-			if (!newDestDir.exists() && !newDestDir.mkdir()) {
+			// the source is a directory
+			final File newDestDir = new File(destDir, srcFileOrDir.getName());
+			if ( ! newDestDir.exists() && ! newDestDir.mkdir() ) {
 				return false;
 			}
-			for (final File child : toCopy.listFiles()) {
-				if (!FileUtils.copyFilesRecusively(child, newDestDir)) {
+			for (final File child : srcFileOrDir.listFiles()) {
+				if ( ! FileUtils.copyFilesRecusively(child, newDestDir)) {
 					return false;
 				}
 			}
@@ -150,17 +159,17 @@ public class FileUtils {
 	}
 
 	// copied from http://stackoverflow.com/questions/4582375/how-to-test-if-a-url-from-an-eclipse-bundle-is-a-directory
-	public static void bundleCopy(String dir, String destination)
+	public static void bundleCopy(final String dir, final String destination)
 			throws IOException, URISyntaxException {
 
-		Bundle bundle = FrameworkUtil.getBundle(FileUtils.class);
+		final Bundle bundle = FrameworkUtil.getBundle(FileUtils.class);
 		
-		Enumeration<URL> en = bundle.findEntries(dir, "*", true);
+		final Enumeration<URL> en = bundle.findEntries(dir, "*", true);
 		while (en.hasMoreElements()) {
-			URL url = en.nextElement();
-			String pathFromBase = url.getPath().substring(dir.length() + 1);
-			String toFileName = destination + pathFromBase;
-			File toFile = new File(toFileName);
+			final URL url = en.nextElement();
+			final String pathFromBase = url.getPath().substring(dir.length() + 1);
+			final String toFileName = destination + pathFromBase;
+			final File toFile = new File(toFileName);
 
 			if (pathFromBase.endsWith("/")) {
 				// This is a directory - create it and recurse
