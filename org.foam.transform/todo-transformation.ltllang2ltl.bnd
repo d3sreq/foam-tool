@@ -1,9 +1,0 @@
-Bundle-Version: 1.0.0
-Export-Package: transformation.ltllang2ltl,\
-	transformation.ltllang2ltl.formatting,\
-	transformation.ltllang2ltl.parser.antlr,\
-	transformation.ltllang2ltl.parser.antlr.internal,\
-	transformation.ltllang2ltl.parseTreeConstruction,\
-	transformation.ltllang2ltl.scoping,\
-	transformation.ltllang2ltl.services,\
-	transformation.ltllang2ltl.validation
