@@ -38,9 +38,9 @@ public class StateAddedEvent {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this._sourceStep== null) ? 0 : this._sourceStep.hashCode());
-    result = prime * result + ((this._targetState== null) ? 0 : this._targetState.hashCode());
-    result = prime * result + ((this._targetStateType== null) ? 0 : this._targetStateType.hashCode());
+    result = prime * result + ((_sourceStep== null) ? 0 : _sourceStep.hashCode());
+    result = prime * result + ((_targetState== null) ? 0 : _targetState.hashCode());
+    result = prime * result + ((_targetStateType== null) ? 0 : _targetStateType.hashCode());
     return result;
   }
   
@@ -53,20 +53,20 @@ public class StateAddedEvent {
     if (getClass() != obj.getClass())
       return false;
     StateAddedEvent other = (StateAddedEvent) obj;
-    if (this._sourceStep == null) {
+    if (_sourceStep == null) {
       if (other._sourceStep != null)
         return false;
-    } else if (!this._sourceStep.equals(other._sourceStep))
+    } else if (!_sourceStep.equals(other._sourceStep))
       return false;
-    if (this._targetState == null) {
+    if (_targetState == null) {
       if (other._targetState != null)
         return false;
-    } else if (!this._targetState.equals(other._targetState))
+    } else if (!_targetState.equals(other._targetState))
       return false;
-    if (this._targetStateType == null) {
+    if (_targetStateType == null) {
       if (other._targetStateType != null)
         return false;
-    } else if (!this._targetStateType.equals(other._targetStateType))
+    } else if (!_targetStateType.equals(other._targetStateType))
       return false;
     return true;
   }

@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
@@ -66,13 +67,13 @@ public class FlowAnnotationResolver {
   public void resolveAnnotations(final UseCaseModel useCaseModel) {
     final HashMap<String, UseCase> id2Uc = new HashMap<String, UseCase>();
     final EList<UseCase> allUseCases = useCaseModel.getUseCases();
-    final Procedure1<UseCase> _function = new Procedure1<UseCase>() {
-      public void apply(final UseCase it) {
+    final Consumer<UseCase> _function = new Consumer<UseCase>() {
+      public void accept(final UseCase it) {
         String _id = it.getId();
         id2Uc.put(_id, it);
       }
     };
-    IterableExtensions.<UseCase>forEach(allUseCases, _function);
+    allUseCases.forEach(_function);
     for (final UseCase useCase : allUseCases) {
       {
         final Map<String, Step> id2Step = this.getId2Step(useCase);
@@ -239,13 +240,13 @@ public class FlowAnnotationResolver {
         }
       };
       final Iterable<VariableDefinition> varDefs = IterableExtensions.<VariableDefinitionAnnotation, VariableDefinition>map(_filter, _function);
-      final Procedure1<VariableDefinition> _function_1 = new Procedure1<VariableDefinition>() {
-        public void apply(final VariableDefinition it) {
+      final Consumer<VariableDefinition> _function_1 = new Consumer<VariableDefinition>() {
+        public void accept(final VariableDefinition it) {
           String _name = it.getName();
           varName2VarDef.put(_name, it);
         }
       };
-      IterableExtensions.<VariableDefinition>forEach(varDefs, _function_1);
+      varDefs.forEach(_function_1);
       _xblockexpression = varName2VarDef;
     }
     return _xblockexpression;
@@ -286,13 +287,13 @@ public class FlowAnnotationResolver {
       final HashMap<String, Step> result = new HashMap<String, Step>();
       Scenario _mainScenario = useCase.getMainScenario();
       EList<Step> _steps = _mainScenario.getSteps();
-      final Procedure1<Step> _function = new Procedure1<Step>() {
-        public void apply(final Step it) {
+      final Consumer<Step> _function = new Consumer<Step>() {
+        public void accept(final Step it) {
           String _label = it.getLabel();
           result.put(_label, it);
         }
       };
-      IterableExtensions.<Step>forEach(_steps, _function);
+      _steps.forEach(_function);
       EMap<Step, ScenarioHolder> _branches = useCase.getBranches();
       Collection<ScenarioHolder> _values = _branches.values();
       for (final ScenarioHolder holder : _values) {
@@ -307,13 +308,13 @@ public class FlowAnnotationResolver {
           };
           Iterable<EList<Step>> _map = IterableExtensions.<Scenario, EList<Step>>map(scenarios, _function_1);
           final Iterable<Step> steps = Iterables.<Step>concat(_map);
-          final Procedure1<Step> _function_2 = new Procedure1<Step>() {
-            public void apply(final Step it) {
+          final Consumer<Step> _function_2 = new Consumer<Step>() {
+            public void accept(final Step it) {
               String _label = it.getLabel();
               result.put(_label, it);
             }
           };
-          IterableExtensions.<Step>forEach(steps, _function_2);
+          steps.forEach(_function_2);
         }
       }
       _xblockexpression = result;

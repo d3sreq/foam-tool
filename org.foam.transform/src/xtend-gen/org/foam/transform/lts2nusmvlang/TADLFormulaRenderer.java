@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.foam.ctl.AllFinally;
 import org.foam.ctl.AllGlobally;
 import org.foam.ctl.AllNext;
@@ -62,12 +62,12 @@ public class TADLFormulaRenderer {
     Iterable<String> _xblockexpression = null;
     {
       final HashSet<EClass> collected = new HashSet<EClass>();
-      final Procedure1<Formula> _function = new Procedure1<Formula>() {
-        public void apply(final Formula it) {
+      final Consumer<Formula> _function = new Consumer<Formula>() {
+        public void accept(final Formula it) {
           TADLFormulaRenderer.this.collect(it, collected);
         }
       };
-      IterableExtensions.<Formula>forEach(list, _function);
+      list.forEach(_function);
       final Function1<EClass, String> _function_1 = new Function1<EClass, String>() {
         public String apply(final EClass it) {
           return TADLFormulaRenderer.this.operator2Description.get(it);

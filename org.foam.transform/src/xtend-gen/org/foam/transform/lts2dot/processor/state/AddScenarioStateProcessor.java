@@ -92,7 +92,7 @@ public class AddScenarioStateProcessor implements StateProcessor {
                 UseCase _useCase = UcmUtils.getUseCase(scenario);
                 String _id = _useCase.getId();
                 _builder.append(_id, "");
-                _builder.append(" ");
+                _builder.append("_");
                 String _label = scenario.getLabel();
                 _builder.append(_label, "");
                 it.setId(_builder.toString());
@@ -261,11 +261,11 @@ public class AddScenarioStateProcessor implements StateProcessor {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this._resultDot== null) ? 0 : this._resultDot.hashCode());
-    result = prime * result + ((this._state2Graph== null) ? 0 : this._state2Graph.hashCode());
-    result = prime * result + ((this._scenario2Graph== null) ? 0 : this._scenario2Graph.hashCode());
-    result = prime * result + ((this._useCase2Graph== null) ? 0 : this._useCase2Graph.hashCode());
-    result = prime * result + ((this._dotFactory== null) ? 0 : this._dotFactory.hashCode());
+    result = prime * result + ((_resultDot== null) ? 0 : _resultDot.hashCode());
+    result = prime * result + ((_state2Graph== null) ? 0 : _state2Graph.hashCode());
+    result = prime * result + ((_scenario2Graph== null) ? 0 : _scenario2Graph.hashCode());
+    result = prime * result + ((_useCase2Graph== null) ? 0 : _useCase2Graph.hashCode());
+    result = prime * result + ((_dotFactory== null) ? 0 : _dotFactory.hashCode());
     return result;
   }
   
@@ -278,30 +278,30 @@ public class AddScenarioStateProcessor implements StateProcessor {
     if (getClass() != obj.getClass())
       return false;
     AddScenarioStateProcessor other = (AddScenarioStateProcessor) obj;
-    if (this._resultDot == null) {
+    if (_resultDot == null) {
       if (other._resultDot != null)
         return false;
-    } else if (!this._resultDot.equals(other._resultDot))
+    } else if (!_resultDot.equals(other._resultDot))
       return false;
-    if (this._state2Graph == null) {
+    if (_state2Graph == null) {
       if (other._state2Graph != null)
         return false;
-    } else if (!this._state2Graph.equals(other._state2Graph))
+    } else if (!_state2Graph.equals(other._state2Graph))
       return false;
-    if (this._scenario2Graph == null) {
+    if (_scenario2Graph == null) {
       if (other._scenario2Graph != null)
         return false;
-    } else if (!this._scenario2Graph.equals(other._scenario2Graph))
+    } else if (!_scenario2Graph.equals(other._scenario2Graph))
       return false;
-    if (this._useCase2Graph == null) {
+    if (_useCase2Graph == null) {
       if (other._useCase2Graph != null)
         return false;
-    } else if (!this._useCase2Graph.equals(other._useCase2Graph))
+    } else if (!_useCase2Graph.equals(other._useCase2Graph))
       return false;
-    if (this._dotFactory == null) {
+    if (_dotFactory == null) {
       if (other._dotFactory != null)
         return false;
-    } else if (!this._dotFactory.equals(other._dotFactory))
+    } else if (!_dotFactory.equals(other._dotFactory))
       return false;
     return true;
   }

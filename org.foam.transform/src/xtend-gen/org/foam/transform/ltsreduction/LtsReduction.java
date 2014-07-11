@@ -6,6 +6,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -47,12 +48,12 @@ public class LtsReduction {
     final Iterable<State> filtered = IterableExtensions.<State>filter(_states, _function);
     final ArrayList<State> statesToRemove = new ArrayList<State>();
     Iterables.<State>addAll(statesToRemove, filtered);
-    final Procedure1<State> _function_1 = new Procedure1<State>() {
-      public void apply(final State it) {
+    final Consumer<State> _function_1 = new Consumer<State>() {
+      public void accept(final State it) {
         LtsReduction.this.reduceState(it, lts);
       }
     };
-    IterableExtensions.<State>forEach(statesToRemove, _function_1);
+    statesToRemove.forEach(_function_1);
   }
   
   private Iterable<EStructuralFeature.Setting> filterSettings(final Collection<EStructuralFeature.Setting> settings, final EReference eReference) {
@@ -96,12 +97,12 @@ public class LtsReduction {
   
   protected void notifyStateReduced(final State removedState, final Transition removedToStateTransition, final Transition removedFromStateTransition, final Transition addedTransition) {
     final StateReducedEvent event = new StateReducedEvent(removedState, removedToStateTransition, removedFromStateTransition, addedTransition);
-    final Procedure1<StateReducedEventListener> _function = new Procedure1<StateReducedEventListener>() {
-      public void apply(final StateReducedEventListener it) {
+    final Consumer<StateReducedEventListener> _function = new Consumer<StateReducedEventListener>() {
+      public void accept(final StateReducedEventListener it) {
         it.stateReduced(event);
       }
     };
-    IterableExtensions.<StateReducedEventListener>forEach(this.stateReducedEventListeners, _function);
+    this.stateReducedEventListeners.forEach(_function);
   }
   
   public void addStateReducedEventListener(final StateReducedEventListener stateReducedEventListener) {

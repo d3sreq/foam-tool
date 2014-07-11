@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
@@ -715,13 +716,13 @@ public class Lts2NuSMVLang {
     HashMap<String, String> _xblockexpression = null;
     {
       final HashMap<String, String> result = new HashMap<String, String>();
-      final Procedure1<String> _function = new Procedure1<String>() {
-        public void apply(final String it) {
+      final Consumer<String> _function = new Consumer<String>() {
+        public void accept(final String it) {
           String _createTadlVarName = Lts2NuSMVLang.this.nameService.createTadlVarName(qualifier, it);
           result.put(it, _createTadlVarName);
         }
       };
-      IterableExtensions.<String>forEach(varNames, _function);
+      varNames.forEach(_function);
       _xblockexpression = result;
     }
     return _xblockexpression;
@@ -745,14 +746,14 @@ public class Lts2NuSMVLang {
               result.put(group, varNameMap);
               Template _template = group.getTemplate();
               EList<VariableDefinition> _variableDefinitions = _template.getVariableDefinitions();
-              final Procedure1<VariableDefinition> _function = new Procedure1<VariableDefinition>() {
-                public void apply(final VariableDefinition it) {
+              final Consumer<VariableDefinition> _function = new Consumer<VariableDefinition>() {
+                public void accept(final VariableDefinition it) {
                   String _name = it.getName();
                   ArrayList<Transition> _newArrayList = CollectionLiterals.<Transition>newArrayList();
                   varNameMap.put(_name, _newArrayList);
                 }
               };
-              IterableExtensions.<VariableDefinition>forEach(_variableDefinitions, _function);
+              _variableDefinitions.forEach(_function);
             }
             final Map<String, List<Transition>> varNameMap_1 = result.get(group);
             VariableDefinition _variableDefinition = tempAnnot.getVariableDefinition();

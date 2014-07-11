@@ -9,13 +9,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.foam.annotation.Annotation;
 import org.foam.lts.Automaton;
 import org.foam.lts.LtsFactory;
@@ -147,12 +147,12 @@ public class Ucm2LtsFacade {
     final LtsReduction ltsReduction = new LtsReduction(reductionPredicate);
     ltsReduction.removeUnneededStates(automaton);
     Ucm2LtsFacade.firstStepReduction(mapping, automaton, mainScenario);
-    final Procedure1<Scenario> _function = new Procedure1<Scenario>() {
-      public void apply(final Scenario it) {
+    final Consumer<Scenario> _function = new Consumer<Scenario>() {
+      public void accept(final Scenario it) {
         Ucm2LtsFacade.lastStepReduction(mapping, automaton, it);
       }
     };
-    IterableExtensions.<Scenario>forEach(allScenarios, _function);
+    allScenarios.forEach(_function);
   }
   
   private static Predicate<State> createStepStateToRemovePredicate(final Automaton automaton, final Map<Pair<Step, StateType>, State> mapping) {

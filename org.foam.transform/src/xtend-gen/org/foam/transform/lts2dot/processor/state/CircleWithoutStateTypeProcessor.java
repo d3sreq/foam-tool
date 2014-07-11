@@ -50,7 +50,7 @@ public class CircleWithoutStateTypeProcessor implements StateProcessor {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this._state2Node== null) ? 0 : this._state2Node.hashCode());
+    result = prime * result + ((_state2Node== null) ? 0 : _state2Node.hashCode());
     return result;
   }
   
@@ -63,10 +63,10 @@ public class CircleWithoutStateTypeProcessor implements StateProcessor {
     if (getClass() != obj.getClass())
       return false;
     CircleWithoutStateTypeProcessor other = (CircleWithoutStateTypeProcessor) obj;
-    if (this._state2Node == null) {
+    if (_state2Node == null) {
       if (other._state2Node != null)
         return false;
-    } else if (!this._state2Node.equals(other._state2Node))
+    } else if (!_state2Node.equals(other._state2Node))
       return false;
     return true;
   }

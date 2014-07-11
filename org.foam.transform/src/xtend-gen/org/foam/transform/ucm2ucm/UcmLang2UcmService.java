@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.emf.common.util.EList;
@@ -154,13 +155,13 @@ public class UcmLang2UcmService {
   private void resolvePreceding(final Multimap<UseCase, String> precedingMap, final UseCaseModel useCaseModel) {
     final EList<UseCase> allUseCases = useCaseModel.getUseCases();
     final HashMap<String, UseCase> id2UseCase = new HashMap<String, UseCase>();
-    final Procedure1<UseCase> _function = new Procedure1<UseCase>() {
-      public void apply(final UseCase it) {
+    final Consumer<UseCase> _function = new Consumer<UseCase>() {
+      public void accept(final UseCase it) {
         String _id = it.getId();
         id2UseCase.put(_id, it);
       }
     };
-    IterableExtensions.<UseCase>forEach(allUseCases, _function);
+    allUseCases.forEach(_function);
     Collection<Map.Entry<UseCase, String>> _entries = precedingMap.entries();
     for (final Map.Entry<UseCase, String> entry : _entries) {
       {
@@ -205,13 +206,13 @@ public class UcmLang2UcmService {
       final HashMap<String, Step> labelToStep = new HashMap<String, Step>();
       Scenario _mainScenario = useCase.getMainScenario();
       EList<Step> _steps = _mainScenario.getSteps();
-      final Procedure1<Step> _function = new Procedure1<Step>() {
-        public void apply(final Step it) {
+      final Consumer<Step> _function = new Consumer<Step>() {
+        public void accept(final Step it) {
           String _label = it.getLabel();
           labelToStep.put(_label, it);
         }
       };
-      IterableExtensions.<Step>forEach(_steps, _function);
+      _steps.forEach(_function);
       boolean _isEmpty = lines.isEmpty();
       boolean _not = (!_isEmpty);
       boolean _while = _not;
@@ -277,13 +278,13 @@ public class UcmLang2UcmService {
             throw new ParseException(_builder_3.toString(), (-1));
           }
           EList<Step> _steps_1 = scenario.getSteps();
-          final Procedure1<Step> _function_1 = new Procedure1<Step>() {
-            public void apply(final Step it) {
+          final Consumer<Step> _function_1 = new Consumer<Step>() {
+            public void accept(final Step it) {
               String _label = it.getLabel();
               labelToStep.put(_label, it);
             }
           };
-          IterableExtensions.<Step>forEach(_steps_1, _function_1);
+          _steps_1.forEach(_function_1);
         }
         boolean _isEmpty_1 = lines.isEmpty();
         boolean _not_1 = (!_isEmpty_1);

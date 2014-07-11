@@ -10,12 +10,12 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -30,9 +30,9 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.foam.annotation.AnnotationPackage;
 import org.foam.cli.launcher.api.IExecutableTool;
+import org.foam.cli.tools.nusmv.NusmvWrapper;
 import org.foam.cli.tools.report.SpecificationWrapper;
 import org.foam.cli.tools.report.pages.ErrorPage;
 import org.foam.cli.tools.report.pages.Menu;
@@ -80,11 +80,20 @@ import org.foam.ucm.UcmPackage;
 import org.foam.ucm.UseCase;
 import org.foam.ucm.UseCaseModel;
 import org.foam.verification.VerificationPackage;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.log.LogService;
 
 @Component
 @SuppressWarnings("all")
 public class ReportApplication implements IExecutableTool {
+  private NusmvWrapper nusmvWrapper;
+  
+  @Reference
+  public void setNusmvWrapper(final NusmvWrapper nusmvWrapper) {
+    this.nusmvWrapper = nusmvWrapper;
+  }
+  
   private LogService logService;
   
   @Reference
@@ -107,6 +116,132 @@ public class ReportApplication implements IExecutableTool {
   public void error(final CharSequence message) {
     String _string = message.toString();
     this.logService.log(LogService.LOG_ERROR, _string);
+  }
+  
+  public void execute(final String[] args) {
+    try {
+      final OptionParser optionParser = new OptionParser();
+      OptionSpecBuilder _accepts = optionParser.accepts("i", "input dir");
+      ArgumentAcceptingOptionSpec<String> _withRequiredArg = _accepts.withRequiredArg();
+      final ArgumentAcceptingOptionSpec<String> inputOption = _withRequiredArg.describedAs("directory with textual use cases");
+      OptionSpecBuilder _accepts_1 = optionParser.accepts("t", "tadl input dir");
+      ArgumentAcceptingOptionSpec<String> _withRequiredArg_1 = _accepts_1.withRequiredArg();
+      final ArgumentAcceptingOptionSpec<String> tadlOption = _withRequiredArg_1.describedAs("directory with textual tadl definitions");
+      OptionSpecBuilder _accepts_2 = optionParser.accepts("o", "output dir");
+      ArgumentAcceptingOptionSpec<String> _withOptionalArg = _accepts_2.withOptionalArg();
+      final ArgumentAcceptingOptionSpec<String> outputOption = _withOptionalArg.describedAs("output directory for html report");
+      ArrayList<String> _newArrayList = CollectionLiterals.<String>newArrayList("h", "?");
+      optionParser.acceptsAll(_newArrayList, "show help");
+      final OptionSet options = optionParser.parse(args);
+      String _xifexpression = null;
+      boolean _and = false;
+      boolean _has = options.has(inputOption);
+      if (!_has) {
+        _and = false;
+      } else {
+        boolean _hasArgument = options.hasArgument(inputOption);
+        _and = _hasArgument;
+      }
+      if (_and) {
+        _xifexpression = inputOption.value(options);
+      } else {
+        optionParser.printHelpOn(System.out);
+        return;
+      }
+      final String inputDirName = _xifexpression;
+      String _xifexpression_1 = null;
+      boolean _and_1 = false;
+      boolean _has_1 = options.has(tadlOption);
+      if (!_has_1) {
+        _and_1 = false;
+      } else {
+        boolean _hasArgument_1 = options.hasArgument(tadlOption);
+        _and_1 = _hasArgument_1;
+      }
+      if (_and_1) {
+        _xifexpression_1 = tadlOption.value(options);
+      } else {
+        optionParser.printHelpOn(System.out);
+        return;
+      }
+      final String tadlDirName = _xifexpression_1;
+      String _xifexpression_2 = null;
+      boolean _and_2 = false;
+      boolean _has_2 = options.has(outputOption);
+      if (!_has_2) {
+        _and_2 = false;
+      } else {
+        boolean _hasArgument_2 = options.hasArgument(outputOption);
+        _and_2 = _hasArgument_2;
+      }
+      if (_and_2) {
+        _xifexpression_2 = outputOption.value(options);
+      } else {
+        _xifexpression_2 = "report";
+      }
+      final String outputDirName = _xifexpression_2;
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("Checking Graphviz version");
+      this.info(_builder);
+      GraphvizUtils.checkGraphvizVersion();
+      this.init();
+      final UseCaseModel useCaseModel = this.ucmlang2Ucm(inputDirName);
+      StringConcatenation _builder_1 = new StringConcatenation();
+      _builder_1.append("Validating input UseCaseModel (with resolved flow annotations)");
+      this.info(_builder_1);
+      EmfCommons.basicValidate(useCaseModel);
+      final List<Template> templates = this.tadlLang2Templates(tadlDirName);
+      StringConcatenation _builder_2 = new StringConcatenation();
+      _builder_2.append("Validating input TADL templates");
+      this.info(_builder_2);
+      final Consumer<Template> _function = new Consumer<Template>() {
+        public void accept(final Template it) {
+          EmfCommons.basicValidate(it);
+        }
+      };
+      templates.forEach(_function);
+      this.resolveTadlAnnotations(useCaseModel, templates);
+      StringConcatenation _builder_3 = new StringConcatenation();
+      _builder_3.append("Validating UseCaseModel with resolved TADL annotations");
+      this.info(_builder_3);
+      EmfCommons.basicValidate(useCaseModel);
+      final Iterable<CounterExample> counterExamples = this.getCounterExamples(useCaseModel);
+      final Function1<CounterExample, EList<Specification>> _function_1 = new Function1<CounterExample, EList<Specification>>() {
+        public EList<Specification> apply(final CounterExample it) {
+          return it.getSpecifications();
+        }
+      };
+      Iterable<EList<Specification>> _map = IterableExtensions.<CounterExample, EList<Specification>>map(counterExamples, _function_1);
+      Iterable<Specification> _flatten = Iterables.<Specification>concat(_map);
+      final Function1<Specification, Boolean> _function_2 = new Function1<Specification, Boolean>() {
+        public Boolean apply(final Specification it) {
+          Trace _trace = it.getTrace();
+          return Boolean.valueOf((!Objects.equal(_trace, null)));
+        }
+      };
+      Iterable<Specification> _filter = IterableExtensions.<Specification>filter(_flatten, _function_2);
+      final Iterable<Specification> specifications = this.uniqueSpecifications(_filter);
+      StringConcatenation _builder_4 = new StringConcatenation();
+      _builder_4.append("Validating error specifications");
+      this.info(_builder_4);
+      final Consumer<Specification> _function_3 = new Consumer<Specification>() {
+        public void accept(final Specification it) {
+          EmfCommons.basicValidate(it);
+        }
+      };
+      specifications.forEach(_function_3);
+      this.createReport(useCaseModel, templates, specifications, outputDirName);
+      this.info("done.");
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public String getUsage() {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Runs the whole FOAM workflow and generates an HTML report. ");
+    _builder.newLine();
+    return _builder.toString();
   }
   
   private Iterable<Specification> uniqueSpecifications(final Iterable<Specification> specifications) {
@@ -242,13 +377,13 @@ public class ReportApplication implements IExecutableTool {
     };
     List<List<MenuItem>> _map_4 = ListExtensions.<MenuCategory, List<MenuItem>>map(_categories_5, _function_10);
     Iterable<MenuItem> _flatten = Iterables.<MenuItem>concat(_map_4);
-    final Procedure1<MenuItem> _function_11 = new Procedure1<MenuItem>() {
-      public void apply(final MenuItem it) {
+    final Consumer<MenuItem> _function_11 = new Consumer<MenuItem>() {
+      public void accept(final MenuItem it) {
         Page _page = it.getPage();
         ReportApplication.this.writePage(_page, outputDirName);
       }
     };
-    IterableExtensions.<MenuItem>forEach(_flatten, _function_11);
+    _flatten.forEach(_function_11);
   }
   
   private HashMap<Group, List<Specification>> partitionByGroup(final Iterable<Specification> specifications) {
@@ -297,9 +432,10 @@ public class ReportApplication implements IExecutableTool {
         _builder.append("Validating overview LTS");
         this.info(_builder);
         EmfCommons.basicValidate(automaton);
-        URL _uRL = new URL("platform:/plugin/cli.report/resources/data/dot/OverviewGraphTemplate.xmi");
-        URLConnection _openConnection = _uRL.openConnection();
-        final InputStream overviewGraphTemplate = _openConnection.getInputStream();
+        Class<? extends ReportApplication> _class = this.getClass();
+        Bundle _bundle = FrameworkUtil.getBundle(_class);
+        URL _resource = _bundle.getResource("/report/dot/OverviewGraphTemplate.xmi");
+        final InputStream overviewGraphTemplate = _resource.openStream();
         EObject _readModel = EmfCommons.readModel(overviewGraphTemplate);
         final Graph initGraph = ((Graph) _readModel);
         StringConcatenation _builder_1 = new StringConcatenation();
@@ -333,9 +469,10 @@ public class ReportApplication implements IExecutableTool {
         _builder.append(" LTS");
         this.info(_builder);
         EmfCommons.basicValidate(automaton);
-        URL _uRL = new URL("platform:/plugin/cli.report/resources/data/dot/GraphTemplate.xmi");
-        URLConnection _openConnection = _uRL.openConnection();
-        final InputStream graphTemplate = _openConnection.getInputStream();
+        Class<? extends ReportApplication> _class = this.getClass();
+        Bundle _bundle = FrameworkUtil.getBundle(_class);
+        URL _resource = _bundle.getResource("/report/dot/GraphTemplate.xmi");
+        final InputStream graphTemplate = _resource.openStream();
         EObject _readModel = EmfCommons.readModel(graphTemplate);
         final Graph initGraph = ((Graph) _readModel);
         StringConcatenation _builder_1 = new StringConcatenation();
@@ -613,23 +750,23 @@ public class ReportApplication implements IExecutableTool {
   }
   
   private List<Template> tadlLang2Templates(final String tadlDirName) {
-    List<Template> _xblockexpression = null;
-    {
-      final TadlLang2Tadl tadlLang2Tadl = new TadlLang2Tadl();
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("Reading TADL definitions from file \"");
-      _builder.append(tadlDirName, "");
-      _builder.append("\" and parsing");
-      this.info(_builder);
-      final List<String> texts = this.readTexts(tadlDirName);
-      final Function1<String, Template> _function = new Function1<String, Template>() {
-        public Template apply(final String it) {
-          return tadlLang2Tadl.parse(it);
-        }
-      };
-      _xblockexpression = ListExtensions.<String, Template>map(texts, _function);
-    }
-    return _xblockexpression;
+    final TadlLang2Tadl tadlLang2Tadl = new TadlLang2Tadl();
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Reading TADL definitions from file \"");
+    _builder.append(tadlDirName, "");
+    _builder.append("\" and parsing");
+    this.info(_builder);
+    final List<String> texts = this.readTexts(tadlDirName);
+    final Function1<String, Template> _function = new Function1<String, Template>() {
+      public Template apply(final String it) {
+        return tadlLang2Tadl.parse(it);
+      }
+    };
+    final List<Template> templates = ListExtensions.<String, Template>map(texts, _function);
+    StringConcatenation _builder_1 = new StringConcatenation();
+    _builder_1.append("TADL files resolved");
+    this.info(_builder_1);
+    return templates;
   }
   
   private void resolveTadlAnnotations(final UseCaseModel useCaseModel, final List<Template> templates) {
@@ -645,7 +782,7 @@ public class ReportApplication implements IExecutableTool {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("Copying template web files to outputDir");
       this.info(_builder);
-      FileUtils.bundleCopy("resources/data/web", outputDir);
+      FileUtils.bundleCopy("report/web", outputDir);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -671,131 +808,5 @@ public class ReportApplication implements IExecutableTool {
       _xblockexpression = ListExtensions.<File, String>map(((List<File>)Conversions.doWrapArray(_listFiles)), _function);
     }
     return _xblockexpression;
-  }
-  
-  public void execute(final String[] args) {
-    try {
-      final OptionParser optionParser = new OptionParser();
-      OptionSpecBuilder _accepts = optionParser.accepts("i", "input dir");
-      ArgumentAcceptingOptionSpec<String> _withRequiredArg = _accepts.withRequiredArg();
-      final ArgumentAcceptingOptionSpec<String> inputOption = _withRequiredArg.describedAs("directory with textual use cases");
-      OptionSpecBuilder _accepts_1 = optionParser.accepts("t", "tadl input dir");
-      ArgumentAcceptingOptionSpec<String> _withRequiredArg_1 = _accepts_1.withRequiredArg();
-      final ArgumentAcceptingOptionSpec<String> tadlOption = _withRequiredArg_1.describedAs("directory with textual tadl definitions");
-      OptionSpecBuilder _accepts_2 = optionParser.accepts("o", "output dir");
-      ArgumentAcceptingOptionSpec<String> _withOptionalArg = _accepts_2.withOptionalArg();
-      final ArgumentAcceptingOptionSpec<String> outputOption = _withOptionalArg.describedAs("output directory for html report");
-      ArrayList<String> _newArrayList = CollectionLiterals.<String>newArrayList("h", "?");
-      optionParser.acceptsAll(_newArrayList, "show help");
-      final OptionSet options = optionParser.parse(args);
-      String _xifexpression = null;
-      boolean _and = false;
-      boolean _has = options.has(inputOption);
-      if (!_has) {
-        _and = false;
-      } else {
-        boolean _hasArgument = options.hasArgument(inputOption);
-        _and = _hasArgument;
-      }
-      if (_and) {
-        _xifexpression = inputOption.value(options);
-      } else {
-        optionParser.printHelpOn(System.out);
-        return;
-      }
-      final String inputDirName = _xifexpression;
-      String _xifexpression_1 = null;
-      boolean _and_1 = false;
-      boolean _has_1 = options.has(tadlOption);
-      if (!_has_1) {
-        _and_1 = false;
-      } else {
-        boolean _hasArgument_1 = options.hasArgument(tadlOption);
-        _and_1 = _hasArgument_1;
-      }
-      if (_and_1) {
-        _xifexpression_1 = tadlOption.value(options);
-      } else {
-        optionParser.printHelpOn(System.out);
-        return;
-      }
-      final String tadlDirName = _xifexpression_1;
-      String _xifexpression_2 = null;
-      boolean _and_2 = false;
-      boolean _has_2 = options.has(outputOption);
-      if (!_has_2) {
-        _and_2 = false;
-      } else {
-        boolean _hasArgument_2 = options.hasArgument(outputOption);
-        _and_2 = _hasArgument_2;
-      }
-      if (_and_2) {
-        _xifexpression_2 = outputOption.value(options);
-      } else {
-        _xifexpression_2 = "report";
-      }
-      final String outputDirName = _xifexpression_2;
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("Checking Graphviz version");
-      this.info(_builder);
-      GraphvizUtils.checkGraphvizVersion();
-      this.init();
-      final UseCaseModel useCaseModel = this.ucmlang2Ucm(inputDirName);
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("Validating input UseCaseModel (with resolved flow annotations)");
-      this.info(_builder_1);
-      EmfCommons.basicValidate(useCaseModel);
-      final List<Template> templates = this.tadlLang2Templates(tadlDirName);
-      StringConcatenation _builder_2 = new StringConcatenation();
-      _builder_2.append("Validating input TADL templates");
-      this.info(_builder_2);
-      final Procedure1<Template> _function = new Procedure1<Template>() {
-        public void apply(final Template it) {
-          EmfCommons.basicValidate(it);
-        }
-      };
-      IterableExtensions.<Template>forEach(templates, _function);
-      this.resolveTadlAnnotations(useCaseModel, templates);
-      StringConcatenation _builder_3 = new StringConcatenation();
-      _builder_3.append("Validating UseCaseModel with resolved TADL annotations");
-      this.info(_builder_3);
-      EmfCommons.basicValidate(useCaseModel);
-      final Iterable<CounterExample> counterExamples = this.getCounterExamples(useCaseModel);
-      final Function1<CounterExample, EList<Specification>> _function_1 = new Function1<CounterExample, EList<Specification>>() {
-        public EList<Specification> apply(final CounterExample it) {
-          return it.getSpecifications();
-        }
-      };
-      Iterable<EList<Specification>> _map = IterableExtensions.<CounterExample, EList<Specification>>map(counterExamples, _function_1);
-      Iterable<Specification> _flatten = Iterables.<Specification>concat(_map);
-      final Function1<Specification, Boolean> _function_2 = new Function1<Specification, Boolean>() {
-        public Boolean apply(final Specification it) {
-          Trace _trace = it.getTrace();
-          return Boolean.valueOf((!Objects.equal(_trace, null)));
-        }
-      };
-      Iterable<Specification> _filter = IterableExtensions.<Specification>filter(_flatten, _function_2);
-      final Iterable<Specification> specifications = this.uniqueSpecifications(_filter);
-      StringConcatenation _builder_4 = new StringConcatenation();
-      _builder_4.append("Validating error specifications");
-      this.info(_builder_4);
-      final Procedure1<Specification> _function_3 = new Procedure1<Specification>() {
-        public void apply(final Specification it) {
-          EmfCommons.basicValidate(it);
-        }
-      };
-      IterableExtensions.<Specification>forEach(specifications, _function_3);
-      this.createReport(useCaseModel, templates, specifications, outputDirName);
-      this.info("done.");
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  public String getUsage() {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("Runs the whole FOAM workflow and generates an HTML report. ");
-    _builder.newLine();
-    return _builder.toString();
   }
 }

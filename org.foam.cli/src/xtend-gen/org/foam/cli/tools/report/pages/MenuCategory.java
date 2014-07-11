@@ -1,10 +1,9 @@
 package org.foam.cli.tools.report.pages;
 
-import com.google.common.collect.Lists;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.eclipse.xtend.lib.Data;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringHelper;
 import org.foam.cli.tools.report.pages.MenuItem;
@@ -25,7 +24,7 @@ public class MenuCategory {
     return this._name;
   }
   
-  private final List<MenuItem> _menuItems = Collections.<MenuItem>unmodifiableList(Lists.<MenuItem>newArrayList());
+  private final List<MenuItem> _menuItems = CollectionLiterals.<MenuItem>newArrayList();
   
   public List<MenuItem> getMenuItems() {
     return this._menuItems;
@@ -61,9 +60,9 @@ public class MenuCategory {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this._name== null) ? 0 : this._name.hashCode());
-    result = prime * result + ((this._menuItems== null) ? 0 : this._menuItems.hashCode());
-    result = prime * result + ((this._naturalOrderComparator== null) ? 0 : this._naturalOrderComparator.hashCode());
+    result = prime * result + ((_name== null) ? 0 : _name.hashCode());
+    result = prime * result + ((_menuItems== null) ? 0 : _menuItems.hashCode());
+    result = prime * result + ((_naturalOrderComparator== null) ? 0 : _naturalOrderComparator.hashCode());
     return result;
   }
   
@@ -76,20 +75,20 @@ public class MenuCategory {
     if (getClass() != obj.getClass())
       return false;
     MenuCategory other = (MenuCategory) obj;
-    if (this._name == null) {
+    if (_name == null) {
       if (other._name != null)
         return false;
-    } else if (!this._name.equals(other._name))
+    } else if (!_name.equals(other._name))
       return false;
-    if (this._menuItems == null) {
+    if (_menuItems == null) {
       if (other._menuItems != null)
         return false;
-    } else if (!this._menuItems.equals(other._menuItems))
+    } else if (!_menuItems.equals(other._menuItems))
       return false;
-    if (this._naturalOrderComparator == null) {
+    if (_naturalOrderComparator == null) {
       if (other._naturalOrderComparator != null)
         return false;
-    } else if (!this._naturalOrderComparator.equals(other._naturalOrderComparator))
+    } else if (!_naturalOrderComparator.equals(other._naturalOrderComparator))
       return false;
     return true;
   }

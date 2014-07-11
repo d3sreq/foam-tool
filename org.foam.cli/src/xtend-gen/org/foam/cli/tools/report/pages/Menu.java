@@ -79,7 +79,7 @@ public class Menu {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this._categories== null) ? 0 : this._categories.hashCode());
+    result = prime * result + ((_categories== null) ? 0 : _categories.hashCode());
     return result;
   }
   
@@ -92,10 +92,10 @@ public class Menu {
     if (getClass() != obj.getClass())
       return false;
     Menu other = (Menu) obj;
-    if (this._categories == null) {
+    if (_categories == null) {
       if (other._categories != null)
         return false;
-    } else if (!this._categories.equals(other._categories))
+    } else if (!_categories.equals(other._categories))
       return false;
     return true;
   }

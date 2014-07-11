@@ -75,9 +75,9 @@ public class OverviewPage implements Page {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this._menu== null) ? 0 : this._menu.hashCode());
-    result = prime * result + ((this._overviewImageLocation== null) ? 0 : this._overviewImageLocation.hashCode());
-    result = prime * result + ((this._css== null) ? 0 : this._css.hashCode());
+    result = prime * result + ((_menu== null) ? 0 : _menu.hashCode());
+    result = prime * result + ((_overviewImageLocation== null) ? 0 : _overviewImageLocation.hashCode());
+    result = prime * result + ((_css== null) ? 0 : _css.hashCode());
     return result;
   }
   
@@ -90,20 +90,20 @@ public class OverviewPage implements Page {
     if (getClass() != obj.getClass())
       return false;
     OverviewPage other = (OverviewPage) obj;
-    if (this._menu == null) {
+    if (_menu == null) {
       if (other._menu != null)
         return false;
-    } else if (!this._menu.equals(other._menu))
+    } else if (!_menu.equals(other._menu))
       return false;
-    if (this._overviewImageLocation == null) {
+    if (_overviewImageLocation == null) {
       if (other._overviewImageLocation != null)
         return false;
-    } else if (!this._overviewImageLocation.equals(other._overviewImageLocation))
+    } else if (!_overviewImageLocation.equals(other._overviewImageLocation))
       return false;
-    if (this._css == null) {
+    if (_css == null) {
       if (other._css != null)
         return false;
-    } else if (!this._css.equals(other._css))
+    } else if (!_css.equals(other._css))
       return false;
     return true;
   }

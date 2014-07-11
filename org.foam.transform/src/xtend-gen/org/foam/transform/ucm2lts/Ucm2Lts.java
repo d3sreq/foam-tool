@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -179,12 +180,12 @@ public class Ucm2Lts {
   
   protected void notifyStateAdded(final Step sourceStep, final State targetState, final StateType stateType) {
     final StateAddedEvent event = new StateAddedEvent(sourceStep, targetState, stateType);
-    final Procedure1<StateAddedEventListener> _function = new Procedure1<StateAddedEventListener>() {
-      public void apply(final StateAddedEventListener it) {
+    final Consumer<StateAddedEventListener> _function = new Consumer<StateAddedEventListener>() {
+      public void accept(final StateAddedEventListener it) {
         it.stateAdded(event);
       }
     };
-    IterableExtensions.<StateAddedEventListener>forEach(this.stateAddedEventListeners, _function);
+    this.stateAddedEventListeners.forEach(_function);
   }
   
   protected Transition addTransition(final State startState, final State endState, final Automaton automaton, final Map<Pair<State, State>, Transition> transitionMap) {
@@ -555,8 +556,8 @@ public class Ucm2Lts {
               }
             };
             Iterable<Step> _filter_1 = IterableExtensions.<Step>filter(_allSteps_1, _function_4);
-            final Procedure1<Step> _function_5 = new Procedure1<Step>() {
-              public void apply(final Step it) {
+            final Consumer<Step> _function_5 = new Consumer<Step>() {
+              public void accept(final Step it) {
                 StringConcatenation _builder = new StringConcatenation();
                 _builder.append("Found a step with ABORT annotation: ");
                 String _label = it.getLabel();
@@ -571,7 +572,7 @@ public class Ucm2Lts {
                 returnStates.add(_get);
               }
             };
-            IterableExtensions.<Step>forEach(_filter_1, _function_5);
+            _filter_1.forEach(_function_5);
             for (final State returnState : returnStates) {
               {
                 StringConcatenation _builder_2 = new StringConcatenation();

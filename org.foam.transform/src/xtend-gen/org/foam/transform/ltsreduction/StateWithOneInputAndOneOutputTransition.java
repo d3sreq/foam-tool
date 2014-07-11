@@ -64,7 +64,7 @@ public class StateWithOneInputAndOneOutputTransition implements Predicate<State>
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this._transitions== null) ? 0 : this._transitions.hashCode());
+    result = prime * result + ((_transitions== null) ? 0 : _transitions.hashCode());
     return result;
   }
   
@@ -77,10 +77,10 @@ public class StateWithOneInputAndOneOutputTransition implements Predicate<State>
     if (getClass() != obj.getClass())
       return false;
     StateWithOneInputAndOneOutputTransition other = (StateWithOneInputAndOneOutputTransition) obj;
-    if (this._transitions == null) {
+    if (_transitions == null) {
       if (other._transitions != null)
         return false;
-    } else if (!this._transitions.equals(other._transitions))
+    } else if (!_transitions.equals(other._transitions))
       return false;
     return true;
   }

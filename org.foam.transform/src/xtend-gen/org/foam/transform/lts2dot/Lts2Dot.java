@@ -3,10 +3,9 @@ package org.foam.transform.lts2dot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.foam.dot.Graph;
 import org.foam.dot.Node;
 import org.foam.dot.RecordNode;
@@ -59,19 +58,19 @@ public class Lts2Dot {
       CreateEdgeTransitionProcessor _createEdgeTransitionProcessor = new CreateEdgeTransitionProcessor(graph, state2Node);
       final ArrayList<TransitionProcessor> transitionProcessorChain = CollectionLiterals.<TransitionProcessor>newArrayList(_removeRecordNodeEdgeTransitionProcessor, _createEdgeTransitionProcessor);
       EList<State> _states = lts.getStates();
-      final Procedure1<State> _function = new Procedure1<State>() {
-        public void apply(final State it) {
+      final Consumer<State> _function = new Consumer<State>() {
+        public void accept(final State it) {
           Lts2Dot.this.processState(stateProcessorChain, it);
         }
       };
-      IterableExtensions.<State>forEach(_states, _function);
+      _states.forEach(_function);
       EList<Transition> _transitions = lts.getTransitions();
-      final Procedure1<Transition> _function_1 = new Procedure1<Transition>() {
-        public void apply(final Transition it) {
+      final Consumer<Transition> _function_1 = new Consumer<Transition>() {
+        public void accept(final Transition it) {
           Lts2Dot.this.processTransition(transitionProcessorChain, it);
         }
       };
-      IterableExtensions.<Transition>forEach(_transitions, _function_1);
+      _transitions.forEach(_function_1);
       _xblockexpression = graph;
     }
     return _xblockexpression;
@@ -97,19 +96,19 @@ public class Lts2Dot {
       CreateEdgeTransitionProcessor _createEdgeTransitionProcessor = new CreateEdgeTransitionProcessor(graph, state2Node);
       final ArrayList<TransitionProcessor> transitionProcessorChain = CollectionLiterals.<TransitionProcessor>newArrayList(_removeRecordNodeEdgeTransitionProcessor, _createEdgeTransitionProcessor);
       EList<State> _states = lts.getStates();
-      final Procedure1<State> _function = new Procedure1<State>() {
-        public void apply(final State it) {
+      final Consumer<State> _function = new Consumer<State>() {
+        public void accept(final State it) {
           Lts2Dot.this.processState(stateProcessorChain, it);
         }
       };
-      IterableExtensions.<State>forEach(_states, _function);
+      _states.forEach(_function);
       EList<Transition> _transitions = lts.getTransitions();
-      final Procedure1<Transition> _function_1 = new Procedure1<Transition>() {
-        public void apply(final Transition it) {
+      final Consumer<Transition> _function_1 = new Consumer<Transition>() {
+        public void accept(final Transition it) {
           Lts2Dot.this.processTransition(transitionProcessorChain, it);
         }
       };
-      IterableExtensions.<Transition>forEach(_transitions, _function_1);
+      _transitions.forEach(_function_1);
       _xblockexpression = graph;
     }
     return _xblockexpression;
@@ -124,19 +123,19 @@ public class Lts2Dot {
       CreateOverviewEdgeTransitionProcessor _createOverviewEdgeTransitionProcessor = new CreateOverviewEdgeTransitionProcessor(graph, state2Node);
       final ArrayList<TransitionProcessor> transitionProcessorChain = CollectionLiterals.<TransitionProcessor>newArrayList(_createOverviewEdgeTransitionProcessor);
       EList<State> _states = lts.getStates();
-      final Procedure1<State> _function = new Procedure1<State>() {
-        public void apply(final State it) {
+      final Consumer<State> _function = new Consumer<State>() {
+        public void accept(final State it) {
           Lts2Dot.this.processState(stateProcessorChain, it);
         }
       };
-      IterableExtensions.<State>forEach(_states, _function);
+      _states.forEach(_function);
       EList<Transition> _transitions = lts.getTransitions();
-      final Procedure1<Transition> _function_1 = new Procedure1<Transition>() {
-        public void apply(final Transition it) {
+      final Consumer<Transition> _function_1 = new Consumer<Transition>() {
+        public void accept(final Transition it) {
           Lts2Dot.this.processTransition(transitionProcessorChain, it);
         }
       };
-      IterableExtensions.<Transition>forEach(_transitions, _function_1);
+      _transitions.forEach(_function_1);
       _xblockexpression = graph;
     }
     return _xblockexpression;

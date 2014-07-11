@@ -44,10 +44,10 @@ public class StateReducedEvent {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((this._removedState== null) ? 0 : this._removedState.hashCode());
-    result = prime * result + ((this._removedToStateTransition== null) ? 0 : this._removedToStateTransition.hashCode());
-    result = prime * result + ((this._removedFromStateTransition== null) ? 0 : this._removedFromStateTransition.hashCode());
-    result = prime * result + ((this._addedTransition== null) ? 0 : this._addedTransition.hashCode());
+    result = prime * result + ((_removedState== null) ? 0 : _removedState.hashCode());
+    result = prime * result + ((_removedToStateTransition== null) ? 0 : _removedToStateTransition.hashCode());
+    result = prime * result + ((_removedFromStateTransition== null) ? 0 : _removedFromStateTransition.hashCode());
+    result = prime * result + ((_addedTransition== null) ? 0 : _addedTransition.hashCode());
     return result;
   }
   
@@ -60,25 +60,25 @@ public class StateReducedEvent {
     if (getClass() != obj.getClass())
       return false;
     StateReducedEvent other = (StateReducedEvent) obj;
-    if (this._removedState == null) {
+    if (_removedState == null) {
       if (other._removedState != null)
         return false;
-    } else if (!this._removedState.equals(other._removedState))
+    } else if (!_removedState.equals(other._removedState))
       return false;
-    if (this._removedToStateTransition == null) {
+    if (_removedToStateTransition == null) {
       if (other._removedToStateTransition != null)
         return false;
-    } else if (!this._removedToStateTransition.equals(other._removedToStateTransition))
+    } else if (!_removedToStateTransition.equals(other._removedToStateTransition))
       return false;
-    if (this._removedFromStateTransition == null) {
+    if (_removedFromStateTransition == null) {
       if (other._removedFromStateTransition != null)
         return false;
-    } else if (!this._removedFromStateTransition.equals(other._removedFromStateTransition))
+    } else if (!_removedFromStateTransition.equals(other._removedFromStateTransition))
       return false;
-    if (this._addedTransition == null) {
+    if (_addedTransition == null) {
       if (other._addedTransition != null)
         return false;
-    } else if (!this._addedTransition.equals(other._addedTransition))
+    } else if (!_addedTransition.equals(other._addedTransition))
       return false;
     return true;
   }
