@@ -16,7 +16,8 @@
 	org.eclipse.xtext.generator,\
 	org.eclipse.xtext.util,\
 	org.foam.models.propositionallogic;version=latest,\
-	org.objectweb.asm
+	org.objectweb.asm,\
+	org.eclipse.xtext.xbase.lib
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.plogic,\
