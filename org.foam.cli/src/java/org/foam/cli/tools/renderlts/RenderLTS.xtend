@@ -18,7 +18,7 @@ import org.foam.traceability.TraceabilityPackage
 import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.lts2dot.Lts2Dot
 import org.foam.transform.utils.graphviz.GraphvizUtils
-import org.foam.transform.utils.model.EmfCommons
+import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService
 

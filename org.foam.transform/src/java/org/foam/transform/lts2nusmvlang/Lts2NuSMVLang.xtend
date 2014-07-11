@@ -5,7 +5,6 @@ import java.util.HashSet
 import java.util.List
 import java.util.Map
 import java.util.Set
-import org.eclipse.xtext.xbase.lib.Pair
 import org.foam.annotation.Annotation
 import org.foam.flowannotation.Guard
 import org.foam.flowannotation.Mark
@@ -21,9 +20,9 @@ import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
+import org.foam.transform.utils.modeling.NameService
 import org.foam.ucm.Step
 import org.foam.verification.Action
-import org.foam.transform.utils.naming.NameService
 
 import static extension org.apache.commons.lang.WordUtils.*
 

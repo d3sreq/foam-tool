@@ -126,6 +126,19 @@ public class Dot2DotLang {
     return _builder;
   }
   
+  private CharSequence _print(final Assignment assignment) {
+    StringConcatenation _builder = new StringConcatenation();
+    String _key = assignment.getKey();
+    _builder.append(_key, "");
+    _builder.append("=\"");
+    String _value = assignment.getValue();
+    String _escape = this.escape(_value);
+    _builder.append(_escape, "");
+    _builder.append("\"");
+    _builder.newLineIfNotEmpty();
+    return _builder;
+  }
+  
   private CharSequence _print(final Settings settings) {
     StringConcatenation _builder = new StringConcatenation();
     SettingsType _type = settings.getType();
@@ -155,19 +168,6 @@ public class Dot2DotLang {
     }
     _builder.append("]");
     _builder.newLine();
-    return _builder;
-  }
-  
-  private CharSequence _print(final Assignment assignment) {
-    StringConcatenation _builder = new StringConcatenation();
-    String _key = assignment.getKey();
-    _builder.append(_key, "");
-    _builder.append("=\"");
-    String _value = assignment.getValue();
-    String _escape = this.escape(_value);
-    _builder.append(_escape, "");
-    _builder.append("\"");
-    _builder.newLineIfNotEmpty();
     return _builder;
   }
   

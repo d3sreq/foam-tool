@@ -1,6 +1,0 @@
-Bundle-Version: 1.0.0
-Export-Package: org.foam.transform.utils.graphviz,\
-	org.foam.transform.utils.model,\
-	org.foam.transform.utils.naming,\
-	org.foam.transform.utils.nusmv,\
-	org.foam.transform.utils.sort

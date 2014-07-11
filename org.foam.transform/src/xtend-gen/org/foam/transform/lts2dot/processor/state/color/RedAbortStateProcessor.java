@@ -15,7 +15,7 @@ import org.foam.dot.RecordNode;
 import org.foam.flowannotation.Abort;
 import org.foam.lts.State;
 import org.foam.transform.lts2dot.processor.state.StateProcessor;
-import org.foam.transform.utils.model.ModelUtils;
+import org.foam.transform.utils.modeling.ModelUtils;
 import org.foam.ucm.Step;
 import org.foam.ucm.UseCase;
 import org.foam.ucm.util.UcmUtils;
@@ -46,8 +46,8 @@ public class RedAbortStateProcessor implements StateProcessor {
           final Predicate<Object> isAbort = Predicates.instanceOf(Abort.class);
           EList<Annotation> _annotations = step.getAnnotations();
           final Iterable<Annotation> aborts = IterableExtensions.<Annotation>filter(_annotations, new Function1<Annotation, Boolean>() {
-              public Boolean apply(Annotation p) {
-                return isAbort.apply(p);
+              public Boolean apply(Annotation arg0) {
+                return isAbort.apply(arg0);
               }
           });
           boolean _isEmpty = IterableExtensions.isEmpty(aborts);

@@ -1,4 +1,4 @@
-package org.foam.cli.tools.nusmv;
+package org.foam.transform.utils.nusmv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,8 +15,8 @@ public class NusmvWrapper {
 	private Process process = null;
 	
 	@Activate
-	final public void activate(Map<String,Object> props) {
-		System.out.println(props);
+	final public void activate(final Map<String,Object> props) {
+		//System.out.println(props);
 	}
 	
 	final public InputStream openNusmvProcess(final String inputFileName)

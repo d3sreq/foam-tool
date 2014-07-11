@@ -1,4 +1,4 @@
-package org.foam.build
+package build
 
 import java.io.File
 import org.eclipse.emf.mwe.utils.DirectoryCleaner

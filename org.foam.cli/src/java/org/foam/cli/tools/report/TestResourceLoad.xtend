@@ -2,16 +2,12 @@ package org.foam.cli.tools.report
 
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
-import org.foam.cli.launcher.api.IExecutableTool
-import org.foam.cli.tools.report.utils.FileUtils
-import org.osgi.service.log.LogService
-import java.net.URL
-import java.nio.file.Files
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import org.foam.cli.launcher.api.IExecutableTool
+import org.foam.cli.tools.report.utils.FileUtils
 import org.osgi.framework.FrameworkUtil
-import java.util.Collections
-import com.google.common.collect.Lists
+import org.osgi.service.log.LogService
 
 @Component
 class TestResourceLoad implements IExecutableTool {

@@ -12,7 +12,7 @@ import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.foam.cli.launcher.api.IExecutableTool;
-import org.foam.cli.tools.nusmv.NusmvWrapper;
+import org.foam.transform.utils.nusmv.NusmvWrapper;
 import org.osgi.service.log.LogService;
 
 @Component

@@ -7,7 +7,7 @@ import org.foam.lts.State;
 import org.foam.lts.Transition;
 import org.foam.traceability.StateType;
 import org.foam.transform.lts2dot.processor.transition.TransitionProcessor;
-import org.foam.transform.utils.model.ModelUtils;
+import org.foam.transform.utils.modeling.ModelUtils;
 import org.foam.ucm.Step;
 
 /**

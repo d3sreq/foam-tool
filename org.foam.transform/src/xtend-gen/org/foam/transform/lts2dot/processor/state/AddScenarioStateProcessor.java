@@ -15,7 +15,7 @@ import org.foam.dot.Graph;
 import org.foam.dot.Statement;
 import org.foam.lts.State;
 import org.foam.transform.lts2dot.processor.state.StateProcessor;
-import org.foam.transform.utils.model.ModelUtils;
+import org.foam.transform.utils.modeling.ModelUtils;
 import org.foam.ucm.Scenario;
 import org.foam.ucm.ScenarioHolder;
 import org.foam.ucm.Step;

@@ -8,7 +8,6 @@ import org.foam.dot.InnerNode
 import org.foam.dot.Node
 import org.foam.dot.RecordNode
 import org.foam.dot.Settings
-import org.foam.dot.Statement
 
 class Dot2DotLang {
 	
@@ -49,6 +48,10 @@ class Dot2DotLang {
 		«edge.source.edgeNodeId» -> «edge.target.edgeNodeId» «edge.createAttributeList»
 	'''
 
+	def private dispatch print(Assignment assignment) '''
+		«assignment.key»="«assignment.value.escape»"
+	'''
+
 	def private dispatch print(Settings settings) '''
 		«settings.type.literal» [
 			«FOR attribute : settings.attributes SEPARATOR ","»
@@ -57,10 +60,6 @@ class Dot2DotLang {
 		]
 	'''
 
-	def private dispatch print(Assignment assignment) '''
-		«assignment.key»="«assignment.value.escape»"
-	'''
-	
 	def private edgeNodeId(Node node) {
 		if (node instanceof InnerNode) {
 			val innerNode = node as InnerNode

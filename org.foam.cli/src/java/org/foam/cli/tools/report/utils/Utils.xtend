@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions
 import org.foam.cntex.Specification
 import org.foam.traceability.FormulaIdentificationAnnotation
 
+//TODO:refactoring needed
 class Utils {
 	
 	def static getGroup(Specification specification) {

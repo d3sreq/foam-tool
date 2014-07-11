@@ -26,7 +26,7 @@ import org.foam.propositionallogic.VariableDefinition
 import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.TraceabilityFactory
-import org.foam.transform.utils.naming.NameService
+import org.foam.transform.utils.modeling.NameService
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase

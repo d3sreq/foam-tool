@@ -14,7 +14,7 @@ import org.foam.propositionallogic.PropositionallogicPackage
 import org.foam.tadl.TadlPackage
 import org.foam.traceability.TraceabilityPackage
 import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang
-import org.foam.transform.utils.model.EmfCommons
+import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService
 

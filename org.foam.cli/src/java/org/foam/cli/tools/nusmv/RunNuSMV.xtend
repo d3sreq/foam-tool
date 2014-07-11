@@ -5,6 +5,7 @@ import aQute.bnd.annotation.component.Reference
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import org.foam.cli.launcher.api.IExecutableTool
+import org.foam.transform.utils.nusmv.NusmvWrapper
 import org.osgi.service.log.LogService
 
 @Component

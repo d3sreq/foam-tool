@@ -3,7 +3,7 @@ package org.foam.transform.lts2dot.processor.transition
 import org.foam.lts.Transition
 import org.eclipse.xtend.lib.Data
 
-import static extension org.foam.transform.utils.model.ModelUtils.*
+import static extension org.foam.transform.utils.modeling.ModelUtils.*
 
 /**
  * Filters out transitions having source and target in same record node

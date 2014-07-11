@@ -1,4 +1,4 @@
-package org.foam.transform.utils.sort;
+package org.foam.cli.tools.report.pages;
 
 /*
 NaturalOrderComparator.java -- Perform 'natural order' comparisons of strings in Java.

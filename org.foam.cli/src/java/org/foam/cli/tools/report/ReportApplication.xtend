@@ -14,7 +14,6 @@ import java.util.Map
 import joptsimple.OptionParser
 import org.foam.annotation.AnnotationPackage
 import org.foam.cli.launcher.api.IExecutableTool
-import org.foam.cli.tools.nusmv.NusmvWrapper
 import org.foam.cli.tools.report.pages.ErrorPage
 import org.foam.cli.tools.report.pages.Menu
 import org.foam.cli.tools.report.pages.MenuCategory
@@ -51,8 +50,9 @@ import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizUtils
-import org.foam.transform.utils.model.EmfCommons
+import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.transform.utils.nusmv.NuSmvUtils
+import org.foam.transform.utils.nusmv.NusmvWrapper
 import org.foam.ucm.UcmPackage
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel

@@ -22,7 +22,7 @@ import org.foam.lts.Transition;
 import org.foam.propositionallogic.Formula;
 import org.foam.propositionallogic.VariableDefinition;
 import org.foam.transform.lts2dot.processor.transition.TransitionProcessor;
-import org.foam.transform.utils.model.ModelUtils;
+import org.foam.transform.utils.modeling.ModelUtils;
 import org.foam.ucm.Step;
 import org.foam.ucm.UseCase;
 import org.foam.ucm.util.UcmUtils;

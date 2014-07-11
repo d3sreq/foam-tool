@@ -5,7 +5,7 @@ import java.util.Map
 import org.foam.lts.State
 import org.eclipse.xtend.lib.Data
 
-import static extension org.foam.transform.utils.model.ModelUtils.*
+import static extension org.foam.transform.utils.modeling.ModelUtils.*
 
 /**
  * @param mapping in parameter

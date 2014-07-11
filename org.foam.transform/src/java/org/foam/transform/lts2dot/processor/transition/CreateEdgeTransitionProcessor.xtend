@@ -1,17 +1,16 @@
 package org.foam.transform.lts2dot.processor.transition
 
+import java.util.Map
 import org.foam.dot.DotFactory
 import org.foam.dot.Edge
 import org.foam.dot.Graph
 import org.foam.dot.Node
 import org.foam.flowannotation.Guard
-import java.util.Map
 import org.foam.lts.State
 import org.foam.lts.Transition
-import org.eclipse.xtend.lib.Data
-import org.foam.transform.utils.model.ModelUtils
-import org.foam.verification.Action
+import org.foam.transform.utils.modeling.ModelUtils
 import org.foam.ucm.util.UcmUtils
+import org.foam.verification.Action
 
 /**
  * @param resultDot out parameter, populated in this processor
@@ -33,7 +32,7 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 			target = state2Node.get(transition.end)
 			
 			// find reference from the transition to the original use-case step
-			val step = ModelUtils::getStepFromStepMappingAnnotation(transition.start)
+			val step = ModelUtils.getStepFromStepMappingAnnotation(transition.start)
 			if(step != null)
 				attributes.put("URL", '''#«UcmUtils::getUseCase(step).id»_«step.label»''' )
 			

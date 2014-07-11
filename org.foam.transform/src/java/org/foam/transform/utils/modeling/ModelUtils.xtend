@@ -1,4 +1,4 @@
-package org.foam.transform.utils.model
+package org.foam.transform.utils.modeling
 
 import org.foam.lts.State
 import org.foam.ucm.Step

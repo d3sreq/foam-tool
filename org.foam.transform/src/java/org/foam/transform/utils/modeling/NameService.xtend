@@ -1,4 +1,4 @@
-package org.foam.transform.utils.naming
+package org.foam.transform.utils.modeling
 
 class NameService {
 	

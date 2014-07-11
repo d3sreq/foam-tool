@@ -42,7 +42,7 @@ import org.foam.traceability.StateTypeMappingAnnotation;
 import org.foam.traceability.StepMappingAnnotation;
 import org.foam.transform.lts2nusmvlang.NuSMVFormulaRenderer;
 import org.foam.transform.lts2nusmvlang.TADLFormulaRenderer;
-import org.foam.transform.utils.naming.NameService;
+import org.foam.transform.utils.modeling.NameService;
 import org.foam.ucm.Step;
 import org.foam.verification.Action;
 

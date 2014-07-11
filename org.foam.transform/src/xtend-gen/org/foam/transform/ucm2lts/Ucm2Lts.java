@@ -50,7 +50,7 @@ import org.foam.traceability.TraceabilityFactory;
 import org.foam.traceability.UseCaseMappingAnnotation;
 import org.foam.transform.ucm2lts.StateAddedEvent;
 import org.foam.transform.ucm2lts.StateAddedEventListener;
-import org.foam.transform.utils.naming.NameService;
+import org.foam.transform.utils.modeling.NameService;
 import org.foam.ucm.Scenario;
 import org.foam.ucm.ScenarioHolder;
 import org.foam.ucm.Step;
@@ -347,8 +347,8 @@ public class Ucm2Lts {
             Preconditions.<Step>checkNotNull(lastStep);
             EList<Annotation> _annotations = lastStep.getAnnotations();
             boolean _forall = IterableExtensions.<Annotation>forall(_annotations, new Function1<Annotation, Boolean>() {
-                public Boolean apply(Annotation p) {
-                  return isNeitherGotoOrAbort.apply(p);
+                public Boolean apply(Annotation arg0) {
+                  return isNeitherGotoOrAbort.apply(arg0);
                 }
             });
             if (_forall) {

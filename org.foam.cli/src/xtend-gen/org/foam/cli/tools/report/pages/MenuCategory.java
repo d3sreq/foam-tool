@@ -7,7 +7,7 @@ import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.util.ToStringHelper;
 import org.foam.cli.tools.report.pages.MenuItem;
-import org.foam.transform.utils.sort.NaturalOrderComparator;
+import org.foam.cli.tools.report.pages.NaturalOrderComparator;
 
 /**
  * Represents grouping of the menu items.

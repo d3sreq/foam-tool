@@ -11,7 +11,7 @@ import org.eclipse.xtext.xbase.lib.util.ToStringHelper;
 import org.foam.dot.RecordNode;
 import org.foam.lts.State;
 import org.foam.transform.lts2dot.processor.state.StateProcessor;
-import org.foam.transform.utils.model.ModelUtils;
+import org.foam.transform.utils.modeling.ModelUtils;
 import org.foam.ucm.Scenario;
 import org.foam.ucm.Step;
 import org.foam.ucm.UseCase;

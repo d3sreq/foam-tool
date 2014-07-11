@@ -2,7 +2,6 @@ package org.foam.cli.tools.report.pages
 
 import java.util.ArrayList
 import java.util.List
-import org.foam.transform.utils.sort.NaturalOrderComparator
 
 /**
  * Represents menu.

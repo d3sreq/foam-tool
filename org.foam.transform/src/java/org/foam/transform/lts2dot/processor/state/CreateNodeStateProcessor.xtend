@@ -10,7 +10,7 @@ import org.foam.ucm.Step
 import org.foam.traceability.StateType
 
 import static extension org.foam.ucm.util.UcmUtils.*
-import static extension org.foam.transform.utils.model.ModelUtils.*
+import static extension org.foam.transform.utils.modeling.ModelUtils.*
 
 /**
  * @param mapping in parameter

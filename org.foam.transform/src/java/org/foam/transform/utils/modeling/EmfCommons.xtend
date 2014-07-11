@@ -1,23 +1,22 @@
-package org.foam.transform.utils.model
+package org.foam.transform.utils.modeling
 
+import java.io.InputStream
 import java.util.Collections
 import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.common.util.EList
-
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.Diagnostician
-import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImplimport java.io.InputStream
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
 
 class EmfCommons {
 	
 	def static void registerAsteriskInExtensionToFactory() {
 		// Register the XMI resource factory for the all extensions
-		val registry = Resource$Factory$Registry::INSTANCE
+		val registry = Resource.Factory.Registry::INSTANCE
 		val extensionToFactoryMap = registry.extensionToFactoryMap
 		extensionToFactoryMap.put("*", new XMIResourceFactoryImpl)
 	}

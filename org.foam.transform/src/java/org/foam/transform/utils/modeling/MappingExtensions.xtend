@@ -1,4 +1,4 @@
-package org.foam.transform.utils.model
+package org.foam.transform.utils.modeling
 
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList

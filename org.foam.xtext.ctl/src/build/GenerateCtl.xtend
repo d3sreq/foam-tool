@@ -6,7 +6,6 @@ import org.eclipse.emf.mwe.utils.FileCopy
 import org.eclipse.emf.mwe.utils.StandaloneSetup
 import org.eclipse.xtext.generator.Generator
 import org.eclipse.xtext.generator.LanguageConfig
-import org.eclipse.xtext.generator.ecore.EMFGeneratorFragment
 import org.eclipse.xtext.generator.grammarAccess.GrammarAccessFragment
 import org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
 import org.eclipse.xtext.generator.serializer.SerializerFragment
