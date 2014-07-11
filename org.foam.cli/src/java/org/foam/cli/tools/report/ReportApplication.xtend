@@ -23,7 +23,6 @@ import org.foam.cli.tools.report.pages.Page
 import org.foam.cli.tools.report.pages.TadlTemplatePage
 import org.foam.cli.tools.report.pages.UseCasePage
 import org.foam.cli.tools.report.utils.FileUtils
-import org.foam.cntex.CntexFactory
 import org.foam.cntex.Specification
 import org.foam.ctl.CtlPackage
 import org.foam.dot.DotPackage
@@ -86,6 +85,7 @@ class ReportApplication implements IExecutableTool {
 	}
 	
 	override execute(String[] args) {
+
 		// parse options
 		val optionParser = new OptionParser
 		val inputOption = optionParser.accepts("i", "input dir").withRequiredArg.describedAs("directory with textual use cases")
@@ -115,9 +115,7 @@ class ReportApplication implements IExecutableTool {
 			"report"
 		}
 		
-		'''Checking Graphviz version'''.debug
-		val graphvizVersion = graphvizWrapper.graphvizVersion
-		'''Graphviz version is «graphvizVersion»'''.info
+		'''Graphviz version is «graphvizWrapper.graphvizVersion»'''.info
 		
 		'''Model factories initialization'''.debug
 		init()
@@ -167,7 +165,7 @@ class ReportApplication implements IExecutableTool {
 	}
 	
 	def private createReport(UseCaseModel useCaseModel, Iterable<Template> templates, Iterable<Specification> specifications, String outputDirName) {
-		'''Writing the results'''.info
+		'''Writing the results'''.debug
 		copyWebFiles(outputDirName)
 		
 		// prepare menu
@@ -210,8 +208,7 @@ class ReportApplication implements IExecutableTool {
 		errorsCategory.menuItems += errorPages.map[it.createErrorPageMenuItem(menu)]
 		errorsCategory.sort
 		
-		// write pages to disk
-		'''Writing pages to disk'''.info
+		'''Writing pages to disk'''.debug
 		menu.categories.map[it.menuItems].flatten.forEach[it.page.writePage(outputDirName)]
 	}
 	
@@ -363,34 +360,31 @@ class ReportApplication implements IExecutableTool {
 	}
 	
 	def private getCounterExamples(UseCaseModel useCaseModel) {
-		useCaseModel.useCases.filter[primary].map[useCase |
-			'''transforming «useCase.id» to LTS'''.info
-			val automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase)
-			
-			'''transforming LTS to NuSMV code'''.info
-			val List<Pair<FormulaHolder, Group>> holderGroupList = newArrayList
-			val code = new Lts2NuSMVLang().transform(automaton, holderGroupList)
-			
-			'''running NuSMV verification'''.debug
-			
-			try {
-				'''NuSMV version is «nusmvWrapper.nusmvVersion»'''.info
-			} catch(Exception e) {
-				e.message.error
-				"Verification skipped - empty counter example was generated".error
-				return CntexFactory.eINSTANCE.createCounterExample
-			}
-			
-			val cntexCode = nusmvWrapper.runNusmvCode(code).join("\n") //TODO: do we really need to convert this to String from an array?
-			
-			// parse counter example code -> CounterExample
-			'''parsing counter example code to CounterExample'''.info
-			val counterExample = new CntexLang2Cntex().transform(cntexCode)
-			new CntexStateResolver().transform(counterExample, automaton)
-			Preconditions.checkState(counterExample.specifications.size == holderGroupList.size)
-			new SpecificationResolver().transform(counterExample, holderGroupList)
-			counterExample
-		]	
+		useCaseModel
+			.useCases
+			.filter[primary]
+			.map[ useCase |
+	
+				'''transforming «useCase.id» to LTS'''.info
+				val automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase)
+				
+				'''transforming LTS to NuSMV code'''.debug
+				val holderGroupList = <Pair<FormulaHolder, Group>> newArrayList
+				val code = new Lts2NuSMVLang().transform(automaton, holderGroupList)
+				
+				'''running NuSMV verification'''.debug
+				val cntexCode = nusmvWrapper.runNusmvCode(code).join("\n") //TODO: do we really need to convert this to String from an array?
+				
+				// parse counter example code -> CounterExample
+				'''parsing counter example code to CounterExample'''.info
+				val counterExample = new CntexLang2Cntex().transform(cntexCode)
+				new CntexStateResolver().transform(counterExample, automaton)
+				
+				Preconditions.checkState(counterExample.specifications.size == holderGroupList.size)
+				new SpecificationResolver().transform(counterExample, holderGroupList)
+				
+				return counterExample
+			]
 	}
 	
 	def private UseCaseModel ucmlang2Ucm(String inputDirName) {

@@ -13,7 +13,6 @@ import java.util.Map
 import java.util.regex.Pattern
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.osgi.service.log.LogService
-import java.util.function.IntFunction
 
 /**
  * This service handles communication with the NuSMV tool
@@ -80,37 +79,4 @@ class NusmvWrapper {
 		
 		return result
 	}
-
-//	/**
-//	 * Starts a new NuSMV process and creates an InputStream for sending data to NuSMV.
-//	 * This operation requires closeNusmvProcess()
-//	 */
-//	def openNusmvProcess(String inputFileName) {
-//		
-//		Preconditions.checkArgument( ! inputFileName.nullOrEmpty, "Invalid input file given as an input for NuSMV" );
-//		Preconditions.checkArgument(process == null, "Running multiple NuSMV processes is not allowed");
-//		
-//		process = Runtime
-//			.getRuntime
-//			.exec( #[nusmvExecFile, inputFileName] );
-//
-//		// Printing error messages from NuSMV in a separate thread
-//		new Thread([/* require zero parameters */|
-//			val reader = new BufferedReader(new InputStreamReader(process.errorStream))
-//			reader.lines.forEach[error]
-//			reader.close
-//		]).start
-//		
-//		// STDIN of the NuSMV process will be closed
-//		process.outputStream.close 
-//		return process.inputStream
-//	}
-//
-//	/**
-//	 * Closes the InputStream to the running NuSMV process and waits for NuSMV to finish.
-//	 */
-//	def closeNusmvProcess() {
-//		process.inputStream.close //TODO:check memleaks and races
-//		process.waitFor
-//	}
 }

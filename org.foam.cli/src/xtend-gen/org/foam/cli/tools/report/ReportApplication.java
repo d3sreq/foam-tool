@@ -44,7 +44,6 @@ import org.foam.cli.tools.report.pages.TadlTemplatePage;
 import org.foam.cli.tools.report.pages.UseCasePage;
 import org.foam.cli.tools.report.utils.FileUtils;
 import org.foam.cli.tools.report.utils.Utils;
-import org.foam.cntex.CntexFactory;
 import org.foam.cntex.CounterExample;
 import org.foam.cntex.Specification;
 import org.foam.cntex.Trace;
@@ -181,26 +180,23 @@ public class ReportApplication implements IExecutableTool {
       }
       final String outputDirName = _xifexpression_2;
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("Checking Graphviz version");
-      this.logServiceExtension.debug(_builder);
-      final String graphvizVersion = this.graphvizWrapper.getGraphvizVersion();
+      _builder.append("Graphviz version is ");
+      String _graphvizVersion = this.graphvizWrapper.getGraphvizVersion();
+      _builder.append(_graphvizVersion, "");
+      this.logServiceExtension.info(_builder);
       StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("Graphviz version is ");
-      _builder_1.append(graphvizVersion, "");
-      this.logServiceExtension.info(_builder_1);
-      StringConcatenation _builder_2 = new StringConcatenation();
-      _builder_2.append("Model factories initialization");
-      this.logServiceExtension.debug(_builder_2);
+      _builder_1.append("Model factories initialization");
+      this.logServiceExtension.debug(_builder_1);
       this.init();
       final UseCaseModel useCaseModel = this.ucmlang2Ucm(inputDirName);
-      StringConcatenation _builder_3 = new StringConcatenation();
-      _builder_3.append("Validating input UseCaseModel (with resolved flow annotations)");
-      this.logServiceExtension.debug(_builder_3);
+      StringConcatenation _builder_2 = new StringConcatenation();
+      _builder_2.append("Validating input UseCaseModel (with resolved flow annotations)");
+      this.logServiceExtension.debug(_builder_2);
       EmfCommons.basicValidate(useCaseModel);
       final List<Template> templates = this.tadlLang2Templates(tadlDirName);
-      StringConcatenation _builder_4 = new StringConcatenation();
-      _builder_4.append("Validating input TADL templates");
-      this.logServiceExtension.debug(_builder_4);
+      StringConcatenation _builder_3 = new StringConcatenation();
+      _builder_3.append("Validating input TADL templates");
+      this.logServiceExtension.debug(_builder_3);
       final Consumer<Template> _function = new Consumer<Template>() {
         public void accept(final Template it) {
           EmfCommons.basicValidate(it);
@@ -208,14 +204,14 @@ public class ReportApplication implements IExecutableTool {
       };
       templates.forEach(_function);
       this.resolveTadlAnnotations(useCaseModel, templates);
-      StringConcatenation _builder_5 = new StringConcatenation();
-      _builder_5.append("Validating UseCaseModel with resolved TADL annotations");
-      this.logServiceExtension.debug(_builder_5);
+      StringConcatenation _builder_4 = new StringConcatenation();
+      _builder_4.append("Validating UseCaseModel with resolved TADL annotations");
+      this.logServiceExtension.debug(_builder_4);
       EmfCommons.basicValidate(useCaseModel);
       final Iterable<CounterExample> counterExamples = this.getCounterExamples(useCaseModel);
-      StringConcatenation _builder_6 = new StringConcatenation();
-      _builder_6.append("Merging errors from counter examples");
-      this.logServiceExtension.debug(_builder_6);
+      StringConcatenation _builder_5 = new StringConcatenation();
+      _builder_5.append("Merging errors from counter examples");
+      this.logServiceExtension.debug(_builder_5);
       final Function1<CounterExample, EList<Specification>> _function_1 = new Function1<CounterExample, EList<Specification>>() {
         public EList<Specification> apply(final CounterExample it) {
           return it.getSpecifications();
@@ -231,9 +227,9 @@ public class ReportApplication implements IExecutableTool {
       };
       Iterable<Specification> _filter = IterableExtensions.<Specification>filter(_flatten, _function_2);
       final Iterable<Specification> specifications = this.uniqueSpecifications(_filter);
-      StringConcatenation _builder_7 = new StringConcatenation();
-      _builder_7.append("Validating error specifications");
-      this.logServiceExtension.debug(_builder_7);
+      StringConcatenation _builder_6 = new StringConcatenation();
+      _builder_6.append("Validating error specifications");
+      this.logServiceExtension.debug(_builder_6);
       final Consumer<Specification> _function_3 = new Consumer<Specification>() {
         public void accept(final Specification it) {
           EmfCommons.basicValidate(it);
@@ -241,9 +237,9 @@ public class ReportApplication implements IExecutableTool {
       };
       specifications.forEach(_function_3);
       this.createReport(useCaseModel, templates, specifications, outputDirName);
-      StringConcatenation _builder_8 = new StringConcatenation();
-      _builder_8.append("Report generation done.");
-      this.logServiceExtension.info(_builder_8);
+      StringConcatenation _builder_7 = new StringConcatenation();
+      _builder_7.append("Report generation done.");
+      this.logServiceExtension.info(_builder_7);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -280,7 +276,7 @@ public class ReportApplication implements IExecutableTool {
   private void createReport(final UseCaseModel useCaseModel, final Iterable<Template> templates, final Iterable<Specification> specifications, final String outputDirName) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Writing the results");
-    this.logServiceExtension.info(_builder);
+    this.logServiceExtension.debug(_builder);
     this.copyWebFiles(outputDirName);
     final Menu menu = new Menu();
     final MenuCategory overviewCategory = new MenuCategory(null);
@@ -380,7 +376,7 @@ public class ReportApplication implements IExecutableTool {
     errorsCategory.sort();
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("Writing pages to disk");
-    this.logServiceExtension.info(_builder_1);
+    this.logServiceExtension.debug(_builder_1);
     List<MenuCategory> _categories_5 = menu.getCategories();
     final Function1<MenuCategory, List<MenuItem>> _function_10 = new Function1<MenuCategory, List<MenuItem>>() {
       public List<MenuItem> apply(final MenuCategory it) {
@@ -676,60 +672,39 @@ public class ReportApplication implements IExecutableTool {
     Iterable<UseCase> _filter = IterableExtensions.<UseCase>filter(_useCases, _function);
     final Function1<UseCase, CounterExample> _function_1 = new Function1<UseCase, CounterExample>() {
       public CounterExample apply(final UseCase useCase) {
-        CounterExample _xblockexpression = null;
-        {
-          StringConcatenation _builder = new StringConcatenation();
-          _builder.append("transforming ");
-          String _id = useCase.getId();
-          _builder.append(_id, "");
-          _builder.append(" to LTS");
-          ReportApplication.this.logServiceExtension.info(_builder);
-          final Automaton automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase);
-          StringConcatenation _builder_1 = new StringConcatenation();
-          _builder_1.append("transforming LTS to NuSMV code");
-          ReportApplication.this.logServiceExtension.info(_builder_1);
-          final List<Pair<FormulaHolder, Group>> holderGroupList = CollectionLiterals.<Pair<FormulaHolder, Group>>newArrayList();
-          Lts2NuSMVLang _lts2NuSMVLang = new Lts2NuSMVLang();
-          final String code = _lts2NuSMVLang.transform(automaton, holderGroupList);
-          StringConcatenation _builder_2 = new StringConcatenation();
-          _builder_2.append("running NuSMV verification");
-          ReportApplication.this.logServiceExtension.debug(_builder_2);
-          try {
-            StringConcatenation _builder_3 = new StringConcatenation();
-            _builder_3.append("NuSMV version is ");
-            String _nusmvVersion = ReportApplication.this.nusmvWrapper.getNusmvVersion();
-            _builder_3.append(_nusmvVersion, "");
-            ReportApplication.this.logServiceExtension.info(_builder_3);
-          } catch (final Throwable _t) {
-            if (_t instanceof Exception) {
-              final Exception e = (Exception)_t;
-              String _message = e.getMessage();
-              ReportApplication.this.logServiceExtension.error(_message);
-              ReportApplication.this.logServiceExtension.error("Verification skipped - empty counter example was generated");
-              return CntexFactory.eINSTANCE.createCounterExample();
-            } else {
-              throw Exceptions.sneakyThrow(_t);
-            }
-          }
-          String[] _runNusmvCode = ReportApplication.this.nusmvWrapper.runNusmvCode(code);
-          final String cntexCode = IterableExtensions.join(((Iterable<?>)Conversions.doWrapArray(_runNusmvCode)), "\n");
-          StringConcatenation _builder_4 = new StringConcatenation();
-          _builder_4.append("parsing counter example code to CounterExample");
-          ReportApplication.this.logServiceExtension.info(_builder_4);
-          CntexLang2Cntex _cntexLang2Cntex = new CntexLang2Cntex();
-          final CounterExample counterExample = _cntexLang2Cntex.transform(cntexCode);
-          CntexStateResolver _cntexStateResolver = new CntexStateResolver();
-          _cntexStateResolver.transform(counterExample, automaton);
-          EList<Specification> _specifications = counterExample.getSpecifications();
-          int _size = _specifications.size();
-          int _size_1 = holderGroupList.size();
-          boolean _equals = (_size == _size_1);
-          Preconditions.checkState(_equals);
-          SpecificationResolver _specificationResolver = new SpecificationResolver();
-          _specificationResolver.transform(counterExample, holderGroupList);
-          _xblockexpression = counterExample;
-        }
-        return _xblockexpression;
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("transforming ");
+        String _id = useCase.getId();
+        _builder.append(_id, "");
+        _builder.append(" to LTS");
+        ReportApplication.this.logServiceExtension.info(_builder);
+        final Automaton automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase);
+        StringConcatenation _builder_1 = new StringConcatenation();
+        _builder_1.append("transforming LTS to NuSMV code");
+        ReportApplication.this.logServiceExtension.debug(_builder_1);
+        final ArrayList<Pair<FormulaHolder, Group>> holderGroupList = CollectionLiterals.<Pair<FormulaHolder, Group>>newArrayList();
+        Lts2NuSMVLang _lts2NuSMVLang = new Lts2NuSMVLang();
+        final String code = _lts2NuSMVLang.transform(automaton, holderGroupList);
+        StringConcatenation _builder_2 = new StringConcatenation();
+        _builder_2.append("running NuSMV verification");
+        ReportApplication.this.logServiceExtension.debug(_builder_2);
+        String[] _runNusmvCode = ReportApplication.this.nusmvWrapper.runNusmvCode(code);
+        final String cntexCode = IterableExtensions.join(((Iterable<?>)Conversions.doWrapArray(_runNusmvCode)), "\n");
+        StringConcatenation _builder_3 = new StringConcatenation();
+        _builder_3.append("parsing counter example code to CounterExample");
+        ReportApplication.this.logServiceExtension.info(_builder_3);
+        CntexLang2Cntex _cntexLang2Cntex = new CntexLang2Cntex();
+        final CounterExample counterExample = _cntexLang2Cntex.transform(cntexCode);
+        CntexStateResolver _cntexStateResolver = new CntexStateResolver();
+        _cntexStateResolver.transform(counterExample, automaton);
+        EList<Specification> _specifications = counterExample.getSpecifications();
+        int _size = _specifications.size();
+        int _size_1 = holderGroupList.size();
+        boolean _equals = (_size == _size_1);
+        Preconditions.checkState(_equals);
+        SpecificationResolver _specificationResolver = new SpecificationResolver();
+        _specificationResolver.transform(counterExample, holderGroupList);
+        return counterExample;
       }
     };
     return IterableExtensions.<UseCase, CounterExample>map(_filter, _function_1);
