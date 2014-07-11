@@ -8,14 +8,11 @@
 	com.google.guava;version='[11.0.2,11.0.3)',\
 	com.google.guava;version='[12.0.1,12.0.2)',\
 	com.google.inject;version='[3.0.0,3.0.1)',\
-	com.ibm.icu;version='[4.8.0,4.8.1)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
 	javax.servlet;version='[2.5.0,2.5.1)',\
 	org.antlr.runtime;version='[3.2.0,3.2.1)',\
-	org.apache.commons.cli;version='[1.2.0,1.2.1)',\
 	org.apache.commons.io;version='[2.0.1,2.0.2)',\
 	org.apache.commons.lang;version='[2.6.0,2.6.1)',\
-	org.apache.commons.logging;version='[1.1.1,1.1.2)',\
 	org.apache.felix.configadmin;version='[1.8.0,1.8.1)',\
 	org.apache.felix.gogo.command;version='[0.12.0,0.12.1)',\
 	org.apache.felix.gogo.runtime;version='[0.10.0,0.10.1)',\
@@ -38,8 +35,6 @@
 	org.foam.cli.launcher;version=latest,\
 	org.foam.cli.launcher.api;version=latest,\
 	org.foam.cli.tools.report;version=latest,\
-	org.foam.emf4osgi.minimal;version=latest,\
-	org.foam.emf4osgi.xmi;version=latest,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
 	org.foam.models.ctl;version=latest,\
@@ -64,7 +59,6 @@
 	org.foam.xtext.ctl;version=latest,\
 	org.foam.xtext.ltl;version=latest,\
 	org.foam.xtext.plogic;version=latest,\
-	org.foam.xtext4osgi;version=latest,\
 	osgi.cmpn;version='[5.0.0,5.0.1)',\
 	osgi.enterprise;version='[4.2.0,4.2.1)',\
 	osgi.residential;version='[4.3.0,4.3.1)'
@@ -81,10 +75,7 @@
 	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=1.6.0))',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher.api)',\
-	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.report)',\
-	osgi.identity;filter:='(osgi.identity=org.eclipse.xtext)',\
-	osgi.identity;filter:='(osgi.identity=org.eclipse.xtext.generator)',\
-	osgi.identity;filter:='(osgi.identity=org.eclipse.xtext.common.types)'
+	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.report)'
 
 ## Uncomment if you need to change the HTTP port
 #-runproperties: org.osgi.service.http.port=8080
