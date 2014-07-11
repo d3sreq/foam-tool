@@ -374,14 +374,14 @@ class ReportApplication implements IExecutableTool {
 			'''running NuSMV verification'''.debug
 			
 			try {
-				'''NuSMV versions is «nusmvWrapper.nusmvVersion»'''.info
+				'''NuSMV version is «nusmvWrapper.nusmvVersion»'''.info
 			} catch(Exception e) {
 				e.message.error
 				"Verification skipped - empty counter example was generated".error
 				return CntexFactory.eINSTANCE.createCounterExample
 			}
 			
-			val cntexCode = nusmvWrapper.runNusmvOnCode(code)
+			val cntexCode = nusmvWrapper.runNusmvCode(code).join("\n") //TODO: do we really need to convert this to String from an array?
 			
 			// parse counter example code -> CounterExample
 			'''parsing counter example code to CounterExample'''.info

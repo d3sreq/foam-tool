@@ -696,7 +696,7 @@ public class ReportApplication implements IExecutableTool {
           ReportApplication.this.logServiceExtension.debug(_builder_2);
           try {
             StringConcatenation _builder_3 = new StringConcatenation();
-            _builder_3.append("NuSMV versions is ");
+            _builder_3.append("NuSMV version is ");
             String _nusmvVersion = ReportApplication.this.nusmvWrapper.getNusmvVersion();
             _builder_3.append(_nusmvVersion, "");
             ReportApplication.this.logServiceExtension.info(_builder_3);
@@ -711,7 +711,8 @@ public class ReportApplication implements IExecutableTool {
               throw Exceptions.sneakyThrow(_t);
             }
           }
-          final String cntexCode = ReportApplication.this.nusmvWrapper.runNusmvOnCode(code);
+          String[] _runNusmvCode = ReportApplication.this.nusmvWrapper.runNusmvCode(code);
+          final String cntexCode = IterableExtensions.join(((Iterable<?>)Conversions.doWrapArray(_runNusmvCode)), "\n");
           StringConcatenation _builder_4 = new StringConcatenation();
           _builder_4.append("parsing counter example code to CounterExample");
           ReportApplication.this.logServiceExtension.info(_builder_4);

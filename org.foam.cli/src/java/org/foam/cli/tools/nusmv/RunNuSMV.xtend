@@ -2,8 +2,7 @@ package org.foam.cli.tools.nusmv
 
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import com.google.common.base.Preconditions
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.nusmv.NusmvWrapper
@@ -23,19 +22,8 @@ class RunNativeNusmv implements IExecutableTool {
 	}
 
 	override execute(String[] args) {
-		if(args.length != 1)
-			throw new IllegalArgumentException("Input file expected as a single argument")
-
-		val nusmvOut = nusmvWrapper.openNusmvProcess(args.head)
-		val reader = new BufferedReader(new InputStreamReader(nusmvOut))
-		
-		var String line
-		while((line = reader.readLine()) != null) {
-			println(line)
-		}
-		
-		nusmvWrapper.closeNusmvProcess
-
+		Preconditions.checkArgument(args.length == 1, "Input file expected as a single argument")
+		nusmvWrapper.runNusmvFile(args.head).forEach[println(it)]
 		"done".info
 	}
 	
