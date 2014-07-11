@@ -14,6 +14,7 @@ import org.foam.propositionallogic.PropositionallogicPackage
 import org.foam.tadl.TadlPackage
 import org.foam.traceability.TraceabilityPackage
 import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang
+import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService
@@ -21,17 +22,9 @@ import org.osgi.service.log.LogService
 @Component
 class LtsToNusmv implements IExecutableTool {
 
-	private LogService logService
+	private extension LogServiceExtension logServiceExtension
 	@Reference def void setLogService(LogService logService) {
-		this.logService = logService
-	}
-	
-	def info(CharSequence message) {
-		logService.log(LogService.LOG_INFO, message.toString)
-	}
-	
-	def debug(CharSequence message) {
-		logService.log(LogService.LOG_DEBUG, message.toString)
+		logServiceExtension = new LogServiceExtension(logService)
 	}
 
 	override execute(String[] args) {

@@ -25,6 +25,7 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionExtensions;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Functions.Function0;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -39,6 +40,7 @@ import org.foam.transform.ucm2ucm.BranchingLabeledAnnotatedText;
 import org.foam.transform.ucm2ucm.BranchingType;
 import org.foam.transform.ucm2ucm.IdAndName;
 import org.foam.transform.ucm2ucm.LabeledAnnotatedText;
+import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.ucm.Scenario;
 import org.foam.ucm.ScenarioHolder;
 import org.foam.ucm.Step;
@@ -50,16 +52,13 @@ import org.osgi.service.log.LogService;
 @Component(provide = UcmLang2UcmService.class)
 @SuppressWarnings("all")
 public class UcmLang2UcmService {
-  private LogService logService;
+  @Extension
+  private LogServiceExtension logServiceExtension;
   
   @Reference
   public void setLogService(final LogService logService) {
-    this.logService = logService;
-  }
-  
-  private void info(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_INFO, _string);
+    LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
+    this.logServiceExtension = _logServiceExtension;
   }
   
   private final UcmFactory usecaseFactory = UcmFactory.eINSTANCE;
@@ -135,7 +134,7 @@ public class UcmLang2UcmService {
           UcmLang2UcmService.this.parseUseCase(text, it, precedingMap);
         }
         StringConcatenation _builder = new StringConcatenation();
-        _builder.append("use-cases: ");
+        _builder.append("collected use-cases: ");
         EList<UseCase> _useCases = it.getUseCases();
         final Function1<UseCase, String> _function = new Function1<UseCase, String>() {
           public String apply(final UseCase it) {
@@ -145,7 +144,7 @@ public class UcmLang2UcmService {
         List<String> _map = ListExtensions.<UseCase, String>map(_useCases, _function);
         String _join = IterableExtensions.join(_map, ", ");
         _builder.append(_join, "");
-        UcmLang2UcmService.this.info(_builder);
+        UcmLang2UcmService.this.logServiceExtension.debug(_builder);
         UcmLang2UcmService.this.resolvePreceding(precedingMap, it);
       }
     };
@@ -153,6 +152,9 @@ public class UcmLang2UcmService {
   }
   
   private void resolvePreceding(final Multimap<UseCase, String> precedingMap, final UseCaseModel useCaseModel) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("Resolving precedence relation");
+    this.logServiceExtension.debug(_builder);
     final EList<UseCase> allUseCases = useCaseModel.getUseCases();
     final HashMap<String, UseCase> id2UseCase = new HashMap<String, UseCase>();
     final Consumer<UseCase> _function = new Consumer<UseCase>() {
@@ -196,7 +198,7 @@ public class UcmLang2UcmService {
       String _name_1 = useCase.getName();
       _builder.append(_name_1, "");
       _builder.append("\"");
-      this.info(_builder);
+      this.logServiceExtension.info(_builder);
       boolean _parseIsPrimary = this.parseIsPrimary(lines);
       useCase.setPrimary(_parseIsPrimary);
       ArrayList<String> _parsePreceding = this.parsePreceding(lines);

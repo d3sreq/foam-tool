@@ -9,9 +9,11 @@ import java.io.InputStreamReader;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.foam.cli.launcher.api.IExecutableTool;
+import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.nusmv.NusmvWrapper;
 import org.osgi.service.log.LogService;
 
@@ -25,21 +27,13 @@ public class RunNativeNusmv implements IExecutableTool {
     this.nusmvWrapper = nusmvWrapper;
   }
   
-  private LogService logService;
+  @Extension
+  private LogServiceExtension logServiceExtension;
   
   @Reference
   public void setLogService(final LogService logService) {
-    this.logService = logService;
-  }
-  
-  public void info(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_INFO, _string);
-  }
-  
-  public void debug(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_DEBUG, _string);
+    LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
+    this.logServiceExtension = _logServiceExtension;
   }
   
   public void execute(final String[] args) {
@@ -66,7 +60,7 @@ public class RunNativeNusmv implements IExecutableTool {
         _while = _notEquals_2;
       }
       this.nusmvWrapper.closeNusmvProcess();
-      this.info("done");
+      this.logServiceExtension.info("done");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.foam.cli.launcher.api.IExecutableTool;
@@ -25,6 +26,7 @@ import org.foam.tadl.TadlPackage;
 import org.foam.traceability.TraceabilityPackage;
 import org.foam.transform.ucm2lts.Ucm2LtsFacade;
 import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph;
+import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.ucm.UcmPackage;
 import org.foam.ucm.UseCase;
@@ -34,21 +36,13 @@ import org.osgi.service.log.LogService;
 @Component
 @SuppressWarnings("all")
 public class Ucm2Lts implements IExecutableTool {
-  private LogService logService;
+  @Extension
+  private LogServiceExtension logServiceExtension;
   
   @Reference
   public void setLogService(final LogService logService) {
-    this.logService = logService;
-  }
-  
-  public void info(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_INFO, _string);
-  }
-  
-  public void debug(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_DEBUG, _string);
+    LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
+    this.logServiceExtension = _logServiceExtension;
   }
   
   public void execute(final String[] args) {
@@ -103,7 +97,7 @@ public class Ucm2Lts implements IExecutableTool {
       final String outputFile = _xifexpression_1;
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("Initializing required meta-models");
-      this.info(_builder);
+      this.logServiceExtension.info(_builder);
       UcmPackage.eINSTANCE.eClass();
       FlowannotationPackage.eINSTANCE.eClass();
       TraceabilityPackage.eINSTANCE.eClass();
@@ -113,16 +107,16 @@ public class Ucm2Lts implements IExecutableTool {
       EmfCommons.registerAsteriskInExtensionToFactory();
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("Reading the input use-case model");
-      this.info(_builder_1);
+      this.logServiceExtension.info(_builder_1);
       EObject _readModel = EmfCommons.readModel(inputFile);
       final UseCaseModel useCaseModel = ((UseCaseModel) _readModel);
       StringConcatenation _builder_2 = new StringConcatenation();
       _builder_2.append("Validating input use-case model");
-      this.info(_builder_2);
+      this.logServiceExtension.info(_builder_2);
       EmfCommons.basicValidate(useCaseModel);
       StringConcatenation _builder_3 = new StringConcatenation();
       _builder_3.append("Running the transformation");
-      this.info(_builder_3);
+      this.logServiceExtension.info(_builder_3);
       Automaton _xifexpression_2 = null;
       boolean _has_2 = options.has(overviewOption);
       if (_has_2) {
@@ -217,9 +211,9 @@ public class Ucm2Lts implements IExecutableTool {
       _builder_4.append("Writing the LTS representation to \"");
       _builder_4.append(outputFile, "");
       _builder_4.append("\"");
-      this.info(_builder_4);
+      this.logServiceExtension.info(_builder_4);
       EmfCommons.writeModel(automaton, outputFile);
-      this.info("done");
+      this.logServiceExtension.info("done");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

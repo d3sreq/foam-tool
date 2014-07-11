@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.foam.cli.launcher.api.IExecutableTool;
 import org.foam.cntex.CntexPackage;
 import org.foam.cntex.CounterExample;
@@ -24,6 +25,7 @@ import org.foam.tadl.TadlPackage;
 import org.foam.traceability.TraceabilityPackage;
 import org.foam.transform.cntexlang2cntex.CntexLang2Cntex;
 import org.foam.transform.cntexlang2cntex.CntexStateResolver;
+import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.verification.VerificationPackage;
 import org.osgi.service.log.LogService;
@@ -31,21 +33,13 @@ import org.osgi.service.log.LogService;
 @Component
 @SuppressWarnings("all")
 public class CounterExampleToXmi implements IExecutableTool {
-  private LogService logService;
+  @Extension
+  private LogServiceExtension logServiceExtension;
   
   @Reference
   public void setLogService(final LogService logService) {
-    this.logService = logService;
-  }
-  
-  public void info(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_INFO, _string);
-  }
-  
-  public void debug(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_DEBUG, _string);
+    LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
+    this.logServiceExtension = _logServiceExtension;
   }
   
   public void execute(final String[] args) {
@@ -118,7 +112,7 @@ public class CounterExampleToXmi implements IExecutableTool {
       final String outputFileName = _xifexpression_2;
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("Initializing required meta-models");
-      this.info(_builder);
+      this.logServiceExtension.info(_builder);
       CntexPackage.eINSTANCE.eClass();
       FlowannotationPackage.eINSTANCE.eClass();
       LtsPackage.eINSTANCE.eClass();
@@ -130,23 +124,23 @@ public class CounterExampleToXmi implements IExecutableTool {
       _builder_1.append("Reading input NuSMV counter example from file \"");
       _builder_1.append(inputCounterExampleFileName, "");
       _builder_1.append("\"");
-      this.info(_builder_1);
+      this.logServiceExtension.info(_builder_1);
       File _file = new File(inputCounterExampleFileName);
       final String inputText = Files.toString(_file, Charsets.UTF_8);
       StringConcatenation _builder_2 = new StringConcatenation();
       _builder_2.append("Reading input LTS from file \"");
       _builder_2.append(inputLtsFileName, "");
       _builder_2.append("\"");
-      this.info(_builder_2);
+      this.logServiceExtension.info(_builder_2);
       EObject _readModel = EmfCommons.readModel(inputLtsFileName);
       final Automaton automaton = ((Automaton) _readModel);
       StringConcatenation _builder_3 = new StringConcatenation();
       _builder_3.append("Validating input LTS");
-      this.info(_builder_3);
+      this.logServiceExtension.info(_builder_3);
       EmfCommons.basicValidate(automaton);
       StringConcatenation _builder_4 = new StringConcatenation();
       _builder_4.append("Running the transformation");
-      this.info(_builder_4);
+      this.logServiceExtension.info(_builder_4);
       final CntexLang2Cntex transformation = new CntexLang2Cntex();
       final CounterExample counterExample = transformation.transform(inputText);
       final CntexStateResolver resolver = new CntexStateResolver();
@@ -155,9 +149,9 @@ public class CounterExampleToXmi implements IExecutableTool {
       _builder_5.append("Writing the result FOAM countex example to \"");
       _builder_5.append(outputFileName, "");
       _builder_5.append("\"");
-      this.info(_builder_5);
+      this.logServiceExtension.info(_builder_5);
       EmfCommons.writeModel(counterExample, outputFileName);
-      this.info("done");
+      this.logServiceExtension.info("done");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

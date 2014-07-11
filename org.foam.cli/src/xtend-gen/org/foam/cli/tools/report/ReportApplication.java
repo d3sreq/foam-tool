@@ -26,6 +26,7 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
@@ -73,6 +74,7 @@ import org.foam.transform.ucm2ucm.UcmLang2UcmService;
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver;
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver;
 import org.foam.transform.utils.graphviz.GraphvizUtils;
+import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.transform.utils.nusmv.NusmvWrapper;
 import org.foam.ucm.UcmPackage;
@@ -86,6 +88,15 @@ import org.osgi.service.log.LogService;
 @Component
 @SuppressWarnings("all")
 public class ReportApplication implements IExecutableTool {
+  @Extension
+  private LogServiceExtension logServiceExtension;
+  
+  @Reference
+  public void setLogService(final LogService logService) {
+    LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
+    this.logServiceExtension = _logServiceExtension;
+  }
+  
   private NusmvWrapper nusmvWrapper;
   
   @Reference
@@ -93,28 +104,11 @@ public class ReportApplication implements IExecutableTool {
     this.nusmvWrapper = nusmvWrapper;
   }
   
-  private LogService logService;
-  
-  @Reference
-  public void setLogService(final LogService logService) {
-    this.logService = logService;
-  }
-  
   private UcmLang2UcmService ucmLang2UcmService;
   
   @Reference
   public void setUcmLang2Ucm(final UcmLang2UcmService serviceRef) {
     this.ucmLang2UcmService = serviceRef;
-  }
-  
-  public void info(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_INFO, _string);
-  }
-  
-  public void error(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_ERROR, _string);
   }
   
   public void execute(final String[] args) {
@@ -181,18 +175,22 @@ public class ReportApplication implements IExecutableTool {
       final String outputDirName = _xifexpression_2;
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("Checking Graphviz version");
-      this.info(_builder);
-      GraphvizUtils.checkGraphvizVersion();
+      this.logServiceExtension.debug(_builder);
+      final String graphvizVersion = GraphvizUtils.checkGraphvizVersion();
+      StringConcatenation _builder_1 = new StringConcatenation();
+      _builder_1.append("Graphviz version is ");
+      _builder_1.append(graphvizVersion, "");
+      this.logServiceExtension.info(_builder_1);
       this.init();
       final UseCaseModel useCaseModel = this.ucmlang2Ucm(inputDirName);
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("Validating input UseCaseModel (with resolved flow annotations)");
-      this.info(_builder_1);
+      StringConcatenation _builder_2 = new StringConcatenation();
+      _builder_2.append("Validating input UseCaseModel (with resolved flow annotations)");
+      this.logServiceExtension.debug(_builder_2);
       EmfCommons.basicValidate(useCaseModel);
       final List<Template> templates = this.tadlLang2Templates(tadlDirName);
-      StringConcatenation _builder_2 = new StringConcatenation();
-      _builder_2.append("Validating input TADL templates");
-      this.info(_builder_2);
+      StringConcatenation _builder_3 = new StringConcatenation();
+      _builder_3.append("Validating input TADL templates");
+      this.logServiceExtension.debug(_builder_3);
       final Consumer<Template> _function = new Consumer<Template>() {
         public void accept(final Template it) {
           EmfCommons.basicValidate(it);
@@ -200,9 +198,9 @@ public class ReportApplication implements IExecutableTool {
       };
       templates.forEach(_function);
       this.resolveTadlAnnotations(useCaseModel, templates);
-      StringConcatenation _builder_3 = new StringConcatenation();
-      _builder_3.append("Validating UseCaseModel with resolved TADL annotations");
-      this.info(_builder_3);
+      StringConcatenation _builder_4 = new StringConcatenation();
+      _builder_4.append("Validating UseCaseModel with resolved TADL annotations");
+      this.logServiceExtension.debug(_builder_4);
       EmfCommons.basicValidate(useCaseModel);
       final Iterable<CounterExample> counterExamples = this.getCounterExamples(useCaseModel);
       final Function1<CounterExample, EList<Specification>> _function_1 = new Function1<CounterExample, EList<Specification>>() {
@@ -220,9 +218,9 @@ public class ReportApplication implements IExecutableTool {
       };
       Iterable<Specification> _filter = IterableExtensions.<Specification>filter(_flatten, _function_2);
       final Iterable<Specification> specifications = this.uniqueSpecifications(_filter);
-      StringConcatenation _builder_4 = new StringConcatenation();
-      _builder_4.append("Validating error specifications");
-      this.info(_builder_4);
+      StringConcatenation _builder_5 = new StringConcatenation();
+      _builder_5.append("Validating error specifications");
+      this.logServiceExtension.debug(_builder_5);
       final Consumer<Specification> _function_3 = new Consumer<Specification>() {
         public void accept(final Specification it) {
           EmfCommons.basicValidate(it);
@@ -230,7 +228,7 @@ public class ReportApplication implements IExecutableTool {
       };
       specifications.forEach(_function_3);
       this.createReport(useCaseModel, templates, specifications, outputDirName);
-      this.info("done.");
+      this.logServiceExtension.info("done.");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -267,7 +265,7 @@ public class ReportApplication implements IExecutableTool {
   private void createReport(final UseCaseModel useCaseModel, final Iterable<Template> templates, final Iterable<Specification> specifications, final String outputDirName) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Writing the results");
-    this.info(_builder);
+    this.logServiceExtension.info(_builder);
     this.copyWebFiles(outputDirName);
     final Menu menu = new Menu();
     final MenuCategory overviewCategory = new MenuCategory(null);
@@ -367,7 +365,7 @@ public class ReportApplication implements IExecutableTool {
     errorsCategory.sort();
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("Writing pages to disk");
-    this.info(_builder_1);
+    this.logServiceExtension.info(_builder_1);
     List<MenuCategory> _categories_5 = menu.getCategories();
     final Function1<MenuCategory, List<MenuItem>> _function_10 = new Function1<MenuCategory, List<MenuItem>>() {
       public List<MenuItem> apply(final MenuCategory it) {
@@ -429,7 +427,7 @@ public class ReportApplication implements IExecutableTool {
         final Automaton automaton = _ucm2LtsOverviewGraph.transform(useCaseModel);
         StringConcatenation _builder = new StringConcatenation();
         _builder.append("Validating overview LTS");
-        this.info(_builder);
+        this.logServiceExtension.debug(_builder);
         EmfCommons.basicValidate(automaton);
         Class<? extends ReportApplication> _class = this.getClass();
         Bundle _bundle = FrameworkUtil.getBundle(_class);
@@ -439,13 +437,13 @@ public class ReportApplication implements IExecutableTool {
         final Graph initGraph = ((Graph) _readModel);
         StringConcatenation _builder_1 = new StringConcatenation();
         _builder_1.append("Validating init overview DOT graph");
-        this.info(_builder_1);
+        this.logServiceExtension.debug(_builder_1);
         EmfCommons.basicValidate(initGraph);
         Lts2Dot _lts2Dot = new Lts2Dot();
         final Graph dotGraph = _lts2Dot.transformOverview(automaton, initGraph);
         StringConcatenation _builder_2 = new StringConcatenation();
         _builder_2.append("Validating overview DOT graph");
-        this.info(_builder_2);
+        this.logServiceExtension.debug(_builder_2);
         EmfCommons.basicValidate(dotGraph);
         final String image = this.createImageAndImageMap(dotGraph, outputDirName, "overview");
         _xblockexpression = new OverviewPage(menu, image);
@@ -466,7 +464,7 @@ public class ReportApplication implements IExecutableTool {
         String _id = useCase.getId();
         _builder.append(_id, "");
         _builder.append(" LTS");
-        this.info(_builder);
+        this.logServiceExtension.debug(_builder);
         EmfCommons.basicValidate(automaton);
         Class<? extends ReportApplication> _class = this.getClass();
         Bundle _bundle = FrameworkUtil.getBundle(_class);
@@ -476,13 +474,13 @@ public class ReportApplication implements IExecutableTool {
         final Graph initGraph = ((Graph) _readModel);
         StringConcatenation _builder_1 = new StringConcatenation();
         _builder_1.append("Validating init DOT graph");
-        this.info(_builder_1);
+        this.logServiceExtension.debug(_builder_1);
         EmfCommons.basicValidate(initGraph);
         Lts2Dot _lts2Dot = new Lts2Dot();
         final Graph dotGraph = _lts2Dot.transformSingleUseCase(automaton, initGraph);
         StringConcatenation _builder_2 = new StringConcatenation();
         _builder_2.append("Validating DOT graph");
-        this.info(_builder_2);
+        this.logServiceExtension.debug(_builder_2);
         EmfCommons.basicValidate(dotGraph);
         String _id_1 = useCase.getId();
         final String imageFileName = this.createImageAndImageMap(dotGraph, outputDirName, _id_1);
@@ -611,7 +609,7 @@ public class ReportApplication implements IExecutableTool {
         String _join = IterableExtensions.join(dotCommand, " ");
         _builder_4.append(_join, "");
         _builder_4.append("\"");
-        this.info(_builder_4);
+        this.logServiceExtension.info(_builder_4);
         GraphvizUtils.runGraphviz(dotCommand);
         _xblockexpression = imageFileName;
       }
@@ -642,7 +640,7 @@ public class ReportApplication implements IExecutableTool {
   private void init() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Initializing required meta-models");
-    this.info(_builder);
+    this.logServiceExtension.debug(_builder);
     AnnotationPackage.eINSTANCE.eClass();
     DotPackage.eINSTANCE.eClass();
     PropositionallogicPackage.eINSTANCE.eClass();
@@ -674,29 +672,29 @@ public class ReportApplication implements IExecutableTool {
           String _id = useCase.getId();
           _builder.append(_id, "");
           _builder.append(" to LTS");
-          ReportApplication.this.info(_builder);
+          ReportApplication.this.logServiceExtension.info(_builder);
           final Automaton automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase);
           StringConcatenation _builder_1 = new StringConcatenation();
           _builder_1.append("transforming LTS to NuSMV code");
-          ReportApplication.this.info(_builder_1);
+          ReportApplication.this.logServiceExtension.info(_builder_1);
           final List<Pair<FormulaHolder, Group>> holderGroupList = CollectionLiterals.<Pair<FormulaHolder, Group>>newArrayList();
           Lts2NuSMVLang _lts2NuSMVLang = new Lts2NuSMVLang();
           final String code = _lts2NuSMVLang.transform(automaton, holderGroupList);
           StringConcatenation _builder_2 = new StringConcatenation();
           _builder_2.append("running NuSMV verification");
-          ReportApplication.this.info(_builder_2);
+          ReportApplication.this.logServiceExtension.debug(_builder_2);
           try {
             StringConcatenation _builder_3 = new StringConcatenation();
             _builder_3.append("NuSMV versions is ");
             String _nusmvVersion = ReportApplication.this.nusmvWrapper.getNusmvVersion();
             _builder_3.append(_nusmvVersion, "");
-            ReportApplication.this.info(_builder_3);
+            ReportApplication.this.logServiceExtension.info(_builder_3);
           } catch (final Throwable _t) {
             if (_t instanceof Exception) {
               final Exception e = (Exception)_t;
               String _message = e.getMessage();
-              ReportApplication.this.error(_message);
-              ReportApplication.this.error("Verification skipped - empty counter example was generated");
+              ReportApplication.this.logServiceExtension.error(_message);
+              ReportApplication.this.logServiceExtension.error("Verification skipped - empty counter example was generated");
               return CntexFactory.eINSTANCE.createCounterExample();
             } else {
               throw Exceptions.sneakyThrow(_t);
@@ -705,7 +703,7 @@ public class ReportApplication implements IExecutableTool {
           final String cntexCode = ReportApplication.this.nusmvWrapper.runNusmvOnCode(code);
           StringConcatenation _builder_4 = new StringConcatenation();
           _builder_4.append("parsing counter example code to CounterExample");
-          ReportApplication.this.info(_builder_4);
+          ReportApplication.this.logServiceExtension.info(_builder_4);
           CntexLang2Cntex _cntexLang2Cntex = new CntexLang2Cntex();
           final CounterExample counterExample = _cntexLang2Cntex.transform(cntexCode);
           CntexStateResolver _cntexStateResolver = new CntexStateResolver();
@@ -732,15 +730,15 @@ public class ReportApplication implements IExecutableTool {
       _builder.append("Reading use case files from the directory \"");
       _builder.append(inputDirName, "");
       _builder.append("\"");
-      this.info(_builder);
+      this.logServiceExtension.info(_builder);
       final List<String> texts = this.readTexts(inputDirName);
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("Running the transformation");
-      this.info(_builder_1);
+      this.logServiceExtension.debug(_builder_1);
       final UseCaseModel useCaseModel = this.ucmLang2UcmService.transform(texts);
       StringConcatenation _builder_2 = new StringConcatenation();
       _builder_2.append("Resolving FLOW annotations");
-      this.info(_builder_2);
+      this.logServiceExtension.debug(_builder_2);
       FlowAnnotationResolver _flowAnnotationResolver = new FlowAnnotationResolver();
       _flowAnnotationResolver.resolveAnnotations(useCaseModel);
       _xblockexpression = useCaseModel;
@@ -754,7 +752,7 @@ public class ReportApplication implements IExecutableTool {
     _builder.append("Reading TADL definitions from file \"");
     _builder.append(tadlDirName, "");
     _builder.append("\" and parsing");
-    this.info(_builder);
+    this.logServiceExtension.info(_builder);
     final List<String> texts = this.readTexts(tadlDirName);
     final Function1<String, Template> _function = new Function1<String, Template>() {
       public Template apply(final String it) {
@@ -764,14 +762,14 @@ public class ReportApplication implements IExecutableTool {
     final List<Template> templates = ListExtensions.<String, Template>map(texts, _function);
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append("TADL files resolved");
-    this.info(_builder_1);
+    this.logServiceExtension.debug(_builder_1);
     return templates;
   }
   
   private void resolveTadlAnnotations(final UseCaseModel useCaseModel, final List<Template> templates) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("Resolving TADL annotations");
-    this.info(_builder);
+    this.logServiceExtension.debug(_builder);
     TadlAnnotationResolver _tadlAnnotationResolver = new TadlAnnotationResolver();
     _tadlAnnotationResolver.resolveAnnotations(useCaseModel, templates);
   }
@@ -779,8 +777,9 @@ public class ReportApplication implements IExecutableTool {
   private void copyWebFiles(final String outputDir) {
     try {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("Copying template web files to outputDir");
-      this.info(_builder);
+      _builder.append("Copying template web files to output directory ");
+      _builder.append(outputDir, "");
+      this.logServiceExtension.info(_builder);
       FileUtils.bundleCopy("report/web", outputDir);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

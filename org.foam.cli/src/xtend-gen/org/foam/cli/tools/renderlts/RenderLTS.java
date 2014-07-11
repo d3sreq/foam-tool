@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.foam.cli.launcher.api.IExecutableTool;
 import org.foam.dot.DotPackage;
@@ -30,6 +31,7 @@ import org.foam.traceability.TraceabilityPackage;
 import org.foam.transform.dot2dotlang.Dot2DotLang;
 import org.foam.transform.lts2dot.Lts2Dot;
 import org.foam.transform.utils.graphviz.GraphvizUtils;
+import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.verification.VerificationPackage;
 import org.osgi.service.log.LogService;
@@ -42,21 +44,13 @@ public class RenderLTS implements IExecutableTool {
   
   private final static String XMI_GraphTemplate = "org/foam/cli/tools/renderlts/GraphTemplate.xmi";
   
-  private LogService logService;
+  @Extension
+  private LogServiceExtension logServiceExtension;
   
   @Reference
   public void setLogService(final LogService logService) {
-    this.logService = logService;
-  }
-  
-  public void info(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_INFO, _string);
-  }
-  
-  public void debug(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_DEBUG, _string);
+    LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
+    this.logServiceExtension = _logServiceExtension;
   }
   
   public void execute(final String[] args) {
@@ -116,7 +110,7 @@ public class RenderLTS implements IExecutableTool {
       final String outputFileName = _xifexpression_1;
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("Initializing required meta-models");
-      this.info(_builder_1);
+      this.logServiceExtension.info(_builder_1);
       DotPackage.eINSTANCE.eClass();
       LtsPackage.eINSTANCE.eClass();
       TraceabilityPackage.eINSTANCE.eClass();
@@ -129,13 +123,13 @@ public class RenderLTS implements IExecutableTool {
       _builder_2.append("Reading input LTS from file \"");
       _builder_2.append(inputLtsFileName, "");
       _builder_2.append("\"");
-      this.info(_builder_2);
+      this.logServiceExtension.info(_builder_2);
       EObject _readModel = EmfCommons.readModel(inputLtsFileName, resourceSet);
       final Automaton automaton = ((Automaton) _readModel);
       final boolean isOverview = options.has(overviewOption);
       StringConcatenation _builder_3 = new StringConcatenation();
       _builder_3.append("Reading configuration graph template from \"conf/GraphTemplate.xmi\"");
-      this.info(_builder_3);
+      this.logServiceExtension.info(_builder_3);
       String _xifexpression_2 = null;
       if (isOverview) {
         _xifexpression_2 = RenderLTS.XMI_OverviewGraphTemplate;
@@ -146,15 +140,15 @@ public class RenderLTS implements IExecutableTool {
       final Graph initGraph = ((Graph) _readModel_1);
       StringConcatenation _builder_4 = new StringConcatenation();
       _builder_4.append("Validating input LTS");
-      this.info(_builder_4);
+      this.logServiceExtension.info(_builder_4);
       EmfCommons.basicValidate(automaton);
       StringConcatenation _builder_5 = new StringConcatenation();
       _builder_5.append("Validating configuration graph template");
-      this.info(_builder_5);
+      this.logServiceExtension.info(_builder_5);
       EmfCommons.basicValidate(initGraph);
       StringConcatenation _builder_6 = new StringConcatenation();
       _builder_6.append("Running the transformation");
-      this.info(_builder_6);
+      this.logServiceExtension.info(_builder_6);
       final Lts2Dot lts2dot = new Lts2Dot();
       Graph _xifexpression_3 = null;
       if (isOverview) {
@@ -169,7 +163,7 @@ public class RenderLTS implements IExecutableTool {
       _builder_7.append("Writing the result DOT code to \"");
       _builder_7.append(outputFileName, "");
       _builder_7.append("\"");
-      this.info(_builder_7);
+      this.logServiceExtension.info(_builder_7);
       File _file = new File(outputFileName);
       Files.write(text, _file, Charsets.UTF_8);
       final List<String> dotCommand = Collections.<String>unmodifiableList(Lists.<String>newArrayList());
@@ -218,7 +212,7 @@ public class RenderLTS implements IExecutableTool {
         _builder_11.append("Running Graphviz DOT tool: ");
         String _join = IterableExtensions.join(dotCommand, " ");
         _builder_11.append(_join, "");
-        this.info(_builder_11);
+        this.logServiceExtension.info(_builder_11);
         Runtime _runtime = Runtime.getRuntime();
         Process _exec = _runtime.exec(((String[])Conversions.unwrapArray(dotCommand, String.class)));
         _exec.waitFor();
@@ -229,7 +223,7 @@ public class RenderLTS implements IExecutableTool {
         _builder_12.append("Writing HTML to \"");
         _builder_12.append(outputFileName, "");
         _builder_12.append(".html\"");
-        this.info(_builder_12);
+        this.logServiceExtension.info(_builder_12);
         StringConcatenation _builder_13 = new StringConcatenation();
         _builder_13.append(outputFileName, "");
         _builder_13.append(".cmapx");
@@ -257,7 +251,7 @@ public class RenderLTS implements IExecutableTool {
         File _file_2 = new File(_builder_15.toString());
         Files.write(_builder_14, _file_2, Charsets.UTF_8);
       }
-      this.info("done");
+      this.logServiceExtension.info("done");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

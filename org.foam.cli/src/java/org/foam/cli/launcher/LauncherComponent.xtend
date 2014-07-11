@@ -4,6 +4,8 @@ import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import java.util.concurrent.ConcurrentHashMap
 import org.foam.cli.launcher.api.IExecutableTool
+import org.foam.transform.utils.logger.LogServiceExtension
+import org.osgi.service.log.LogService
 
 @Component(
 	immediate=true,
@@ -14,7 +16,12 @@ import org.foam.cli.launcher.api.IExecutableTool
 	]
 )
 class LauncherComponent {
-		
+
+	private extension LogServiceExtension logServiceExtension
+	@Reference def void setLogService(LogService logService) {
+		logServiceExtension = new LogServiceExtension(logService)
+	}
+
 //	var String[] args;
 //	
 //	@Reference(target="(launcher.arguments=*)")
@@ -29,8 +36,9 @@ class LauncherComponent {
 	def void addTool(IExecutableTool tool) {
 		val toolName = tool.class.simpleName
 		val previousItem = toolMap.putIfAbsent(toolName, tool)
-		if(previousItem != null)
-			throw new Exception('''Tool already registered : «toolName»''')
+		if(previousItem != null) {
+			'''The tool '«toolName»' has already been registered.'''.debug
+		}
 	}
 	
 	def void removeTool(IExecutableTool tool) {

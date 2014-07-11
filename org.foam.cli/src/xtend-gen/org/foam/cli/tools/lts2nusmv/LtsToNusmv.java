@@ -12,6 +12,7 @@ import joptsimple.OptionSpecBuilder;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.foam.cli.launcher.api.IExecutableTool;
 import org.foam.ctl.CtlPackage;
 import org.foam.flowannotation.FlowannotationPackage;
@@ -22,6 +23,7 @@ import org.foam.propositionallogic.PropositionallogicPackage;
 import org.foam.tadl.TadlPackage;
 import org.foam.traceability.TraceabilityPackage;
 import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang;
+import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.verification.VerificationPackage;
 import org.osgi.service.log.LogService;
@@ -29,21 +31,13 @@ import org.osgi.service.log.LogService;
 @Component
 @SuppressWarnings("all")
 public class LtsToNusmv implements IExecutableTool {
-  private LogService logService;
+  @Extension
+  private LogServiceExtension logServiceExtension;
   
   @Reference
   public void setLogService(final LogService logService) {
-    this.logService = logService;
-  }
-  
-  public void info(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_INFO, _string);
-  }
-  
-  public void debug(final CharSequence message) {
-    String _string = message.toString();
-    this.logService.log(LogService.LOG_DEBUG, _string);
+    LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
+    this.logServiceExtension = _logServiceExtension;
   }
   
   public void execute(final String[] args) {
@@ -93,7 +87,7 @@ public class LtsToNusmv implements IExecutableTool {
       final String outputFileName = _xifexpression_1;
       StringConcatenation _builder_1 = new StringConcatenation();
       _builder_1.append("Initializing required meta-models");
-      this.info(_builder_1);
+      this.logServiceExtension.info(_builder_1);
       LtsPackage.eINSTANCE.eClass();
       TraceabilityPackage.eINSTANCE.eClass();
       FlowannotationPackage.eINSTANCE.eClass();
@@ -107,27 +101,27 @@ public class LtsToNusmv implements IExecutableTool {
       _builder_2.append("Reading the input LTS model from \"");
       _builder_2.append(inputFileName, "");
       _builder_2.append("\"");
-      this.info(_builder_2);
+      this.logServiceExtension.info(_builder_2);
       EObject _readModel = EmfCommons.readModel(inputFileName);
       final Automaton automaton = ((Automaton) _readModel);
       StringConcatenation _builder_3 = new StringConcatenation();
       _builder_3.append("Validating input LTS model");
-      this.info(_builder_3);
+      this.logServiceExtension.info(_builder_3);
       EmfCommons.basicValidate(automaton);
       StringConcatenation _builder_4 = new StringConcatenation();
       _builder_4.append("Running the transformation");
-      this.info(_builder_4);
+      this.logServiceExtension.info(_builder_4);
       Lts2NuSMVLang _lts2NuSMVLang = new Lts2NuSMVLang();
       final String result = _lts2NuSMVLang.transform(automaton);
       StringConcatenation _builder_5 = new StringConcatenation();
       _builder_5.append("Writing the result NuSMV code to \"");
       _builder_5.append(outputFileName, "");
       _builder_5.append("\"");
-      this.info(_builder_5);
+      this.logServiceExtension.info(_builder_5);
       final PrintWriter pw = new PrintWriter(outputFileName);
       pw.print(result);
       pw.close();
-      this.info("done");
+      this.logServiceExtension.info("done");
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

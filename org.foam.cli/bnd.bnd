@@ -34,4 +34,5 @@
 	org.foam.models.verification;version=latest,\
 	org.eclipse.emf.common,\
 	org.eclipse.emf.ecore,\
-	org.eclipse.emf.ecore.xmi
+	org.eclipse.emf.ecore.xmi,\
+	org.foam.transform.utils.logger;version=latest

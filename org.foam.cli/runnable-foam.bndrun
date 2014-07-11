@@ -57,6 +57,7 @@
 	org.foam.transform.ucm2lts;version=latest,\
 	org.foam.transform.ucm2ucm;version=latest,\
 	org.foam.transform.utils.graphviz;version=latest,\
+	org.foam.transform.utils.logger;version=latest,\
 	org.foam.transform.utils.modeling;version=latest,\
 	org.foam.transform.utils.nusmv;version=latest,\
 	org.foam.xtext.ctl;version=latest,\
@@ -87,3 +88,6 @@
 	Workspace,\
 	Local,\
 	Bndtools Hub
+-runproperties:  \
+	org.apache.felix.log.storeDebug=true,\
+	org.apache.felix.log.maxSize=200

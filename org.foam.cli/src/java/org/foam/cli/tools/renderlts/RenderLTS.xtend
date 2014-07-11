@@ -18,6 +18,7 @@ import org.foam.traceability.TraceabilityPackage
 import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.lts2dot.Lts2Dot
 import org.foam.transform.utils.graphviz.GraphvizUtils
+import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService
@@ -29,19 +30,11 @@ class RenderLTS implements IExecutableTool {
 	private static val XMI_OverviewGraphTemplate = "org/foam/cli/tools/renderlts/OverviewGraphTemplate.xmi"
 	private static val XMI_GraphTemplate = "org/foam/cli/tools/renderlts/GraphTemplate.xmi"
 	
-	private LogService logService
+	private extension LogServiceExtension logServiceExtension
 	@Reference def void setLogService(LogService logService) {
-		this.logService = logService
+		logServiceExtension = new LogServiceExtension(logService)
 	}
-	
-	def info(CharSequence message) {
-		logService.log(LogService.LOG_INFO, message.toString)
-	}
-	
-	def debug(CharSequence message) {
-		logService.log(LogService.LOG_DEBUG, message.toString)
-	}
-	
+
 	override execute(String[] args) {
 		
 		// parse options

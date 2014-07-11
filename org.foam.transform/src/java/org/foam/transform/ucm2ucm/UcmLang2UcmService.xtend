@@ -1,5 +1,6 @@
 package org.foam.transform.ucm2ucm
 
+import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Splitter
 import com.google.common.collect.HashMultimap
@@ -14,13 +15,13 @@ import java.util.List
 import java.util.regex.Pattern
 import org.foam.annotation.Annotation
 import org.foam.annotation.AnnotationFactory
+import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UcmFactory
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 import org.osgi.service.log.LogService
-import aQute.bnd.annotation.component.Component
 
 public enum BranchingType {
 	Extension, Variation
@@ -28,14 +29,10 @@ public enum BranchingType {
 
 @Component(provide = UcmLang2UcmService)
 class UcmLang2UcmService {
-	
-	private LogService logService
+
+	private extension LogServiceExtension logServiceExtension
 	@Reference def void setLogService(LogService logService) {
-		this.logService = logService
-	}
-	
-	private def info(CharSequence message) {
-		logService.log(LogService.LOG_INFO, message.toString)
+		logServiceExtension = new LogServiceExtension(logService)
 	}
 	
 	val usecaseFactory = UcmFactory.eINSTANCE
@@ -59,13 +56,14 @@ class UcmLang2UcmService {
 				parseUseCase(text, it, precedingMap)
 			}
 			
-			'''use-cases: «useCases.map[id].join(", ")»'''.info
+			'''collected use-cases: «useCases.map[id].join(", ")»'''.debug
 
 			resolvePreceding(precedingMap, it)
 		]	
 	}
 	
 	def private resolvePreceding(Multimap<UseCase, String> precedingMap, UseCaseModel useCaseModel) {
+		'''Resolving precedence relation'''.debug
 		val allUseCases = useCaseModel.useCases 
 		val id2UseCase = new HashMap<String, UseCase>
 		allUseCases.forEach[id2UseCase.put(it.id, it)]
@@ -148,7 +146,8 @@ class UcmLang2UcmService {
 			scenario.steps.forEach[labelToStep.put(it.label, it)]
 		}
 	}
-		def private parseIdAndName(LinkedList<String> lines) {
+
+	def private parseIdAndName(LinkedList<String> lines) {
 		popEmptyLines(lines)
 		val line = lines.pop			
 		

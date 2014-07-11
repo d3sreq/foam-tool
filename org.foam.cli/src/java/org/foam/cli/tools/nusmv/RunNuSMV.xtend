@@ -5,6 +5,7 @@ import aQute.bnd.annotation.component.Reference
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import org.foam.cli.launcher.api.IExecutableTool
+import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.nusmv.NusmvWrapper
 import org.osgi.service.log.LogService
 
@@ -16,19 +17,11 @@ class RunNativeNusmv implements IExecutableTool {
 		this.nusmvWrapper = nusmvWrapper
 	}
 
-	private LogService logService
+	private extension LogServiceExtension logServiceExtension
 	@Reference def void setLogService(LogService logService) {
-		this.logService = logService
+		logServiceExtension = new LogServiceExtension(logService)
 	}
-	
-	def info(CharSequence message) {
-		logService.log(LogService.LOG_INFO, message.toString)
-	}
-	
-	def debug(CharSequence message) {
-		logService.log(LogService.LOG_DEBUG, message.toString)
-	}
-	
+
 	override execute(String[] args) {
 		if(args.length != 1)
 			throw new IllegalArgumentException("Input file expected as a single argument")

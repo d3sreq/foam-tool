@@ -50,6 +50,7 @@ import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizUtils
+import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.transform.utils.nusmv.NusmvWrapper
 import org.foam.ucm.UcmPackage
@@ -64,27 +65,19 @@ import static extension org.foam.cli.tools.report.utils.Utils.*
 @Component
 class ReportApplication implements IExecutableTool {
 	
+	private extension LogServiceExtension logServiceExtension
+	@Reference def void setLogService(LogService logService) {
+		logServiceExtension = new LogServiceExtension(logService)
+	}
+
 	private NusmvWrapper nusmvWrapper
 	@Reference def void setNusmvWrapper(NusmvWrapper nusmvWrapper) {
 		this.nusmvWrapper = nusmvWrapper
 	}
 
-	private LogService logService
-	@Reference def void setLogService(LogService logService) {
-		this.logService = logService
-	}
-	
 	private UcmLang2UcmService ucmLang2UcmService
 	@Reference def void setUcmLang2Ucm(UcmLang2UcmService serviceRef) {
 		this.ucmLang2UcmService = serviceRef
-	}
-	
-	def info(CharSequence message) {
-		logService.log(LogService.LOG_INFO, message.toString)
-	}
-	
-	def error(CharSequence message) {
-		logService.log(LogService.LOG_ERROR, message.toString)
 	}
 	
 	override execute(String[] args) {
@@ -117,34 +110,35 @@ class ReportApplication implements IExecutableTool {
 			"report"
 		}
 		
-		'''Checking Graphviz version'''.info
-		GraphvizUtils.checkGraphvizVersion
+		'''Checking Graphviz version'''.debug
+		val graphvizVersion = GraphvizUtils.checkGraphvizVersion
+		'''Graphviz version is «graphvizVersion»'''.info
 		
 		// model factories initialization
 		init()
 		
 		// transformations
 		val useCaseModel = ucmlang2Ucm(inputDirName)
-		'''Validating input UseCaseModel (with resolved flow annotations)'''.info
+		'''Validating input UseCaseModel (with resolved flow annotations)'''.debug
 		EmfCommons.basicValidate(useCaseModel)
 		
 		val templates = tadlLang2Templates(tadlDirName)
-		'''Validating input TADL templates'''.info
+		'''Validating input TADL templates'''.debug
 		templates.forEach[EmfCommons.basicValidate(it)]
 		
 		resolveTadlAnnotations(useCaseModel, templates)
-		'''Validating UseCaseModel with resolved TADL annotations'''.info
+		'''Validating UseCaseModel with resolved TADL annotations'''.debug
 		EmfCommons.basicValidate(useCaseModel)
 		
 		val counterExamples = getCounterExamples(useCaseModel)
 		// merge errors from counter-examples
 		val specifications = counterExamples.map[specifications].flatten.filter[trace != null].uniqueSpecifications
-		'''Validating error specifications'''.info
+		'''Validating error specifications'''.debug
 		specifications.forEach[EmfCommons.basicValidate(it)]
 		
 		createReport(useCaseModel, templates, specifications, outputDirName)
 		
-		"done.".info 
+		"done.".info
 	}
 	
 	override getUsage() '''
@@ -238,18 +232,18 @@ class ReportApplication implements IExecutableTool {
 	def private createOverviewPage(UseCaseModel useCaseModel, Menu menu, String outputDirName) {
 		// ucm -> lts -> dot
 		val automaton = (new Ucm2LtsOverviewGraph).transform(useCaseModel)
-		'''Validating overview LTS'''.info
+		'''Validating overview LTS'''.debug
 		EmfCommons.basicValidate(automaton)
 		
 		// load XMI from bundle
 		val overviewGraphTemplate = FrameworkUtil.getBundle(class).getResource("/report/dot/OverviewGraphTemplate.xmi").openStream
 		val initGraph = EmfCommons.readModel(overviewGraphTemplate) as Graph
 		
-		'''Validating init overview DOT graph'''.info
+		'''Validating init overview DOT graph'''.debug
 		EmfCommons.basicValidate(initGraph)
 		
 		val dotGraph = new Lts2Dot().transformOverview(automaton, initGraph)
-		'''Validating overview DOT graph'''.info
+		'''Validating overview DOT graph'''.debug
 		EmfCommons.basicValidate(dotGraph)
 		
 		// dot -> svg (with links)
@@ -261,7 +255,7 @@ class ReportApplication implements IExecutableTool {
 	def private createUseCasePage(UseCase useCase, Menu menu, String outputDirName) {
 		// ucm -> lts -> dot
 		val automaton = Ucm2LtsFacade.transformSingleUseCaseForPage(useCase)
-		'''Validating «useCase.id» LTS'''.info
+		'''Validating «useCase.id» LTS'''.debug
 		EmfCommons.basicValidate(automaton)
 		
 		// TODO - optimize - read init graph only once and then copy it
@@ -269,11 +263,11 @@ class ReportApplication implements IExecutableTool {
 		val graphTemplate = FrameworkUtil.getBundle(class).getResource("/report/dot/GraphTemplate.xmi").openStream
 		val initGraph = EmfCommons.readModel(graphTemplate) as Graph
 
-		'''Validating init DOT graph'''.info
+		'''Validating init DOT graph'''.debug
 		EmfCommons.basicValidate(initGraph)
 		
 		val dotGraph = new Lts2Dot().transformSingleUseCase(automaton, initGraph)
-		'''Validating DOT graph'''.info
+		'''Validating DOT graph'''.debug
 		EmfCommons.basicValidate(dotGraph)
 		
 		// dot -> svg (with links)
@@ -342,7 +336,7 @@ class ReportApplication implements IExecutableTool {
 	}
 	
 	def private void init() {
-		'''Initializing required meta-models'''.info		
+		'''Initializing required meta-models'''.debug		
 		AnnotationPackage.eINSTANCE.eClass
 		DotPackage.eINSTANCE.eClass
 		PropositionallogicPackage.eINSTANCE.eClass
@@ -366,7 +360,7 @@ class ReportApplication implements IExecutableTool {
 			val List<Pair<FormulaHolder, Group>> holderGroupList = newArrayList
 			val code = new Lts2NuSMVLang().transform(automaton, holderGroupList)
 			
-			'''running NuSMV verification'''.info
+			'''running NuSMV verification'''.debug
 			
 			try {
 				'''NuSMV versions is «nusmvWrapper.nusmvVersion»'''.info
@@ -392,10 +386,10 @@ class ReportApplication implements IExecutableTool {
 		'''Reading use case files from the directory "«inputDirName»"'''.info
 		val texts = readTexts(inputDirName)
 		
-		'''Running the transformation'''.info		
+		'''Running the transformation'''.debug		
 		val useCaseModel = ucmLang2UcmService.transform(texts)
 
-		'''Resolving FLOW annotations'''.info
+		'''Resolving FLOW annotations'''.debug
 		new FlowAnnotationResolver().resolveAnnotations(useCaseModel)
 		
 		useCaseModel
@@ -409,18 +403,18 @@ class ReportApplication implements IExecutableTool {
 		 
 		val templates = texts.map[tadlLang2Tadl.parse(it)]
 		
-		'''TADL files resolved'''.info
+		'''TADL files resolved'''.debug
 		
 		return templates
 	}
 	
 	def private resolveTadlAnnotations(UseCaseModel useCaseModel, List<Template> templates) {
-		'''Resolving TADL annotations'''.info
+		'''Resolving TADL annotations'''.debug
 		new TadlAnnotationResolver().resolveAnnotations(useCaseModel, templates)
 	}
 	
 	def private copyWebFiles(String outputDir) {
-		'''Copying template web files to outputDir'''.info
+		'''Copying template web files to output directory «outputDir»'''.info
 		FileUtils.bundleCopy("report/web", outputDir)
 	}
 	
