@@ -8,3 +8,13 @@
 /.StepTrace.java._trace
 /.TadlTemplatePage.java._trace
 /.UseCasePage.java._trace
+/ErrorPage.java
+/FoamCommonAnnotationRenderer.java
+/Menu.java
+/MenuCategory.java
+/MenuItem.java
+/OverviewPage.java
+/PageTemplate.java
+/StepTrace.java
+/TadlTemplatePage.java
+/UseCasePage.java

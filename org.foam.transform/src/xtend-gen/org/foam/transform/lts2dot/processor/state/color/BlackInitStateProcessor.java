@@ -55,8 +55,8 @@ public class BlackInitStateProcessor implements StateProcessor {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_initState== null) ? 0 : _initState.hashCode());
-    result = prime * result + ((_state2Node== null) ? 0 : _state2Node.hashCode());
+    result = prime * result + ((this._initState== null) ? 0 : this._initState.hashCode());
+    result = prime * result + ((this._state2Node== null) ? 0 : this._state2Node.hashCode());
     return result;
   }
   
@@ -69,15 +69,15 @@ public class BlackInitStateProcessor implements StateProcessor {
     if (getClass() != obj.getClass())
       return false;
     BlackInitStateProcessor other = (BlackInitStateProcessor) obj;
-    if (_initState == null) {
+    if (this._initState == null) {
       if (other._initState != null)
         return false;
-    } else if (!_initState.equals(other._initState))
+    } else if (!this._initState.equals(other._initState))
       return false;
-    if (_state2Node == null) {
+    if (this._state2Node == null) {
       if (other._state2Node != null)
         return false;
-    } else if (!_state2Node.equals(other._state2Node))
+    } else if (!this._state2Node.equals(other._state2Node))
       return false;
     return true;
   }

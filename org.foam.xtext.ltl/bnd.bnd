@@ -15,8 +15,13 @@
 	org.eclipse.xtext,\
 	org.eclipse.xtext.generator,\
 	org.eclipse.xtext.util,\
-	org.foam.models.ctl;version=latest,\
+	org.foam.models.ltl;version=latest,\
 	org.objectweb.asm,\
 	org.foam.xtext.plogic;version=latest
 Bundle-Version: 1.0.0
 
+Export-Package:  \
+	org.foam.xtext.ltl,\
+	org.foam.xtext.ltl.parser.antlr,\
+	org.foam.xtext.ltl.services,\
+	org.foam.xtext.ltl.parser.antlr.internal

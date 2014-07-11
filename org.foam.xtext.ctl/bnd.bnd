@@ -22,4 +22,5 @@ Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.ctl,\
 	org.foam.xtext.ctl.services,\
-	org.foam.xtext.ctl.parser.antlr
+	org.foam.xtext.ctl.parser.antlr,\
+	org.foam.xtext.ctl.parser.antlr.internal

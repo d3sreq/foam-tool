@@ -9,22 +9,26 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.foam.annotation.Annotation;
 import org.foam.lts.Automaton;
+import org.foam.lts.LtsFactory;
 import org.foam.lts.State;
 import org.foam.lts.Transition;
+import org.foam.propositionallogic.VariableDefinition;
 import org.foam.traceability.StateType;
 import org.foam.traceability.StateTypeMappingAnnotation;
 import org.foam.traceability.StepMappingAnnotation;
 import org.foam.transform.ltsreduction.LtsReduction;
 import org.foam.transform.ltsreduction.predicates.HasStateTypeMappingAnnotation;
 import org.foam.transform.ucm2lts.Ucm2Lts;
+import org.foam.transform.ucm2lts.listeners.TraceabilityListener;
 import org.foam.ucm.Scenario;
 import org.foam.ucm.Step;
 import org.foam.ucm.UseCase;
@@ -75,24 +79,66 @@ public class Ucm2LtsFacade {
   }
   
   public static Automaton transformSingleUseCaseForPage(final UseCase useCase) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method addSingleIncludeState is undefined for the type Ucm2LtsFacade");
+    Automaton _xblockexpression = null;
+    {
+      final Map<Pair<State, State>, Transition> transitionMap = CollectionLiterals.<Pair<State, State>, Transition>newHashMap();
+      final Ucm2Lts ucm2lts = Ucm2LtsFacade.createUcm2lts();
+      final Set<UseCase> allUseCases = Collections.<UseCase>singleton(useCase);
+      final Automaton automaton = LtsFactory.eINSTANCE.createAutomaton();
+      final HashMap<Pair<Step, StateType>, State> stepToStateMap = ucm2lts.addStates(automaton, allUseCases, transitionMap);
+      ucm2lts.connectCommon(automaton, allUseCases, stepToStateMap, transitionMap);
+      ucm2lts.handleGoto(automaton, allUseCases, stepToStateMap, transitionMap);
+      ucm2lts.addSingleIncludeState(automaton, useCase, stepToStateMap);
+      Scenario _mainScenario = useCase.getMainScenario();
+      Iterable<Scenario> _allScenarios = UcmUtils.allScenarios(useCase);
+      Ucm2LtsFacade.reductionForDot(automaton, _mainScenario, _allScenarios);
+      EList<State> _states = automaton.getStates();
+      State _head = IterableExtensions.<State>head(_states);
+      automaton.setInitState(_head);
+      _xblockexpression = automaton;
+    }
+    return _xblockexpression;
   }
   
   private static Automaton transformUcmToLts(final UseCaseModel useCaseModel, final Iterable<UseCase> allUseCases, final Iterable<UseCase> toSchedule, final Ucm2Lts ucm2lts) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method addInitState is undefined for the type Ucm2LtsFacade"
-      + "\nThe method scheduleUseCases is undefined for the type Ucm2LtsFacade"
-      + "\nThe method addFinalState is undefined for the type Ucm2LtsFacade"
-      + "\nThe method addAtomicPropositions is undefined for the type Ucm2LtsFacade"
-      + "\nThe method addGuardsToUnguardedSteps is undefined for the type Ucm2LtsFacade"
-      + "\nThe method addGuardsToUnguardedSteps is undefined for the type Ucm2LtsFacade"
-      + "\nThe method addGuardsToUnguardedSteps is undefined for the type Ucm2LtsFacade");
+    Automaton _xblockexpression = null;
+    {
+      final Map<Pair<State, State>, Transition> transitionMap = CollectionLiterals.<Pair<State, State>, Transition>newHashMap();
+      final Automaton automaton = LtsFactory.eINSTANCE.createAutomaton();
+      final HashMap<Pair<Step, StateType>, State> stepToStateMap = ucm2lts.addStates(automaton, allUseCases, transitionMap);
+      ucm2lts.connectCommon(automaton, allUseCases, stepToStateMap, transitionMap);
+      ucm2lts.handleGoto(automaton, allUseCases, stepToStateMap, transitionMap);
+      ucm2lts.handleAbort(automaton, allUseCases, stepToStateMap, transitionMap);
+      ucm2lts.includeResolution(automaton, allUseCases, stepToStateMap, transitionMap);
+      ucm2lts.moveMarkAnnotations(automaton, allUseCases, stepToStateMap, transitionMap);
+      ucm2lts.addInitState(automaton);
+      final HashMap<UseCase, VariableDefinition> doneVars = ucm2lts.scheduleUseCases(automaton, toSchedule, stepToStateMap, transitionMap);
+      ucm2lts.addFinalState(automaton, doneVars, transitionMap);
+      ucm2lts.addAtomicPropositions(automaton, allUseCases, stepToStateMap);
+      final Function1<UseCase, Iterable<Step>> _function = new Function1<UseCase, Iterable<Step>>() {
+        public Iterable<Step> apply(final UseCase it) {
+          return UcmUtils.allSteps(it);
+        }
+      };
+      Iterable<Iterable<Step>> _map = IterableExtensions.<UseCase, Iterable<Step>>map(allUseCases, _function);
+      final Iterable<Step> allSteps = Iterables.<Step>concat(_map);
+      ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType.VAR, stepToStateMap);
+      ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType.EXT, stepToStateMap);
+      ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType.OUT, stepToStateMap);
+      _xblockexpression = automaton;
+    }
+    return _xblockexpression;
   }
   
   private static Ucm2Lts createUcm2lts() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method addStateAddedEventListener is undefined for the type Ucm2LtsFacade");
+    Ucm2Lts _xblockexpression = null;
+    {
+      final Ucm2Lts ucm2lts = new Ucm2Lts();
+      TraceabilityListener _traceabilityListener = new TraceabilityListener();
+      ucm2lts.addStateAddedEventListener(_traceabilityListener);
+      _xblockexpression = ucm2lts;
+    }
+    return _xblockexpression;
   }
   
   private static void reductionForDot(final Automaton automaton, final Scenario mainScenario, final Iterable<Scenario> allScenarios) {
@@ -101,12 +147,12 @@ public class Ucm2LtsFacade {
     final LtsReduction ltsReduction = new LtsReduction(reductionPredicate);
     ltsReduction.removeUnneededStates(automaton);
     Ucm2LtsFacade.firstStepReduction(mapping, automaton, mainScenario);
-    final Consumer<Scenario> _function = new Consumer<Scenario>() {
-      public void accept(final Scenario it) {
+    final Procedure1<Scenario> _function = new Procedure1<Scenario>() {
+      public void apply(final Scenario it) {
         Ucm2LtsFacade.lastStepReduction(mapping, automaton, it);
       }
     };
-    allScenarios.forEach(_function);
+    IterableExtensions.<Scenario>forEach(allScenarios, _function);
   }
   
   private static Predicate<State> createStepStateToRemovePredicate(final Automaton automaton, final Map<Pair<Step, StateType>, State> mapping) {

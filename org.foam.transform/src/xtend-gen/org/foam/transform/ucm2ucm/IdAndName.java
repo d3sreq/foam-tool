@@ -28,8 +28,8 @@ public class IdAndName {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_id== null) ? 0 : _id.hashCode());
-    result = prime * result + ((_name== null) ? 0 : _name.hashCode());
+    result = prime * result + ((this._id== null) ? 0 : this._id.hashCode());
+    result = prime * result + ((this._name== null) ? 0 : this._name.hashCode());
     return result;
   }
   
@@ -42,15 +42,15 @@ public class IdAndName {
     if (getClass() != obj.getClass())
       return false;
     IdAndName other = (IdAndName) obj;
-    if (_id == null) {
+    if (this._id == null) {
       if (other._id != null)
         return false;
-    } else if (!_id.equals(other._id))
+    } else if (!this._id.equals(other._id))
       return false;
-    if (_name == null) {
+    if (this._name == null) {
       if (other._name != null)
         return false;
-    } else if (!_name.equals(other._name))
+    } else if (!this._name.equals(other._name))
       return false;
     return true;
   }

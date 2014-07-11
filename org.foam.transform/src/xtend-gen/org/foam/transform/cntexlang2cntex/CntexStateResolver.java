@@ -2,7 +2,6 @@ package org.foam.transform.cntexlang2cntex;
 
 import com.google.common.base.Objects;
 import java.util.HashMap;
-import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -35,13 +34,13 @@ public class CntexStateResolver {
   public void transform(final CounterExample counterExample, final Automaton automaton) {
     final HashMap<String, State> id2State = new HashMap<String, State>();
     EList<State> _states = automaton.getStates();
-    final Consumer<State> _function = new Consumer<State>() {
-      public void accept(final State it) {
+    final Procedure1<State> _function = new Procedure1<State>() {
+      public void apply(final State it) {
         String _id = it.getId();
         id2State.put(_id, it);
       }
     };
-    _states.forEach(_function);
+    IterableExtensions.<State>forEach(_states, _function);
     EList<Specification> _specifications = counterExample.getSpecifications();
     for (final Specification specification : _specifications) {
       Trace _trace = specification.getTrace();

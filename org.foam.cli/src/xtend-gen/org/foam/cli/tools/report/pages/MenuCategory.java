@@ -61,9 +61,9 @@ public class MenuCategory {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_name== null) ? 0 : _name.hashCode());
-    result = prime * result + ((_menuItems== null) ? 0 : _menuItems.hashCode());
-    result = prime * result + ((_naturalOrderComparator== null) ? 0 : _naturalOrderComparator.hashCode());
+    result = prime * result + ((this._name== null) ? 0 : this._name.hashCode());
+    result = prime * result + ((this._menuItems== null) ? 0 : this._menuItems.hashCode());
+    result = prime * result + ((this._naturalOrderComparator== null) ? 0 : this._naturalOrderComparator.hashCode());
     return result;
   }
   
@@ -76,20 +76,20 @@ public class MenuCategory {
     if (getClass() != obj.getClass())
       return false;
     MenuCategory other = (MenuCategory) obj;
-    if (_name == null) {
+    if (this._name == null) {
       if (other._name != null)
         return false;
-    } else if (!_name.equals(other._name))
+    } else if (!this._name.equals(other._name))
       return false;
-    if (_menuItems == null) {
+    if (this._menuItems == null) {
       if (other._menuItems != null)
         return false;
-    } else if (!_menuItems.equals(other._menuItems))
+    } else if (!this._menuItems.equals(other._menuItems))
       return false;
-    if (_naturalOrderComparator == null) {
+    if (this._naturalOrderComparator == null) {
       if (other._naturalOrderComparator != null)
         return false;
-    } else if (!_naturalOrderComparator.equals(other._naturalOrderComparator))
+    } else if (!this._naturalOrderComparator.equals(other._naturalOrderComparator))
       return false;
     return true;
   }

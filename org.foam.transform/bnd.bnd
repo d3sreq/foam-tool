@@ -23,7 +23,9 @@
 	org.eclipse.xtext.util,\
 	org.eclipse.xtext.xbase.lib,\
 	com.google.guava,\
-	org.foam.emf4osgi.minimal,\
-	org.foam.emf4osgi.xmi,\
-	org.foam.xtext4osgi;version=1.1.0,\
-	org.foam.xtext.plogic;version=latest
+	org.foam.xtext.ctl;version=latest,\
+	org.foam.xtext.ltl;version=latest,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.ecore.xmi,\
+	org.eclipse.emf.common,\
+	org.eclipse.xtext

@@ -154,9 +154,9 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_resultDot== null) ? 0 : _resultDot.hashCode());
-    result = prime * result + ((_state2Node== null) ? 0 : _state2Node.hashCode());
-    result = prime * result + ((_dotFactory== null) ? 0 : _dotFactory.hashCode());
+    result = prime * result + ((this._resultDot== null) ? 0 : this._resultDot.hashCode());
+    result = prime * result + ((this._state2Node== null) ? 0 : this._state2Node.hashCode());
+    result = prime * result + ((this._dotFactory== null) ? 0 : this._dotFactory.hashCode());
     return result;
   }
   
@@ -169,20 +169,20 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
     if (getClass() != obj.getClass())
       return false;
     CreateEdgeTransitionProcessor other = (CreateEdgeTransitionProcessor) obj;
-    if (_resultDot == null) {
+    if (this._resultDot == null) {
       if (other._resultDot != null)
         return false;
-    } else if (!_resultDot.equals(other._resultDot))
+    } else if (!this._resultDot.equals(other._resultDot))
       return false;
-    if (_state2Node == null) {
+    if (this._state2Node == null) {
       if (other._state2Node != null)
         return false;
-    } else if (!_state2Node.equals(other._state2Node))
+    } else if (!this._state2Node.equals(other._state2Node))
       return false;
-    if (_dotFactory == null) {
+    if (this._dotFactory == null) {
       if (other._dotFactory != null)
         return false;
-    } else if (!_dotFactory.equals(other._dotFactory))
+    } else if (!this._dotFactory.equals(other._dotFactory))
       return false;
     return true;
   }
