@@ -26,7 +26,7 @@ import com.google.common.base.Preconditions;
  */
 public class FileUtils {
 	
-	public static boolean copyFile(final File toCopy, final File destFile) {
+	final public static boolean copyFile(final File toCopy, final File destFile) {
 		try {
 			
 			return FileUtils.copyStream(
@@ -63,7 +63,7 @@ public class FileUtils {
 		return true;
 	}
 
-	public static boolean copyJarResourcesRecursively(final File destDir,
+	final public static boolean copyJarResourcesRecursively(final File destDir,
 			final JarURLConnection jarConnection) throws IOException {
 
 		final JarFile jarFile = jarConnection.getJarFile();
@@ -94,8 +94,10 @@ public class FileUtils {
 		return true;
 	}
 
-	// from apache StringUtils
-	public static String removeStart(String str, String remove) {
+	/**
+	 * From Apache StringUtils.
+	 */
+	final public static String removeStart(String str, String remove) {
 		if (isEmpty(str) || isEmpty(remove)) {
 			return str;
 		}
@@ -105,7 +107,7 @@ public class FileUtils {
 		return str;
 	}
 
-	public static boolean copyResourcesRecursively(
+	final public static boolean copyResourcesRecursively(
 			final URL originUrl, final File destination) {
 		try {
 			final URLConnection urlConnection = originUrl.openConnection();
@@ -153,13 +155,17 @@ public class FileUtils {
 		return f.exists() || f.mkdir();
 	}
 
-	// from apache StringUtils
-	public static boolean isEmpty(CharSequence cs) {
+	/**
+	 * From Apache StringUtils.
+	 */
+	final public static boolean isEmpty(CharSequence cs) {
 		return cs == null || cs.length() == 0;
 	}
 
-	// copied from http://stackoverflow.com/questions/4582375/how-to-test-if-a-url-from-an-eclipse-bundle-is-a-directory
-	public static void bundleCopy(final String dir, final String destination)
+	/**
+	 * Copied from http://stackoverflow.com/questions/4582375/how-to-test-if-a-url-from-an-eclipse-bundle-is-a-directory
+	 */
+	final public static void bundleCopy(final String dir, final String destination)
 			throws IOException, URISyntaxException {
 
 		final Bundle bundle = FrameworkUtil.getBundle(FileUtils.class);
