@@ -55,7 +55,7 @@ class NusmvWrapper {
 
 	def runNusmvCode(CharSequence nusmvCode) {
 		val tempFile = File.createTempFile("nusmv-file", "")
-		Files::write(nusmvCode, tempFile, Charsets.UTF_8)
+		Files.write(nusmvCode, tempFile, Charsets.UTF_8)
 		return runNusmvFile(tempFile.absolutePath)
 	}
 	

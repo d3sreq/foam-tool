@@ -45,291 +45,291 @@ public class NuSMVFormulaRenderer {
     this.varNameMapping = _dummyMap;
   }
   
-  protected CharSequence _evalFormula(final Formula f) {
+  protected String _evalFormula(final Formula f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("?");
     String _string = f.toString();
     _builder.append(_string, "");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Not f) {
+  protected String _evalFormula(final Not f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("!");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final VariableUse f) {
+  protected String _evalFormula(final VariableUse f) {
     StringConcatenation _builder = new StringConcatenation();
     VariableDefinition _variableDefinition = f.getVariableDefinition();
     String _name = _variableDefinition.getName();
     String _get = this.varNameMapping.get(_name);
     _builder.append(_get, "");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final And f) {
+  protected String _evalFormula(final And f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(" & ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Or f) {
+  protected String _evalFormula(final Or f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(" | ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Implication f) {
+  protected String _evalFormula(final Implication f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(" -> ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Equivalence f) {
+  protected String _evalFormula(final Equivalence f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(" <-> ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final False f) {
+  protected String _evalFormula(final False f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("FALSE");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final True f) {
+  protected String _evalFormula(final True f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("TRUE");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Next f) {
+  protected String _evalFormula(final Next f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("[!jmp U (jmp & X ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
     _builder.append(")]");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Globally f) {
+  protected String _evalFormula(final Globally f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("G(jmp -> ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Future f) {
+  protected String _evalFormula(final Future f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("F ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Historically f) {
+  protected String _evalFormula(final Historically f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("H(jmp -> ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Once f) {
+  protected String _evalFormula(final Once f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("O ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Until f) {
+  protected String _evalFormula(final Until f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("((jmp -> ");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(") U ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Since f) {
+  protected String _evalFormula(final Since f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("((jmp -> ");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(") S ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Triggered f) {
+  protected String _evalFormula(final Triggered f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(" T (jmp -> ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append("))");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final Releases f) {
+  protected String _evalFormula(final Releases f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(" V (jmp -> ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append("))");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final ExistsGlobally f) {
+  protected String _evalFormula(final ExistsGlobally f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("EG(jmp -> ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final ExistsFinally f) {
+  protected String _evalFormula(final ExistsFinally f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("EF ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final ExistsNext f) {
+  protected String _evalFormula(final ExistsNext f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("EX E[ !jmp U (jmp & ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
     _builder.append(") ]");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final AllGlobally f) {
+  protected String _evalFormula(final AllGlobally f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("AG(jmp -> ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
     _builder.append(")");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final AllFinally f) {
+  protected String _evalFormula(final AllFinally f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("AF ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final AllNext f) {
+  protected String _evalFormula(final AllNext f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("AX A[ !jmp U (jmp & ");
     Formula _formula = f.getFormula();
-    Object _evalFormula = this.evalFormula(_formula);
+    String _evalFormula = this.evalFormula(_formula);
     _builder.append(_evalFormula, "");
     _builder.append(") ]");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final AllUntil f) {
+  protected String _evalFormula(final AllUntil f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("A[(jmp -> ");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(") U ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append("]");
-    return _builder;
+    return _builder.toString();
   }
   
-  protected CharSequence _evalFormula(final ExistsUntil f) {
+  protected String _evalFormula(final ExistsUntil f) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("E[(jmp -> ");
     Formula _left = f.getLeft();
-    Object _evalFormula = this.evalFormula(_left);
+    String _evalFormula = this.evalFormula(_left);
     _builder.append(_evalFormula, "");
     _builder.append(") U ");
     Formula _right = f.getRight();
-    Object _evalFormula_1 = this.evalFormula(_right);
+    String _evalFormula_1 = this.evalFormula(_right);
     _builder.append(_evalFormula_1, "");
     _builder.append("]");
-    return _builder;
+    return _builder.toString();
   }
   
-  public Object evalFormula(final Formula f) {
+  public String evalFormula(final Formula f) {
     if (f instanceof AllFinally) {
       return _evalFormula((AllFinally)f);
     } else if (f instanceof AllGlobally) {

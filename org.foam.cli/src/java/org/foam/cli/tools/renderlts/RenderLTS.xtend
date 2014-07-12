@@ -27,6 +27,7 @@ import org.osgi.service.log.LogService
 @Deprecated
 class RenderLTS implements IExecutableTool {
 	
+	// TODO: these files are now located inside org.foam.cli.tools.report.jar as resources
 	private static val XMI_OverviewGraphTemplate = "org/foam/cli/tools/renderlts/OverviewGraphTemplate.xmi"
 	private static val XMI_GraphTemplate = "org/foam/cli/tools/renderlts/GraphTemplate.xmi"
 	

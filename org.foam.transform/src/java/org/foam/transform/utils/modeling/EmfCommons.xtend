@@ -16,7 +16,7 @@ class EmfCommons {
 	
 	def static void registerAsteriskInExtensionToFactory() {
 		// Register the XMI resource factory for the all extensions
-		val registry = Resource.Factory.Registry::INSTANCE
+		val registry = Resource.Factory.Registry.INSTANCE
 		val extensionToFactoryMap = registry.extensionToFactoryMap
 		extensionToFactoryMap.put("*", new XMIResourceFactoryImpl)
 	}
@@ -25,12 +25,12 @@ class EmfCommons {
 		// Obtain a new resource set
 		val resourceSet = new ResourceSetImpl
 		
-		EmfCommons::readModel(fileURI, resourceSet)
+		EmfCommons.readModel(fileURI, resourceSet)
 	}
 	
 	def static EObject readModel(String fileURI, ResourceSet resourceSet) {
 		// Get the resource
-		val resource = resourceSet.getResource(URI::createURI(fileURI), true)
+		val resource = resourceSet.getResource(URI.createURI(fileURI), true)
 		// Get the first model element and cast it to the right type, in my
 		// example everything is hierarchical included in this first node
 		resource.contents.head
@@ -46,18 +46,18 @@ class EmfCommons {
 	def static void writeModel(EObject model, String fileName) {
 		val resourceSet = new ResourceSetImpl
 		
-		val uri = URI::createURI(fileName)
+		val uri = URI.createURI(fileName)
 		val resource = resourceSet.createResource(uri)
 		
 		resource.contents.add(model)
 		
-		resource.save(Collections::EMPTY_MAP)
+		resource.save(Collections.EMPTY_MAP)
 	}
 	
 	def static void basicValidate(EObject eObject) throws BasicModelValidationException {
-		val diagnostic = Diagnostician::INSTANCE.validate(eObject)		
+		val diagnostic = Diagnostician.INSTANCE.validate(eObject)		
 		
-		if (diagnostic.severity != Diagnostic::OK) {
+		if (diagnostic.severity != Diagnostic.OK) {
 			throw new BasicModelValidationException(diagnostic)
 		}
 	}

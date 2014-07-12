@@ -179,7 +179,7 @@ public class Lts2NuSMVLang {
       final NuSMVFormulaRenderer nuSMVFormulaRenderer = new NuSMVFormulaRenderer();
       Guard _get = this.trans2guards.get(transition);
       Formula _formula = _get.getFormula();
-      Object _evalFormula = nuSMVFormulaRenderer.evalFormula(_formula);
+      String _evalFormula = nuSMVFormulaRenderer.evalFormula(_formula);
       _xblockexpression = _evalFormula.toString();
     }
     return _xblockexpression;

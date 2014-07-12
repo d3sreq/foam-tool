@@ -27,6 +27,6 @@ class BulletInnerNodeStateProcessor implements StateProcessor {
 	
 	def private hasJmp(State state) {
 		val stateTypeMappingAnnoatations = state.annotations.filter(typeof(StateTypeMappingAnnotation))
-		!stateTypeMappingAnnoatations.empty && stateTypeMappingAnnoatations.head.stateType == StateType::JMP
+		!stateTypeMappingAnnoatations.empty && stateTypeMappingAnnoatations.head.stateType == StateType.JMP
 	} 
 }

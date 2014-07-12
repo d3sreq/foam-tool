@@ -22,13 +22,13 @@ class CntexLang2Cntex {
 	static val LOOP_LINE = "-- Loop starts here"
 	static val AS_DEMONSTRATED_LINE = "-- as demonstrated by the following execution sequence"
 	
-	val cntexFactory = CntexFactory::eINSTANCE
+	val cntexFactory = CntexFactory.eINSTANCE
 	
 	def CounterExample transform(String text) {
 		val result = cntexFactory.createCounterExample
 		
-		val splitter = Splitter::on('\n').trimResults
-		val lines = Lists::newLinkedList(splitter.split(text))
+		val splitter = Splitter.on('\n').trimResults
+		val lines = Lists.newLinkedList(splitter.split(text))
 		
 		popEmptyOrComments(lines)
 		
@@ -44,7 +44,7 @@ class CntexLang2Cntex {
 	}
 	
 	def private Specification parseSpecification(LinkedList<String> lines) {
-		val docCommentPattern = Pattern::compile(SPECIFICATION_REGEXP)
+		val docCommentPattern = Pattern.compile(SPECIFICATION_REGEXP)
 		
 		var line = lines.pop
 		val matcher = docCommentPattern.matcher(line)
@@ -126,7 +126,7 @@ class CntexLang2Cntex {
 	}
 	
 	def private CntExState parseState(LinkedList<String> lines) {
-		val assignmentPattern = Pattern::compile(ASSIGNMENT_REGEXP)
+		val assignmentPattern = Pattern.compile(ASSIGNMENT_REGEXP)
 		
 		val result = cntexFactory.createCntExState
 		

@@ -61,7 +61,7 @@ class Lts2NuSMVLang {
 		
 		val stateX = transition.start
 		val stateY = transition.end
-		val stateG = LtsFactory::eINSTANCE.createState => [
+		val stateG = LtsFactory.eINSTANCE.createState => [
 			id =  '''«stateX.id»$-guard-$«stateY.id»'''
 		]
 		
@@ -103,7 +103,7 @@ class Lts2NuSMVLang {
 				
 		val stateX = transition.start
 		val stateY = transition.end
-		val stateA = LtsFactory::eINSTANCE.createState => [
+		val stateA = LtsFactory.eINSTANCE.createState => [
 			id = '''«stateX.id»$-act-$«stateY.id»'''
 		]
 		
@@ -202,7 +202,7 @@ class Lts2NuSMVLang {
 		-- the granularity of states changed during UCM->LTS transformation.
 		DEFINE jmp := s in {
 			«automaton.states.filter[ s |
-				StateType::JMP.literal.equals(s.type) ||	// state type is JMP
+				StateType.JMP.literal.equals(s.type) ||	// state type is JMP
 				s.stateTransitions.exists[end == s]			// s->s loop (final + abort loops)
 			].map[stateId].join(", ").wrap(NUSMV_CODE_WRAP_LENGTH)»
 		};

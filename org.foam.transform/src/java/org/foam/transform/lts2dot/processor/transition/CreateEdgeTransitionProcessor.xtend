@@ -23,7 +23,7 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 	private Graph resultDot
 	private Map<State, Node> state2Node
 	
-	private val dotFactory = DotFactory::eINSTANCE
+	private val dotFactory = DotFactory.eINSTANCE
 	
 	override process(Transition transition) {
 		// transform oba state to dot node and add it into result graph
@@ -34,7 +34,7 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 			// find reference from the transition to the original use-case step
 			val step = ModelUtils.getStepFromStepMappingAnnotation(transition.start)
 			if(step != null)
-				attributes.put("URL", '''#«UcmUtils::getUseCase(step).id»_«step.label»''' )
+				attributes.put("URL", '''#«UcmUtils.getUseCase(step).id»_«step.label»''' )
 			
 			for(action : transition.annotations.filter(typeof(Action)) ) {
 				attributes.put("color", "blueviolet")

@@ -23,7 +23,7 @@ class LtsReduction {
 	}
 	
 	def removeUnneededStates(Automaton lts) {
-		val predicate = Predicates::and(removeStatePredicate, new StateWithOneInputAndOneOutputTransition(lts.transitions))		
+		val predicate = Predicates.and(removeStatePredicate, new StateWithOneInputAndOneOutputTransition(lts.transitions))		
 		val filtered = lts.states.filter[predicate.apply(it)]
 		// extra list is needed to prevent ConcurrentModificationException
 		val statesToRemove = new ArrayList<State>
@@ -38,23 +38,23 @@ class LtsReduction {
 	def private reduceState(State state, Automaton automaton) {
 		// get transitions containing state which will be removed
 		// assumes that only one transition is going into this state and from this state
-		val settings = EcoreUtil.UsageCrossReferencer::find(state, automaton.transitions)
-		val fromState = settings.filterSettings(LtsPackage.Literals::TRANSITION__START).head.EObject as Transition
-		val toState = settings.filterSettings(LtsPackage.Literals::TRANSITION__END).head.EObject as Transition
+		val settings = EcoreUtil.UsageCrossReferencer.find(state, automaton.transitions)
+		val fromState = settings.filterSettings(LtsPackage.Literals.TRANSITION__START).head.EObject as Transition
+		val toState = settings.filterSettings(LtsPackage.Literals.TRANSITION__END).head.EObject as Transition
 		
 		// add transition bypassing removed state
-		val newTransition = LtsFactory::eINSTANCE.createTransition => [
+		val newTransition = LtsFactory.eINSTANCE.createTransition => [
 			start = toState.start
 			end = fromState.end
 		]
 		automaton.transitions += newTransition
 
 		// remove transitions going from/to removed state
-		EcoreUtil::remove(toState)
-		EcoreUtil::remove(fromState)
+		EcoreUtil.remove(toState)
+		EcoreUtil.remove(fromState)
 		
 		// remove state from Automaton
-		EcoreUtil::remove(state)
+		EcoreUtil.remove(state)
 		
 		notifyStateReduced(state, toState, fromState, newTransition)
 	}
@@ -84,10 +84,10 @@ class StateWithOneInputAndOneOutputTransition implements Predicate<State> {
 	} 
 	
 	override apply(State state) {
-		val settings = EcoreUtil.UsageCrossReferencer::find(state, transitions)
+		val settings = EcoreUtil.UsageCrossReferencer.find(state, transitions)
 		
-		val toState = settings.filterSettings(LtsPackage.Literals::TRANSITION__START)
-		val fromState = settings.filterSettings(LtsPackage.Literals::TRANSITION__END)
+		val toState = settings.filterSettings(LtsPackage.Literals.TRANSITION__START)
+		val fromState = settings.filterSettings(LtsPackage.Literals.TRANSITION__END)
 		
 		toState.size == 1 && fromState.size == 1
 	}

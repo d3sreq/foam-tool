@@ -26,7 +26,7 @@ class CreateNodeStateProcessor implements StateProcessor {
 	Map<Step, RecordNode> step2RecordNode
 	Map<State, Graph> state2Graph
 
-	val dotFactory = DotFactory::eINSTANCE
+	val dotFactory = DotFactory.eINSTANCE
 	
 	/** 
 	 *  Increment used to increase width of record node. Width of record node is 
@@ -81,7 +81,7 @@ class CreateNodeStateProcessor implements StateProcessor {
 	}
 	
 	def private increaseRecordNodeWidth(RecordNode node) {
-		val currentWidth = Double::valueOf(node.attributes.get(WIDTH_ATTRIBUTE_MAP_KEY))
+		val currentWidth = Double.valueOf(node.attributes.get(WIDTH_ATTRIBUTE_MAP_KEY))
 		val newWidth = currentWidth + WIDTH_INCREMENT
 		node.attributes.put(WIDTH_ATTRIBUTE_MAP_KEY, newWidth.toString)
 	}

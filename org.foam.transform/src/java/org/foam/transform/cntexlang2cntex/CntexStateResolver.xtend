@@ -14,7 +14,7 @@ class CntexStateResolver {
 	 */
 	static val STATE_ID = "s"
 	
-	val fac = TraceabilityFactory::eINSTANCE
+	val fac = TraceabilityFactory.eINSTANCE
 	
 	/**
 	 * Adds {@link StateMappingAnnotation}s to given counterExample pointing to

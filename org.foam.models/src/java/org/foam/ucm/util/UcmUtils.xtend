@@ -20,7 +20,7 @@ class UcmUtils {
 		val holders = useCase.branches.values
 		val extScenarioLists = holders.map[it.extensions]
 		val varScenarioLists = holders.map[it.variations]
-		val allScenarios = (extScenarioLists + varScenarioLists).flatten + Collections::singletonList(useCase.mainScenario)
+		val allScenarios = (extScenarioLists + varScenarioLists).flatten + Collections.singletonList(useCase.mainScenario)
 		allScenarios.map[getStepAnnotations(it)].flatten
 	}
 	
@@ -33,12 +33,12 @@ class UcmUtils {
 	}
 	
 	def static Iterable<Scenario> allScenarios(UseCase useCase) {
-		return Collections::singletonList(useCase.mainScenario) 
+		return Collections.singletonList(useCase.mainScenario) 
 			+ useCase.branches.values.map[it.branches.map[value as Scenario]].flatten
 	}
 	
 	def static Set<UseCase> getPreceededTransitively(UseCase useCase) {
-		Preconditions::checkNotNull(useCase)
+		Preconditions.checkNotNull(useCase)
 		
 		val result = new HashSet<UseCase>
 		getPreceededRecursively(useCase, result)
@@ -61,7 +61,7 @@ class UcmUtils {
 	}
 	
 	def static Set<UseCase> getIncludedTransitively(UseCase useCase) {
-		Preconditions::checkNotNull(useCase)
+		Preconditions.checkNotNull(useCase)
 		
 		val result = new HashSet<UseCase>
 		getIncludedUseCasesRecursively(useCase, result)
@@ -80,13 +80,13 @@ class UcmUtils {
 	}
 	
 	def static UseCase getUseCase(Step step) {
-		Preconditions::checkNotNull(step)
+		Preconditions.checkNotNull(step)
 		val scenario = step.eContainer as Scenario
 		getUseCase(scenario)
 	}
 	
 	def static UseCase getUseCase(Scenario scenario) {
-		Preconditions::checkNotNull(scenario)
+		Preconditions.checkNotNull(scenario)
 		val scenarioParent = scenario.eContainer()
 		return switch scenarioParent {
 			ScenarioHolder: {
@@ -99,7 +99,7 @@ class UcmUtils {
 	}
 	
 	def static Scenario getScenario(Step step) {
-		Preconditions::checkNotNull(step)
+		Preconditions.checkNotNull(step)
 		step.eContainer as Scenario
 	}
 }
