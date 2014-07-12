@@ -115,8 +115,6 @@ class ReportApplication implements IExecutableTool {
 			"report"
 		}
 		
-		'''Graphviz version is «graphvizWrapper.graphvizVersion»'''.info
-		
 		'''Model factories initialization'''.debug
 		init()
 		
@@ -365,7 +363,7 @@ class ReportApplication implements IExecutableTool {
 			.filter[primary]
 			.map[ useCase |
 	
-				'''transforming «useCase.id» to LTS'''.info
+				'''transforming «useCase.id» to LTS'''.debug
 				val automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase)
 				
 				'''transforming LTS to NuSMV code'''.debug
@@ -375,8 +373,7 @@ class ReportApplication implements IExecutableTool {
 				'''running NuSMV verification'''.debug
 				val cntexCode = nusmvWrapper.runNusmvCode(code).join("\n") //TODO: do we really need to convert this to String from an array?
 				
-				// parse counter example code -> CounterExample
-				'''parsing counter example code to CounterExample'''.info
+				'''parsing counter example code to CounterExample'''.debug
 				val counterExample = new CntexLang2Cntex().transform(cntexCode)
 				new CntexStateResolver().transform(counterExample, automaton)
 				

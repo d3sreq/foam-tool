@@ -1,10 +1,12 @@
 package org.foam.transform.utils.graphviz
 
+import aQute.bnd.annotation.component.Activate
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.List
+import java.util.Map
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.osgi.service.log.LogService
 
@@ -15,8 +17,12 @@ class GraphvizWrapper {
 	@Reference def void setLogService(LogService logService) {
 		logServiceExtension = new LogServiceExtension(logService)
 	}
+	
+	@Activate def final void activate(Map<String,Object> props) {
+		'''Found GRAPHVIZ version: «graphvizVersion»'''.info
+	}
 
-	def getGraphvizVersion() {
+	def private getGraphvizVersion() {
 		val process = Runtime.runtime.exec( newArrayList("dot", "-V") as String[] )
 		val procstdout = process.errorStream
 		val reader = new BufferedReader(new InputStreamReader(procstdout))

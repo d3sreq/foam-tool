@@ -211,7 +211,6 @@ public class RenderLTS implements IExecutableTool {
       boolean _isEmpty = dotCommand.isEmpty();
       boolean _not = (!_isEmpty);
       if (_not) {
-        this.graphvizWrapper.getGraphvizVersion();
         dotCommand.add(0, "dot");
         dotCommand.add(outputFileName);
         StringConcatenation _builder_11 = new StringConcatenation();

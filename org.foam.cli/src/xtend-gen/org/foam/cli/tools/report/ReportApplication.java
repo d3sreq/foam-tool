@@ -180,23 +180,18 @@ public class ReportApplication implements IExecutableTool {
       }
       final String outputDirName = _xifexpression_2;
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("Graphviz version is ");
-      String _graphvizVersion = this.graphvizWrapper.getGraphvizVersion();
-      _builder.append(_graphvizVersion, "");
-      this.logServiceExtension.info(_builder);
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("Model factories initialization");
-      this.logServiceExtension.debug(_builder_1);
+      _builder.append("Model factories initialization");
+      this.logServiceExtension.debug(_builder);
       this.init();
       final UseCaseModel useCaseModel = this.ucmlang2Ucm(inputDirName);
-      StringConcatenation _builder_2 = new StringConcatenation();
-      _builder_2.append("Validating input UseCaseModel (with resolved flow annotations)");
-      this.logServiceExtension.debug(_builder_2);
+      StringConcatenation _builder_1 = new StringConcatenation();
+      _builder_1.append("Validating input UseCaseModel (with resolved flow annotations)");
+      this.logServiceExtension.debug(_builder_1);
       EmfCommons.basicValidate(useCaseModel);
       final List<Template> templates = this.tadlLang2Templates(tadlDirName);
-      StringConcatenation _builder_3 = new StringConcatenation();
-      _builder_3.append("Validating input TADL templates");
-      this.logServiceExtension.debug(_builder_3);
+      StringConcatenation _builder_2 = new StringConcatenation();
+      _builder_2.append("Validating input TADL templates");
+      this.logServiceExtension.debug(_builder_2);
       final Consumer<Template> _function = new Consumer<Template>() {
         public void accept(final Template it) {
           EmfCommons.basicValidate(it);
@@ -204,14 +199,14 @@ public class ReportApplication implements IExecutableTool {
       };
       templates.forEach(_function);
       this.resolveTadlAnnotations(useCaseModel, templates);
-      StringConcatenation _builder_4 = new StringConcatenation();
-      _builder_4.append("Validating UseCaseModel with resolved TADL annotations");
-      this.logServiceExtension.debug(_builder_4);
+      StringConcatenation _builder_3 = new StringConcatenation();
+      _builder_3.append("Validating UseCaseModel with resolved TADL annotations");
+      this.logServiceExtension.debug(_builder_3);
       EmfCommons.basicValidate(useCaseModel);
       final Iterable<CounterExample> counterExamples = this.getCounterExamples(useCaseModel);
-      StringConcatenation _builder_5 = new StringConcatenation();
-      _builder_5.append("Merging errors from counter examples");
-      this.logServiceExtension.debug(_builder_5);
+      StringConcatenation _builder_4 = new StringConcatenation();
+      _builder_4.append("Merging errors from counter examples");
+      this.logServiceExtension.debug(_builder_4);
       final Function1<CounterExample, EList<Specification>> _function_1 = new Function1<CounterExample, EList<Specification>>() {
         public EList<Specification> apply(final CounterExample it) {
           return it.getSpecifications();
@@ -227,9 +222,9 @@ public class ReportApplication implements IExecutableTool {
       };
       Iterable<Specification> _filter = IterableExtensions.<Specification>filter(_flatten, _function_2);
       final Iterable<Specification> specifications = this.uniqueSpecifications(_filter);
-      StringConcatenation _builder_6 = new StringConcatenation();
-      _builder_6.append("Validating error specifications");
-      this.logServiceExtension.debug(_builder_6);
+      StringConcatenation _builder_5 = new StringConcatenation();
+      _builder_5.append("Validating error specifications");
+      this.logServiceExtension.debug(_builder_5);
       final Consumer<Specification> _function_3 = new Consumer<Specification>() {
         public void accept(final Specification it) {
           EmfCommons.basicValidate(it);
@@ -237,9 +232,9 @@ public class ReportApplication implements IExecutableTool {
       };
       specifications.forEach(_function_3);
       this.createReport(useCaseModel, templates, specifications, outputDirName);
-      StringConcatenation _builder_7 = new StringConcatenation();
-      _builder_7.append("Report generation done.");
-      this.logServiceExtension.info(_builder_7);
+      StringConcatenation _builder_6 = new StringConcatenation();
+      _builder_6.append("Report generation done.");
+      this.logServiceExtension.info(_builder_6);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -677,7 +672,7 @@ public class ReportApplication implements IExecutableTool {
         String _id = useCase.getId();
         _builder.append(_id, "");
         _builder.append(" to LTS");
-        ReportApplication.this.logServiceExtension.info(_builder);
+        ReportApplication.this.logServiceExtension.debug(_builder);
         final Automaton automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase);
         StringConcatenation _builder_1 = new StringConcatenation();
         _builder_1.append("transforming LTS to NuSMV code");
@@ -692,7 +687,7 @@ public class ReportApplication implements IExecutableTool {
         final String cntexCode = IterableExtensions.join(((Iterable<?>)Conversions.doWrapArray(_runNusmvCode)), "\n");
         StringConcatenation _builder_3 = new StringConcatenation();
         _builder_3.append("parsing counter example code to CounterExample");
-        ReportApplication.this.logServiceExtension.info(_builder_3);
+        ReportApplication.this.logServiceExtension.debug(_builder_3);
         CntexLang2Cntex _cntexLang2Cntex = new CntexLang2Cntex();
         final CounterExample counterExample = _cntexLang2Cntex.transform(cntexCode);
         CntexStateResolver _cntexStateResolver = new CntexStateResolver();

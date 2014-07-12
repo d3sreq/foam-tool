@@ -29,11 +29,10 @@ class NusmvWrapper {
 	}
 
 	//TODO:implement multiple ways of obtaining a path to the nusmv executable file
-	val nusmvExecFile = "/home/vlx/Apps/NuSMV-zchaff-2.5.4-x86_64-unknown-linux-gnu/bin/NuSMV"
+	val nusmvExecFile = "NuSMV"
 
-	@Activate
-	def final void activate(Map<String,Object> props) {
-		'''Found NuSMV version «nusmvVersion»'''.info
+	@Activate def final void activate(Map<String,Object> props) {
+		'''Found NuSMV version: «nusmvVersion»'''.info
 	}
 
 	val NUSMV_VERSION_PATTERN = Pattern.compile(".*NuSMV (\\S+).*")
@@ -41,7 +40,7 @@ class NusmvWrapper {
 	/**
 	 * Returns NuSMV version or null in case of an error.
 	 */
-	def getNusmvVersion() {
+	def private getNusmvVersion() {
 		
 		val firstLine = runNusmvFile("-h").head
 		

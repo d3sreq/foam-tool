@@ -136,8 +136,6 @@ class RenderLTS implements IExecutableTool {
 
 		if( ! dotCommand.empty ) {
 	
-			graphvizWrapper.graphvizVersion
-
 			dotCommand.add(0, "dot")
 			dotCommand += outputFileName
 			
