@@ -70,27 +70,27 @@ class TADLFormulaRenderer {
 	
 	val operator2Description = newHashMap(
 		//LTL Operators
-		LtlPackage.Literals::NEXT			-> "LTL: X(f) = 'Next', i.e. f holds in the next use-case step.",
-		LtlPackage.Literals::GLOBALLY 		-> "LTL: G(f) = 'Globally', i.e. f holds in all steps.",
-		LtlPackage.Literals::FUTURE			-> "LTL: F(f) = 'Future', i.e. there is a step in future where f holds.",
-		LtlPackage.Literals::UNTIL 			-> "LTL: [f U g] = 'Until', i.e. at some point g holds while in the meantime f holds.",
-		LtlPackage.Literals::RELEASES		-> "LTL: [f R g] = 'Release', is equivalent to ![ !f U !g ]",
+		LtlPackage.Literals.NEXT			-> "LTL: X(f) = 'Next', i.e. f holds in the next use-case step.",
+		LtlPackage.Literals.GLOBALLY 		-> "LTL: G(f) = 'Globally', i.e. f holds in all steps.",
+		LtlPackage.Literals.FUTURE			-> "LTL: F(f) = 'Future', i.e. there is a step in future where f holds.",
+		LtlPackage.Literals.UNTIL 			-> "LTL: [f U g] = 'Until', i.e. at some point g holds while in the meantime f holds.",
+		LtlPackage.Literals.RELEASES		-> "LTL: [f R g] = 'Release', is equivalent to ![ !f U !g ]",
 	
 		//PLTL Operators
-		LtlPackage.Literals::HISTORICALLY	-> "PLTL: H(f) = 'Historically', i.e. f holds in all previous steps in the past.",
-		LtlPackage.Literals::ONCE 			-> "PLTL: O(f) = 'Once', i.e. f held in at least one step in the past (past also includes current step).",
-		LtlPackage.Literals::SINCE 			-> "PLTL: [f S g] = 'Since', i.e. f held in some step in the past (past also includes current step) and q holds in all following steps.",
-		LtlPackage.Literals::TRIGGERED		-> "PLTL: [f T g] = 'Triggered', i.e. f held in past (past also includes current step) and q holds in all following steps. If f has never been true, then g must hold in all steps from beginning up to current step (included).",
+		LtlPackage.Literals.HISTORICALLY	-> "PLTL: H(f) = 'Historically', i.e. f holds in all previous steps in the past.",
+		LtlPackage.Literals.ONCE 			-> "PLTL: O(f) = 'Once', i.e. f held in at least one step in the past (past also includes current step).",
+		LtlPackage.Literals.SINCE 			-> "PLTL: [f S g] = 'Since', i.e. f held in some step in the past (past also includes current step) and q holds in all following steps.",
+		LtlPackage.Literals.TRIGGERED		-> "PLTL: [f T g] = 'Triggered', i.e. f held in past (past also includes current step) and q holds in all following steps. If f has never been true, then g must hold in all steps from beginning up to current step (included).",
 
 		//CTL Operators
-		CtlPackage.Literals::EXISTS_GLOBALLY	-> "CTL: EG(f) = 'Exists globally', i.e. exists (infinite) path starting with current step such that f holds in all it's steps.",
-		CtlPackage.Literals::EXISTS_FINALLY		-> "CTL: EF(f) = 'Exists finally', i.e. exists path starting with current step containing step where f holds.", 
-		CtlPackage.Literals::EXISTS_NEXT		-> "CTL: EX(f) = 'Exists next', i.e. f holds in one of the following steps.", 
-		CtlPackage.Literals::ALL_GLOBALLY		-> "CTL: AG(f) = 'All globally', i.e. holds on all paths in all steps.", 
-		CtlPackage.Literals::ALL_FINALLY		-> "CTL: AF(f) = 'All finally', i.e. in all paths starting with current step exists a step where f holds.", 
-		CtlPackage.Literals::ALL_NEXT			-> "CTL: AX(f) = 'All next', i.e. f holds in all following steps.", 
-		CtlPackage.Literals::ALL_UNTIL			-> "CTL: A[f U g] = 'All Until', i.e. on all paths at some point g holds while in the meantime f holds.",
-		CtlPackage.Literals::EXISTS_UNTIL		-> "CTL: E[f U g] = 'Exists Until', i.e. exists path where at some point g holds while in the meantime f holds."
+		CtlPackage.Literals.EXISTS_GLOBALLY	-> "CTL: EG(f) = 'Exists globally', i.e. exists (infinite) path starting with current step such that f holds in all it's steps.",
+		CtlPackage.Literals.EXISTS_FINALLY	-> "CTL: EF(f) = 'Exists finally', i.e. exists path starting with current step containing step where f holds.", 
+		CtlPackage.Literals.EXISTS_NEXT		-> "CTL: EX(f) = 'Exists next', i.e. f holds in one of the following steps.", 
+		CtlPackage.Literals.ALL_GLOBALLY	-> "CTL: AG(f) = 'All globally', i.e. holds on all paths in all steps.", 
+		CtlPackage.Literals.ALL_FINALLY		-> "CTL: AF(f) = 'All finally', i.e. in all paths starting with current step exists a step where f holds.", 
+		CtlPackage.Literals.ALL_NEXT		-> "CTL: AX(f) = 'All next', i.e. f holds in all following steps.", 
+		CtlPackage.Literals.ALL_UNTIL		-> "CTL: A[f U g] = 'All Until', i.e. on all paths at some point g holds while in the meantime f holds.",
+		CtlPackage.Literals.EXISTS_UNTIL	-> "CTL: E[f U g] = 'Exists Until', i.e. exists path where at some point g holds while in the meantime f holds."
 	)
 	
 	def dispatch String evalFormula(Formula f)'''?«f.toString»'''

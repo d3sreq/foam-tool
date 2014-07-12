@@ -20,11 +20,11 @@ class CreateOverviewEdgeTransitionProcessor implements TransitionProcessor {
 	private Graph resultDot
 	private Map<State, Node> state2Node
 	
-	private val dotFactory = DotFactory::eINSTANCE
+	private val dotFactory = DotFactory.eINSTANCE
 	
 	override process(Transition transition) {
 		
-		val transitionType = transition.annotations.filter(typeof(OverviewTransitionTypeAnnotation)).head.overviewTransitionType
+		val transitionType = transition.annotations.filter(OverviewTransitionTypeAnnotation).head.overviewTransitionType
 		
 		// transform oba state to dot node and add it into result graph
 		val edge = dotFactory.createEdge => [
@@ -32,7 +32,7 @@ class CreateOverviewEdgeTransitionProcessor implements TransitionProcessor {
 			target = state2Node.get(transition.end)
 			
 			// make include edges dashed
-			if (transitionType == OverviewTransitionType::INCLUDE) {
+			if (transitionType == OverviewTransitionType.INCLUDE) {
 				it.attributes.put("style", "dashed")
 				it.attributes.put("arrowhead", "onormal")
 			}

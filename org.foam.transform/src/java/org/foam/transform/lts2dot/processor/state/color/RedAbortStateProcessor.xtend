@@ -25,9 +25,9 @@ class RedAbortStateProcessor implements StateProcessor {
 		// make "abort" node red
 		val step = state.stepFromStepMappingAnnotation
 		if (step != null) {
-			val useCase = UcmUtils::getUseCase(step) 
+			val useCase = UcmUtils.getUseCase(step) 
 			if (useCase != null) {
-				val isAbort = Predicates::instanceOf(typeof(Abort))
+				val isAbort = Predicates.instanceOf(Abort)
 				val aborts = step.annotations.filter(isAbort)
 				
 				if (!aborts.empty) {

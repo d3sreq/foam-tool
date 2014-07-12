@@ -12,7 +12,7 @@ import org.foam.transform.ucm2lts.StateAddedEventListener
  * (if Step is given in event) into {@link State} passed in event.
  */
 class TraceabilityListener implements StateAddedEventListener {
-	val traceabilityFac = TraceabilityFactory::eINSTANCE
+	val traceabilityFac = TraceabilityFactory.eINSTANCE
 	
 	override stateAdded(StateAddedEvent event) {
 		val state = event.targetState

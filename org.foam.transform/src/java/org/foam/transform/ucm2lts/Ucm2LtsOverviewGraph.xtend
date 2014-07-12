@@ -12,8 +12,8 @@ import org.foam.ucm.UseCaseModel
 import static extension org.foam.ucm.util.UcmUtils.*
 
 class Ucm2LtsOverviewGraph {
-	val ltsFac = LtsFactory::eINSTANCE
-	val tracFac = TraceabilityFactory::eINSTANCE
+	val ltsFac = LtsFactory.eINSTANCE
+	val tracFac = TraceabilityFactory.eINSTANCE
 	
 	def Automaton transform(UseCaseModel ucm) {
 		val result = ltsFac.createAutomaton
@@ -46,7 +46,7 @@ class Ucm2LtsOverviewGraph {
 					start = useCase2State.get(useCase)
 					end = useCase2State.get(preceeded)
 					annotations += tracFac.createOverviewTransitionTypeAnnotation => [
-						overviewTransitionType = OverviewTransitionType::PRECEDENCE
+						overviewTransitionType = OverviewTransitionType.PRECEDENCE
 					]
 				]
 			}
@@ -57,7 +57,7 @@ class Ucm2LtsOverviewGraph {
 					start = useCase2State.get(useCase)
 					end = useCase2State.get(included)
 					annotations += tracFac.createOverviewTransitionTypeAnnotation => [
-						overviewTransitionType = OverviewTransitionType::INCLUDE
+						overviewTransitionType = OverviewTransitionType.INCLUDE
 					]					
 				]
 			}

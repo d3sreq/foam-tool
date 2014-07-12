@@ -20,11 +20,11 @@ class HasStateTypeMappingAnnotation implements Predicate<State> {
 	}
 	
 	new (StateType stateTypeToRetain) {
-		this(Collections::singleton(stateTypeToRetain))
+		this(Collections.singleton(stateTypeToRetain))
 	}
 	
 	new() {
-		this(StateType::values.toList)
+		this(StateType.values.toList)
 	}
 	
 	override apply(State state) {

@@ -16,7 +16,7 @@ import static extension org.foam.ucm.util.UcmUtils.*
 
 class TadlAnnotationResolver {
 	
-	val tadlFac = TadlFactory::eINSTANCE
+	val tadlFac = TadlFactory.eINSTANCE
 	
 	def void resolveAnnotations(UseCaseModel useCaseModel, Collection<Template> templates) {
 		val varDefName2Template = new HashMap<String, Template>
@@ -32,14 +32,14 @@ class TadlAnnotationResolver {
 		
 		for (useCase : useCaseModel.useCases) {
 			val allUseCaseAnnotations = useCase.stepAnnotations 
-			val allUnknownAnnotations = allUseCaseAnnotations.filter(typeof(UnknownAnnotation))
+			val allUnknownAnnotations = allUseCaseAnnotations.filter(UnknownAnnotation)
 			
 			for (annotation : allUnknownAnnotations) {
 				// replace recognized unknown annotations with flow annotations
 				val resolvedAnnotation = resolveAnnotation(annotation, varDefName2Template, varDefName2VarDef, qualifier2Group, useCaseModel)
 				
 				if (annotation != resolvedAnnotation) {
-					EcoreUtil::replace(annotation, resolvedAnnotation)
+					EcoreUtil.replace(annotation, resolvedAnnotation)
 				}
 			}
 		}

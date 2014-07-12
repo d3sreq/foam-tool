@@ -42,7 +42,7 @@ class Ucm2Lts implements IExecutableTool {
 		val inputFile = if (options.has(inputOption) && options.hasArgument(inputOption)) {
 			inputOption.value(options)
 		} else {			
-			optionParser.printHelpOn(System::out)
+			optionParser.printHelpOn(System.out)
 			return
 		}
 
@@ -95,7 +95,7 @@ class Ucm2Lts implements IExecutableTool {
 			val ucId = if (options.hasArgument(singleUseCaseForPageOption)) {
 				singleUseCaseForPageOption.value(options)
 			} else {
-				optionParser.printHelpOn(System::out)
+				optionParser.printHelpOn(System.out)
 				return
 			}
 			val uc = Preconditions.checkNotNull(useCaseModel.useCases.findFirst[it.id == ucId && it.primary], 

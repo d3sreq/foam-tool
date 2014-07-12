@@ -24,7 +24,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 	Map<Scenario, Graph> scenario2Graph
 	Map<UseCase, Graph> useCase2Graph
 
-	val dotFactory = DotFactory::eINSTANCE
+	val dotFactory = DotFactory.eINSTANCE
 
 	override process(State state) {
 		addScenarioSubGraph(state)
@@ -37,7 +37,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 		val graphForNode = if (step == null) {
 			resultDot
 		} else {
-			val scenario = UcmUtils::getScenario(step)
+			val scenario = UcmUtils.getScenario(step)
 			if (!scenario2Graph.containsKey(scenario)) {
 				val subGraph = dotFactory.createGraph => [
 					id = '''«scenario.useCase.id»_«scenario.label»''' // assert: id does not contain spaces
@@ -81,7 +81,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 				]
 				scenario2Graph.put(scenario, subGraph)
 				// add scenario graph into use case graph
-				val uc = UcmUtils::getUseCase(step)
+				val uc = UcmUtils.getUseCase(step)
 				val ucGraph = useCase2Graph.get(uc)
 				ucGraph.statements += subGraph
 			}

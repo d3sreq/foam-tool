@@ -36,13 +36,13 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 			if(step != null)
 				attributes.put("URL", '''#«UcmUtils.getUseCase(step).id»_«step.label»''' )
 			
-			for(action : transition.annotations.filter(typeof(Action)) ) {
+			for(action : transition.annotations.filter(Action) ) {
 				attributes.put("color", "blueviolet")
 				attributes.put("fontcolor", "blueviolet")
 				addTooltip('''action: «action.variableDefinition.name» := «action.value»''')
 			}
 
-			for(guard : transition.annotations.filter(typeof(Guard)) ) {
+			for(guard : transition.annotations.filter(Guard) ) {
 				attributes.put("color", "blueviolet")
 				attributes.put("fontcolor", "blueviolet")
 				addTooltip("guard: " + guard.formula)

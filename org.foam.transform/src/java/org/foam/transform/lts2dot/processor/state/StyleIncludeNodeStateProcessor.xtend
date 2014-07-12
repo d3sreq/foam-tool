@@ -9,11 +9,11 @@ import org.foam.traceability.UseCaseMappingAnnotation
 @Data
 class StyleIncludeNodeStateProcessor implements StateProcessor {
 	
-	val dotFactory = DotFactory::eINSTANCE
-	Map<State, Node> state2Node
+	val dotFactory = DotFactory.eINSTANCE
+	var Map<State, Node> state2Node
 	
 	override process(State state) {
-		val useCaseMappingAnnotations = state.annotations.filter(typeof(UseCaseMappingAnnotation))
+		val useCaseMappingAnnotations = state.annotations.filter(UseCaseMappingAnnotation)
 		if (!useCaseMappingAnnotations.empty) {
 			val annotation = useCaseMappingAnnotations.head
 			

@@ -47,11 +47,11 @@ class Ucm2Lts {
 	
 	private static val logger = Logger.getLogger(Ucm2Lts.canonicalName)
 	
-	val ltsFactory = LtsFactory::eINSTANCE
-	val flowannotationFactory = FlowannotationFactory::eINSTANCE
-	val propositionalLogicFactory = PropositionallogicFactory::eINSTANCE
-	val verificationFactory = VerificationFactory::eINSTANCE
-	val tracFactory = TraceabilityFactory::eINSTANCE
+	val ltsFactory = LtsFactory.eINSTANCE
+	val flowannotationFactory = FlowannotationFactory.eINSTANCE
+	val propositionalLogicFactory = PropositionallogicFactory.eINSTANCE
+	val verificationFactory = VerificationFactory.eINSTANCE
+	val tracFactory = TraceabilityFactory.eINSTANCE
 	val nameService = new NameService
 	val stateAddedEventListeners = new ArrayList<StateAddedEventListener>
 
@@ -64,20 +64,20 @@ class Ucm2Lts {
 									Map<Pair<Step, StateType>, State> 	stepToStateMap,
 									Map<Pair<State,State>, Transition>	transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
 		for (useCase : useCases) {
 			for (step : useCase.allSteps) {
-				val marks = step.annotations.filter(typeof(Mark)).toList
+				val marks = step.annotations.filter(Mark).toList
 				
 				if (!marks.empty) {
-					val copies = EcoreUtil::copyAll(marks)
+					val copies = EcoreUtil.copyAll(marks)
 					
-					val jmpState = stepToStateMap.get(step -> StateType::JMP)
-					val extState = stepToStateMap.get(step -> StateType::EXT)
+					val jmpState = stepToStateMap.get(step -> StateType.JMP)
+					val extState = stepToStateMap.get(step -> StateType.EXT)
 					
 					transitionMap.get(jmpState -> extState).annotations += copies
 				}
@@ -95,9 +95,9 @@ class Ucm2Lts {
 	 * @return helper mapping for {@link State} lookup
 	 */
 	def addStates(Automaton resultAutomaton, Iterable<UseCase> useCases, Map<Pair<State,State>, Transition> transitionMap) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(transitionMap)
 		 
 		val result = new HashMap<Pair<Step, StateType>, State>
 
@@ -151,14 +151,14 @@ class Ucm2Lts {
 							Map<Pair<Step, StateType>, State> stepToStateMap,
 							Map<Pair<State,State>, Transition> transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
 		connectScenarioSteps(resultAutomaton, useCases, stepToStateMap, transitionMap)
-		connectBranchesToParents(resultAutomaton, useCases, StateType::VAR, stepToStateMap, transitionMap)
-		connectBranchesToParents(resultAutomaton, useCases, StateType::EXT, stepToStateMap, transitionMap)
+		connectBranchesToParents(resultAutomaton, useCases, StateType.VAR, stepToStateMap, transitionMap)
+		connectBranchesToParents(resultAutomaton, useCases, StateType.EXT, stepToStateMap, transitionMap)
 		connectContinuationFromScenarios(resultAutomaton, useCases, stepToStateMap, transitionMap)
 	}
 	
@@ -175,18 +175,18 @@ class Ucm2Lts {
 									Map<Pair<Step, StateType>, State> 	stepToStateMap,
 									Map<Pair<State,State>, Transition>	transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
 		for (useCase : useCases) {
 			for (scenario : useCase.allScenarios) {
 				var Step previousStep = null
 				for (step : scenario.steps) {
 					if (previousStep != null) {
-						val start = stepToStateMap.get(previousStep -> StateType::OUT)
-						val end = stepToStateMap.get(step -> StateType::IN)
+						val start = stepToStateMap.get(previousStep -> StateType.OUT)
+						val end = stepToStateMap.get(step -> StateType.IN)
 						addTransition(start, end, resultAutomaton, transitionMap)
 					}
 					previousStep = step;
@@ -213,15 +213,15 @@ class Ucm2Lts {
 										Map<Pair<Step, StateType>, State>	stepToStateMap,
 										Map<Pair<State,State>, Transition> 	transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
 		for (useCase : useCases) {
 			for (entry : useCase.branches) {
 				// get scenarios from branches (variations and extensions)
-				var branches = if (extOrVar == StateType::VAR) entry.value.variations else entry.value.extensions
+				var branches = if (extOrVar == StateType.VAR) entry.value.variations else entry.value.extensions
 				for (branch : branches) {
 					val firstStep = branch.steps.head
 					val parentStep = entry.key
@@ -232,7 +232,7 @@ class Ucm2Lts {
 					val transition = addTransition(branchStateExtOrVar, extOrVarStateIn, resultAutomaton, transitionMap)
 					
 					// add guards to transition in lts
-					val guards = EcoreUtil::copyAll(firstStep.annotations.filter(Guard).toList)
+					val guards = EcoreUtil.copyAll(firstStep.annotations.filter(Guard).toList)
 					transition.annotations += guards
 				}
 			}
@@ -254,26 +254,26 @@ class Ucm2Lts {
 												Map<Pair<Step, StateType>, State>	stepToStateMap,
 												Map<Pair<State,State>, Transition>	transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
-		val isAbort = Predicates::instanceOf(Abort) 
-		val isGoto = Predicates::instanceOf(Goto)
-		val isNeitherGotoOrAbort = Predicates::not(Predicates::or(isAbort, isGoto))
+		val isAbort = Predicates.instanceOf(Abort) 
+		val isGoto = Predicates.instanceOf(Goto)
+		val isNeitherGotoOrAbort = Predicates.not(Predicates.or(isAbort, isGoto))
 		
 		for (useCase : useCases) {
 			for (entry : useCase.branches) {
 				for (scenario : entry.value.branches.map[value as Scenario]) {
 					val lastStep = scenario.steps.last
-					Preconditions::checkNotNull(lastStep)
+					Preconditions.checkNotNull(lastStep)
 
 					// last step cannot contain abort or goto to connect back to parent's OUT state					
 					if (lastStep.annotations.forall(isNeitherGotoOrAbort)) {
 						// connect last step OUT to parent OUT
-						val lastStepOutState = stepToStateMap.get(lastStep -> StateType::OUT)
-						val parentOutState = stepToStateMap.get(entry.key -> StateType::OUT)
+						val lastStepOutState = stepToStateMap.get(lastStep -> StateType.OUT)
+						val parentOutState = stepToStateMap.get(entry.key -> StateType.OUT)
 						
 						addTransition(lastStepOutState, parentOutState, resultAutomaton, transitionMap)
 					}
@@ -296,19 +296,19 @@ class Ucm2Lts {
 					Map<Pair<Step, StateType>, State>	stepToStateMap, 
 					Map<Pair<State,State>, Transition>	transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
 		for (useCase : useCases) {
 			for (step : useCase.allSteps) {
 				// TODO - this will add multiple gotos if multiple gotos are
 				// attached to single step
 				// throw exception instead ?
-				for (goto : step.annotations.filter(typeof(Goto))) {
-					val stepOutState = stepToStateMap.get(step -> StateType::OUT)
-					val targetJumpState = stepToStateMap.get(goto.target -> StateType::JMP)
+				for (goto : step.annotations.filter(Goto)) {
+					val stepOutState = stepToStateMap.get(step -> StateType.OUT)
+					val targetJumpState = stepToStateMap.get(goto.target -> StateType.JMP)
 					
 					addTransition(stepOutState, targetJumpState, resultAutomaton, transitionMap)
 				}
@@ -329,17 +329,17 @@ class Ucm2Lts {
 						Map<Pair<Step, StateType>, State>	stepToStateMap,
 						Map<Pair<State,State>, Transition>	transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
 		for (useCase : useCases) {
 			for (step : useCase.allSteps) {
-				val aborts = step.annotations.filter(typeof(Abort))
+				val aborts = step.annotations.filter(Abort)
 				// TODO - check that only one abort is attached ? 
 				if (!aborts.empty) {
-					val stepOutState = stepToStateMap.get(step -> StateType::OUT)
+					val stepOutState = stepToStateMap.get(step -> StateType.OUT)
 					// abort loop, see also includeResolution
 					addTransition(stepOutState, stepOutState, resultAutomaton, transitionMap)
 					// Note: From now on, we don't need a special abort-loop state because
@@ -375,10 +375,10 @@ class Ucm2Lts {
 							Map<Pair<Step, StateType>, State>	stepToStateMap,
 							Map<Pair<State,State>, Transition>	transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
 		for (useCase : useCases) {
 			for (step : useCase.allSteps) {
@@ -389,8 +389,8 @@ class Ucm2Lts {
 					
 					// disable execution from step x JMP to x EXT
 					// according to the FOAM paper, this is achieved by adding a FALSE guard instead of removing the transition
-					val stepJmpState = stepToStateMap.get(step -> StateType::JMP)
-					val stepExtState = stepToStateMap.get(step -> StateType::EXT)
+					val stepJmpState = stepToStateMap.get(step -> StateType.JMP)
+					val stepExtState = stepToStateMap.get(step -> StateType.EXT)
 					val transitionJmp1Ext1 = transitionMap.get(stepJmpState -> stepExtState)
 					transitionJmp1Ext1.annotations += flowannotationFactory.createGuard => [
 						formula = propositionalLogicFactory.createFalse // the FALSE guard
@@ -399,7 +399,7 @@ class Ucm2Lts {
 					// connect x JMP to y1 IN
 					val includedUseCaseSteps = include.inlinedUseCase.mainScenario.steps
 					val firstStep = includedUseCaseSteps.head
-					val firstInState = stepToStateMap.get(firstStep -> StateType::IN)
+					val firstInState = stepToStateMap.get(firstStep -> StateType.IN)
 					val transitionJmp1In2 = addTransition(stepJmpState, firstInState, resultAutomaton, transitionMap)
 
 					// add action setting variable incl_x,c to true
@@ -430,7 +430,7 @@ class Ucm2Lts {
 					val lastStepOfMainScenario = includedUseCaseSteps.last
 					
 					if( ! lastStepOfMainScenario.annotations.exists[it instanceof Goto]) {
-						returnStates += stepToStateMap.get(lastStepOfMainScenario -> StateType::OUT)
+						returnStates += stepToStateMap.get(lastStepOfMainScenario -> StateType.OUT)
 					} else {
 						logger.debug('''The included use-case «include.inlinedUseCase.id» contains "goto" annotation, therefore we won't add a "return" transition to «useCase.id»''')
 					}
@@ -438,7 +438,7 @@ class Ucm2Lts {
 					// covers the (ii) case:
 					include.inlinedUseCase.allSteps.filter[annotations.exists[it instanceof Abort]].forEach[
 						logger.debug('''Found a step with ABORT annotation: «it.label» in use-case «include.inlinedUseCase.id»''')
-						returnStates += stepToStateMap.get(it -> StateType::OUT)
+						returnStates += stepToStateMap.get(it -> StateType.OUT)
 					]
 										
 					// now adding the return transitions from the collected return states:
@@ -474,7 +474,7 @@ class Ucm2Lts {
 	 * @param resultAutomaton Automaton to add init state into
 	 */
 	def addInitState(Automaton resultAutomaton) {
-		Preconditions::checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(resultAutomaton)
 		
 		// add init state
 		val init = ltsFactory.createState => [
@@ -490,10 +490,10 @@ class Ucm2Lts {
 							Map<Pair<Step, StateType>, State>	stepToStateMap,
 							Map<Pair<State,State>, Transition>	transitionMap
 	) {
-		Preconditions::checkNotNull(resultAutomaton)
-		Preconditions::checkNotNull(useCases)
-		Preconditions::checkNotNull(stepToStateMap)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultAutomaton)
+		Preconditions.checkNotNull(useCases)
+		Preconditions.checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(transitionMap)
 		
 		// add variables done_u
 		val doneVars = new HashMap<UseCase, VariableDefinition>
@@ -511,14 +511,14 @@ class Ucm2Lts {
 		for (useCase : useCases) {
 			// connect init to x_1 IN
 			val steps = useCase.mainScenario.steps
-			val firstIn = stepToStateMap.get(steps.head -> StateType::IN)
+			val firstIn = stepToStateMap.get(steps.head -> StateType.IN)
 			val transition = addTransition(resultAutomaton.initState, firstIn, resultAutomaton, transitionMap)
 
 			// add precedence guard over done variables
 			transition.annotations += createInitGuard(useCase, doneVars)
 
 			// add action setting done_u (exec_u in the paper) to true to transition x_1 IN -> x_1 VAR
-			val firstVar = stepToStateMap.get(steps.head -> StateType::VAR)
+			val firstVar = stepToStateMap.get(steps.head -> StateType.VAR)
 			val inToVarTransition = transitionMap.get(firstIn -> firstVar)
 			inToVarTransition.annotations += verificationFactory.createAction => [
 				variableDefinition = doneVars.get(useCase)
@@ -526,7 +526,7 @@ class Ucm2Lts {
 			]
 
 			// connect to x_n OUT to init
-			val lastOut = stepToStateMap.get(steps.last -> StateType::OUT)
+			val lastOut = stepToStateMap.get(steps.last -> StateType.OUT)
 			addTransition(lastOut, resultAutomaton.initState, resultAutomaton, transitionMap)
 		}
 
@@ -537,9 +537,9 @@ class Ucm2Lts {
 						Map<UseCase, VariableDefinition>	doneVars,
 						Map<Pair<State,State>, Transition>	transitionMap
 	) {
-		Preconditions::checkNotNull(resultLts)
-		Preconditions::checkNotNull(doneVars)
-		Preconditions::checkNotNull(transitionMap)
+		Preconditions.checkNotNull(resultLts)
+		Preconditions.checkNotNull(doneVars)
+		Preconditions.checkNotNull(transitionMap)
 		
 		// add final state
 		val finalState = ltsFactory.createState => [
@@ -595,7 +595,7 @@ class Ucm2Lts {
 			return propositionalLogicFactory.createTrue
 		}
 		
-		val partsCopies = EcoreUtil::copyAll(parts.toList)
+		val partsCopies = EcoreUtil.copyAll(parts.toList)
 		
 		var result = partsCopies.head
 		for (rightPart : partsCopies.tail) {
@@ -612,17 +612,17 @@ class Ucm2Lts {
 								Iterable<UseCase> allUseCases,
 								Map<Pair<Step, StateType>, State> stepToStateMap
 	) {
-		Preconditions::checkNotNull(resultOba)
-		Preconditions::checkNotNull(allUseCases)
-		Preconditions::checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(resultOba)
+		Preconditions.checkNotNull(allUseCases)
+		Preconditions.checkNotNull(stepToStateMap)
 									
 		for (useCase : allUseCases) {
 			// add temporal annotations from use case step to JMP state in lts
-			val tempAnnotations = useCase.stepAnnotations.filter(typeof(TemporalAnnotation))
+			val tempAnnotations = useCase.stepAnnotations.filter(TemporalAnnotation)
 			for (tempAnnotation : tempAnnotations) {
 				val step = tempAnnotation.eContainer as Step
-				val jmpState = stepToStateMap.get(step -> StateType::JMP)
-				jmpState.annotations += EcoreUtil::copy(tempAnnotation)
+				val jmpState = stepToStateMap.get(step -> StateType.JMP)
+				jmpState.annotations += EcoreUtil.copy(tempAnnotation)
 			}
 		}
 	}
@@ -632,10 +632,10 @@ class Ucm2Lts {
 										StateType stateType,
 										Map<Pair<Step, StateType>, State> stepToStateMap
 	) {
-		Preconditions::checkNotNull(resultOba)
-		Preconditions::checkNotNull(steps)
-		Preconditions::checkNotNull(stateType)
-		Preconditions::checkNotNull(stepToStateMap)
+		Preconditions.checkNotNull(resultOba)
+		Preconditions.checkNotNull(steps)
+		Preconditions.checkNotNull(stateType)
+		Preconditions.checkNotNull(stepToStateMap)
 		
 		for (step : steps) {
 			val branchState = stepToStateMap.get(step -> stateType)
@@ -643,13 +643,13 @@ class Ucm2Lts {
 			val branchTransitions = resultOba.transitions.filter[it.start == branchState]
 			
 			// get union of guarding formulae on variations/extensions
-			val guards = branchTransitions.map[annotations.filter(typeof(Guard))].flatten
+			val guards = branchTransitions.map[annotations.filter(Guard)].flatten
 			
 			if (!guards.empty) {
 				
 				// add guard to unguarded transitions
 				for (transition : branchTransitions) {
-					val transitionGuards = transition.annotations.filter(typeof(Guard))
+					val transitionGuards = transition.annotations.filter(Guard)
 					
 					if (transitionGuards.empty) {
 						transition.annotations += flowannotationFactory.createGuard => [ 
@@ -666,12 +666,12 @@ class Ucm2Lts {
 	}
 	
 	def void addStateAddedEventListener(StateAddedEventListener stateAddedEventListener) {
-		Preconditions::checkNotNull(stateAddedEventListener)
+		Preconditions.checkNotNull(stateAddedEventListener)
 		stateAddedEventListeners += stateAddedEventListener
 	}
 	
 	def void removeStateAddedEventListener(StateAddedEventListener stateAddedEventListener) {
-		Preconditions::checkNotNull(stateAddedEventListener)
+		Preconditions.checkNotNull(stateAddedEventListener)
 		stateAddedEventListeners.remove(stateAddedEventListener)
 	}
 
@@ -685,7 +685,7 @@ class Ucm2Lts {
 		
 		for (step : useCase.allSteps) {
 			
-			val includeAnnotations = step.annotations.filter(typeof(Include))
+			val includeAnnotations = step.annotations.filter(Include)
 			if (!includeAnnotations.empty) {
 				// TODO - at most one include should be attached
 			 	val includedUseCase = includeAnnotations.head.inlinedUseCase
@@ -708,13 +708,13 @@ class Ucm2Lts {
 			 	// add transitions
 			 	// calling:JMP -> incl
 			 	automaton.transitions += ltsFactory.createTransition => [
-			 		start = stepToStateMap.get(step -> StateType::JMP)
+			 		start = stepToStateMap.get(step -> StateType.JMP)
 			 		end = includeState
 			 	]
 			 	// incl -> calling:EXT
 			 	automaton.transitions += ltsFactory.createTransition => [
 			 		start = includeState
-			 		end = stepToStateMap.get(step -> StateType::EXT)
+			 		end = stepToStateMap.get(step -> StateType.EXT)
 			 	]
 			}
 			

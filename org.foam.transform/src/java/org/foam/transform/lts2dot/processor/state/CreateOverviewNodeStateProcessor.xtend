@@ -14,10 +14,10 @@ class CreateOverviewNodeStateProcessor implements StateProcessor {
 	private Graph resultDot
 	private Map<State, Node> state2Node
 	
-	val dotFactory = DotFactory::eINSTANCE
+	val dotFactory = DotFactory.eINSTANCE
 	
 	override process(State state) {
-		val useCase = state.annotations.filter(typeof(UseCaseMappingAnnotation)).head.useCase
+		val useCase = state.annotations.filter(UseCaseMappingAnnotation).head.useCase
 		
 		val node = dotFactory.createNode => [
 			id = useCase.id

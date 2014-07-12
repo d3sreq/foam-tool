@@ -24,7 +24,7 @@ class AddUseCaseStateProcessor implements StateProcessor {
 	Graph resultDot
 	Map<UseCase, Graph> useCase2Graph	
 	
-	val dotFactory = DotFactory::eINSTANCE
+	val dotFactory = DotFactory.eINSTANCE
 
 	override process(State state) {
 		addUseCaseSubGraph(state)
@@ -36,7 +36,7 @@ class AddUseCaseStateProcessor implements StateProcessor {
 		val step = state.stepFromStepMappingAnnotation
 		
 		if (step != null) {
-			val useCase = UcmUtils::getUseCase(step)
+			val useCase = UcmUtils.getUseCase(step)
 			if (!useCase2Graph.containsKey(useCase)) {
 				val subGraph = dotFactory.createGraph => [
 					id = useCase.id

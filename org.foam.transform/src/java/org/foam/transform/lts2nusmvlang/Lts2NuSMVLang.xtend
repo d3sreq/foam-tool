@@ -316,7 +316,7 @@ class Lts2NuSMVLang {
 		val result = new HashMap<Group, Map<String, List<Transition>>>
 		
 		for (transition : transitions) {
-			for (tempAnnot : transition.start.annotations.filter(typeof(TemporalAnnotation))) {
+			for (tempAnnot : transition.start.annotations.filter(TemporalAnnotation)) {
 				val group = tempAnnot.group
 				if (!result.containsKey(group)) {
 					val varNameMap = new HashMap<String, List<Transition>>
@@ -338,6 +338,7 @@ class Lts2NuSMVLang {
 	}
 }
 
+// TODO: Is this DummyMap really necessary?
 class DummyMap<K> extends HashMap<K, K> {
 
 	override get(Object key) {

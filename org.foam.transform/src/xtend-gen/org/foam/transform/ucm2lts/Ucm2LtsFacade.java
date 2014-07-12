@@ -247,7 +247,7 @@ public class Ucm2LtsFacade {
   private static HashMap<Pair<Step, StateType>, State> createStepStateType2StateMap(final Automaton automaton) {
     HashMap<Pair<Step, StateType>, State> _xblockexpression = null;
     {
-      final HashMap<Pair<Step, StateType>, State> stepStateType2State = new HashMap<Pair<Step, StateType>, State>();
+      final HashMap<Pair<Step, StateType>, State> stepStateType2State = CollectionLiterals.<Pair<Step, StateType>, State>newHashMap();
       EList<State> _states = automaton.getStates();
       for (final State state : _states) {
         {

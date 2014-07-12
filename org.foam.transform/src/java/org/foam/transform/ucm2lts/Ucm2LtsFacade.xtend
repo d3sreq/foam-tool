@@ -36,10 +36,10 @@ class Ucm2LtsFacade {
 	
 	def static Automaton transformSingleUseCase( UseCaseModel useCaseModel, UseCase useCase) {
 		val ucm2lts = createUcm2lts
-		val preceededWithUc = Sets::union(useCase.preceededTransitively, Collections::singleton(useCase))
+		val preceededWithUc = Sets.union(useCase.preceededTransitively, Collections.singleton(useCase))
 		// get transitive includes of all preceeded use cases
 		val included = preceededWithUc.map[it.includedTransitively].flatten.toSet
-		val allUseCases = Sets::union(preceededWithUc, included)		 
+		val allUseCases = Sets.union(preceededWithUc, included)		 
 		transformUcmToLts(useCaseModel, allUseCases, preceededWithUc, ucm2lts)
 	}
 	
@@ -48,9 +48,9 @@ class Ucm2LtsFacade {
 		
 		val ucm2lts = createUcm2lts
 		
-		val allUseCases = Collections::singleton(useCase)
+		val allUseCases = Collections.singleton(useCase)
 		
-		val automaton = LtsFactory::eINSTANCE.createAutomaton
+		val automaton = LtsFactory.eINSTANCE.createAutomaton
 		val stepToStateMap = ucm2lts.addStates(automaton, allUseCases, transitionMap)
 		
 		ucm2lts.connectCommon(automaton, allUseCases, stepToStateMap, transitionMap)
@@ -72,7 +72,7 @@ class Ucm2LtsFacade {
 	) {
 		val Map<Pair<State,State>, Transition> transitionMap = newHashMap
 		
-		val automaton = LtsFactory::eINSTANCE.createAutomaton
+		val automaton = LtsFactory.eINSTANCE.createAutomaton
 		
 		val stepToStateMap = ucm2lts.addStates(automaton, allUseCases, transitionMap)
 		
@@ -88,10 +88,10 @@ class Ucm2LtsFacade {
 		ucm2lts.addAtomicPropositions(automaton, allUseCases, stepToStateMap)
 		
 		val allSteps = allUseCases.map[it.allSteps].flatten
-		ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType::VAR, stepToStateMap)
-		ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType::EXT, stepToStateMap)
+		ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType.VAR, stepToStateMap)
+		ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType.EXT, stepToStateMap)
 		// TODO - use for all OUT steps ?
-		ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType::OUT, stepToStateMap)
+		ucm2lts.addGuardsToUnguardedSteps(automaton, allSteps, StateType.OUT, stepToStateMap)
 		
 		// TODO - I'm currenty not sure that reduction is correct. It should be carefully thought over
 		//  which states can and which cannot be reduced.
@@ -121,16 +121,16 @@ class Ucm2LtsFacade {
 //		val existsTransitionWithMarkEndingInThisState = new ExistsTransitionWithMarkEndingInThisState(automaton.transitions)
 //		val stepStateToRemovePredicate = createStepStateToRemovePredicate(automaton, mapping)
 //		
-//		val reductionPredicate = Predicates::and(
-//			Predicates::not(hasTemporal),
-//			Predicates::not(existsTransitionWithMarkEndingInThisState),
+//		val reductionPredicate = Predicates.and(
+//			Predicates.not(hasTemporal),
+//			Predicates.not(existsTransitionWithMarkEndingInThisState),
 //			stepStateToRemovePredicate
 //		)
 //		val ltsReduction = new LtsReduction(reductionPredicate)
 //		
 //		// move guards and actions from removed transitions to new transition
-//		ltsReduction.addStateReducedEventListener(new MoveAnnotationsWithTypeListener(typeof(Guard)))
-//		ltsReduction.addStateReducedEventListener(new MoveAnnotationsWithTypeListener(typeof(Action)))
+//		ltsReduction.addStateReducedEventListener(new MoveAnnotationsWithTypeListener(Guard))
+//		ltsReduction.addStateReducedEventListener(new MoveAnnotationsWithTypeListener(Action))
 //		
 //		ltsReduction.removeUnneededStates(automaton)
 //	}
@@ -148,14 +148,14 @@ class Ucm2LtsFacade {
 	
 	def private static createStepStateToRemovePredicate(Automaton automaton, Map<Pair<Step, StateType>, State> mapping) {
 		val hasAnyStateTypeAnnotation = new HasStateTypeMappingAnnotation
-		val isJmp = new HasStateTypeMappingAnnotation(StateType::JMP)
+		val isJmp = new HasStateTypeMappingAnnotation(StateType.JMP)
 		
 		// remove state that
 		// - was created from step
 		// - is not JMP
-		Predicates::and(
+		Predicates.and(
 			hasAnyStateTypeAnnotation,
-			Predicates::not(isJmp)
+			Predicates.not(isJmp)
 		)
 	}
 	
@@ -163,18 +163,18 @@ class Ucm2LtsFacade {
 		// try to remove IN state of the first step in main scenario
 		// from IN state goes only transition to the other state of the first step 
 		val fstStep = mainScenario.steps.head
-		val fstState = mapping.get(fstStep -> StateType::IN)
+		val fstState = mapping.get(fstStep -> StateType.IN)
 		
 		val fstStateTransitions = automaton.transitions.filter[it.start == fstState]
 		
 		val transitionEnd = fstStateTransitions.head.end
-		val transitionEndStep = transitionEnd.annotations.filter(typeof(StepMappingAnnotation)).head.step
+		val transitionEndStep = transitionEnd.annotations.filter(StepMappingAnnotation).head.step
 		
 		if (fstStep == transitionEndStep) {
 			// remove fstState
 			// remove transitions going from/to removed state
-			EcoreUtil::remove(fstStateTransitions.head)
-			EcoreUtil::remove(fstState)
+			EcoreUtil.remove(fstStateTransitions.head)
+			EcoreUtil.remove(fstState)
 		}
 	}
 	
@@ -187,32 +187,32 @@ class Ucm2LtsFacade {
 		// try to remove OUT state of the last step in scenario
 		// from IN state goes only transition to the other state of the first step 
 		val lastStep = scenario.steps.last
-		val lastState = mapping.get(lastStep -> StateType::OUT)
+		val lastState = mapping.get(lastStep -> StateType.OUT)
 		
 		val toStateTransitions = automaton.transitions.filter[it.end == lastState]
 		val fromStateTransitions = automaton.transitions.filter[it.start == lastState]
 		
 		if (toStateTransitions.size == 1 && fromStateTransitions.empty) {
 			val transitionStartState = toStateTransitions.head.start
-			val transitionStartStateStep = transitionStartState.annotations.filter(typeof(StepMappingAnnotation)).head.step
+			val transitionStartStateStep = transitionStartState.annotations.filter(StepMappingAnnotation).head.step
 			
 			if (lastStep == transitionStartStateStep) {
 				// remove transition going to removed state
-				EcoreUtil::remove(toStateTransitions.head)
+				EcoreUtil.remove(toStateTransitions.head)
 				// remove lastState
-				EcoreUtil::remove(lastState)
+				EcoreUtil.remove(lastState)
 			}
 		}
 	}
 	
 	def private static createStepStateType2StateMap(Automaton automaton) {
 		// prepare stepStateType2State map
-		val stepStateType2State = new HashMap<Pair<Step, StateType>, State>
+		val stepStateType2State = <Pair<Step, StateType>, State> newHashMap
 		for (state : automaton.states) {
-			val stepAnnotation = state.annotations.filter(typeof(StepMappingAnnotation)).head
+			val stepAnnotation = state.annotations.filter(StepMappingAnnotation).head
 			if (stepAnnotation != null) {
 				val step = stepAnnotation.step
-				val stateType = state.annotations.filter(typeof(StateTypeMappingAnnotation)).head.stateType
+				val stateType = state.annotations.filter(StateTypeMappingAnnotation).head.stateType
 				stepStateType2State.put(step -> stateType, state)
 			}
 		}

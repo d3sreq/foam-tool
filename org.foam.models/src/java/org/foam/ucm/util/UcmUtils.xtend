@@ -56,14 +56,14 @@ class UcmUtils {
 	
 	def static Set<UseCase> getIncluded(UseCase useCase) {
 		allSteps(useCase).map[
-			annotations.filter(typeof(Include)).map[inlinedUseCase]
+			annotations.filter(Include).map[inlinedUseCase]
 		].flatten.toSet
 	}
 	
 	def static Set<UseCase> getIncludedTransitively(UseCase useCase) {
 		Preconditions.checkNotNull(useCase)
 		
-		val result = new HashSet<UseCase>
+		val result = <UseCase> newHashSet
 		getIncludedUseCasesRecursively(useCase, result)
 		result
 	}

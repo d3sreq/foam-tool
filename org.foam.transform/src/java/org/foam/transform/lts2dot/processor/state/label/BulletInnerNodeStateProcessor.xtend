@@ -15,7 +15,7 @@ import org.foam.traceability.StateTypeMappingAnnotation
 @Data
 class BulletInnerNodeStateProcessor implements StateProcessor {
 	
-	Map<State, Node> state2Node
+	private Map<State, Node> state2Node
 	
 	override process(State state) {
 		if (state.hasJmp) {
@@ -26,7 +26,7 @@ class BulletInnerNodeStateProcessor implements StateProcessor {
 	}
 	
 	def private hasJmp(State state) {
-		val stateTypeMappingAnnoatations = state.annotations.filter(typeof(StateTypeMappingAnnotation))
+		val stateTypeMappingAnnoatations = state.annotations.filter(StateTypeMappingAnnotation)
 		!stateTypeMappingAnnoatations.empty && stateTypeMappingAnnoatations.head.stateType == StateType.JMP
 	} 
 }

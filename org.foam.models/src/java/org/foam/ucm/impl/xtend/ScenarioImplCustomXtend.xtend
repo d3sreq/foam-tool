@@ -17,11 +17,11 @@ class ScenarioImplCustomXtend {
 				return '''«step.label»«letter»'''
 				
 			}
-			default: ""
+			default: return ""
 		} 
 	}
 	
 	def private static getLetter(int index) {
-		Character::valueOf(('a'.charAt(0) + index) as char).toString
+		Character.valueOf(('a'.charAt(0) + index) as char).toString
 	}
 }
