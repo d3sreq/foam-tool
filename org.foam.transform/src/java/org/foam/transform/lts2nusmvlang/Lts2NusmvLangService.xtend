@@ -2,10 +2,10 @@ package org.foam.transform.lts2nusmvlang
 
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
+import com.google.common.collect.HashMultimap
 import java.util.HashMap
 import java.util.HashSet
 import java.util.List
-import java.util.Map
 import java.util.Set
 import org.foam.annotation.Annotation
 import org.foam.flowannotation.Guard
@@ -23,12 +23,12 @@ import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
 import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.modeling.FoamNamingExtension
 import org.foam.ucm.Step
 import org.foam.verification.Action
 import org.osgi.service.log.LogService
 
 import static extension org.apache.commons.lang.WordUtils.*
-import org.foam.transform.utils.modeling.FoamNamingExtension
 
 @Component(provide = Lts2NusmvLangService)
 class Lts2NusmvLangService {
@@ -138,8 +138,9 @@ package class Lts2NusmvContext {
 		automaton.transitions += newTransition
 		
 		// lazy initialization
-		if(!actvar2acttrans.containsKey(actionAnnot.variableDefinition))
+		if(!actvar2acttrans.containsKey(actionAnnot.variableDefinition)) {
 			actvar2acttrans.put(actionAnnot.variableDefinition, newArrayList)
+		}
 			
 		actvar2acttrans.get(actionAnnot.variableDefinition).add(actionAnnot -> transition)
 	}
@@ -220,7 +221,7 @@ package class Lts2NusmvContext {
 		DEFINE jmp := s in {
 			«automaton.states.filter[ s |
 				StateType.JMP.literal.equals(s.type) ||	// state type is JMP
-				s.stateTransitions.exists[end == s]			// s->s loop (final + abort loops)
+				s.stateTransitions.exists[end == s]		// s->s loop (final + abort loops)
 			].map[stateId].join(", ").wrap(NUSMV_CODE_WRAP_LENGTH)»
 		};
 		
@@ -325,34 +326,62 @@ package class Lts2NusmvContext {
 	def private createTemplateVar2NuSMVVarMap(String qualifier, Set<String> varNames) {
 		val result = new HashMap<String, String>
 		varNames.forEach[result.put(it, createTadlVarName(qualifier, it))]
-		result
+		return result
 	}
 
-	// separates transitions with tadl annotations according to groups (qualifiers) and variable names used within templates 
+	/**
+	 * Separates transitions with TADL annotations according to groups (qualifiers)
+	 * and variable names used within templates.
+	 */
 	def private partitionTransitions(Iterable<Transition> transitions) {
-		val result = new HashMap<Group, Map<String, List<Transition>>>
-		
-		for (transition : transitions) {
-			for (tempAnnot : transition.start.annotations.filter(TemporalAnnotation)) {
-				val group = tempAnnot.group
-				if (!result.containsKey(group)) {
-					val varNameMap = new HashMap<String, List<Transition>>
-					result.put(group, varNameMap)
-					
-					// add all variable names from template
-					group.template.variableDefinitions.forEach[varNameMap.put(it.name, newArrayList)]
-				}
-				
-				val varNameMap = result.get(group)
-				val varName = tempAnnot.variableDefinition.name
-				
-				val transList = varNameMap.get(varName)
-				transList += transition
-			}
-		}
-		
-		result
+		transitions.map[ transition |
+			transition.start.annotations
+			.filter(TemporalAnnotation)
+			.map[ group -> (variableDefinition.name -> transition)]
+		].flatten.fold(
+			HashMultimap.<Group, Pair<String, Transition>>create,
+			[mmap, p|
+				mmap.put(p.key, p.value)
+				mmap
+			]
+		).asMap.mapValues[fold(
+			HashMultimap.<String, Transition>create,
+			[mmap, p|
+				mmap.put(p.key, p.value)
+				mmap
+			]
+		)]
 	}
+
+//	/**
+//	 * Separates transitions with TADL annotations according to groups (qualifiers)
+//	 * and variable names used within templates.
+//	 */
+//	def private partitionTransitions(Iterable<Transition> transitions) {
+//
+//		val result = new HashMap<Group, Map<String, List<Transition>>>
+//
+//		for (transition : transitions) {
+//			for (tempAnnot : transition.start.annotations.filter(TemporalAnnotation)) {
+//				val group = tempAnnot.group
+//				if (!result.containsKey(group)) {
+//					val varNameMap = new HashMap<String, List<Transition>>
+//					result.put(group, varNameMap)
+//					
+//					// add all variable names from template
+//					group.template.variableDefinitions.forEach[varNameMap.put(it.name, newArrayList)]
+//				}
+//				
+//				val varNameMap = result.get(group)
+//				val varName = tempAnnot.variableDefinition.name
+//				
+//				val transList = varNameMap.get(varName)
+//				transList += transition
+//			}
+//		}
+//		
+//		return result
+//	}
 }
 
 // TODO: Is this DummyMap really necessary?

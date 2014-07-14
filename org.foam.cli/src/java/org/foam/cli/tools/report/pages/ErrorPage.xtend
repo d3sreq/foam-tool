@@ -22,7 +22,7 @@ import static extension org.foam.cli.tools.report.utils.Utils.*
 import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
 
 class StepTrace {
-	@Property val List<Step> steps = #[]
+	@Property val List<Step> steps = newArrayList
 	@Property var Step loopStart = null
 }
 
