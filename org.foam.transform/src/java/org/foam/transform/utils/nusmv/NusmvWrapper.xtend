@@ -5,8 +5,8 @@ import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Charsets
 import com.google.common.base.Preconditions
+import com.google.common.io.CharStreams
 import com.google.common.io.Files
-import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.util.Map
@@ -65,15 +65,11 @@ class NusmvWrapper {
 		val builder = new ProcessBuilder(nusmvExecFile, inputFileName)
 		builder.redirectErrorStream(true)
 		val process = builder.start
-		
-		val reader = new BufferedReader(new InputStreamReader(process.inputStream))
-		
-		val result = reader
-			.lines
-			.map[replaceAll("WARNING \\*\\*\\*","***")]
-			.<String>toArray([<String>newArrayOfSize(it)])
+
+		val reader = new InputStreamReader(process.inputStream)
+		val result = CharStreams.readLines(reader)
+						.map[replaceAll("WARNING \\*\\*\\*","***")]
 			
-		reader.close
 		process.destroy
 		
 		return result
