@@ -13,11 +13,11 @@ import org.foam.lts.LtsPackage
 import org.foam.propositionallogic.PropositionallogicPackage
 import org.foam.tadl.TadlPackage
 import org.foam.traceability.TraceabilityPackage
-import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService
+import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService
 
 @Component
 class LtsToNusmv implements IExecutableTool {
@@ -25,6 +25,11 @@ class LtsToNusmv implements IExecutableTool {
 	private extension LogServiceExtension logServiceExtension
 	@Reference def void setLogService(LogService logService) {
 		logServiceExtension = new LogServiceExtension(logService)
+	}
+
+	private Lts2NusmvLangService lts2NuSMVLangService
+	@Reference def void setLts2NuSMVLangService(Lts2NusmvLangService serviceRef) {
+		this.lts2NuSMVLangService = serviceRef
 	}
 
 	override execute(String[] args) {
@@ -69,7 +74,7 @@ class LtsToNusmv implements IExecutableTool {
 		EmfCommons.basicValidate(automaton)
 
 		'''Running the transformation'''.info
-		val result = (new Lts2NuSMVLang).transform(automaton)
+		val result = lts2NuSMVLangService.transform(automaton)
 		
 		// write nusmv code to output stream 
 		'''Writing the result NuSMV code to "«outputFileName»"'''.info

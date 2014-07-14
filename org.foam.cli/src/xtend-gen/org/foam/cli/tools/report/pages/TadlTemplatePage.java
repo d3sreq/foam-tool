@@ -16,7 +16,7 @@ import org.foam.propositionallogic.VariableDefinition;
 import org.foam.tadl.FormulaHolder;
 import org.foam.tadl.FormulaType;
 import org.foam.tadl.Template;
-import org.foam.transform.lts2nusmvlang.TADLFormulaRenderer;
+import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer;
 
 @Data
 @SuppressWarnings("all")
@@ -33,9 +33,9 @@ public class TadlTemplatePage implements Page {
     return this._template;
   }
   
-  private final TADLFormulaRenderer _renderer = new TADLFormulaRenderer();
+  private final TadlFormulaRenderer _renderer = new TadlFormulaRenderer();
   
-  public TADLFormulaRenderer getRenderer() {
+  public TadlFormulaRenderer getRenderer() {
     return this._renderer;
   }
   
@@ -88,7 +88,7 @@ public class TadlTemplatePage implements Page {
         FormulaType _formulaType = formulaHolder.getFormulaType();
         _builder.append(_formulaType, "");
         _builder.append(" ");
-        TADLFormulaRenderer _renderer = this.getRenderer();
+        TadlFormulaRenderer _renderer = this.getRenderer();
         Formula _formula = formulaHolder.getFormula();
         String _evalFormula = _renderer.evalFormula(_formula);
         _builder.append(_evalFormula, "");
@@ -106,7 +106,7 @@ public class TadlTemplatePage implements Page {
     _builder.append("<h2>Temporal Operators Explained</h2>");
     _builder.newLine();
     {
-      TADLFormulaRenderer _renderer_1 = this.getRenderer();
+      TadlFormulaRenderer _renderer_1 = this.getRenderer();
       Template _template_1 = this.getTemplate();
       EList<FormulaHolder> _formulaHolders_1 = _template_1.getFormulaHolders();
       final Function1<FormulaHolder, Formula> _function = new Function1<FormulaHolder, Formula>() {

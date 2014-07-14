@@ -19,6 +19,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
@@ -50,7 +52,7 @@ import org.foam.traceability.TraceabilityFactory;
 import org.foam.traceability.UseCaseMappingAnnotation;
 import org.foam.transform.ucm2lts.StateAddedEvent;
 import org.foam.transform.ucm2lts.StateAddedEventListener;
-import org.foam.transform.utils.modeling.NameService;
+import org.foam.transform.utils.modeling.FoamNamingExtension;
 import org.foam.ucm.Scenario;
 import org.foam.ucm.ScenarioHolder;
 import org.foam.ucm.Step;
@@ -71,6 +73,9 @@ import org.foam.verification.VerificationFactory;
 public class Ucm2Lts {
   private final static Logger logger = Logger.getLogger(Ucm2Lts.class.getCanonicalName());
   
+  @Extension
+  private FoamNamingExtension _foamNamingExtension = new FoamNamingExtension();
+  
   private final LtsFactory ltsFactory = LtsFactory.eINSTANCE;
   
   private final FlowannotationFactory flowannotationFactory = FlowannotationFactory.eINSTANCE;
@@ -81,9 +86,7 @@ public class Ucm2Lts {
   
   private final TraceabilityFactory tracFactory = TraceabilityFactory.eINSTANCE;
   
-  private final NameService nameService = new NameService();
-  
-  private final ArrayList<StateAddedEventListener> stateAddedEventListeners = new ArrayList<StateAddedEventListener>();
+  private final ArrayList<StateAddedEventListener> stateAddedEventListeners = CollectionLiterals.<StateAddedEventListener>newArrayList();
   
   /**
    * Copies {@link Mark} annotations from steps of the given use cases
@@ -630,7 +633,7 @@ public class Ucm2Lts {
     State _createState = this.ltsFactory.createState();
     final Procedure1<State> _function = new Procedure1<State>() {
       public void apply(final State it) {
-        String _createInitStateId = Ucm2Lts.this.nameService.createInitStateId();
+        String _createInitStateId = Ucm2Lts.this._foamNamingExtension.createInitStateId();
         it.setId(_createInitStateId);
       }
     };
@@ -653,7 +656,7 @@ public class Ucm2Lts {
         final Procedure1<VariableDefinition> _function = new Procedure1<VariableDefinition>() {
           public void apply(final VariableDefinition it) {
             String _id = uc.getId();
-            String _createDoneStateId = Ucm2Lts.this.nameService.createDoneStateId(_id);
+            String _createDoneStateId = Ucm2Lts.this._foamNamingExtension.createDoneStateId(_id);
             it.setName(_createDoneStateId);
           }
         };
@@ -717,7 +720,7 @@ public class Ucm2Lts {
       State _createState = this.ltsFactory.createState();
       final Procedure1<State> _function = new Procedure1<State>() {
         public void apply(final State it) {
-          String _createFinalStateId = Ucm2Lts.this.nameService.createFinalStateId();
+          String _createFinalStateId = Ucm2Lts.this._foamNamingExtension.createFinalStateId();
           it.setId(_createFinalStateId);
         }
       };

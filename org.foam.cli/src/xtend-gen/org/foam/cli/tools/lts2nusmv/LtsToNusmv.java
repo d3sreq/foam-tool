@@ -22,7 +22,7 @@ import org.foam.lts.LtsPackage;
 import org.foam.propositionallogic.PropositionallogicPackage;
 import org.foam.tadl.TadlPackage;
 import org.foam.traceability.TraceabilityPackage;
-import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang;
+import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService;
 import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.verification.VerificationPackage;
@@ -38,6 +38,13 @@ public class LtsToNusmv implements IExecutableTool {
   public void setLogService(final LogService logService) {
     LogServiceExtension _logServiceExtension = new LogServiceExtension(logService);
     this.logServiceExtension = _logServiceExtension;
+  }
+  
+  private Lts2NusmvLangService lts2NuSMVLangService;
+  
+  @Reference
+  public void setLts2NuSMVLangService(final Lts2NusmvLangService serviceRef) {
+    this.lts2NuSMVLangService = serviceRef;
   }
   
   public void execute(final String[] args) {
@@ -111,8 +118,7 @@ public class LtsToNusmv implements IExecutableTool {
       StringConcatenation _builder_4 = new StringConcatenation();
       _builder_4.append("Running the transformation");
       this.logServiceExtension.info(_builder_4);
-      Lts2NuSMVLang _lts2NuSMVLang = new Lts2NuSMVLang();
-      final String result = _lts2NuSMVLang.transform(automaton);
+      final String result = this.lts2NuSMVLangService.transform(automaton);
       StringConcatenation _builder_5 = new StringConcatenation();
       _builder_5.append("Writing the result NuSMV code to \"");
       _builder_5.append(outputFileName, "");

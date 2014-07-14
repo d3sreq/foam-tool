@@ -1,14 +1,14 @@
 package org.foam.cli.tools.report.pages
 
 import org.foam.tadl.Template
-import org.foam.transform.lts2nusmvlang.TADLFormulaRenderer
+import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
 
 @Data
 class TadlTemplatePage implements Page {
 
 	val Menu menu
 	val Template template	
-	val renderer = new TADLFormulaRenderer
+	val renderer = new TadlFormulaRenderer
 	
 	override getId() {
 		template.variableDefinitions.map[name].join("-")

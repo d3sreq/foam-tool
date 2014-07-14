@@ -26,7 +26,7 @@ import org.foam.propositionallogic.VariableDefinition
 import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.TraceabilityFactory
-import org.foam.transform.utils.modeling.NameService
+import org.foam.transform.utils.modeling.FoamNamingExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase
@@ -45,15 +45,15 @@ import static extension org.foam.ucm.util.UcmUtils.*
  */
 class Ucm2Lts {
 	
-	private static val logger = Logger.getLogger(Ucm2Lts.canonicalName)
+	private static val logger = Logger.getLogger(Ucm2Lts.canonicalName) // TODO: use OSGi LogService
+	private extension FoamNamingExtension = new FoamNamingExtension
 	
 	val ltsFactory = LtsFactory.eINSTANCE
 	val flowannotationFactory = FlowannotationFactory.eINSTANCE
 	val propositionalLogicFactory = PropositionallogicFactory.eINSTANCE
 	val verificationFactory = VerificationFactory.eINSTANCE
 	val tracFactory = TraceabilityFactory.eINSTANCE
-	val nameService = new NameService
-	val stateAddedEventListeners = new ArrayList<StateAddedEventListener>
+	val stateAddedEventListeners = <StateAddedEventListener> newArrayList
 
 	/**
 	 * Copies {@link Mark} annotations from steps of the given use cases 
@@ -478,7 +478,7 @@ class Ucm2Lts {
 		
 		// add init state
 		val init = ltsFactory.createState => [
-			id = nameService.createInitStateId
+			id = createInitStateId
 		]
 		resultAutomaton.states += init
 		resultAutomaton.initState = init
@@ -499,7 +499,7 @@ class Ucm2Lts {
 		val doneVars = new HashMap<UseCase, VariableDefinition>
 		for (uc : useCases) {
 			val varDef = propositionalLogicFactory.createVariableDefinition => [
-				name = nameService.createDoneStateId(uc.id)
+				name = createDoneStateId(uc.id)
 			]
 			doneVars.put(uc, varDef)
 			
@@ -543,7 +543,7 @@ class Ucm2Lts {
 		
 		// add final state
 		val finalState = ltsFactory.createState => [
-			id = nameService.createFinalStateId
+			id = createFinalStateId
 		]
 		resultLts.states += finalState
 		notifyStateAdded(null, finalState, null)

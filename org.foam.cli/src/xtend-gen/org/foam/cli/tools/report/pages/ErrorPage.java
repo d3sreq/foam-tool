@@ -36,7 +36,7 @@ import org.foam.traceability.StateMappingAnnotation;
 import org.foam.traceability.StateType;
 import org.foam.traceability.StateTypeMappingAnnotation;
 import org.foam.traceability.StepMappingAnnotation;
-import org.foam.transform.lts2nusmvlang.TADLFormulaRenderer;
+import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer;
 import org.foam.ucm.Step;
 import org.foam.ucm.UseCase;
 import org.foam.ucm.util.UcmUtils;
@@ -82,9 +82,9 @@ public class ErrorPage implements Page {
     return this._orderId;
   }
   
-  private final TADLFormulaRenderer _renderer = new TADLFormulaRenderer();
+  private final TadlFormulaRenderer _renderer = new TadlFormulaRenderer();
   
-  public TADLFormulaRenderer getRenderer() {
+  public TadlFormulaRenderer getRenderer() {
     return this._renderer;
   }
   
@@ -302,7 +302,7 @@ public class ErrorPage implements Page {
       FormulaType _formulaType = _formulaHolder_1.getFormulaType();
       _builder.append(_formulaType, "\t");
       _builder.append(" ");
-      TADLFormulaRenderer _renderer = this.getRenderer();
+      TadlFormulaRenderer _renderer = this.getRenderer();
       FormulaHolder _formulaHolder_2 = this.getFormulaHolder();
       Formula _formula = _formulaHolder_2.getFormula();
       String _evalFormula = _renderer.evalFormula(_formula);

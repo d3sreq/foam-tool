@@ -15,11 +15,11 @@ import org.foam.traceability.StateMappingAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
-import org.foam.transform.lts2nusmvlang.TADLFormulaRenderer
 import org.foam.ucm.Step
 import org.foam.ucm.util.UcmUtils
 
 import static extension org.foam.cli.tools.report.utils.Utils.*
+import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
 
 class StepTrace {
 	@Property val List<Step> steps = #[]
@@ -40,7 +40,7 @@ class ErrorPage implements Page {
 	 */
 	@Property String orderId
 	
-	val renderer = new TADLFormulaRenderer
+	val renderer = new TadlFormulaRenderer
 	
 	new(Menu menu, Specification specification, String orderId) {
 

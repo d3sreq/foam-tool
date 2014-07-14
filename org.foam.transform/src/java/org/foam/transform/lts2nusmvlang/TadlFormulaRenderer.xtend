@@ -35,7 +35,7 @@ import org.foam.propositionallogic.True
 import org.foam.propositionallogic.UnaryFormula
 import org.foam.propositionallogic.VariableUse
 
-class TADLFormulaRenderer {
+class TadlFormulaRenderer {
 	
 	val Map<String, String> varNameMapping
 	

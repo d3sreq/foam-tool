@@ -1,5 +1,7 @@
 package org.foam.transform.lts2nusmvlang
 
+import aQute.bnd.annotation.component.Component
+import aQute.bnd.annotation.component.Reference
 import java.util.HashMap
 import java.util.HashSet
 import java.util.List
@@ -20,18 +22,37 @@ import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
-import org.foam.transform.utils.modeling.NameService
+import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.ucm.Step
 import org.foam.verification.Action
+import org.osgi.service.log.LogService
 
 import static extension org.apache.commons.lang.WordUtils.*
+import org.foam.transform.utils.modeling.FoamNamingExtension
 
-class Lts2NuSMVLang {
+@Component(provide = Lts2NusmvLangService)
+class Lts2NusmvLangService {
+	private extension LogServiceExtension logServiceExtension
+	@Reference def void setLogService(LogService logService) {
+		logServiceExtension = new LogServiceExtension(logService)
+	}
 	
+	def transform(Automaton automaton) {
+		return transform(automaton, newArrayList)
+	}
+	
+	def transform(Automaton automaton, List<Pair<FormulaHolder, Group>> holderGroupList) {
+		return new Lts2NusmvContext().transform(automaton, holderGroupList)
+	}
+}
+
+package class Lts2NusmvContext {
+	
+	private extension FoamNamingExtension = new FoamNamingExtension
+
 	private static val NUSMV_CODE_WRAP_LENGTH = 120
 	private static val NUSMV_CODE_ABBREVIATE_LENGTH = 60
 	
-	val nameService = new NameService
 	
 	def private stateId(State s) {
 		// TODO - check that state.id is valid nusmv identifier ?
@@ -128,7 +149,7 @@ class Lts2NuSMVLang {
 	}
 	
 	def private getGuardingFormula(Transition transition) {
-		val nuSMVFormulaRenderer = new NuSMVFormulaRenderer
+		val nuSMVFormulaRenderer = new NusmvFormulaRenderer
 		nuSMVFormulaRenderer.evalFormula(trans2guards.get(transition).formula).toString
 	}
 	
@@ -160,11 +181,7 @@ class Lts2NuSMVLang {
 		state2type.get(state)
 	}
 	
-	def transform(Automaton automaton) {
-		transform(automaton, newArrayList)
-	}
-	
-	def transform(Automaton automaton, List<Pair<FormulaHolder, Group>> holderGroupList) {
+	package def transform(Automaton automaton, List<Pair<FormulaHolder, Group>> holderGroupList) {
 		
 		automaton.initState.stateId
 
@@ -271,7 +288,7 @@ class Lts2NuSMVLang {
 			
 			-- ====================== TEMPORAL ANNOTATIONS «templateVarNames.join(", ")» «group.qualifier» ===================
 			«FOR templateVarName : templateVarNames»
-				«val nusmvVarName = nameService.createTadlVarName(group.qualifier, templateVarName)»
+				«val nusmvVarName = createTadlVarName(group.qualifier, templateVarName)»
 				«val transitions = groupEntry.value.get(templateVarName)»
 				VAR «nusmvVarName»: boolean;
 				ASSIGN
@@ -290,7 +307,7 @@ class Lts2NuSMVLang {
 ««« 		CTL/LTS formulas
 ««« 		create translation map from template variable (e.g. "create") to concrete variable ("create_zoom")
 			«val map = createTemplateVar2NuSMVVarMap(group.qualifier, templateVarNames)»
-			«val tadlRenderer = new TADLFormulaRenderer(map)»
+			«val tadlRenderer = new TadlFormulaRenderer(map)»
 			«FOR fh : group.template.formulaHolders»
 			 	-- Formula: "«fh.comment»"
 			 	-- TADL «tadlRenderer.evalFormula(fh.formula)»
@@ -307,7 +324,7 @@ class Lts2NuSMVLang {
 	
 	def private createTemplateVar2NuSMVVarMap(String qualifier, Set<String> varNames) {
 		val result = new HashMap<String, String>
-		varNames.forEach[result.put(it, nameService.createTadlVarName(qualifier, it))]
+		varNames.forEach[result.put(it, createTadlVarName(qualifier, it))]
 		result
 	}
 

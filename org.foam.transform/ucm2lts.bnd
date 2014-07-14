@@ -4,3 +4,5 @@ Export-Package: org.foam.transform.ucm2lts,\
 	org.foam.transform.ltsreduction,\
 	org.foam.transform.ltsreduction.listeners,\
 	org.foam.transform.ltsreduction.predicates
+Service-Component:  \
+	*

@@ -2,3 +2,5 @@ Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.transform.utils.modeling,\
 	org.foam.transform.utils.naming
+Service-Component:  \
+	*

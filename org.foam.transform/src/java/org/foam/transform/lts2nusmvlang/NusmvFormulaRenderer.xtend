@@ -34,7 +34,7 @@ import org.foam.propositionallogic.VariableUse
 // We will use the special "jmp" variable that is TRUE when the current state has type=JMP
 // There is always an exactly one JMP state for each use-case step
 
-class NuSMVFormulaRenderer {
+class NusmvFormulaRenderer {
 	
 	val Map<String, String> varNameMapping
 	

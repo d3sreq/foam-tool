@@ -1,6 +1,6 @@
 package org.foam.transform.utils.modeling
 
-class NameService {
+class FoamNamingExtension {
 	
 	private static val TADL_VARIABLE_PREFIX = "tadl_"
 	private static val MARK_VARIABLE_PREFIX = "mark_"

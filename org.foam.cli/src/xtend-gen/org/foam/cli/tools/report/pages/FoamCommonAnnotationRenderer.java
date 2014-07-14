@@ -16,14 +16,14 @@ import org.foam.propositionallogic.Formula;
 import org.foam.propositionallogic.VariableDefinition;
 import org.foam.tadl.Group;
 import org.foam.tadl.TemporalAnnotation;
-import org.foam.transform.lts2nusmvlang.TADLFormulaRenderer;
+import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer;
 import org.foam.ucm.Step;
 import org.foam.ucm.UseCase;
 
 @SuppressWarnings("all")
 public class FoamCommonAnnotationRenderer {
   @Extension
-  private TADLFormulaRenderer _tADLFormulaRenderer = new TADLFormulaRenderer();
+  private TadlFormulaRenderer _tadlFormulaRenderer = new TadlFormulaRenderer();
   
   protected CharSequence _render(final Annotation annot) {
     StringConcatenation _builder = new StringConcatenation();
@@ -88,7 +88,7 @@ public class FoamCommonAnnotationRenderer {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("#guard:");
     Formula _formula = annot.getFormula();
-    String _evalFormula = this._tADLFormulaRenderer.evalFormula(_formula);
+    String _evalFormula = this._tadlFormulaRenderer.evalFormula(_formula);
     _builder.append(_evalFormula, "");
     return _builder;
   }

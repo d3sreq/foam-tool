@@ -34,7 +34,6 @@
 	org.eclipse.xtext.xbase.lib;version='[2.6.2,2.6.3)',\
 	org.foam.cli.launcher;version=latest,\
 	org.foam.cli.launcher.api;version=latest,\
-	org.foam.cli.tools.nusmv;version=latest,\
 	org.foam.cli.tools.report;version=latest,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
@@ -79,8 +78,7 @@
 	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=1.6.0))',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher.api)',\
-	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.report)',\
-	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.nusmv)'
+	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.report)'
 
 ## Uncomment if you need to change the HTTP port
 #-runproperties: org.osgi.service.http.port=8080

@@ -65,7 +65,7 @@ import org.foam.transform.cntexlang2cntex.CntexStateResolver;
 import org.foam.transform.cntexlang2cntex.SpecificationResolver;
 import org.foam.transform.dot2dotlang.Dot2DotLang;
 import org.foam.transform.lts2dot.Lts2Dot;
-import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang;
+import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService;
 import org.foam.transform.tadllang2tadl.TadlLang2Tadl;
 import org.foam.transform.ucm2lts.Ucm2LtsFacade;
 import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph;
@@ -115,6 +115,13 @@ public class ReportApplication implements IExecutableTool {
   @Reference
   public void setUcmLang2Ucm(final UcmLang2UcmService serviceRef) {
     this.ucmLang2UcmService = serviceRef;
+  }
+  
+  private Lts2NusmvLangService lts2NusmvLangService;
+  
+  @Reference
+  public void setLts2NusmvLangService(final Lts2NusmvLangService serviceRef) {
+    this.lts2NusmvLangService = serviceRef;
   }
   
   public void execute(final String[] args) {
@@ -678,8 +685,7 @@ public class ReportApplication implements IExecutableTool {
         _builder_1.append("transforming LTS to NuSMV code");
         ReportApplication.this.logServiceExtension.debug(_builder_1);
         final ArrayList<Pair<FormulaHolder, Group>> holderGroupList = CollectionLiterals.<Pair<FormulaHolder, Group>>newArrayList();
-        Lts2NuSMVLang _lts2NuSMVLang = new Lts2NuSMVLang();
-        final String code = _lts2NuSMVLang.transform(automaton, holderGroupList);
+        final String code = ReportApplication.this.lts2NusmvLangService.transform(automaton, holderGroupList);
         StringConcatenation _builder_2 = new StringConcatenation();
         _builder_2.append("running NuSMV verification");
         ReportApplication.this.logServiceExtension.debug(_builder_2);

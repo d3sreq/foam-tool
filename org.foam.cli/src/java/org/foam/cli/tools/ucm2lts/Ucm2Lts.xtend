@@ -49,7 +49,7 @@ class Ucm2Lts implements IExecutableTool {
 		// get output file name to write LTS into
 		val outputFile = if (options.has(outputOption) && options.hasArgument(outputOption)) {
 			outputOption.value(options)
-		} else {			
+		} else {
 			"ltsModel.lts"
 		}
 

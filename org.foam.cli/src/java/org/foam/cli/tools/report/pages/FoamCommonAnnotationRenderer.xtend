@@ -8,11 +8,11 @@ import org.foam.flowannotation.Include
 import org.foam.tadl.TemporalAnnotation
 import org.foam.flowannotation.Mark
 import org.foam.annotation.UnknownAnnotation
-import org.foam.transform.lts2nusmvlang.TADLFormulaRenderer
+import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
 
 class FoamCommonAnnotationRenderer {
 	
-	extension TADLFormulaRenderer = new TADLFormulaRenderer
+	extension TadlFormulaRenderer = new TadlFormulaRenderer
 	
 	// fallback (this is not the "unknown" annotation) 
 	def dispatch render(Annotation annot) '''?«annot»'''

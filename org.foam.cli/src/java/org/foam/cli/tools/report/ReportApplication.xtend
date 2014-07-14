@@ -41,7 +41,7 @@ import org.foam.transform.cntexlang2cntex.CntexStateResolver
 import org.foam.transform.cntexlang2cntex.SpecificationResolver
 import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.lts2dot.Lts2Dot
-import org.foam.transform.lts2nusmvlang.Lts2NuSMVLang
+import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService
 import org.foam.transform.tadllang2tadl.TadlLang2Tadl
 import org.foam.transform.ucm2lts.Ucm2LtsFacade
 import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph
@@ -84,6 +84,11 @@ class ReportApplication implements IExecutableTool {
 		this.ucmLang2UcmService = serviceRef
 	}
 	
+	private Lts2NusmvLangService lts2NusmvLangService
+	@Reference def void setLts2NusmvLangService(Lts2NusmvLangService serviceRef) {
+		this.lts2NusmvLangService = serviceRef
+	}
+
 	override execute(String[] args) {
 
 		// parse options
@@ -368,7 +373,7 @@ class ReportApplication implements IExecutableTool {
 				
 				'''transforming LTS to NuSMV code'''.debug
 				val holderGroupList = <Pair<FormulaHolder, Group>> newArrayList
-				val code = new Lts2NuSMVLang().transform(automaton, holderGroupList)
+				val code = lts2NusmvLangService.transform(automaton, holderGroupList) // TODO:comment on this out parameter
 				
 				'''running NuSMV verification'''.debug
 				val cntexCode = nusmvWrapper.runNusmvCode(code).join("\n") //TODO: do we really need to convert this to String from an array?
@@ -388,7 +393,7 @@ class ReportApplication implements IExecutableTool {
 		'''Reading use case files from the directory "«inputDirName»"'''.info
 		val texts = readTexts(inputDirName)
 		
-		'''Running the transformation'''.debug		
+		'''Running the transformation'''.debug
 		val useCaseModel = ucmLang2UcmService.transform(texts)
 
 		'''Resolving FLOW annotations'''.debug

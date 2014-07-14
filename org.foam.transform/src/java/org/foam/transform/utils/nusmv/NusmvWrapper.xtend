@@ -13,6 +13,7 @@ import java.util.Map
 import java.util.regex.Pattern
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.osgi.service.log.LogService
+import java.util.List
 
 /**
  * This service handles communication with the NuSMV tool
@@ -70,9 +71,9 @@ class NusmvWrapper {
 		
 		val result = reader
 			.lines
-			.map[replaceAll("WARNING \\*\\*\\*","***")]
-			.<String>toArray([<String>newArrayOfSize(it)])
-			
+			.map[replaceAll("WARNING \\*\\*\\*", "***")]
+			.<String>toArray[<String>newArrayOfSize(it)]
+		
 		reader.close
 		process.destroy
 		
