@@ -39,13 +39,13 @@ public class RunNativeNusmv implements IExecutableTool {
     boolean _equals = (_length == 1);
     Preconditions.checkArgument(_equals, "Input file expected as a single argument");
     String _head = IterableExtensions.<String>head(((Iterable<String>)Conversions.doWrapArray(args)));
-    String[] _runNusmvFile = this.nusmvWrapper.runNusmvFile(_head);
+    List<String> _runNusmvFile = this.nusmvWrapper.runNusmvFile(_head);
     final Consumer<String> _function = new Consumer<String>() {
       public void accept(final String it) {
         InputOutput.<String>println(it);
       }
     };
-    ((List<String>)Conversions.doWrapArray(_runNusmvFile)).forEach(_function);
+    _runNusmvFile.forEach(_function);
     this.logServiceExtension.info("done");
   }
   

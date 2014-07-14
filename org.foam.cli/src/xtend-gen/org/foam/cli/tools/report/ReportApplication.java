@@ -689,8 +689,8 @@ public class ReportApplication implements IExecutableTool {
         StringConcatenation _builder_2 = new StringConcatenation();
         _builder_2.append("running NuSMV verification");
         ReportApplication.this.logServiceExtension.debug(_builder_2);
-        String[] _runNusmvCode = ReportApplication.this.nusmvWrapper.runNusmvCode(code);
-        final String cntexCode = IterableExtensions.join(((Iterable<?>)Conversions.doWrapArray(_runNusmvCode)), "\n");
+        List<String> _runNusmvCode = ReportApplication.this.nusmvWrapper.runNusmvCode(code);
+        final String cntexCode = IterableExtensions.join(_runNusmvCode, "\n");
         StringConcatenation _builder_3 = new StringConcatenation();
         _builder_3.append("parsing counter example code to CounterExample");
         ReportApplication.this.logServiceExtension.debug(_builder_3);
