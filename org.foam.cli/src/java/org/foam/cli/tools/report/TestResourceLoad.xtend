@@ -2,7 +2,7 @@ package org.foam.cli.tools.report
 
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
-import java.io.BufferedReader
+import com.google.common.io.CharStreams
 import java.io.InputStreamReader
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.cli.tools.report.utils.FileUtils
@@ -23,8 +23,7 @@ class TestResourceLoad implements IExecutableTool {
 		FileUtils.bundleCopy("report/web", "/home/vlx/tmp/testik");
 		
 		val is = FrameworkUtil.getBundle(class).getResource("/report/dot/OverviewGraphTemplate.xmi").openStream
-		val reader = new BufferedReader(new InputStreamReader(is))
-		reader.lines.forEach[println(it)]
+		CharStreams.readLines(new InputStreamReader(is)).forEach[println(it)]
 	}
 	
 	override getUsage() '''Testik'''
