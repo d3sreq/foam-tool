@@ -1,15 +1,16 @@
 package org.foam.transform.cntexlang2cntex
 
+import java.text.ParseException
+import java.util.regex.Pattern
 import org.foam.cntex.CntExState
 import org.foam.cntex.CntexFactory
 import org.foam.cntex.CounterExample
 import org.foam.cntex.Specification
 import org.foam.cntex.Trace
-import com.google.common.base.Splitter
-import com.google.common.collect.Lists
-import java.text.ParseException
-import java.util.LinkedList
-import java.util.regex.Pattern
+
+import static extension org.foam.transform.utils.modeling.IterableExtensions.*
+import com.google.common.base.Preconditions
+import java.util.ArrayList
 
 class CntexLang2Cntex {
 	
@@ -24,51 +25,49 @@ class CntexLang2Cntex {
 	
 	val cntexFactory = CntexFactory.eINSTANCE
 	
-	def CounterExample transform(String text) {
-		val result = cntexFactory.createCounterExample
-		
-		val splitter = Splitter.on('\n').trimResults
-		val lines = Lists.newLinkedList(splitter.split(text))
-		
-		popEmptyOrComments(lines)
-		
-		while (!lines.empty) {
-			// empty line at end of file
-			if (lines.peek.nullOrEmpty) {
-				return result
-			}
-			result.specifications += parseSpecification(lines)
-		}
-		
-		result
+	def CounterExample transform(CharSequence text) {
+		cntexFactory.createCounterExample => [
+			specifications += text.toString
+				.split("\n")
+				.map[trim]
+				.filter[!empty]
+				.filter[!startsWith(COMMENT_PREFIX)]
+				.split[matches(SPECIFICATION_REGEXP)]
+				.tail
+				.map[parseSpecification]
+		]
 	}
 	
-	def private Specification parseSpecification(LinkedList<String> lines) {
-		val docCommentPattern = Pattern.compile(SPECIFICATION_REGEXP)
+	private static val SPEC_PATTERN = Pattern.compile(SPECIFICATION_REGEXP)
+	
+	def private Specification parseSpecification(Iterable<String> lines) {
 		
-		var line = lines.pop
-		val matcher = docCommentPattern.matcher(line)
+		val specLine = lines.head
+		val matcher = SPEC_PATTERN.matcher(specLine)
 		
 		if (!matcher.matches) {
-			throw new ParseException('''Expected documentation comment but was: «line»''', -1)
+			throw new ParseException('''Expected documentation comment but was: «specLine»''', -1)
 		}
 		
-		val result = cntexFactory.createSpecification
-		
 		val isCorrect = matcher.group(2)
-		if (isCorrect != "true" && isCorrect != "false") {
-			throw new ParseException('''Expected documentation comment ends with 'true'/'false': «line»''', -1)
+
+		val result = cntexFactory.createSpecification
+		result.textFormula = matcher.group(1)
+		
+		if(isCorrect == "true") {
+			// specification analysed as 'true' returns Specification object without trace
+			return result
 		}
 		
 		if (isCorrect == "false") {
-			// skip lines
-			checkLineMatches(lines.pop, AS_DEMONSTRATED_LINE)
-			result.trace = parseTrace(lines)			
+			val linesWithoutFirst = lines.tail
+			linesWithoutFirst.head.checkLineMatches(AS_DEMONSTRATED_LINE)
+			
+			result.trace = parseTrace(linesWithoutFirst.tail)
+			return result
 		}
-		result.textFormula = matcher.group(1)
 		
-		// specification analysed as 'true' returns Specification object without trace
-		result
+		throw new ParseException('''Expected documentation comment ends with 'true'/'false': «specLine»''', -1)
 	}
 	
 	def private checkLineMatches(String line, String regexp) {
@@ -77,90 +76,51 @@ class CntexLang2Cntex {
 		}
 	}
 	
-	def private Trace parseTrace(LinkedList<String> lines) {
-		val result = cntexFactory.createTrace
-		
-		// skip lines
-		checkLineMatches(lines.pop, TRACE_DESCRIPTION_REGEXP)
-		checkLineMatches(lines.pop, TRACE_TYPE_REGEXP)
-		
-		var nextStateIsLoopStart = false
-		var firstLoopProcessed = false
-		
-		while (!lines.empty) {
-			val line = lines.pop
+	/**
+	 * Parses the stack trace from NuSMV plain text as a 
+	 */
+	def private Trace parseTrace(Iterable<String> lines) {
+
+		val checkedLines = lines
+			.checkConsumed[matches(TRACE_DESCRIPTION_REGEXP)]
+			.checkConsumed[matches(TRACE_TYPE_REGEXP)]
 			
-			if (line == LOOP_LINE) {
-				nextStateIsLoopStart = true
+		// NOTE: the "loop" delimiters are not removed
+		val splitByLoops = checkedLines.split[equals(LOOP_LINE)]
 
-			} else if (line.matches(SPECIFICATION_REGEXP)){
-				// start of next specification
-				lines.addFirst(line)
-				return result
+		val statesBeforeLoop = splitByLoops.head
+			.split[startsWith("-> State:")]
+			.checkConsumed[empty] // there should be nothing before the first State
+			.map[parseState]
+			.toList
 
-			} else if (line.matches(STATE_REGEXP)) {
-				// parse state
-				lines.addFirst(line)
-				
-				val state = parseState(lines)
-				result.states += state				
-				if (nextStateIsLoopStart) {
-					nextStateIsLoopStart = false
-					
-					// set only first loop - ignore nested loops
-					if (!firstLoopProcessed) {
-						result.loopStart = state
-						firstLoopProcessed = true
-					}
-				}
-				
-			} else if (line.empty) {
-				// end of file
-				return result
-			} else {
-				throw new ParseException('''Unexpected line while parsing trace: "«line»"''', -1)
-			}
-		}		
-		
-		result
+		val statesInLoop = splitByLoops.tail
+			.map[checkConsumed[equals(LOOP_LINE)]] // remove the loop delimiter from each block 
+			.flatten // merge all loops into a single loop
+			.split[startsWith("-> State:")]
+			.checkConsumed[empty] // there should be nothing before the first State
+			.map[parseState]
+			.toList
+			
+		return cntexFactory.createTrace => [
+			states += statesBeforeLoop + statesInLoop
+			loopStart = statesInLoop.head
+		]
 	}
 	
-	def private CntExState parseState(LinkedList<String> lines) {
-		val assignmentPattern = Pattern.compile(ASSIGNMENT_REGEXP)
-		
-		val result = cntexFactory.createCntExState
-		
-		// skip line
-		checkLineMatches(lines.pop, STATE_REGEXP)
-		
-		// parse assignments
-		while (!lines.empty) {
-			val line = lines.pop
-			
-			val matcher = assignmentPattern.matcher(line)
-			if (!matcher.matches) {
-				// start of next state or next specification
-				lines.addFirst(line)
-				return result
-			} else {
-				result.assignments += cntexFactory.createCntExAssignment => [
-					variableName = matcher.group(1)
-					value = matcher.group(2)
+	private static val ASSIGN_PATTERN = Pattern.compile(ASSIGNMENT_REGEXP)
+	def private CntExState parseState(Iterable<String> lines) {
+		cntexFactory.createCntExState => [
+			assignments += lines
+				.checkConsumed[matches(STATE_REGEXP)]
+				.map[
+					val m = ASSIGN_PATTERN.matcher(it)
+					Preconditions.checkState(m.matches, '''Expected state assignment 'varname = value' but '«it»' encountered.''')
+					cntexFactory.createCntExAssignment => [
+						variableName = m.group(1)
+						value = m.group(2)
+					]
 				]
-			}
-		}
-		
-		result
+		]
 	}
-	
-	def private popEmptyOrComments(LinkedList<String> lines) {
-		while (!lines.empty) {
-			val line = lines.pop			
-			if (!line.empty && !line.startsWith(COMMENT_PREFIX)) {
-				lines.addFirst(line)
-				return
-			}
-		}
-	}
-	
 }

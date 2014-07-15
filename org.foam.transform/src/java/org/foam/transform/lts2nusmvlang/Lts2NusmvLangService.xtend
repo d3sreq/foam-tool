@@ -2,7 +2,6 @@ package org.foam.transform.lts2nusmvlang
 
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
-import com.google.common.collect.HashMultimap
 import java.util.HashMap
 import java.util.HashSet
 import java.util.List
@@ -29,6 +28,7 @@ import org.foam.verification.Action
 import org.osgi.service.log.LogService
 
 import static extension org.apache.commons.lang.WordUtils.*
+import static extension org.foam.transform.utils.modeling.IterableExtensions.*
 
 @Component(provide = Lts2NusmvLangService)
 class Lts2NusmvLangService {
@@ -204,8 +204,9 @@ package class Lts2NusmvContext {
 		for(trans : automaton.transitions) {
 			mapStateToTransitions.get(trans.start).add(trans)
 		}
-				
-		val partTrans = partitionTransitions(automaton.transitions)
+		
+		val groupToVarNameMap = automaton.transitions.transToGroupVarName
+		val groupVarNameToTransMap = automaton.transitions.transToGroupVarNameTrans
 		
 		return '''
 		MODULE main
@@ -283,14 +284,13 @@ package class Lts2NusmvContext {
 			«guardLoopFairnessStates.map[stateId].join(", ").wrap(NUSMV_CODE_WRAP_LENGTH)»
 		};
 ««« 	temporal annotations
-		«FOR groupEntry : partTrans.entrySet»
-			«val group = groupEntry.key»
-			«val templateVarNames = groupEntry.value.keySet»
+		«FOR group : groupToVarNameMap.keySet»
+			«val templateVarNames = groupToVarNameMap.get(group)»
 			
 			-- ====================== TEMPORAL ANNOTATIONS «templateVarNames.join(", ")» «group.qualifier» ===================
 			«FOR templateVarName : templateVarNames»
 				«val nusmvVarName = createTadlVarName(group.qualifier, templateVarName)»
-				«val transitions = groupEntry.value.get(templateVarName)»
+				«val transitions = groupVarNameToTransMap.get(group -> templateVarName)»
 				VAR «nusmvVarName»: boolean;
 				ASSIGN
 					init(«nusmvVarName») := FALSE;
@@ -329,30 +329,38 @@ package class Lts2NusmvContext {
 		return result
 	}
 
-	/**
-	 * Separates transitions with TADL annotations according to groups (qualifiers)
-	 * and variable names used within templates.
-	 */
-	def private partitionTransitions(Iterable<Transition> transitions) {
+	def private transToGroupVarName(Iterable<Transition> transitions) {
 		transitions.map[ transition |
+			
+			// FIRST: add variable names used in all temporal annotations
 			transition.start.annotations
-			.filter(TemporalAnnotation)
-			.map[ group -> (variableDefinition.name -> transition)]
-		].flatten.fold(
-			HashMultimap.<Group, Pair<String, Transition>>create,
-			[mmap, p|
-				mmap.put(p.key, p.value)
-				mmap
-			]
-		).asMap.mapValues[fold(
-			HashMultimap.<String, Transition>create,
-			[mmap, p|
-				mmap.put(p.key, p.value)
-				mmap
-			]
-		)]
+			.filter(TemporalAnnotation) // all temporal annotations of a single transition
+			.map[group -> variableDefinition.name]
+			
+			+ // joining these two lists of pairs
+			
+			// SECOND: add all variable names from template
+			transition.start.annotations
+			.filter(TemporalAnnotation) // all temporal annotations of a single transition
+			.map[a|
+				a.group.template.variableDefinitions.map[a.group -> name]
+			].flatten
+			
+		].flatten
+		.toHashMultimap
 	}
-
+	
+	def private transToGroupVarNameTrans(Iterable<Transition> transitions) {
+		transitions.map[ transition |
+			// add variable names used in all temporal annotations
+			transition.start.annotations
+			.filter(TemporalAnnotation) // all temporal annotations of a single transition
+			.map[(group -> variableDefinition.name) -> transition]
+			
+		].flatten
+		.toHashMultimap
+	}
+	
 //	/**
 //	 * Separates transitions with TADL annotations according to groups (qualifiers)
 //	 * and variable names used within templates.
