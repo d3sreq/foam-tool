@@ -7,6 +7,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import joptsimple.ArgumentAcceptingOptionSpec;
@@ -33,16 +35,13 @@ import org.foam.transform.utils.graphviz.GraphvizWrapper;
 import org.foam.transform.utils.logger.LogServiceExtension;
 import org.foam.transform.utils.modeling.EmfCommons;
 import org.foam.verification.VerificationPackage;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.log.LogService;
 
 @Component(enabled = false)
-@Deprecated
 @SuppressWarnings("all")
 public class RenderLTS implements IExecutableTool {
-  private final static String XMI_OverviewGraphTemplate = "org/foam/cli/tools/renderlts/OverviewGraphTemplate.xmi";
-  
-  private final static String XMI_GraphTemplate = "org/foam/cli/tools/renderlts/GraphTemplate.xmi";
-  
   @Extension
   private LogServiceExtension logServiceExtension;
   
@@ -134,15 +133,20 @@ public class RenderLTS implements IExecutableTool {
       final Automaton automaton = ((Automaton) _readModel);
       final boolean isOverview = options.has(overviewOption);
       StringConcatenation _builder_3 = new StringConcatenation();
-      _builder_3.append("Reading configuration graph template from \"conf/GraphTemplate.xmi\"");
+      _builder_3.append("Reading configuration graph template");
       this.logServiceExtension.info(_builder_3);
       String _xifexpression_2 = null;
       if (isOverview) {
-        _xifexpression_2 = RenderLTS.XMI_OverviewGraphTemplate;
+        _xifexpression_2 = "/report/dot/OverviewGraphTemplate.xmi";
       } else {
-        _xifexpression_2 = RenderLTS.XMI_GraphTemplate;
+        _xifexpression_2 = "/report/dot/GraphTemplate.xmi";
       }
-      EObject _readModel_1 = EmfCommons.readModel(_xifexpression_2);
+      final String xmiResourceName = _xifexpression_2;
+      Class<? extends RenderLTS> _class = this.getClass();
+      Bundle _bundle = FrameworkUtil.getBundle(_class);
+      URL _resource = _bundle.getResource(xmiResourceName);
+      final InputStream xmiInputStream = _resource.openStream();
+      EObject _readModel_1 = EmfCommons.readModel(xmiInputStream);
       final Graph initGraph = ((Graph) _readModel_1);
       StringConcatenation _builder_4 = new StringConcatenation();
       _builder_4.append("Validating input LTS");

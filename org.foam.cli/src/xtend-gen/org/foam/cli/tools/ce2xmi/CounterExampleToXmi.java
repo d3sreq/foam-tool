@@ -31,6 +31,7 @@ import org.foam.verification.VerificationPackage;
 import org.osgi.service.log.LogService;
 
 @Component
+@Deprecated
 @SuppressWarnings("all")
 public class CounterExampleToXmi implements IExecutableTool {
   @Extension

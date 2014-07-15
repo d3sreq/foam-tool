@@ -29,6 +29,7 @@ import org.foam.verification.VerificationPackage;
 import org.osgi.service.log.LogService;
 
 @Component
+@Deprecated
 @SuppressWarnings("all")
 public class LtsToNusmv implements IExecutableTool {
   @Extension

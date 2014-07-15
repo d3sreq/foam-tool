@@ -21,6 +21,7 @@ import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService
 
 @Component
+@Deprecated
 class CounterExampleToXmi implements IExecutableTool {
 
 	private extension LogServiceExtension logServiceExtension

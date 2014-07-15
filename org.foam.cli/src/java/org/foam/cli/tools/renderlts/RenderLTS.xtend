@@ -22,14 +22,10 @@ import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService
+import org.osgi.framework.FrameworkUtil
 
 @Component(enabled = false)
-@Deprecated
 class RenderLTS implements IExecutableTool {
-	
-	// TODO: these files are now located inside org.foam.cli.tools.report.jar as resources
-	private static val XMI_OverviewGraphTemplate = "org/foam/cli/tools/renderlts/OverviewGraphTemplate.xmi"
-	private static val XMI_GraphTemplate = "org/foam/cli/tools/renderlts/GraphTemplate.xmi"
 	
 	private extension LogServiceExtension logServiceExtension
 	@Reference def void setLogService(LogService logService) {
@@ -96,10 +92,15 @@ class RenderLTS implements IExecutableTool {
 		
 		val isOverview = options.has(overviewOption)
 		
-		'''Reading configuration graph template from "conf/GraphTemplate.xmi"'''.info
-		val initGraph = EmfCommons.readModel(
-			if(isOverview) XMI_OverviewGraphTemplate else XMI_GraphTemplate
-		) as Graph
+		'''Reading configuration graph template'''.info
+		val xmiResourceName = if(isOverview) {
+			"/report/dot/OverviewGraphTemplate.xmi"
+		} else {
+			"/report/dot/GraphTemplate.xmi"
+		}
+		
+		val xmiInputStream = FrameworkUtil.getBundle(class).getResource(xmiResourceName).openStream
+		val initGraph = EmfCommons.readModel(xmiInputStream) as Graph
 		
 		// validation
 		'''Validating input LTS'''.info

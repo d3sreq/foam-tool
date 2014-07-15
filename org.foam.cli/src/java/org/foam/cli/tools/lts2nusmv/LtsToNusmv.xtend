@@ -20,6 +20,7 @@ import org.osgi.service.log.LogService
 import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService
 
 @Component
+@Deprecated
 class LtsToNusmv implements IExecutableTool {
 
 	private extension LogServiceExtension logServiceExtension

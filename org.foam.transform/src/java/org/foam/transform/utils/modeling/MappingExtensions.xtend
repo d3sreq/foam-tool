@@ -4,6 +4,7 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.EMap
 
+@Deprecated
 class MappingExtensions {
 	
 	/**
