@@ -1,45 +1,96 @@
-/*
- * WARNING
- *
- * This file is maintained automatically by Bndtools.
- * You should not edit it.
- *
- * See the BUILDING-GRADLE.md document in the root project for more details.
- */
-
-assert(project == rootProject)
-
-
-/* Scan for the location of the configuration (cnf) project, relative to the root project */
-def cnfs = new LinkedList<String>();
-rootDir.eachFile {
-  if (it.isDirectory() && new File(it, "build.bnd").exists()) {
-    cnfs.add(relativePath(it))
-  }
+subprojects { 
+    apply plugin: 'eclipse' 
 }
-if (cnfs.isEmpty()) {
-  throw new GradleException("Could not locate the cnf project.")
+
+configure(subprojects.findAll {it.name != 'cnf'}) {
+
+    apply plugin: 'java'
+
+    // Eclipse configuration for bndtools
+    eclipse {
+        project {
+            natures 'org.eclipse.jdt.core.javanature', 'bndtools.core.bndnature'
+            buildCommand 'org.eclipse.jdt.core.javabuilder'
+            buildCommand 'bndtools.core.bndbuilder'
+        }
+        classpath {
+            containers 'aQute.bnd.classpath.container'
+            // define a separate output folder for the main and test classes
+            file {
+                whenMerged { classpath ->
+                    classpath.entries.findAll { entry ->
+                        entry instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && entry.path.startsWith("src/main/")
+                    }*.output = "build/classes/main"
+                    classpath.entries.findAll { entry ->
+                        entry instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && entry.path.startsWith("src/test/")
+                    }*.output = "build/classes/test"
+                }
+            }
+            defaultOutputDir = file('build/classes/main')
+        }
+    }
+    
+    // initialize bnd ant task
+    task initializeBnd << {
+        ant.taskdef(resource: 'aQute/bnd/ant/taskdef.properties') {
+            classpath {
+                fileset(dir: "${projectDir}/../cnf/plugins/biz.aQute.bnd/", includes: '*.jar')
+                configurations.compile.asPath
+            }
+        }
+        ant.bndprepare(basedir:"${projectDir}", print:'false')
+        def projectBuildpath = ant.properties['project.buildpath']
+        def bndBuildDependencies = files(projectBuildpath.split(':'))
+        sourceSets.main.compileClasspath += bndBuildDependencies
+        sourceSets.main.runtimeClasspath += bndBuildDependencies
+        sourceSets.test.compileClasspath += bndBuildDependencies
+        sourceSets.test.runtimeClasspath += bndBuildDependencies
+    }
+    
+    // before compile source bnd ant task must be initialized
+    compileJava.dependsOn initializeBnd
+    
+    // build a OSGi bundle by using bnd
+    task bundle(dependsOn: test) << {
+         ant.bnd(command:'build', exceptions:'true', basedir:"${projectDir}")
+    }
+    
+    // before the jar task is invoked the bundle task should create the bundle
+    jar.dependsOn bundle
+    
+    // copy bnd build bundle to libs directory (workaround)
+    jar.doFirst {
+        FileTree bundleDirectory = fileTree(dir: "${projectDir}/build/bundles", include: '*.jar')
+        jar {
+            from { bundleDirectory.collect { it.isDirectory() ? it : zipTree(it) } }
+        }
+    }
+    jar.doLast {
+        copy {
+            from "${projectDir}/build/bundle"
+            into "${projectDir}/build/libs"
+            include '*.jar'
+        }
+    }
+    
+    // Run the bundle tests by the bnd ant task (integrated OSGi tests)
+    task testBundle(dependsOn: build) << {
+        if(project.name.endsWith('.test')) {
+            ant.bnd(command: "test", exceptions:true, basedir:"${projectDir}")
+        }
+        else {
+           logger.quiet("Bundle tests are not invoked for project: ${project.name}.")
+           logger.quiet("Bundle tests are only invoked on bndtools project which names ends with .test")
+        }
+    }
+    
+    // task release a bundle to the bnd release repository
+    task releaseBundle(dependsOn: bundle) << { ant.bndrelease() }
+    
+    // setup maven central repository for gradle build dependencies
+    repositories { mavenCentral() }
 }
-if (cnfs.size() > 1) {
-  throw new GradleException("Multiple cnf projects found: $cnfs")
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.2'
 }
-ext.bnd_cnf = cnfs.get(0)
-
-
-/* Load the workspace build settings */
-apply from: file("$bnd_cnf/gradle/template/settings-workspace.gradle")
-
-/* Logging */
-assert(hasProperty("gradleBuild_loggingCaptureStandardOutput"))
-assert(hasProperty("gradleBuild_loggingLevel"))
-logging.captureStandardOutput   gradleBuild_loggingCaptureStandardOutput
-logging.level                 = gradleBuild_loggingLevel
-
-/* Determine the build dependencies */
-apply from: file("$bnd_cnf/gradle/template/buildDependencies.gradle")
-
-/* Initialise the bnd workspace and load the workspace defaults */
-apply from: file("$bnd_cnf/gradle/template/bndWorkspace.gradle")
-
-/* Apply the build template */
-apply from: file("$bnd_cnf/gradle/template/template.gradle")
