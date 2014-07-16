@@ -15,8 +15,8 @@ p:            ${basename;${project}}
 project.name: ${p}
 
 src: src
-bin: ${project}/build/classes/main
-target-dir: build/bundles
+#bin: ${project}/build/classes/main
+#target-dir: build/bundles
 
 # Bnd Options
 -sources:       true
