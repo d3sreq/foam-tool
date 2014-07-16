@@ -1,0 +1,23 @@
+# General Options
+project.dependson       = ${p-dependson;:}
+project.bootclasspath   = ${p-bootclasspath;:}
+project.buildpath       = ${p-buildpath;:}
+project.sourcepath      = ${p-sourcepath;:}
+project.allsourcepath   = ${p-allsourcepath;:}
+project.output          = ${p-output}
+project.testpath        = ${p-testpath;:}
+
+-verbose:     true
+project:      ${basedir}
+target:       ${project}/${target-dir}
+build:        ${workspace}/cnf
+p:            ${basename;${project}}
+project.name: ${p}
+
+src: src
+bin: ${project}/build/classes/main
+target-dir: build/bundles
+
+# Bnd Options
+-sources:       true
+-sourcepath:    ${project}/src

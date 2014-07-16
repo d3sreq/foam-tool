@@ -3,6 +3,7 @@
 
 # common
 **/bin/
+**/build/
 **/generated/
 **/src-gen/
 **/xtend-gen/
