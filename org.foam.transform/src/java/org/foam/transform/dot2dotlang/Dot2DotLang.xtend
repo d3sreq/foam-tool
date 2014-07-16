@@ -80,11 +80,5 @@ class Dot2DotLang {
 		])
 	}
 	
-	def private String escape(String toEscape) {
-		if (toEscape == null) {
-			""
-		} else {
-			toEscape.replaceAll('"', '\\\\"')
-		}
-	}
+	def private String escape(String toEscape) '''«toEscape?.replaceAll('"', '\\\\"')»'''
 }
