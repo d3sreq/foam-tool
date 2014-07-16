@@ -45,7 +45,6 @@ class CreateNodeStateProcessor implements StateProcessor {
 		} else {
 			addNonRecordNode(state)
 		}
-		true
 	}
 	
 	def addNonRecordNode(State state) {

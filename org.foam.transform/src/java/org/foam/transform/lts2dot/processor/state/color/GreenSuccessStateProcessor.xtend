@@ -31,7 +31,6 @@ class GreenSuccessStateProcessor implements StateProcessor {
 				recordNode.attributes.put("fillcolor", "#ccebc5")
 			}
 		}
-		true
 	}
 	
 }

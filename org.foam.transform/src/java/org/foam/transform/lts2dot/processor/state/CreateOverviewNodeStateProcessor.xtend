@@ -27,8 +27,6 @@ class CreateOverviewNodeStateProcessor implements StateProcessor {
 		]
 		resultDot.statements += node 
 		state2Node.put(state, node)
-		
-		true
 	}
 	
 }

@@ -15,19 +15,15 @@ import static extension org.foam.transform.utils.modeling.ModelUtils.*
  */
 @Data
 class XlabelStepStateProcessor implements StateProcessor {
-	
+
 	Map<Step, RecordNode> step2RecordNode
-	
+
 	override process(State state) {
+		
 		val step = state.stepFromStepMappingAnnotation
-		
-		val recordNode = step2RecordNode.get(step)
-		if (recordNode == null) {
-			return true
-		}
-		
-		recordNode.attributes.put("xlabel", step.label)
-		
-		true
+
+		step2RecordNode.get(step)
+		?.attributes                // silently ignore if null
+		?.put("xlabel", step.label) // silently ignore if null
 	}
 }

@@ -37,7 +37,6 @@ class RedAbortStateProcessor implements StateProcessor {
 				}
 			}		
 		}
-		true
 	}
 	
 }

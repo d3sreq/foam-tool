@@ -1,9 +1,9 @@
 package org.foam.transform.lts2dot.processor.transition
 
+import java.util.Map
 import org.foam.dot.DotFactory
 import org.foam.dot.Graph
 import org.foam.dot.Node
-import java.util.Map
 import org.foam.lts.State
 import org.foam.lts.Transition
 import org.foam.traceability.OverviewTransitionType
@@ -24,7 +24,9 @@ class CreateOverviewEdgeTransitionProcessor implements TransitionProcessor {
 	
 	override process(Transition transition) {
 		
-		val transitionType = transition.annotations.filter(OverviewTransitionTypeAnnotation).head.overviewTransitionType
+		val transitionType = transition.annotations
+			.filter(OverviewTransitionTypeAnnotation).head
+			.overviewTransitionType
 		
 		// transform oba state to dot node and add it into result graph
 		val edge = dotFactory.createEdge => [
@@ -39,7 +41,6 @@ class CreateOverviewEdgeTransitionProcessor implements TransitionProcessor {
 		]
 
 		resultDot.statements += edge
-		true
 	}
 	
 }

@@ -22,7 +22,6 @@ class CircleWithoutStateTypeProcessor implements StateProcessor {
 			val node = state2Node.get(state)
 			node.attributes.put("shape", "circle")
 		}
-		true
 	}
 	
 }

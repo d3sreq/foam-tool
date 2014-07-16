@@ -21,7 +21,6 @@ class BlackInitStateProcessor implements StateProcessor {
 		if (state == initState) {
 			state2Node.get(state).attributes.put("fillcolor", "black")
 		}
-		true
 	}
 	
 }

@@ -28,7 +28,6 @@ class AddScenarioStateProcessor implements StateProcessor {
 
 	override process(State state) {
 		addScenarioSubGraph(state)
-		true
 	}
 	
 	def private addScenarioSubGraph(State state) {

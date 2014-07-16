@@ -12,6 +12,8 @@ import org.foam.transform.utils.modeling.ModelUtils
 import org.foam.ucm.util.UcmUtils
 import org.foam.verification.Action
 
+import static extension org.foam.transform.utils.modeling.ModelUtils.*
+
 /**
  * @param resultDot out parameter, populated in this processor
  * @param state2Node in parameter, map has to contain mapping for source
@@ -26,15 +28,21 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 	private val dotFactory = DotFactory.eINSTANCE
 	
 	override process(Transition transition) {
-		// transform oba state to dot node and add it into result graph
+
+		if(transition.isWithinSameBox) {
+			return // remove transitions pointing to same record node
+		}
+
+		// transform OBA state to dot node and add it into result graph
 		val edge = dotFactory.createEdge => [
 			source = state2Node.get(transition.start)
 			target = state2Node.get(transition.end)
 			
 			// find reference from the transition to the original use-case step
 			val step = ModelUtils.getStepFromStepMappingAnnotation(transition.start)
-			if(step != null)
+			if(step != null) {
 				attributes.put("URL", '''#«UcmUtils.getUseCase(step).id»_«step.label»''' )
+			}
 			
 			for(action : transition.annotations.filter(Action) ) {
 				attributes.put("color", "blueviolet")
@@ -50,10 +58,26 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 		]
 
 		resultDot.statements += edge
-		true
 	}
 	
-	def void addTooltip(Edge edge, String tooltipStr) {
+	/**
+	 * Filters out transitions having source and target in same record node.
+	 */
+	private def boolean isWithinSameBox(Transition transition) {
+		
+		val startStep = transition.start.stepFromStepMappingAnnotation  
+		val endStep = transition.end.stepFromStepMappingAnnotation
+		val startStateType = transition.start.stateTypeFromStateTypeMappingAnnotation
+		val endStateType = transition.end.stateTypeFromStateTypeMappingAnnotation
+		
+		// NOTE: abort state has associated step but not state type 
+		return startStep.identityEquals(endStep) 
+				&& startStep != null 
+				&& startStateType != null 
+				&& endStateType != null
+	}
+
+	private def void addTooltip(Edge edge, String tooltipStr) {
 		val tooltipAttr = edge.attributes.get("tooltip")
 		edge.attributes.put(
 			"tooltip",

@@ -28,7 +28,6 @@ class AddUseCaseStateProcessor implements StateProcessor {
 
 	override process(State state) {
 		addUseCaseSubGraph(state)
-		true
 	}
 	
 	def private addUseCaseSubGraph(State state) {

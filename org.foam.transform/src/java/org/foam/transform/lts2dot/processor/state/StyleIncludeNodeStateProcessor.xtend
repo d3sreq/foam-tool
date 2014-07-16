@@ -31,7 +31,6 @@ class StyleIncludeNodeStateProcessor implements StateProcessor {
 			
 			node.attributes.put("fillcolor", "#fed9a6")
 		}
-		true
 	}
 	
 }

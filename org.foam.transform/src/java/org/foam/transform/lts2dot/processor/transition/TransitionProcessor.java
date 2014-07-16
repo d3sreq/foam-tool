@@ -12,7 +12,6 @@ public interface TransitionProcessor {
 	 * 
 	 * @param transition analyzed transition
 	 * @param processorData stores output graph and additional data for analysis
-	 * @return indication whether following processors should be called
 	 */
-	boolean process(Transition transition);
+	void process(Transition transition);
 }

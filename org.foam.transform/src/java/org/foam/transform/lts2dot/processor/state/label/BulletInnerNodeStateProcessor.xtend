@@ -21,8 +21,6 @@ class BulletInnerNodeStateProcessor implements StateProcessor {
 		if (state.hasJmp) {
 			state2Node.get(state).attributes.put("label", "&bull;")
 		}
-		
-		true
 	}
 	
 	def private hasJmp(State state) {
