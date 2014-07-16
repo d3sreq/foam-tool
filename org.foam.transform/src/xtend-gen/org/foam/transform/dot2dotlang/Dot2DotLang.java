@@ -1,6 +1,5 @@
 package org.foam.transform.dot2dotlang;
 
-import com.google.common.base.Objects;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
@@ -229,14 +228,13 @@ public class Dot2DotLang {
   }
   
   private String escape(final String toEscape) {
-    String _xifexpression = null;
-    boolean _equals = Objects.equal(toEscape, null);
-    if (_equals) {
-      _xifexpression = "";
-    } else {
-      _xifexpression = toEscape.replaceAll("\"", "\\\\\"");
+    StringConcatenation _builder = new StringConcatenation();
+    String _replaceAll = null;
+    if (toEscape!=null) {
+      _replaceAll=toEscape.replaceAll("\"", "\\\\\"");
     }
-    return _xifexpression;
+    _builder.append(_replaceAll, "");
+    return _builder.toString();
   }
   
   private CharSequence print(final Statement assignment) {

@@ -21,6 +21,7 @@ import org.foam.lts.State;
 import org.foam.lts.Transition;
 import org.foam.propositionallogic.Formula;
 import org.foam.propositionallogic.VariableDefinition;
+import org.foam.traceability.StateType;
 import org.foam.transform.lts2dot.processor.transition.TransitionProcessor;
 import org.foam.transform.utils.modeling.ModelUtils;
 import org.foam.ucm.Step;
@@ -54,80 +55,116 @@ public class CreateEdgeTransitionProcessor implements TransitionProcessor {
     return this._dotFactory;
   }
   
-  public boolean process(final Transition transition) {
-    boolean _xblockexpression = false;
-    {
-      DotFactory _dotFactory = this.getDotFactory();
-      Edge _createEdge = _dotFactory.createEdge();
-      final Procedure1<Edge> _function = new Procedure1<Edge>() {
-        public void apply(final Edge it) {
-          Map<State, Node> _state2Node = CreateEdgeTransitionProcessor.this.getState2Node();
-          State _start = transition.getStart();
-          Node _get = _state2Node.get(_start);
-          it.setSource(_get);
-          Map<State, Node> _state2Node_1 = CreateEdgeTransitionProcessor.this.getState2Node();
-          State _end = transition.getEnd();
-          Node _get_1 = _state2Node_1.get(_end);
-          it.setTarget(_get_1);
-          State _start_1 = transition.getStart();
-          final Step step = ModelUtils.getStepFromStepMappingAnnotation(_start_1);
-          boolean _notEquals = (!Objects.equal(step, null));
-          if (_notEquals) {
-            EMap<String, String> _attributes = it.getAttributes();
-            StringConcatenation _builder = new StringConcatenation();
-            _builder.append("#");
-            UseCase _useCase = UcmUtils.getUseCase(step);
-            String _id = _useCase.getId();
-            _builder.append(_id, "");
-            _builder.append("_");
-            String _label = step.getLabel();
-            _builder.append(_label, "");
-            _attributes.put("URL", _builder.toString());
-          }
-          EList<Annotation> _annotations = transition.getAnnotations();
-          Iterable<Action> _filter = Iterables.<Action>filter(_annotations, Action.class);
-          for (final Action action : _filter) {
-            {
-              EMap<String, String> _attributes_1 = it.getAttributes();
-              _attributes_1.put("color", "blueviolet");
-              EMap<String, String> _attributes_2 = it.getAttributes();
-              _attributes_2.put("fontcolor", "blueviolet");
-              StringConcatenation _builder_1 = new StringConcatenation();
-              _builder_1.append("action: ");
-              VariableDefinition _variableDefinition = action.getVariableDefinition();
-              String _name = _variableDefinition.getName();
-              _builder_1.append(_name, "");
-              _builder_1.append(" := ");
-              boolean _isValue = action.isValue();
-              _builder_1.append(_isValue, "");
-              CreateEdgeTransitionProcessor.this.addTooltip(it, _builder_1.toString());
-            }
-          }
-          EList<Annotation> _annotations_1 = transition.getAnnotations();
-          Iterable<Guard> _filter_1 = Iterables.<Guard>filter(_annotations_1, Guard.class);
-          for (final Guard guard : _filter_1) {
-            {
-              EMap<String, String> _attributes_1 = it.getAttributes();
-              _attributes_1.put("color", "blueviolet");
-              EMap<String, String> _attributes_2 = it.getAttributes();
-              _attributes_2.put("fontcolor", "blueviolet");
-              Formula _formula = guard.getFormula();
-              String _plus = ("guard: " + _formula);
-              CreateEdgeTransitionProcessor.this.addTooltip(it, _plus);
-            }
+  public void process(final Transition transition) {
+    boolean _isWithinSameBox = this.isWithinSameBox(transition);
+    if (_isWithinSameBox) {
+      return;
+    }
+    DotFactory _dotFactory = this.getDotFactory();
+    Edge _createEdge = _dotFactory.createEdge();
+    final Procedure1<Edge> _function = new Procedure1<Edge>() {
+      public void apply(final Edge it) {
+        Map<State, Node> _state2Node = CreateEdgeTransitionProcessor.this.getState2Node();
+        State _start = transition.getStart();
+        Node _get = _state2Node.get(_start);
+        it.setSource(_get);
+        Map<State, Node> _state2Node_1 = CreateEdgeTransitionProcessor.this.getState2Node();
+        State _end = transition.getEnd();
+        Node _get_1 = _state2Node_1.get(_end);
+        it.setTarget(_get_1);
+        State _start_1 = transition.getStart();
+        final Step step = ModelUtils.getStepFromStepMappingAnnotation(_start_1);
+        boolean _notEquals = (!Objects.equal(step, null));
+        if (_notEquals) {
+          EMap<String, String> _attributes = it.getAttributes();
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("#");
+          UseCase _useCase = UcmUtils.getUseCase(step);
+          String _id = _useCase.getId();
+          _builder.append(_id, "");
+          _builder.append("_");
+          String _label = step.getLabel();
+          _builder.append(_label, "");
+          _attributes.put("URL", _builder.toString());
+        }
+        EList<Annotation> _annotations = transition.getAnnotations();
+        Iterable<Action> _filter = Iterables.<Action>filter(_annotations, Action.class);
+        for (final Action action : _filter) {
+          {
+            EMap<String, String> _attributes_1 = it.getAttributes();
+            _attributes_1.put("color", "blueviolet");
+            EMap<String, String> _attributes_2 = it.getAttributes();
+            _attributes_2.put("fontcolor", "blueviolet");
+            StringConcatenation _builder_1 = new StringConcatenation();
+            _builder_1.append("action: ");
+            VariableDefinition _variableDefinition = action.getVariableDefinition();
+            String _name = _variableDefinition.getName();
+            _builder_1.append(_name, "");
+            _builder_1.append(" := ");
+            boolean _isValue = action.isValue();
+            _builder_1.append(_isValue, "");
+            CreateEdgeTransitionProcessor.this.addTooltip(it, _builder_1.toString());
           }
         }
-      };
-      final Edge edge = ObjectExtensions.<Edge>operator_doubleArrow(_createEdge, _function);
-      Graph _resultDot = this.getResultDot();
-      EList<Statement> _statements = _resultDot.getStatements();
-      _statements.add(edge);
-      _xblockexpression = true;
-    }
-    return _xblockexpression;
+        EList<Annotation> _annotations_1 = transition.getAnnotations();
+        Iterable<Guard> _filter_1 = Iterables.<Guard>filter(_annotations_1, Guard.class);
+        for (final Guard guard : _filter_1) {
+          {
+            EMap<String, String> _attributes_1 = it.getAttributes();
+            _attributes_1.put("color", "blueviolet");
+            EMap<String, String> _attributes_2 = it.getAttributes();
+            _attributes_2.put("fontcolor", "blueviolet");
+            Formula _formula = guard.getFormula();
+            String _plus = ("guard: " + _formula);
+            CreateEdgeTransitionProcessor.this.addTooltip(it, _plus);
+          }
+        }
+      }
+    };
+    final Edge edge = ObjectExtensions.<Edge>operator_doubleArrow(_createEdge, _function);
+    Graph _resultDot = this.getResultDot();
+    EList<Statement> _statements = _resultDot.getStatements();
+    _statements.add(edge);
   }
   
-  public void addTooltip(final Edge edge, final String tooltipStr) {
+  /**
+   * Filters out transitions having source and target in same record node.
+   */
+  private boolean isWithinSameBox(final Transition transition) {
+    State _start = transition.getStart();
+    final Step startStep = ModelUtils.getStepFromStepMappingAnnotation(_start);
+    State _end = transition.getEnd();
+    final Step endStep = ModelUtils.getStepFromStepMappingAnnotation(_end);
+    State _start_1 = transition.getStart();
+    final StateType startStateType = ModelUtils.getStateTypeFromStateTypeMappingAnnotation(_start_1);
+    State _end_1 = transition.getEnd();
+    final StateType endStateType = ModelUtils.getStateTypeFromStateTypeMappingAnnotation(_end_1);
+    boolean _and = false;
+    boolean _and_1 = false;
+    boolean _and_2 = false;
+    boolean _identityEquals = (startStep == endStep);
+    if (!_identityEquals) {
+      _and_2 = false;
+    } else {
+      boolean _notEquals = (!Objects.equal(startStep, null));
+      _and_2 = _notEquals;
+    }
+    if (!_and_2) {
+      _and_1 = false;
+    } else {
+      boolean _notEquals_1 = (!Objects.equal(startStateType, null));
+      _and_1 = _notEquals_1;
+    }
+    if (!_and_1) {
+      _and = false;
+    } else {
+      boolean _notEquals_2 = (!Objects.equal(endStateType, null));
+      _and = _notEquals_2;
+    }
+    return _and;
+  }
+  
+  private void addTooltip(final Edge edge, final String tooltipStr) {
     EMap<String, String> _attributes = edge.getAttributes();
     final String tooltipAttr = _attributes.get("tooltip");
     EMap<String, String> _attributes_1 = edge.getAttributes();

@@ -1,11 +1,11 @@
 package org.foam.transform.lts2dot;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.foam.dot.Graph;
 import org.foam.dot.Node;
 import org.foam.dot.RecordNode;
@@ -27,7 +27,6 @@ import org.foam.transform.lts2dot.processor.state.label.BulletInnerNodeStateProc
 import org.foam.transform.lts2dot.processor.state.label.XlabelStepStateProcessor;
 import org.foam.transform.lts2dot.processor.transition.CreateEdgeTransitionProcessor;
 import org.foam.transform.lts2dot.processor.transition.CreateOverviewEdgeTransitionProcessor;
-import org.foam.transform.lts2dot.processor.transition.RemoveRecordNodeEdgeTransitionProcessor;
 import org.foam.transform.lts2dot.processor.transition.TransitionProcessor;
 import org.foam.ucm.Scenario;
 import org.foam.ucm.Step;
@@ -53,10 +52,7 @@ public class Lts2Dot {
       BlackInitStateProcessor _blackInitStateProcessor = new BlackInitStateProcessor(_initState, state2Node);
       GreenSuccessStateProcessor _greenSuccessStateProcessor = new GreenSuccessStateProcessor(step2RecordNode);
       RedAbortStateProcessor _redAbortStateProcessor = new RedAbortStateProcessor(step2RecordNode);
-      final ArrayList<StateProcessor> stateProcessorChain = CollectionLiterals.<StateProcessor>newArrayList(_addUseCaseStateProcessor, _addScenarioStateProcessor, _createNodeStateProcessor, _circleWithoutStateTypeProcessor, _xlabelStepStateProcessor, _bulletInnerNodeStateProcessor, _blackInitStateProcessor, _greenSuccessStateProcessor, _redAbortStateProcessor);
-      RemoveRecordNodeEdgeTransitionProcessor _removeRecordNodeEdgeTransitionProcessor = new RemoveRecordNodeEdgeTransitionProcessor();
-      CreateEdgeTransitionProcessor _createEdgeTransitionProcessor = new CreateEdgeTransitionProcessor(graph, state2Node);
-      final ArrayList<TransitionProcessor> transitionProcessorChain = CollectionLiterals.<TransitionProcessor>newArrayList(_removeRecordNodeEdgeTransitionProcessor, _createEdgeTransitionProcessor);
+      final List<? extends StateProcessor> stateProcessorChain = Collections.<StateProcessor>unmodifiableList(Lists.<StateProcessor>newArrayList(_addUseCaseStateProcessor, _addScenarioStateProcessor, _createNodeStateProcessor, _circleWithoutStateTypeProcessor, _xlabelStepStateProcessor, _bulletInnerNodeStateProcessor, _blackInitStateProcessor, _greenSuccessStateProcessor, _redAbortStateProcessor));
       EList<State> _states = lts.getStates();
       final Consumer<State> _function = new Consumer<State>() {
         public void accept(final State it) {
@@ -64,6 +60,8 @@ public class Lts2Dot {
         }
       };
       _states.forEach(_function);
+      CreateEdgeTransitionProcessor _createEdgeTransitionProcessor = new CreateEdgeTransitionProcessor(graph, state2Node);
+      final List<CreateEdgeTransitionProcessor> transitionProcessorChain = Collections.<CreateEdgeTransitionProcessor>unmodifiableList(Lists.<CreateEdgeTransitionProcessor>newArrayList(_createEdgeTransitionProcessor));
       EList<Transition> _transitions = lts.getTransitions();
       final Consumer<Transition> _function_1 = new Consumer<Transition>() {
         public void accept(final Transition it) {
@@ -91,10 +89,9 @@ public class Lts2Dot {
       GreenSuccessStateProcessor _greenSuccessStateProcessor = new GreenSuccessStateProcessor(step2RecordNode);
       RedAbortStateProcessor _redAbortStateProcessor = new RedAbortStateProcessor(step2RecordNode);
       StyleIncludeNodeStateProcessor _styleIncludeNodeStateProcessor = new StyleIncludeNodeStateProcessor(state2Node);
-      final ArrayList<StateProcessor> stateProcessorChain = CollectionLiterals.<StateProcessor>newArrayList(_addScenarioStateProcessor, _createNodeStateProcessor, _xlabelStepStateProcessor, _bulletInnerNodeStateProcessor, _greenSuccessStateProcessor, _redAbortStateProcessor, _styleIncludeNodeStateProcessor);
-      RemoveRecordNodeEdgeTransitionProcessor _removeRecordNodeEdgeTransitionProcessor = new RemoveRecordNodeEdgeTransitionProcessor();
+      final List<? extends StateProcessor> stateProcessorChain = Collections.<StateProcessor>unmodifiableList(Lists.<StateProcessor>newArrayList(_addScenarioStateProcessor, _createNodeStateProcessor, _xlabelStepStateProcessor, _bulletInnerNodeStateProcessor, _greenSuccessStateProcessor, _redAbortStateProcessor, _styleIncludeNodeStateProcessor));
       CreateEdgeTransitionProcessor _createEdgeTransitionProcessor = new CreateEdgeTransitionProcessor(graph, state2Node);
-      final ArrayList<TransitionProcessor> transitionProcessorChain = CollectionLiterals.<TransitionProcessor>newArrayList(_removeRecordNodeEdgeTransitionProcessor, _createEdgeTransitionProcessor);
+      final List<CreateEdgeTransitionProcessor> transitionProcessorChain = Collections.<CreateEdgeTransitionProcessor>unmodifiableList(Lists.<CreateEdgeTransitionProcessor>newArrayList(_createEdgeTransitionProcessor));
       EList<State> _states = lts.getStates();
       final Consumer<State> _function = new Consumer<State>() {
         public void accept(final State it) {
@@ -119,9 +116,9 @@ public class Lts2Dot {
     {
       final HashMap<State, Node> state2Node = new HashMap<State, Node>();
       CreateOverviewNodeStateProcessor _createOverviewNodeStateProcessor = new CreateOverviewNodeStateProcessor(graph, state2Node);
-      final ArrayList<StateProcessor> stateProcessorChain = CollectionLiterals.<StateProcessor>newArrayList(_createOverviewNodeStateProcessor);
+      final List<CreateOverviewNodeStateProcessor> stateProcessorChain = Collections.<CreateOverviewNodeStateProcessor>unmodifiableList(Lists.<CreateOverviewNodeStateProcessor>newArrayList(_createOverviewNodeStateProcessor));
       CreateOverviewEdgeTransitionProcessor _createOverviewEdgeTransitionProcessor = new CreateOverviewEdgeTransitionProcessor(graph, state2Node);
-      final ArrayList<TransitionProcessor> transitionProcessorChain = CollectionLiterals.<TransitionProcessor>newArrayList(_createOverviewEdgeTransitionProcessor);
+      final List<CreateOverviewEdgeTransitionProcessor> transitionProcessorChain = Collections.<CreateOverviewEdgeTransitionProcessor>unmodifiableList(Lists.<CreateOverviewEdgeTransitionProcessor>newArrayList(_createOverviewEdgeTransitionProcessor));
       EList<State> _states = lts.getStates();
       final Consumer<State> _function = new Consumer<State>() {
         public void accept(final State it) {
@@ -141,23 +138,21 @@ public class Lts2Dot {
     return _xblockexpression;
   }
   
-  private void processState(final List<StateProcessor> processors, final State state) {
-    for (final StateProcessor processor : processors) {
-      boolean _process = processor.process(state);
-      boolean _not = (!_process);
-      if (_not) {
-        return;
+  private void processState(final Iterable<? extends StateProcessor> processors, final State state) {
+    final Consumer<StateProcessor> _function = new Consumer<StateProcessor>() {
+      public void accept(final StateProcessor it) {
+        it.process(state);
       }
-    }
+    };
+    processors.forEach(_function);
   }
   
-  private void processTransition(final List<TransitionProcessor> processors, final Transition transition) {
-    for (final TransitionProcessor processor : processors) {
-      boolean _process = processor.process(transition);
-      boolean _not = (!_process);
-      if (_not) {
-        return;
+  private void processTransition(final Iterable<? extends TransitionProcessor> processors, final Transition transition) {
+    final Consumer<TransitionProcessor> _function = new Consumer<TransitionProcessor>() {
+      public void accept(final TransitionProcessor it) {
+        it.process(transition);
       }
-    }
+    };
+    processors.forEach(_function);
   }
 }

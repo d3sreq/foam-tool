@@ -1,18 +1,21 @@
 package org.foam.transform.cntexlang2cntex;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import java.text.ParseException;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import org.eclipse.xtext.xbase.lib.ListExtensions;
 import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-import org.eclipse.xtext.xbase.lib.StringExtensions;
 import org.foam.cntex.CntExAssignment;
 import org.foam.cntex.CntExState;
 import org.foam.cntex.CntexFactory;
@@ -40,81 +43,88 @@ public class CntexLang2Cntex {
   
   private final CntexFactory cntexFactory = CntexFactory.eINSTANCE;
   
-  public CounterExample transform(final String text) {
-    CounterExample _xblockexpression = null;
-    {
-      final CounterExample result = this.cntexFactory.createCounterExample();
-      Splitter _on = Splitter.on("\n");
-      final Splitter splitter = _on.trimResults();
-      Iterable<String> _split = splitter.split(text);
-      final LinkedList<String> lines = Lists.<String>newLinkedList(_split);
-      this.popEmptyOrComments(lines);
-      boolean _isEmpty = lines.isEmpty();
-      boolean _not = (!_isEmpty);
-      boolean _while = _not;
-      while (_while) {
-        {
-          String _peek = lines.peek();
-          boolean _isNullOrEmpty = StringExtensions.isNullOrEmpty(_peek);
-          if (_isNullOrEmpty) {
-            return result;
+  public CounterExample transform(final CharSequence text) {
+    CounterExample _createCounterExample = this.cntexFactory.createCounterExample();
+    final Procedure1<CounterExample> _function = new Procedure1<CounterExample>() {
+      public void apply(final CounterExample it) {
+        EList<Specification> _specifications = it.getSpecifications();
+        String _string = text.toString();
+        String[] _split = _string.split("\n");
+        final Function1<String, String> _function = new Function1<String, String>() {
+          public String apply(final String it) {
+            return it.trim();
           }
-          EList<Specification> _specifications = result.getSpecifications();
-          Specification _parseSpecification = this.parseSpecification(lines);
-          _specifications.add(_parseSpecification);
-        }
-        boolean _isEmpty_1 = lines.isEmpty();
-        boolean _not_1 = (!_isEmpty_1);
-        _while = _not_1;
+        };
+        List<String> _map = ListExtensions.<String, String>map(((List<String>)Conversions.doWrapArray(_split)), _function);
+        final Function1<String, Boolean> _function_1 = new Function1<String, Boolean>() {
+          public Boolean apply(final String it) {
+            boolean _isEmpty = it.isEmpty();
+            return Boolean.valueOf((!_isEmpty));
+          }
+        };
+        Iterable<String> _filter = IterableExtensions.<String>filter(_map, _function_1);
+        final Function1<String, Boolean> _function_2 = new Function1<String, Boolean>() {
+          public Boolean apply(final String it) {
+            boolean _startsWith = it.startsWith(CntexLang2Cntex.COMMENT_PREFIX);
+            return Boolean.valueOf((!_startsWith));
+          }
+        };
+        Iterable<String> _filter_1 = IterableExtensions.<String>filter(_filter, _function_2);
+        final Function1<String, Boolean> _function_3 = new Function1<String, Boolean>() {
+          public Boolean apply(final String it) {
+            return Boolean.valueOf(it.matches(CntexLang2Cntex.SPECIFICATION_REGEXP));
+          }
+        };
+        Iterable<? extends Iterable<String>> _split_1 = org.foam.transform.utils.modeling.IterableExtensions.<String>split(_filter_1, _function_3);
+        Iterable<? extends Iterable<String>> _tail = IterableExtensions.tail(_split_1);
+        final Function1<Iterable<String>, Specification> _function_4 = new Function1<Iterable<String>, Specification>() {
+          public Specification apply(final Iterable<String> it) {
+            return CntexLang2Cntex.this.parseSpecification(it);
+          }
+        };
+        Iterable<Specification> _map_1 = IterableExtensions.map(_tail, _function_4);
+        Iterables.<Specification>addAll(_specifications, _map_1);
       }
-      _xblockexpression = result;
-    }
-    return _xblockexpression;
+    };
+    return ObjectExtensions.<CounterExample>operator_doubleArrow(_createCounterExample, _function);
   }
   
-  private Specification parseSpecification(final LinkedList<String> lines) {
+  private final static Pattern SPEC_PATTERN = Pattern.compile(CntexLang2Cntex.SPECIFICATION_REGEXP);
+  
+  private Specification parseSpecification(final Iterable<String> lines) {
     try {
-      Specification _xblockexpression = null;
-      {
-        final Pattern docCommentPattern = Pattern.compile(CntexLang2Cntex.SPECIFICATION_REGEXP);
-        String line = lines.pop();
-        final Matcher matcher = docCommentPattern.matcher(line);
-        boolean _matches = matcher.matches();
-        boolean _not = (!_matches);
-        if (_not) {
-          StringConcatenation _builder = new StringConcatenation();
-          _builder.append("Expected documentation comment but was: ");
-          _builder.append(line, "");
-          throw new ParseException(_builder.toString(), (-1));
-        }
-        final Specification result = this.cntexFactory.createSpecification();
-        final String isCorrect = matcher.group(2);
-        boolean _and = false;
-        boolean _notEquals = (!Objects.equal(isCorrect, "true"));
-        if (!_notEquals) {
-          _and = false;
-        } else {
-          boolean _notEquals_1 = (!Objects.equal(isCorrect, "false"));
-          _and = _notEquals_1;
-        }
-        if (_and) {
-          StringConcatenation _builder_1 = new StringConcatenation();
-          _builder_1.append("Expected documentation comment ends with \'true\'/\'false\': ");
-          _builder_1.append(line, "");
-          throw new ParseException(_builder_1.toString(), (-1));
-        }
-        boolean _equals = Objects.equal(isCorrect, "false");
-        if (_equals) {
-          String _pop = lines.pop();
-          this.checkLineMatches(_pop, CntexLang2Cntex.AS_DEMONSTRATED_LINE);
-          Trace _parseTrace = this.parseTrace(lines);
-          result.setTrace(_parseTrace);
-        }
-        String _group = matcher.group(1);
-        result.setTextFormula(_group);
-        _xblockexpression = result;
+      final String specLine = IterableExtensions.<String>head(lines);
+      final Matcher matcher = CntexLang2Cntex.SPEC_PATTERN.matcher(specLine);
+      boolean _matches = matcher.matches();
+      boolean _not = (!_matches);
+      if (_not) {
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("Expected documentation comment but was: ");
+        _builder.append(specLine, "");
+        throw new ParseException(_builder.toString(), (-1));
       }
-      return _xblockexpression;
+      final String isCorrect = matcher.group(2);
+      final Specification result = this.cntexFactory.createSpecification();
+      String _group = matcher.group(1);
+      result.setTextFormula(_group);
+      boolean _equals = Objects.equal(isCorrect, "true");
+      if (_equals) {
+        return result;
+      }
+      boolean _equals_1 = Objects.equal(isCorrect, "false");
+      if (_equals_1) {
+        final Iterable<String> linesWithoutFirst = IterableExtensions.<String>tail(lines);
+        String _head = IterableExtensions.<String>head(linesWithoutFirst);
+        this.checkLineMatches(_head, CntexLang2Cntex.AS_DEMONSTRATED_LINE);
+        Iterable<String> _tail = IterableExtensions.<String>tail(linesWithoutFirst);
+        Trace _parseTrace = this.parseTrace(_tail);
+        result.setTrace(_parseTrace);
+        return result;
+      }
+      StringConcatenation _builder_1 = new StringConcatenation();
+      _builder_1.append("Expected documentation comment ends with \'true\'/\'false\': ");
+      _builder_1.append(specLine, "");
+      throw new ParseException(_builder_1.toString(), (-1));
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
@@ -137,140 +147,135 @@ public class CntexLang2Cntex {
     }
   }
   
-  private Trace parseTrace(final LinkedList<String> lines) {
-    try {
-      Trace _xblockexpression = null;
-      {
-        final Trace result = this.cntexFactory.createTrace();
-        String _pop = lines.pop();
-        this.checkLineMatches(_pop, CntexLang2Cntex.TRACE_DESCRIPTION_REGEXP);
-        String _pop_1 = lines.pop();
-        this.checkLineMatches(_pop_1, CntexLang2Cntex.TRACE_TYPE_REGEXP);
-        boolean nextStateIsLoopStart = false;
-        boolean firstLoopProcessed = false;
-        boolean _isEmpty = lines.isEmpty();
-        boolean _not = (!_isEmpty);
-        boolean _while = _not;
-        while (_while) {
-          {
-            final String line = lines.pop();
-            boolean _equals = Objects.equal(line, CntexLang2Cntex.LOOP_LINE);
-            if (_equals) {
-              nextStateIsLoopStart = true;
-            } else {
-              boolean _matches = line.matches(CntexLang2Cntex.SPECIFICATION_REGEXP);
-              if (_matches) {
-                lines.addFirst(line);
-                return result;
-              } else {
-                boolean _matches_1 = line.matches(CntexLang2Cntex.STATE_REGEXP);
-                if (_matches_1) {
-                  lines.addFirst(line);
-                  final CntExState state = this.parseState(lines);
-                  EList<CntExState> _states = result.getStates();
-                  _states.add(state);
-                  if (nextStateIsLoopStart) {
-                    nextStateIsLoopStart = false;
-                    if ((!firstLoopProcessed)) {
-                      result.setLoopStart(state);
-                      firstLoopProcessed = true;
-                    }
-                  }
-                } else {
-                  boolean _isEmpty_1 = line.isEmpty();
-                  if (_isEmpty_1) {
-                    return result;
-                  } else {
-                    StringConcatenation _builder = new StringConcatenation();
-                    _builder.append("Unexpected line while parsing trace: \"");
-                    _builder.append(line, "");
-                    _builder.append("\"");
-                    throw new ParseException(_builder.toString(), (-1));
-                  }
+  /**
+   * Parses the stack trace from NuSMV plain text as a
+   */
+  private Trace parseTrace(final Iterable<String> lines) {
+    final Function1<String, Boolean> _function = new Function1<String, Boolean>() {
+      public Boolean apply(final String it) {
+        return Boolean.valueOf(it.matches(CntexLang2Cntex.TRACE_DESCRIPTION_REGEXP));
+      }
+    };
+    Iterable<String> _checkConsumed = org.foam.transform.utils.modeling.IterableExtensions.<String>checkConsumed(lines, _function);
+    final Function1<String, Boolean> _function_1 = new Function1<String, Boolean>() {
+      public Boolean apply(final String it) {
+        return Boolean.valueOf(it.matches(CntexLang2Cntex.TRACE_TYPE_REGEXP));
+      }
+    };
+    final Iterable<String> checkedLines = org.foam.transform.utils.modeling.IterableExtensions.<String>checkConsumed(_checkConsumed, _function_1);
+    final Function1<String, Boolean> _function_2 = new Function1<String, Boolean>() {
+      public Boolean apply(final String it) {
+        return Boolean.valueOf(it.equals(CntexLang2Cntex.LOOP_LINE));
+      }
+    };
+    final Iterable<? extends Iterable<String>> splitByLoops = org.foam.transform.utils.modeling.IterableExtensions.<String>split(checkedLines, _function_2);
+    Iterable<String> _head = IterableExtensions.head(splitByLoops);
+    final Function1<String, Boolean> _function_3 = new Function1<String, Boolean>() {
+      public Boolean apply(final String it) {
+        return Boolean.valueOf(it.startsWith("-> State:"));
+      }
+    };
+    Iterable<? extends Iterable<String>> _split = org.foam.transform.utils.modeling.IterableExtensions.<String>split(_head, _function_3);
+    final Function1<Iterable<String>, Boolean> _function_4 = new Function1<Iterable<String>, Boolean>() {
+      public Boolean apply(final Iterable<String> it) {
+        return Boolean.valueOf(IterableExtensions.isEmpty(it));
+      }
+    };
+    Iterable<? extends Iterable<String>> _checkConsumed_1 = org.foam.transform.utils.modeling.IterableExtensions.checkConsumed(_split, _function_4);
+    final Function1<Iterable<String>, CntExState> _function_5 = new Function1<Iterable<String>, CntExState>() {
+      public CntExState apply(final Iterable<String> it) {
+        return CntexLang2Cntex.this.parseState(it);
+      }
+    };
+    Iterable<CntExState> _map = IterableExtensions.map(_checkConsumed_1, _function_5);
+    final List<CntExState> statesBeforeLoop = IterableExtensions.<CntExState>toList(_map);
+    Iterable<? extends Iterable<String>> _tail = IterableExtensions.tail(splitByLoops);
+    final Function1<Iterable<String>, Iterable<String>> _function_6 = new Function1<Iterable<String>, Iterable<String>>() {
+      public Iterable<String> apply(final Iterable<String> it) {
+        final Function1<String, Boolean> _function = new Function1<String, Boolean>() {
+          public Boolean apply(final String it) {
+            return Boolean.valueOf(it.equals(CntexLang2Cntex.LOOP_LINE));
+          }
+        };
+        return org.foam.transform.utils.modeling.IterableExtensions.<String>checkConsumed(it, _function);
+      }
+    };
+    Iterable<Iterable<String>> _map_1 = IterableExtensions.map(_tail, _function_6);
+    Iterable<String> _flatten = Iterables.<String>concat(_map_1);
+    final Function1<String, Boolean> _function_7 = new Function1<String, Boolean>() {
+      public Boolean apply(final String it) {
+        return Boolean.valueOf(it.startsWith("-> State:"));
+      }
+    };
+    Iterable<? extends Iterable<String>> _split_1 = org.foam.transform.utils.modeling.IterableExtensions.<String>split(_flatten, _function_7);
+    final Function1<Iterable<String>, Boolean> _function_8 = new Function1<Iterable<String>, Boolean>() {
+      public Boolean apply(final Iterable<String> it) {
+        return Boolean.valueOf(IterableExtensions.isEmpty(it));
+      }
+    };
+    Iterable<? extends Iterable<String>> _checkConsumed_2 = org.foam.transform.utils.modeling.IterableExtensions.checkConsumed(_split_1, _function_8);
+    final Function1<Iterable<String>, CntExState> _function_9 = new Function1<Iterable<String>, CntExState>() {
+      public CntExState apply(final Iterable<String> it) {
+        return CntexLang2Cntex.this.parseState(it);
+      }
+    };
+    Iterable<CntExState> _map_2 = IterableExtensions.map(_checkConsumed_2, _function_9);
+    final List<CntExState> statesInLoop = IterableExtensions.<CntExState>toList(_map_2);
+    Trace _createTrace = this.cntexFactory.createTrace();
+    final Procedure1<Trace> _function_10 = new Procedure1<Trace>() {
+      public void apply(final Trace it) {
+        EList<CntExState> _states = it.getStates();
+        Iterable<CntExState> _plus = Iterables.<CntExState>concat(statesBeforeLoop, statesInLoop);
+        Iterables.<CntExState>addAll(_states, _plus);
+        CntExState _head = IterableExtensions.<CntExState>head(statesInLoop);
+        it.setLoopStart(_head);
+      }
+    };
+    return ObjectExtensions.<Trace>operator_doubleArrow(_createTrace, _function_10);
+  }
+  
+  private final static Pattern ASSIGN_PATTERN = Pattern.compile(CntexLang2Cntex.ASSIGNMENT_REGEXP);
+  
+  private CntExState parseState(final Iterable<String> lines) {
+    CntExState _createCntExState = this.cntexFactory.createCntExState();
+    final Procedure1<CntExState> _function = new Procedure1<CntExState>() {
+      public void apply(final CntExState it) {
+        EList<CntExAssignment> _assignments = it.getAssignments();
+        final Function1<String, Boolean> _function = new Function1<String, Boolean>() {
+          public Boolean apply(final String it) {
+            return Boolean.valueOf(it.matches(CntexLang2Cntex.STATE_REGEXP));
+          }
+        };
+        Iterable<String> _checkConsumed = org.foam.transform.utils.modeling.IterableExtensions.<String>checkConsumed(lines, _function);
+        final Function1<String, CntExAssignment> _function_1 = new Function1<String, CntExAssignment>() {
+          public CntExAssignment apply(final String it) {
+            CntExAssignment _xblockexpression = null;
+            {
+              final Matcher m = CntexLang2Cntex.ASSIGN_PATTERN.matcher(it);
+              boolean _matches = m.matches();
+              StringConcatenation _builder = new StringConcatenation();
+              _builder.append("Expected state assignment \'varname = value\' but \'");
+              _builder.append(it, "");
+              _builder.append("\' encountered.");
+              Preconditions.checkState(_matches, _builder);
+              CntExAssignment _createCntExAssignment = CntexLang2Cntex.this.cntexFactory.createCntExAssignment();
+              final Procedure1<CntExAssignment> _function = new Procedure1<CntExAssignment>() {
+                public void apply(final CntExAssignment it) {
+                  String _group = m.group(1);
+                  it.setVariableName(_group);
+                  String _group_1 = m.group(2);
+                  it.setValue(_group_1);
                 }
-              }
+              };
+              _xblockexpression = ObjectExtensions.<CntExAssignment>operator_doubleArrow(_createCntExAssignment, _function);
             }
+            return _xblockexpression;
           }
-          boolean _isEmpty_1 = lines.isEmpty();
-          boolean _not_1 = (!_isEmpty_1);
-          _while = _not_1;
-        }
-        _xblockexpression = result;
+        };
+        Iterable<CntExAssignment> _map = IterableExtensions.<String, CntExAssignment>map(_checkConsumed, _function_1);
+        Iterables.<CntExAssignment>addAll(_assignments, _map);
       }
-      return _xblockexpression;
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
-  }
-  
-  private CntExState parseState(final LinkedList<String> lines) {
-    CntExState _xblockexpression = null;
-    {
-      final Pattern assignmentPattern = Pattern.compile(CntexLang2Cntex.ASSIGNMENT_REGEXP);
-      final CntExState result = this.cntexFactory.createCntExState();
-      String _pop = lines.pop();
-      this.checkLineMatches(_pop, CntexLang2Cntex.STATE_REGEXP);
-      boolean _isEmpty = lines.isEmpty();
-      boolean _not = (!_isEmpty);
-      boolean _while = _not;
-      while (_while) {
-        {
-          final String line = lines.pop();
-          final Matcher matcher = assignmentPattern.matcher(line);
-          boolean _matches = matcher.matches();
-          boolean _not_1 = (!_matches);
-          if (_not_1) {
-            lines.addFirst(line);
-            return result;
-          } else {
-            EList<CntExAssignment> _assignments = result.getAssignments();
-            CntExAssignment _createCntExAssignment = this.cntexFactory.createCntExAssignment();
-            final Procedure1<CntExAssignment> _function = new Procedure1<CntExAssignment>() {
-              public void apply(final CntExAssignment it) {
-                String _group = matcher.group(1);
-                it.setVariableName(_group);
-                String _group_1 = matcher.group(2);
-                it.setValue(_group_1);
-              }
-            };
-            CntExAssignment _doubleArrow = ObjectExtensions.<CntExAssignment>operator_doubleArrow(_createCntExAssignment, _function);
-            _assignments.add(_doubleArrow);
-          }
-        }
-        boolean _isEmpty_1 = lines.isEmpty();
-        boolean _not_1 = (!_isEmpty_1);
-        _while = _not_1;
-      }
-      _xblockexpression = result;
-    }
-    return _xblockexpression;
-  }
-  
-  private void popEmptyOrComments(final LinkedList<String> lines) {
-    boolean _isEmpty = lines.isEmpty();
-    boolean _not = (!_isEmpty);
-    boolean _while = _not;
-    while (_while) {
-      {
-        final String line = lines.pop();
-        boolean _and = false;
-        boolean _isEmpty_1 = line.isEmpty();
-        boolean _not_1 = (!_isEmpty_1);
-        if (!_not_1) {
-          _and = false;
-        } else {
-          boolean _startsWith = line.startsWith(CntexLang2Cntex.COMMENT_PREFIX);
-          boolean _not_2 = (!_startsWith);
-          _and = _not_2;
-        }
-        if (_and) {
-          lines.addFirst(line);
-          return;
-        }
-      }
-      boolean _isEmpty_1 = lines.isEmpty();
-      boolean _not_1 = (!_isEmpty_1);
-      _while = _not_1;
-    }
+    };
+    return ObjectExtensions.<CntExState>operator_doubleArrow(_createCntExState, _function);
   }
 }

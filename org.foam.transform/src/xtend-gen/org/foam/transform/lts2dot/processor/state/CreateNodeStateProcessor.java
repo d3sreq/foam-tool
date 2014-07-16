@@ -67,20 +67,15 @@ public class CreateNodeStateProcessor implements StateProcessor {
   
   private static String TOOLTIP_ATTRIBUTE_MAP_KEY = "tooltip";
   
-  public boolean process(final State state) {
-    boolean _xblockexpression = false;
-    {
-      final StateType stateType = ModelUtils.getStateTypeFromStateTypeMappingAnnotation(state);
-      boolean _notEquals = (!Objects.equal(stateType, null));
-      if (_notEquals) {
-        final Step step = ModelUtils.getStepFromStepMappingAnnotation(state);
-        this.addRecordNode(state, stateType, step);
-      } else {
-        this.addNonRecordNode(state);
-      }
-      _xblockexpression = true;
+  public void process(final State state) {
+    final StateType stateType = ModelUtils.getStateTypeFromStateTypeMappingAnnotation(state);
+    boolean _notEquals = (!Objects.equal(stateType, null));
+    if (_notEquals) {
+      final Step step = ModelUtils.getStepFromStepMappingAnnotation(state);
+      this.addRecordNode(state, stateType, step);
+    } else {
+      this.addNonRecordNode(state);
     }
-    return _xblockexpression;
   }
   
   public boolean addNonRecordNode(final State state) {

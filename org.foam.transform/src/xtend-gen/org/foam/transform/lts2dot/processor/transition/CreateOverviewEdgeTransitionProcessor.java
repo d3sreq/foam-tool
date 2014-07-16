@@ -48,41 +48,36 @@ public class CreateOverviewEdgeTransitionProcessor implements TransitionProcesso
     return this._dotFactory;
   }
   
-  public boolean process(final Transition transition) {
-    boolean _xblockexpression = false;
-    {
-      EList<Annotation> _annotations = transition.getAnnotations();
-      Iterable<OverviewTransitionTypeAnnotation> _filter = Iterables.<OverviewTransitionTypeAnnotation>filter(_annotations, OverviewTransitionTypeAnnotation.class);
-      OverviewTransitionTypeAnnotation _head = IterableExtensions.<OverviewTransitionTypeAnnotation>head(_filter);
-      final OverviewTransitionType transitionType = _head.getOverviewTransitionType();
-      DotFactory _dotFactory = this.getDotFactory();
-      Edge _createEdge = _dotFactory.createEdge();
-      final Procedure1<Edge> _function = new Procedure1<Edge>() {
-        public void apply(final Edge it) {
-          Map<State, Node> _state2Node = CreateOverviewEdgeTransitionProcessor.this.getState2Node();
-          State _start = transition.getStart();
-          Node _get = _state2Node.get(_start);
-          it.setSource(_get);
-          Map<State, Node> _state2Node_1 = CreateOverviewEdgeTransitionProcessor.this.getState2Node();
-          State _end = transition.getEnd();
-          Node _get_1 = _state2Node_1.get(_end);
-          it.setTarget(_get_1);
-          boolean _equals = Objects.equal(transitionType, OverviewTransitionType.INCLUDE);
-          if (_equals) {
-            EMap<String, String> _attributes = it.getAttributes();
-            _attributes.put("style", "dashed");
-            EMap<String, String> _attributes_1 = it.getAttributes();
-            _attributes_1.put("arrowhead", "onormal");
-          }
+  public void process(final Transition transition) {
+    EList<Annotation> _annotations = transition.getAnnotations();
+    Iterable<OverviewTransitionTypeAnnotation> _filter = Iterables.<OverviewTransitionTypeAnnotation>filter(_annotations, OverviewTransitionTypeAnnotation.class);
+    OverviewTransitionTypeAnnotation _head = IterableExtensions.<OverviewTransitionTypeAnnotation>head(_filter);
+    final OverviewTransitionType transitionType = _head.getOverviewTransitionType();
+    DotFactory _dotFactory = this.getDotFactory();
+    Edge _createEdge = _dotFactory.createEdge();
+    final Procedure1<Edge> _function = new Procedure1<Edge>() {
+      public void apply(final Edge it) {
+        Map<State, Node> _state2Node = CreateOverviewEdgeTransitionProcessor.this.getState2Node();
+        State _start = transition.getStart();
+        Node _get = _state2Node.get(_start);
+        it.setSource(_get);
+        Map<State, Node> _state2Node_1 = CreateOverviewEdgeTransitionProcessor.this.getState2Node();
+        State _end = transition.getEnd();
+        Node _get_1 = _state2Node_1.get(_end);
+        it.setTarget(_get_1);
+        boolean _equals = Objects.equal(transitionType, OverviewTransitionType.INCLUDE);
+        if (_equals) {
+          EMap<String, String> _attributes = it.getAttributes();
+          _attributes.put("style", "dashed");
+          EMap<String, String> _attributes_1 = it.getAttributes();
+          _attributes_1.put("arrowhead", "onormal");
         }
-      };
-      final Edge edge = ObjectExtensions.<Edge>operator_doubleArrow(_createEdge, _function);
-      Graph _resultDot = this.getResultDot();
-      EList<Statement> _statements = _resultDot.getStatements();
-      _statements.add(edge);
-      _xblockexpression = true;
-    }
-    return _xblockexpression;
+      }
+    };
+    final Edge edge = ObjectExtensions.<Edge>operator_doubleArrow(_createEdge, _function);
+    Graph _resultDot = this.getResultDot();
+    EList<Statement> _statements = _resultDot.getStatements();
+    _statements.add(edge);
   }
   
   public CreateOverviewEdgeTransitionProcessor(final Graph resultDot, final Map<State, Node> state2Node) {

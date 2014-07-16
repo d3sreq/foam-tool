@@ -59,13 +59,8 @@ public class AddScenarioStateProcessor implements StateProcessor {
     return this._dotFactory;
   }
   
-  public boolean process(final State state) {
-    boolean _xblockexpression = false;
-    {
-      this.addScenarioSubGraph(state);
-      _xblockexpression = true;
-    }
-    return _xblockexpression;
+  public void process(final State state) {
+    this.addScenarioSubGraph(state);
   }
   
   private Graph addScenarioSubGraph(final State state) {

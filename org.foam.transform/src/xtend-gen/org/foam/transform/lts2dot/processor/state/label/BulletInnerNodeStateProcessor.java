@@ -29,19 +29,14 @@ public class BulletInnerNodeStateProcessor implements StateProcessor {
     return this._state2Node;
   }
   
-  public boolean process(final State state) {
-    boolean _xblockexpression = false;
-    {
-      boolean _hasJmp = this.hasJmp(state);
-      if (_hasJmp) {
-        Map<State, Node> _state2Node = this.getState2Node();
-        Node _get = _state2Node.get(state);
-        EMap<String, String> _attributes = _get.getAttributes();
-        _attributes.put("label", "&bull;");
-      }
-      _xblockexpression = true;
+  public void process(final State state) {
+    boolean _hasJmp = this.hasJmp(state);
+    if (_hasJmp) {
+      Map<State, Node> _state2Node = this.getState2Node();
+      Node _get = _state2Node.get(state);
+      EMap<String, String> _attributes = _get.getAttributes();
+      _attributes.put("label", "&bull;");
     }
-    return _xblockexpression;
   }
   
   private boolean hasJmp(final State state) {

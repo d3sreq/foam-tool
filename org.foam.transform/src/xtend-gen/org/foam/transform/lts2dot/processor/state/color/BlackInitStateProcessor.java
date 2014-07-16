@@ -29,20 +29,15 @@ public class BlackInitStateProcessor implements StateProcessor {
     return this._state2Node;
   }
   
-  public boolean process(final State state) {
-    boolean _xblockexpression = false;
-    {
-      State _initState = this.getInitState();
-      boolean _equals = Objects.equal(state, _initState);
-      if (_equals) {
-        Map<State, Node> _state2Node = this.getState2Node();
-        Node _get = _state2Node.get(state);
-        EMap<String, String> _attributes = _get.getAttributes();
-        _attributes.put("fillcolor", "black");
-      }
-      _xblockexpression = true;
+  public void process(final State state) {
+    State _initState = this.getInitState();
+    boolean _equals = Objects.equal(state, _initState);
+    if (_equals) {
+      Map<State, Node> _state2Node = this.getState2Node();
+      Node _get = _state2Node.get(state);
+      EMap<String, String> _attributes = _get.getAttributes();
+      _attributes.put("fillcolor", "black");
     }
-    return _xblockexpression;
   }
   
   public BlackInitStateProcessor(final State initState, final Map<State, Node> state2Node) {

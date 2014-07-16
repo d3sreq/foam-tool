@@ -25,20 +25,15 @@ public class CircleWithoutStateTypeProcessor implements StateProcessor {
     return this._state2Node;
   }
   
-  public boolean process(final State state) {
-    boolean _xblockexpression = false;
-    {
-      StateType _stateTypeFromStateTypeMappingAnnotation = ModelUtils.getStateTypeFromStateTypeMappingAnnotation(state);
-      boolean _equals = Objects.equal(_stateTypeFromStateTypeMappingAnnotation, null);
-      if (_equals) {
-        Map<State, Node> _state2Node = this.getState2Node();
-        final Node node = _state2Node.get(state);
-        EMap<String, String> _attributes = node.getAttributes();
-        _attributes.put("shape", "circle");
-      }
-      _xblockexpression = true;
+  public void process(final State state) {
+    StateType _stateTypeFromStateTypeMappingAnnotation = ModelUtils.getStateTypeFromStateTypeMappingAnnotation(state);
+    boolean _equals = Objects.equal(_stateTypeFromStateTypeMappingAnnotation, null);
+    if (_equals) {
+      Map<State, Node> _state2Node = this.getState2Node();
+      final Node node = _state2Node.get(state);
+      EMap<String, String> _attributes = node.getAttributes();
+      _attributes.put("shape", "circle");
     }
-    return _xblockexpression;
   }
   
   public CircleWithoutStateTypeProcessor(final Map<State, Node> state2Node) {

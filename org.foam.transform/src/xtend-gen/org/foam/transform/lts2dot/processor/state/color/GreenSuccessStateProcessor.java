@@ -30,34 +30,29 @@ public class GreenSuccessStateProcessor implements StateProcessor {
     return this._step2RecordNode;
   }
   
-  public boolean process(final State state) {
-    boolean _xblockexpression = false;
-    {
-      final Step step = ModelUtils.getStepFromStepMappingAnnotation(state);
-      boolean _notEquals = (!Objects.equal(step, null));
-      if (_notEquals) {
-        EObject _eContainer = step.eContainer();
-        final Scenario scenario = ((Scenario) _eContainer);
-        final EObject scenarioParent = scenario.eContainer();
-        boolean _and = false;
-        if (!(scenarioParent instanceof UseCase)) {
-          _and = false;
-        } else {
-          EList<Step> _steps = scenario.getSteps();
-          Step _last = IterableExtensions.<Step>last(_steps);
-          boolean _equals = Objects.equal(_last, step);
-          _and = _equals;
-        }
-        if (_and) {
-          Map<Step, RecordNode> _step2RecordNode = this.getStep2RecordNode();
-          final RecordNode recordNode = _step2RecordNode.get(step);
-          EMap<String, String> _attributes = recordNode.getAttributes();
-          _attributes.put("fillcolor", "#ccebc5");
-        }
+  public void process(final State state) {
+    final Step step = ModelUtils.getStepFromStepMappingAnnotation(state);
+    boolean _notEquals = (!Objects.equal(step, null));
+    if (_notEquals) {
+      EObject _eContainer = step.eContainer();
+      final Scenario scenario = ((Scenario) _eContainer);
+      final EObject scenarioParent = scenario.eContainer();
+      boolean _and = false;
+      if (!(scenarioParent instanceof UseCase)) {
+        _and = false;
+      } else {
+        EList<Step> _steps = scenario.getSteps();
+        Step _last = IterableExtensions.<Step>last(_steps);
+        boolean _equals = Objects.equal(_last, step);
+        _and = _equals;
       }
-      _xblockexpression = true;
+      if (_and) {
+        Map<Step, RecordNode> _step2RecordNode = this.getStep2RecordNode();
+        final RecordNode recordNode = _step2RecordNode.get(step);
+        EMap<String, String> _attributes = recordNode.getAttributes();
+        _attributes.put("fillcolor", "#ccebc5");
+      }
     }
-    return _xblockexpression;
   }
   
   public GreenSuccessStateProcessor(final Map<Step, RecordNode> step2RecordNode) {

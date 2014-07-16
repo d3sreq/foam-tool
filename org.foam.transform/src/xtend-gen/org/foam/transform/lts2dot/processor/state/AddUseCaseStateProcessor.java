@@ -49,13 +49,8 @@ public class AddUseCaseStateProcessor implements StateProcessor {
     return this._dotFactory;
   }
   
-  public boolean process(final State state) {
-    boolean _xblockexpression = false;
-    {
-      this.addUseCaseSubGraph(state);
-      _xblockexpression = true;
-    }
-    return _xblockexpression;
+  public void process(final State state) {
+    this.addUseCaseSubGraph(state);
   }
   
   private boolean addUseCaseSubGraph(final State state) {

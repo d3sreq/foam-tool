@@ -1,6 +1,5 @@
 package org.foam.transform.lts2dot.processor.state.label;
 
-import com.google.common.base.Objects;
 import java.util.Map;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.xtend.lib.Data;
@@ -25,22 +24,18 @@ public class XlabelStepStateProcessor implements StateProcessor {
     return this._step2RecordNode;
   }
   
-  public boolean process(final State state) {
-    boolean _xblockexpression = false;
-    {
-      final Step step = ModelUtils.getStepFromStepMappingAnnotation(state);
-      Map<Step, RecordNode> _step2RecordNode = this.getStep2RecordNode();
-      final RecordNode recordNode = _step2RecordNode.get(step);
-      boolean _equals = Objects.equal(recordNode, null);
-      if (_equals) {
-        return true;
-      }
-      EMap<String, String> _attributes = recordNode.getAttributes();
+  public void process(final State state) {
+    final Step step = ModelUtils.getStepFromStepMappingAnnotation(state);
+    Map<Step, RecordNode> _step2RecordNode = this.getStep2RecordNode();
+    RecordNode _get = _step2RecordNode.get(step);
+    EMap<String, String> _attributes = null;
+    if (_get!=null) {
+      _attributes=_get.getAttributes();
+    }
+    if (_attributes!=null) {
       String _label = step.getLabel();
       _attributes.put("xlabel", _label);
-      _xblockexpression = true;
     }
-    return _xblockexpression;
   }
   
   public XlabelStepStateProcessor(final Map<Step, RecordNode> step2RecordNode) {
