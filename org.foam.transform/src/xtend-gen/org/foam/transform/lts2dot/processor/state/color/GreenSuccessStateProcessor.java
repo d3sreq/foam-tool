@@ -64,7 +64,7 @@ public class GreenSuccessStateProcessor implements StateProcessor {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_step2RecordNode== null) ? 0 : _step2RecordNode.hashCode());
+    result = prime * result + ((this._step2RecordNode== null) ? 0 : this._step2RecordNode.hashCode());
     return result;
   }
   
@@ -77,10 +77,10 @@ public class GreenSuccessStateProcessor implements StateProcessor {
     if (getClass() != obj.getClass())
       return false;
     GreenSuccessStateProcessor other = (GreenSuccessStateProcessor) obj;
-    if (_step2RecordNode == null) {
+    if (this._step2RecordNode == null) {
       if (other._step2RecordNode != null)
         return false;
-    } else if (!_step2RecordNode.equals(other._step2RecordNode))
+    } else if (!this._step2RecordNode.equals(other._step2RecordNode))
       return false;
     return true;
   }

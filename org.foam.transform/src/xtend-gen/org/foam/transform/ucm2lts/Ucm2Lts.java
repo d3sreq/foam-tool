@@ -350,8 +350,8 @@ public class Ucm2Lts {
             Preconditions.<Step>checkNotNull(lastStep);
             EList<Annotation> _annotations = lastStep.getAnnotations();
             boolean _forall = IterableExtensions.<Annotation>forall(_annotations, new Function1<Annotation, Boolean>() {
-                public Boolean apply(Annotation p) {
-                  return isNeitherGotoOrAbort.apply(p);
+                public Boolean apply(Annotation arg0) {
+                  return isNeitherGotoOrAbort.apply(arg0);
                 }
             });
             if (_forall) {

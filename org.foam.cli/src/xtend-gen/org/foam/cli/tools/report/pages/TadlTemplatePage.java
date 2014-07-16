@@ -139,9 +139,9 @@ public class TadlTemplatePage implements Page {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_menu== null) ? 0 : _menu.hashCode());
-    result = prime * result + ((_template== null) ? 0 : _template.hashCode());
-    result = prime * result + ((_renderer== null) ? 0 : _renderer.hashCode());
+    result = prime * result + ((this._menu== null) ? 0 : this._menu.hashCode());
+    result = prime * result + ((this._template== null) ? 0 : this._template.hashCode());
+    result = prime * result + ((this._renderer== null) ? 0 : this._renderer.hashCode());
     return result;
   }
   
@@ -154,20 +154,20 @@ public class TadlTemplatePage implements Page {
     if (getClass() != obj.getClass())
       return false;
     TadlTemplatePage other = (TadlTemplatePage) obj;
-    if (_menu == null) {
+    if (this._menu == null) {
       if (other._menu != null)
         return false;
-    } else if (!_menu.equals(other._menu))
+    } else if (!this._menu.equals(other._menu))
       return false;
-    if (_template == null) {
+    if (this._template == null) {
       if (other._template != null)
         return false;
-    } else if (!_template.equals(other._template))
+    } else if (!this._template.equals(other._template))
       return false;
-    if (_renderer == null) {
+    if (this._renderer == null) {
       if (other._renderer != null)
         return false;
-    } else if (!_renderer.equals(other._renderer))
+    } else if (!this._renderer.equals(other._renderer))
       return false;
     return true;
   }

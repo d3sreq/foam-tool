@@ -44,8 +44,8 @@ public class RedAbortStateProcessor implements StateProcessor {
         final Predicate<Object> isAbort = Predicates.instanceOf(Abort.class);
         EList<Annotation> _annotations = step.getAnnotations();
         final Iterable<Annotation> aborts = IterableExtensions.<Annotation>filter(_annotations, new Function1<Annotation, Boolean>() {
-            public Boolean apply(Annotation p) {
-              return isAbort.apply(p);
+            public Boolean apply(Annotation arg0) {
+              return isAbort.apply(arg0);
             }
         });
         boolean _isEmpty = IterableExtensions.isEmpty(aborts);
@@ -69,7 +69,7 @@ public class RedAbortStateProcessor implements StateProcessor {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_step2RecordNode== null) ? 0 : _step2RecordNode.hashCode());
+    result = prime * result + ((this._step2RecordNode== null) ? 0 : this._step2RecordNode.hashCode());
     return result;
   }
   
@@ -82,10 +82,10 @@ public class RedAbortStateProcessor implements StateProcessor {
     if (getClass() != obj.getClass())
       return false;
     RedAbortStateProcessor other = (RedAbortStateProcessor) obj;
-    if (_step2RecordNode == null) {
+    if (this._step2RecordNode == null) {
       if (other._step2RecordNode != null)
         return false;
-    } else if (!_step2RecordNode.equals(other._step2RecordNode))
+    } else if (!this._step2RecordNode.equals(other._step2RecordNode))
       return false;
     return true;
   }
