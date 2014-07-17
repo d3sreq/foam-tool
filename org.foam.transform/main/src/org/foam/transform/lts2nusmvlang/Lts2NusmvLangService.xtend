@@ -32,6 +32,7 @@ import static extension org.foam.transform.utils.modeling.IterableExtensions.*
 
 @Component(provide = Lts2NusmvLangService)
 class Lts2NusmvLangService {
+	
 	private extension LogServiceExtension logServiceExtension
 	@Reference def void setLogService(LogService logService) {
 		logServiceExtension = new LogServiceExtension(logService)
