@@ -1,7 +1,6 @@
 package org.foam.transform.junit
 
 import org.eclipse.emf.ecore.EPackage
-import org.foam.ctl.CtlPackage
 import org.foam.ltl.LtlFactory
 import org.foam.ltl.LtlPackage
 import org.foam.propositionallogic.Formula
@@ -28,9 +27,6 @@ class LtlParserTest {
 		// Without registration exception with "Unresolved proxy" is thrown
 		// when parsing Ctl or LTL formula (propositional logic formula is parsed
 		// without errors).
-		if (!EPackage.Registry.INSTANCE.containsKey(CtlPackage.eNS_URI)) {
-			EPackage.Registry.INSTANCE.put(CtlPackage.eNS_URI, CtlPackage.eINSTANCE)
-		}
 		if (!EPackage.Registry.INSTANCE.containsKey(LtlPackage.eNS_URI)) {
 			EPackage.Registry.INSTANCE.put(LtlPackage.eNS_URI, LtlPackage.eINSTANCE)
 		}
