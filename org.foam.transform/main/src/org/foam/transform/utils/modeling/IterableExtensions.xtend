@@ -40,6 +40,11 @@ class IterableExtensions {
 		return input.tail
 	}
 	
+	/**
+	 * Converts a stream of pairs into a miltimap where the keys are the keys from the pairs
+	 * and each item in the multimap is a set of values with the same key.
+	 * TODO: consider renaming this method to something like "groupByKey"
+	 */
 	def static <K,V> HashMultimap<K,V> toHashMultimap(Iterable<Pair<K,V>> input) {
 		input.fold(
 			// this transforms the list into a multimap
