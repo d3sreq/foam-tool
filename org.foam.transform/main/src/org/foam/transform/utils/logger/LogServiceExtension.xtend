@@ -14,16 +14,16 @@ class LogServiceExtension {
 	}
 	
 	def void info(CharSequence message) {
-		logService.log(LogService.LOG_INFO, message.toString)
+		logService?.log(LogService.LOG_INFO, message.toString)
 	}
 	def void error(CharSequence message) {
-		logService.log(LogService.LOG_ERROR, message.toString)
+		logService?.log(LogService.LOG_ERROR, message.toString)
 	}
 
 	def void debug(CharSequence message) {
-		logService.log(LogService.LOG_DEBUG, message.toString)
+		logService?.log(LogService.LOG_DEBUG, message.toString)
 	}
 	def void warning(CharSequence message) {
-		logService.log(LogService.LOG_WARNING, message.toString)
+		logService?.log(LogService.LOG_WARNING, message.toString)
 	}
 }
