@@ -1,13 +1,14 @@
 /.gradle/
 /reports/
+/.metadata/
 
 # common
-**/bin/
+**/main/bin/
+**/test/bin/
 **/build/
 **/generated/
-**/src-gen/
-**/xtend-gen/
-**/emf-gen/
+**/main/*-gen/
+**/test/*-gen/
 *RuntimeModule.java
 *StandaloneSetup.java
 .antlr-generator-3.2.0.jar
