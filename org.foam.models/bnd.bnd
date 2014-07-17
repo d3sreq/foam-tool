@@ -1,4 +1,3 @@
--sourcepath: src/java, src/emf-gen, src/xtend-gen
 -sub: *.bnd
 -buildpath:  \
 	org.eclipse.emf.mwe.utils,\

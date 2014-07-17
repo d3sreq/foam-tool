@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.foam.models/src/emf-gen" modelPluginID="org.foam.models"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.foam.models/main/emf-gen" modelPluginID="org.foam.models"
     modelName="Flowannotation" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
-    testsDirectory="/org.foam.models/src/tests" importerID="org.eclipse.emf.importer.ecore"
+    testsDirectory="/org.foam.models/test/src" importerID="org.eclipse.emf.importer.ecore"
     bundleManifest="false" complianceLevel="7.0" copyrightFields="false" usedGenPackages="annotation.genmodel#//annotation propositionallogic.genmodel#//propositionallogic ucm.genmodel#//ucm"
     operationReflection="true" importOrganizing="true">
   <foreignModel>flowannotation.ecore</foreignModel>

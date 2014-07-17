@@ -28,4 +28,5 @@
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.common,\
-	org.eclipse.xtext
+	org.eclipse.xtext,\
+	org.apache.servicemix.bundles.junit
