@@ -57,7 +57,7 @@ class TadlLang2Tadl {
 	def public Template parse(CharSequence input) {
 		// parse each line with CTL and LTL parser, distinguish by CTL or LTL on start
 		// of each line
-		val result = parseFormulas(input)
+		val result = input.parseFormulas
 		
 		// add VariableDefinition and replace RuleVariableUse with VariableUse
 		resolveVariables(result)
@@ -65,6 +65,7 @@ class TadlLang2Tadl {
 		result
 	}
 	
+	//TODO:reimplement in functional style
 	def private Template parseFormulas(CharSequence input) {
 		val result = tadlFactory.createTemplate
 		val splitter = Splitter.on('\n').trimResults

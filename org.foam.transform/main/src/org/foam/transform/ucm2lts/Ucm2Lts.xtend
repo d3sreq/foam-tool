@@ -2,8 +2,6 @@ package org.foam.transform.ucm2lts
 
 import com.google.common.base.Preconditions
 import com.google.common.base.Predicates
-import java.util.ArrayList
-import java.util.HashMap
 import java.util.Map
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
@@ -45,6 +43,7 @@ import static extension org.foam.ucm.util.UcmUtils.*
  */
 class Ucm2Lts {
 	
+	// TODO: reimplement using OSGi DS
 	private static val logger = Logger.getLogger(Ucm2Lts.canonicalName) // TODO: use OSGi LogService
 	private extension FoamNamingExtension = new FoamNamingExtension
 	
@@ -95,11 +94,12 @@ class Ucm2Lts {
 	 * @return helper mapping for {@link State} lookup
 	 */
 	def addStates(Automaton resultAutomaton, Iterable<UseCase> useCases, Map<Pair<State,State>, Transition> transitionMap) {
+
 		Preconditions.checkNotNull(resultAutomaton)
 		Preconditions.checkNotNull(useCases)
 		Preconditions.checkNotNull(transitionMap)
 		 
-		val result = new HashMap<Pair<Step, StateType>, State>
+		val result = <Pair<Step, StateType>, State> newHashMap
 
 		for (useCase : useCases) {
 			for (step : useCase.allSteps) {
@@ -128,7 +128,7 @@ class Ucm2Lts {
 
 	def protected void notifyStateAdded(Step sourceStep, State targetState, StateType stateType) {		
 		val event = new StateAddedEvent(sourceStep, targetState, stateType)
-		stateAddedEventListeners.forEach[it.stateAdded(event)]
+		stateAddedEventListeners.forEach[ stateAdded(event) ]
 	}
 
 	def protected Transition addTransition(	State startState, 
@@ -424,7 +424,7 @@ class Ucm2Lts {
 					//      the execution should continue in the original use-case
 
 					// here, we collect all the return states
-					val returnStates = new ArrayList<State>
+					val returnStates = <State>newArrayList
 
 					// covers the (i) case:
 					val lastStepOfMainScenario = includedUseCaseSteps.last
@@ -496,7 +496,7 @@ class Ucm2Lts {
 		Preconditions.checkNotNull(transitionMap)
 		
 		// add variables done_u
-		val doneVars = new HashMap<UseCase, VariableDefinition>
+		val doneVars = <UseCase, VariableDefinition> newHashMap
 		for (uc : useCases) {
 			val varDef = propositionalLogicFactory.createVariableDefinition => [
 				name = createDoneStateId(uc.id)
@@ -567,7 +567,7 @@ class Ucm2Lts {
 	}
 	
 	def private createInitGuard(UseCase useCase, Map<UseCase,VariableDefinition> doneVars) {
-		val parts = new ArrayList<Formula>
+		val parts = <Formula> newArrayList
 		// create "(NOT done_u)"
 		parts += propositionalLogicFactory.createNot => [
 			formula = propositionalLogicFactory.createVariableUse => [
@@ -681,7 +681,7 @@ class Ucm2Lts {
 	) {
 		// in case that one use case is included in several places
 		// we want the state representing use case to be included only once 
-		val includedUseCase2State = new HashMap<UseCase, State> 
+		val includedUseCase2State = <UseCase, State> newHashMap 
 		
 		for (step : useCase.allSteps) {
 			

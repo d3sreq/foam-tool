@@ -1,11 +1,11 @@
 package org.foam.transform.cntexlang2cntex
 
+import java.util.HashMap
 import org.foam.cntex.CounterExample
 import org.foam.lts.Automaton
 import org.foam.lts.State
-import java.util.HashMap
-import org.foam.traceability.TraceabilityFactory
 import org.foam.traceability.StateMappingAnnotation
+import org.foam.traceability.TraceabilityFactory
 
 class CntexStateResolver {
 	

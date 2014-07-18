@@ -1,5 +1,6 @@
 package org.foam.transform.cntexlang2cntex
 
+import com.google.common.base.Preconditions
 import java.text.ParseException
 import java.util.regex.Pattern
 import org.foam.cntex.CntExState
@@ -9,8 +10,6 @@ import org.foam.cntex.Specification
 import org.foam.cntex.Trace
 
 import static extension org.foam.transform.utils.modeling.IterableExtensions.*
-import com.google.common.base.Preconditions
-import java.util.ArrayList
 
 class CntexLang2Cntex {
 	

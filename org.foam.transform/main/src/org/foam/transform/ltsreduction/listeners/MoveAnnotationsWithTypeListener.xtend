@@ -1,7 +1,6 @@
 package org.foam.transform.ltsreduction.listeners
 
 import org.foam.annotation.Annotation
-import java.util.ArrayList
 import org.foam.lts.Transition
 import org.foam.transform.ltsreduction.StateReducedEvent
 import org.foam.transform.ltsreduction.StateReducedEventListener
@@ -18,12 +17,17 @@ class MoveAnnotationsWithTypeListener implements StateReducedEventListener {
 	}
 
 	override stateReduced(StateReducedEvent stateReducedEvent) {
-		val annotations = stateReducedEvent.removedFromStateTransition.annotations + stateReducedEvent.removedToStateTransition.annotations
-		val annotationsWithType = annotations.filter[annotationType.isAssignableFrom(it.getClass())]
+
+		val annotations =
+			stateReducedEvent.removedFromStateTransition.annotations
+			+ stateReducedEvent.removedToStateTransition.annotations
+			
+		val annotationsWithType = annotations.filter[annotationType.isAssignableFrom(it.class)]
+
 		// extra list to prevent ConcurentModificationException
-		val list = new ArrayList<Annotation>
-		list.addAll(annotationsWithType)
-		stateReducedEvent.addedTransition.annotations.addAll(list)
+		val list = <Annotation> newArrayList
+		list += annotationsWithType
+		stateReducedEvent.addedTransition.annotations += list
 	}
 	
 }

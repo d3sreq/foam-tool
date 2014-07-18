@@ -24,11 +24,11 @@ class HasStateTypeMappingAnnotation implements Predicate<State> {
 	}
 	
 	new() {
-		this(StateType.values.toList)
+		this(StateType.values.toList.unmodifiableView)
 	}
 	
 	override apply(State state) {
-		val annotation = state.annotations.findFirst[it instanceof StateTypeMappingAnnotation] as StateTypeMappingAnnotation
+		val annotation = state.annotations.filter(StateTypeMappingAnnotation).head
 		annotation != null && stateTypesToRetain.contains(annotation.stateType)
 	}
 	

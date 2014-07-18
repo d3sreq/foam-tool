@@ -3,7 +3,6 @@ package org.foam.transform.ucm2lts
 import com.google.common.base.Predicates
 import com.google.common.collect.Sets
 import java.util.Collections
-import java.util.HashMap
 import java.util.Map
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.foam.lts.Automaton
