@@ -1,15 +1,18 @@
 package org.foam.cli.launcher
 
+import aQute.bnd.annotation.component.Activate
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
+import java.util.Map
 import java.util.concurrent.ConcurrentHashMap
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.transform.utils.logger.LogServiceExtension
+import org.osgi.framework.BundleContext
 import org.osgi.service.log.LogService
 
 @Component(
-	immediate=true,
-	provide=LauncherComponent,
+	immediate = true,
+	provide = LauncherComponent,
 	properties = #[
 		"osgi.command.scope:String=foam",
 		"osgi.command.function:String=run"
@@ -22,12 +25,25 @@ class LauncherComponent {
 		logServiceExtension = new LogServiceExtension(logService)
 	}
 
-//	var String[] args;
-//	
-//	@Reference(target="(launcher.arguments=*)")
-//	def void setArgs(Object object, Map<String, Object> map) {
-//		args = map.get("launcher.arguments") as String[];
-//	}
+	var String[] args
+	
+	@Reference(target="(launcher.arguments=*)")
+	def void setArgs(Object object, Map<String, Object> map) {
+		args = map.get("launcher.arguments") as String[]
+	}
+	
+	/**
+	 * The activator is used when the user specifies command line arguments.
+	 */
+	@Activate def void activate(BundleContext context) {
+		if(!args.empty) {
+			print("ARGS: ")
+			println(args.map['''"«it»"'''].join(", "))
+			run(args)
+			println("done.")
+			context.getBundle(0).stop
+		}
+	}
 	
 	// we use a dynamic+optional+multiple reference and therefore multiple threads can access the toolMap
 	val toolMap = new ConcurrentHashMap<String, IExecutableTool>

@@ -1,4 +1,4 @@
--runfw: org.apache.felix.framework;version='[4,5)'
+-runfw: org.apache.felix.framework;version='[4.4.0,4.4.0]'
 -runee: JavaSE-1.7
 -runsystemcapabilities: ${native_capability}
 
@@ -19,9 +19,7 @@
 	org.apache.felix.gogo.shell;version='[0.10.0,0.10.1)',\
 	org.apache.felix.http.jetty;version='[2.2.2,2.2.3)',\
 	org.apache.felix.log;version='[1.0.1,1.0.2)',\
-	org.apache.felix.metatype;version='[1.0.10,1.0.11)',\
 	org.apache.felix.scr;version='[1.6.2,1.6.3)',\
-	org.apache.felix.scr;version='[1.8.2,1.8.3)',\
 	org.apache.felix.webconsole;version='[4.2.2,4.2.3)',\
 	org.apache.log4j;version='[1.2.15,1.2.16)',\
 	org.apache.servicemix.bundles.jopt-simple;version='[4.6.0,4.6.1)',\
@@ -62,22 +60,16 @@
 	org.foam.xtext.ctl;version=latest,\
 	org.foam.xtext.ltl;version=latest,\
 	org.foam.xtext.plogic;version=latest,\
-	osgi.cmpn;version='[5.0.0,5.0.1)',\
 	osgi.enterprise;version='[4.2.0,4.2.1)',\
 	osgi.residential;version='[4.3.0,4.3.1)'
 
 -runrequires:  \
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.shell)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.command)',\
-	osgi.identity;filter:='(osgi.identity=org.apache.felix.webconsole)',\
-	osgi.identity;filter:='(osgi.identity=org.apache.felix.configadmin)',\
-	osgi.identity;filter:='(osgi.identity=org.apache.felix.http.jetty)',\
-	osgi.identity;filter:='(osgi.identity=org.apache.felix.metatype)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.log)',\
-	osgi.identity;filter:='(&(osgi.identity=osgi.cmpn)(version>=4.2))',\
-	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.scr)(version>=1.6.0))',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.webconsole)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.http.jetty)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher)',\
-	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher.api)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.report)'
 
 ## Uncomment if you need to change the HTTP port
