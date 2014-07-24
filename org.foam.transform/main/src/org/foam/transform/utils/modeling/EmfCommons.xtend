@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.Diagnostician
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
+import java.io.StringWriter
 
 @Data
 package class BasicModelValidationException extends RuntimeException {
@@ -61,6 +62,16 @@ class EmfCommons {
 
 		resource.save(Collections.EMPTY_MAP)
 	}
+
+	def static asXmiString(EObject model) {
+		val xmiResource = new XMIResourceImpl
+		xmiResource.contents.add(model)
+		
+		val writer = new StringWriter
+		xmiResource.save(writer, emptyMap)
+		return writer.toString
+	}	
+	
 
 	def static void basicValidate(EObject eObject) {
 		val diagnostic = Diagnostician.INSTANCE.validate(eObject)
