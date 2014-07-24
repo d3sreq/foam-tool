@@ -75,18 +75,3 @@ class IterableExtensionsTest {
 
 	}
 }
-
-//package org.foam.transform.junit;
-//
-//import static org.junit.Assert.*;
-//import junit.framework.TestSuite;
-//
-//import org.junit.Test;
-//
-//
-//public class IterableExtensionsTest extends TestSuite {
-//
-//	
-//	
-//
-//}

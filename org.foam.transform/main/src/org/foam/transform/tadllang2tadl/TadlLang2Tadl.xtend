@@ -1,8 +1,6 @@
 package org.foam.transform.tadllang2tadl
 
 import com.google.common.base.Splitter
-import java.util.ArrayList
-import java.util.HashMap
 import java.util.regex.Pattern
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.xtext.EcoreUtil2
@@ -73,7 +71,7 @@ class TadlLang2Tadl {
 		val formulaPattern = Pattern.compile(FORMULA_REGEXP)
 		val commentPattern = Pattern.compile(FORMULA_COMMENT_REGEXP)
 		
-		val comments = new ArrayList<String>
+		val comments = <String> newArrayList
 		
 		for (line : splitter.split(input)) {			 
 			val matcher = formulaPattern.matcher(line)
@@ -98,7 +96,7 @@ class TadlLang2Tadl {
 	
 	def private void resolveVariables(Template template) {
 		val ruleVars = EcoreUtil2.getAllContentsOfType(template, RuleVariableUse)
-		val varName2VarDef = new HashMap<String, VariableDefinition>
+		val varName2VarDef = <String, VariableDefinition> newHashMap
 		
 		for (ruleVar : ruleVars) {
 			// replace RuleVariableUse with VariableUse			

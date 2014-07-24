@@ -23,4 +23,5 @@
 	org.objectweb.asm,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
-	org.eclipse.emf.common
+	org.eclipse.emf.common,\
+	org.apache.servicemix.bundles.junit
