@@ -12,6 +12,7 @@ import org.foam.transform.utils.modeling.EmfCommons
 import org.junit.Assert
 import org.junit.Test
 
+// TODO: refactor the CTL/LTL builder methods into a separate extension class and reuse it in multiple test suits
 class TadlTest {
 	
 	private extension TadlFactory = TadlFactory.eINSTANCE
