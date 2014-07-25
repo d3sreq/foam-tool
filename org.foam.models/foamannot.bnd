@@ -11,6 +11,6 @@ Export-Package: org.foam.ctl,\
 	org.foam.propositionallogic,\
 	org.foam.propositionallogic.impl,\
 	org.foam.propositionallogic.util,\
-	org.foam.tadl,\
+	org.foam.tadl.util,\
 	org.foam.tadl.impl,\
 	org.foam.tadl.util
