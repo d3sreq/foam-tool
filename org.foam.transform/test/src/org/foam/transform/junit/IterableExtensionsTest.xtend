@@ -54,7 +54,7 @@ class IterableExtensionsTest {
 		} catch(Exception e) {}
 	}
 
-	@Test def void testToHashMultimap() {
+	@Test def void testToMultimapUsingPairs() {
 		val data = #[
 			1 -> 10,
 			2 -> 20,
@@ -64,7 +64,7 @@ class IterableExtensionsTest {
 			3 -> 31
 		]
 		
-		val mmap = data.toHashMultimap
+		val mmap = data.toMultimap
 		
 		assertEquals(6, mmap.size)
 		assertEquals(3, mmap.keySet.size)
@@ -73,5 +73,17 @@ class IterableExtensionsTest {
 		assertArrayEquals(#[20,21], mmap.get(2))
 		assertArrayEquals(#[10,11], mmap.get(1))
 
+	}
+	
+	@Test def void testToMultimapUsingLambda() {
+		val data = #[10,20,30,11,12,31,14]
+		val mmap = data.toMultimap[(it / 10) -> it]
+		
+		assertEquals(7, mmap.size)
+		assertEquals(3, mmap.keySet.size)
+
+		assertArrayEquals(#[10,11,12,14], mmap.get(1))
+		assertArrayEquals(#[20], mmap.get(2))
+		assertArrayEquals(#[30,31], mmap.get(3))
 	}
 }

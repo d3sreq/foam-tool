@@ -1,7 +1,8 @@
 package org.foam.transform.utils.modeling
 
-import java.util.Collection
 import com.google.common.collect.HashMultimap
+import com.google.common.collect.Multimap
+import java.util.Collection
 
 class IterableExtensions {
 
@@ -41,18 +42,26 @@ class IterableExtensions {
 	}
 	
 	/**
-	 * Converts a stream of pairs into a miltimap where the keys are the keys from the pairs
-	 * and each item in the multimap is a set of values with the same key.
-	 * TODO: consider renaming this method to something like "groupByKey"
+	 * Converts a stream of pairs into a MultiMap where the keys are the keys from the pairs
+	 * and each item in the MultiMap is a set of values with the same key.
 	 */
-	def static <K,V> HashMultimap<K,V> toHashMultimap(Iterable<Pair<K,V>> input) {
+	def static <K,V> Multimap<K,V> toMultimap(Iterable<Pair<K,V>> input) {
 		input.fold(
-			// this transforms the list into a multimap
+			// this transforms the list into a MultiMap
 			HashMultimap.<K, V>create,
 			[mmap, p|
 				mmap.put(p.key, p.value)
 				mmap
 			]
 		)
+	}
+	
+	/**
+	 * Converts a stream of pairs into a MultiMap where the keys are the keys and values
+	 * are computed using a lambda function which returns a Pair<K,V>
+	 * Example: users.toMultimap[user| user.id -> user ]
+	 */
+	def static <K,V> Multimap<K,V> toMultimap(Iterable<V> input, (V) => Pair<K,V> computeKeyValuePair) {
+		input.map[computeKeyValuePair.apply(it)].toMultimap
 	}
 }

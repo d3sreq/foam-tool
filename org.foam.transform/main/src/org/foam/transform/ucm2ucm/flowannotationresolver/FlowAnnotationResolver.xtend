@@ -1,6 +1,5 @@
 package org.foam.transform.ucm2ucm.flowannotationresolver
 
-import java.util.HashMap
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EPackage
@@ -49,29 +48,33 @@ class FlowAnnotationResolver {
 	}
 	
 	def resolveAnnotations(UseCaseModel useCaseModel) {
-		val id2Uc = new HashMap<String, UseCase>
+
 		val allUseCases = useCaseModel.useCases
-		allUseCases.forEach[id2Uc.put(it.id, it)]
+		val id2Uc = allUseCases.toMap[id]
 		
 		for (useCase : allUseCases) {
-			val id2Step = useCase.id2Step
+			val id2Step = useCase.allSteps.toMap[label]
 			
-			val allUseCaseAnnotations = useCase.stepAnnotations 
-			val allUnknownAnnotations = allUseCaseAnnotations.filter(UnknownAnnotation)
-			
-			for (annotation : allUnknownAnnotations) {
+			useCase.stepAnnotations		// all annotations
+			.filter(UnknownAnnotation)	// only unknown annotations
+			.forEach[annotation|
 				// replace recognized unknown annotations with flow annotations
 				val resolvedAnnotation = resolveAnnotation(annotation, id2Uc, id2Step, useCaseModel)
 				
 				if (annotation != resolvedAnnotation) {
 					EcoreUtil2.replace(annotation, resolvedAnnotation)
 				}
-			}
+			]
 		}
 	}
 	
-	def private resolveAnnotation(UnknownAnnotation annotation, HashMap<String,UseCase> id2Uc, Map<String,Step> id2Step, UseCaseModel useCaseModel) {
-		val varName2VarDef = getVarName2VarDef(useCaseModel)		
+	def private resolveAnnotation(UnknownAnnotation annotation, Map<String,UseCase> id2Uc, Map<String,Step> id2Step, UseCaseModel useCaseModel) {
+
+		val varName2VarDef = useCaseModel.annotations
+				.filter(VariableDefinitionAnnotation)
+				.map[variableDefinition]
+				.toMap[name] // use "name" as the key when grouping
+
 		return switch (annotation.parts.head) {
 			case "abort": {
 				flowannotationFactory.createAbort
@@ -107,7 +110,7 @@ class FlowAnnotationResolver {
 		}
 	}
 	
-	def private Formula getFormula(String text) {
+	def private getFormula(String text) {
 		val parseResult = propLogicParser.doParse(text)
 		// TODO - error handling
 		return parseResult.rootASTElement as Formula
@@ -139,14 +142,7 @@ class FlowAnnotationResolver {
 		}
 	}
 	
-	def private Map<String, VariableDefinition> getVarName2VarDef(UseCaseModel useCaseModel) {
-		val varName2VarDef = new HashMap<String, VariableDefinition>
-		val varDefs = useCaseModel.annotations.filter(VariableDefinitionAnnotation).map[variableDefinition]
-		varDefs.forEach[varName2VarDef.put(it.name, it)]
-		varName2VarDef
-	}
-	
-	def private VariableDefinition findOrAddVariableDefinition(String variableName, Map<String, VariableDefinition> varName2VarDef, UseCaseModel useCaseModel) {
+	def private findOrAddVariableDefinition(String variableName, Map<String, VariableDefinition> varName2VarDef, UseCaseModel useCaseModel) {
 		if (!varName2VarDef.containsKey(variableName)) {
 			val varDef = propLogicFactory.createVariableDefinition => [
 				name = variableName
@@ -159,18 +155,4 @@ class FlowAnnotationResolver {
 		varName2VarDef.get(variableName)
 	}
 
-	
-	def private Map<String, Step> getId2Step(UseCase useCase) {
-		val result = new HashMap<String, Step>
-		
-		useCase.mainScenario.steps.forEach[result.put(it.label, it)] 
-		for (holder : useCase.branches.values) {
-			val scenarios = holder.extensions + holder.variations
-			val steps = scenarios.map[it.steps].flatten
-			steps.forEach[result.put(it.label, it)]
-		}
-		
-		result
-	}	
-		
 }
