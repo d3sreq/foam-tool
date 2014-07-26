@@ -63,7 +63,7 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 	/**
 	 * Filters out transitions having source and target in same record node.
 	 */
-	private def boolean isWithinSameBox(Transition transition) {
+	def private boolean isWithinSameBox(Transition transition) {
 		
 		val startStep = transition.start.stepFromStepMappingAnnotation  
 		val endStep = transition.end.stepFromStepMappingAnnotation
@@ -77,7 +77,7 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 				&& endStateType != null
 	}
 
-	private def void addTooltip(Edge edge, String tooltipStr) {
+	def private void addTooltip(Edge edge, String tooltipStr) {
 		val tooltipAttr = edge.attributes.get("tooltip")
 		edge.attributes.put(
 			"tooltip",

@@ -62,7 +62,7 @@ class LauncherComponent {
 		toolMap.remove(toolName)
 	}
 	
-	private def showtools() '''
+	def private showtools() '''
 		Available tools are:
 		 «FOR toolName:toolMap.keySet»
 		 - «toolName»
