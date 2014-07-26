@@ -45,7 +45,7 @@ class IterableExtensions {
 	 * Converts a stream of pairs into a MultiMap where the keys are the keys from the pairs
 	 * and each item in the MultiMap is a set of values with the same key.
 	 */
-	def static <K,V> Multimap<K,V> toMultimap(Iterable<Pair<K,V>> input) {
+	def static <K,V> HashMultimap<K,V> toMultimap(Iterable<Pair<K,V>> input) {
 		input.fold(
 			// this transforms the list into a MultiMap
 			HashMultimap.<K, V>create,

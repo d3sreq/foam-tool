@@ -348,7 +348,7 @@ package class Lts2NusmvContext {
 			].flatten
 			
 		].flatten
-		.toHashMultimap
+		.toMultimap
 	}
 	
 	def private transToGroupVarNameTrans(Iterable<Transition> transitions) {
@@ -359,38 +359,8 @@ package class Lts2NusmvContext {
 			.map[(group -> variableDefinition.name) -> transition]
 			
 		].flatten
-		.toHashMultimap
+		.toMultimap
 	}
-	
-//	/**
-//	 * Separates transitions with TADL annotations according to groups (qualifiers)
-//	 * and variable names used within templates.
-//	 */
-//	def private partitionTransitions(Iterable<Transition> transitions) {
-//
-//		val result = new HashMap<Group, Map<String, List<Transition>>>
-//
-//		for (transition : transitions) {
-//			for (tempAnnot : transition.start.annotations.filter(TemporalAnnotation)) {
-//				val group = tempAnnot.group
-//				if (!result.containsKey(group)) {
-//					val varNameMap = new HashMap<String, List<Transition>>
-//					result.put(group, varNameMap)
-//					
-//					// add all variable names from template
-//					group.template.variableDefinitions.forEach[varNameMap.put(it.name, newArrayList)]
-//				}
-//				
-//				val varNameMap = result.get(group)
-//				val varName = tempAnnot.variableDefinition.name
-//				
-//				val transList = varNameMap.get(varName)
-//				transList += transition
-//			}
-//		}
-//		
-//		return result
-//	}
 }
 
 // TODO: Is this DummyMap really necessary?
