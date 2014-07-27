@@ -1,9 +1,31 @@
 //subprojects {  apply plugin: 'eclipse'  }
 
+buildscript {
+	repositories { mavenCentral() }
+	dependencies { classpath 'org.xtend:xtend-gradle-plugin:0.1.+' }
+}
+
+repositories { mavenCentral() }
+
 configure(subprojects.findAll {it.name != 'cnf'}) {
+	apply plugin: 'xtend'
+//	apply plugin: 'java'
+	dependencies { compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.+' }
+
+	sourceSets {
+		main {
+			java {
+				srcDirs = [
+					'main/src',
+					'main/emf-gen',
+					'main/xtend-gen'
+				]
+			}
+			// resources { srcDir 'src/resources' }
+		}
+	}
 
 	//apply plugin: 'java'
-	apply plugin: 'xtend'
 
 	// initialize bnd ant task
 	task initializeBnd << {
@@ -16,68 +38,59 @@ configure(subprojects.findAll {it.name != 'cnf'}) {
 		ant.bndprepare(basedir:"${projectDir}", print:'false')
 		def projectBuildpath = ant.properties['project.buildpath']
 		def bndBuildDependencies = files(projectBuildpath.split(':'))
+		
+		println ">>> ${projectBuildpath}"
+		
 		sourceSets.main.compileClasspath += bndBuildDependencies
 		sourceSets.main.runtimeClasspath += bndBuildDependencies
 		sourceSets.test.compileClasspath += bndBuildDependencies
 		sourceSets.test.runtimeClasspath += bndBuildDependencies
 	}
 
+	compileXtend.dependsOn initializeBnd
+
 	// before compile source bnd ant task must be initialized
 	compileJava.dependsOn initializeBnd
 
-	//	task genModels {
-	//		println "hello"
+	// build a OSGi bundle by using bnd
+//	task bundle(dependsOn: test) << {
+//		ant.bnd(command:'build', exceptions:'true', basedir:"${projectDir}")
+//	}
+
+	//	// before the jar task is invoked the bundle task should create the bundle
+	//	jar.dependsOn bundle
+	//
+	//	// copy bnd build bundle to libs directory (workaround)
+	//	jar.doFirst {
+	//		FileTree bundleDirectory = fileTree(dir: "${projectDir}/build/bundles", include: '*.jar')
+	//		jar {
+	//			from { bundleDirectory.collect { it.isDirectory() ? it : zipTree(it) } }
+	//		}
+	//	}
+	//	jar.doLast {
+	//		copy {
+	//			from "${projectDir}/build/bundle"
+	//			into "${projectDir}/build/libs"
+	//			include '*.jar'
+	//		}
 	//	}
 
-	// build a OSGi bundle by using bnd
-	task bundle(dependsOn: test) << {
-		ant.bnd(command:'build', exceptions:'true', basedir:"${projectDir}")
-	}
-
-	// before the jar task is invoked the bundle task should create the bundle
-	jar.dependsOn bundle
-
-	// copy bnd build bundle to libs directory (workaround)
-	jar.doFirst {
-		FileTree bundleDirectory = fileTree(dir: "${projectDir}/build/bundles", include: '*.jar')
-		jar {
-			from { bundleDirectory.collect { it.isDirectory() ? it : zipTree(it) } }
-		}
-	}
-	jar.doLast {
-		copy {
-			from "${projectDir}/build/bundle"
-			into "${projectDir}/build/libs"
-			include '*.jar'
-		}
-	}
-
 	// Run the bundle tests by the bnd ant task (integrated OSGi tests)
-	task testBundle(dependsOn: build) << {
-		if(project.name.endsWith('.test')) {
-			ant.bnd(command: "test", exceptions:true, basedir:"${projectDir}")
-		}
-		else {
-			logger.quiet("Bundle tests are not invoked for project: ${project.name}.")
-			logger.quiet("Bundle tests are only invoked on bndtools project which names ends with .test")
-		}
-	}
+	//	task testBundle(dependsOn: build) << {
+	//		if(project.name.endsWith('.test')) {
+	//			ant.bnd(command: "test", exceptions:true, basedir:"${projectDir}")
+	//		}
+	//		else {
+	//			logger.quiet("Bundle tests are not invoked for project: ${project.name}.")
+	//			logger.quiet("Bundle tests are only invoked on bndtools project which names ends with .test")
+	//		}
+	//	}
 
 	// task release a bundle to the bnd release repository
-	task releaseBundle(dependsOn: bundle) << { ant.bndrelease() }
+	//	task releaseBundle(dependsOn: bundle) << { ant.bndrelease() }
 
 	// setup maven central repository for gradle build dependencies
 	repositories { mavenCentral() }
 }
 
-task wrapper(type: Wrapper) { gradleVersion = '1.2' }
-
-//task hello(type: GreetingTask)
-//
-//class GreetingTask extends DefaultTask {
-//	@TaskAction
-//	def greet() {
-//		println 'hello from GreetingTask'
-//		new org.eclipse.emf.mwe.utils.StandaloneSetup()
-//	}
-//}
+task wrapper(type: Wrapper) { gradleVersion = '2.0' }

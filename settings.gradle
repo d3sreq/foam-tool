@@ -1,8 +1,2 @@
-//  
 include 'cnf',\
-		'org.foam.cli',\
-		'org.foam.models',\
-		'org.foam.transform',\
-		'org.foam.xtext.ctl',\
-		'org.foam.xtext.ltl',\
-		'org.foam.xtext.plogic'
+		'org.foam.models'
