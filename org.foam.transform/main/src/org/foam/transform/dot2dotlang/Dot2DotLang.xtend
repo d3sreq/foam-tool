@@ -73,9 +73,12 @@ class Dot2DotLang {
 			return ""
 		}
 		
-		attributedItem.attributes.entrySet.join("[", ", ", "]", [
-			'''«it.key»="«it.value.escape»"'''
-		])
+		attributedItem.attributes.entrySet.join(
+			"[", // before
+			", ", // separator
+			"]", // after
+			['''«it.key»="«it.value.escape»"''']
+		)
 	}
 	
 	def private String escape(String toEscape) '''«toEscape?.replaceAll('"', '\\\\"')»'''

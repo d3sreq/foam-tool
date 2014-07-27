@@ -17,7 +17,7 @@ class SpecificationResolver {
 	val fac = TraceabilityFactory.eINSTANCE
 	
 	def void transform(CounterExample counterExample, List<Pair<FormulaHolder, Group>> holderGroupList) {
-		// need to reorder formulas in formulaHolders list becouse CTL formulas are in counter-example
+		// need to reorder formulas in formulaHolders list because CTL formulas are in counter-example
 		// before all LTL formulas. Preserve formula order among CTL/LTL ! 
 		val ctlFormulas = holderGroupList.filter[it.key.formulaType == FormulaType.CTL]
 		val ltlFormulas = holderGroupList.filter[it.key.formulaType == FormulaType.LTL]

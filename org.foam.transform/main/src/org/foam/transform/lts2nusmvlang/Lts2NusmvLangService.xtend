@@ -3,7 +3,6 @@ package org.foam.transform.lts2nusmvlang
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import java.util.HashMap
-import java.util.HashSet
 import java.util.List
 import java.util.Set
 import org.foam.annotation.Annotation
@@ -60,12 +59,12 @@ package class Lts2NusmvContext {
 		s.id
 	}
 	
-	private val mapStateToTransitions = new HashMap<State, List<Transition>>
+	private val mapStateToTransitions = <State, List<Transition>> newHashMap
 	def private stateTransitions(State s) {
 		mapStateToTransitions.get(s)
 	}
 
-	private val trans2guards = new HashMap<Transition, Guard>
+	private val trans2guards = <Transition, Guard> newHashMap
 	def private dispatch void prepareTransitionAnnotationMapping(Automaton automaton, Transition transition, Guard guardAnnot) {
 
 		// OPTIMIZATION: remove transitions guarded by "FALSE"
@@ -104,7 +103,7 @@ package class Lts2NusmvContext {
 		trans2guards.put(newTransition, guardAnnot)
 	}
 	
-	private val markvar2trans = new HashMap<VariableDefinition, List<Transition>>
+	private val markvar2trans = <VariableDefinition, List<Transition>>newHashMap
 	def private dispatch void prepareTransitionAnnotationMapping(Automaton automaton, Transition transition, Mark markAnnot) {
 		if(!markvar2trans.containsKey(markAnnot.variableDefinition)) {
 			markvar2trans.put(markAnnot.variableDefinition, newArrayList)
@@ -113,7 +112,7 @@ package class Lts2NusmvContext {
 		markvar2trans.get(markAnnot.variableDefinition) += transition
 	}
 	
-	private val actvar2acttrans = new HashMap<VariableDefinition, List<Pair<Action,Transition>>>
+	private val actvar2acttrans = <VariableDefinition, List<Pair<Action,Transition>>> newHashMap
 	def private dispatch void prepareTransitionAnnotationMapping(Automaton automaton, Transition transition, Action actionAnnot) {
 
 		// NuSMV HACK: split transitions containing actions
@@ -151,21 +150,21 @@ package class Lts2NusmvContext {
 	}
 	
 	def private getGuardingFormula(Transition transition) {
-		val nuSMVFormulaRenderer = new NusmvFormulaRenderer
-		nuSMVFormulaRenderer.evalFormula(trans2guards.get(transition).formula).toString
+		val nuSmvFormulaRenderer = new NusmvFormulaRenderer
+		nuSmvFormulaRenderer.evalFormula(trans2guards.get(transition).formula).toString
 	}
 	
-	private val guardLoopFairnessStates = new HashSet<State>
+	private val guardLoopFairnessStates = <State> newHashSet
 	def private void addToFairness(State s) {
 		guardLoopFairnessStates.add(s)
 	}
 	
-	private val state2ucstep = new HashMap<State, Step>
+	private val state2ucstep = <State, Step> newHashMap
 	def private dispatch prepareStateToAnnotationMapping(State state, StepMappingAnnotation annot) {
 		state2ucstep.put(state, annot.step)
 	}
 	
-	private val state2type = new HashMap<State, String>
+	private val state2type = <State, String> newHashMap
 	def private dispatch prepareStateToAnnotationMapping(State state, StateTypeMappingAnnotation annot) {
 		state2type.put(state, annot.stateType.literal)
 	}
@@ -308,7 +307,7 @@ package class Lts2NusmvContext {
 			
 ««« 		CTL/LTS formulas
 ««« 		create translation map from template variable (e.g. "create") to concrete variable ("create_zoom")
-			«val map = createTemplateVar2NuSMVVarMap(group.qualifier, templateVarNames)»
+			«val map = createTemplateVar2NuSmvVarMap(group.qualifier, templateVarNames)»
 			«val tadlRenderer = new TadlFormulaRenderer(map)»
 			«FOR fh : group.template.formulaHolders»
 			 	-- Formula: "«fh.comment»"
@@ -324,12 +323,15 @@ package class Lts2NusmvContext {
 	 	holderGroupList += fh -> group
 	}
 	
-	def private createTemplateVar2NuSMVVarMap(String qualifier, Set<String> varNames) {
-		val result = new HashMap<String, String>
+	def private createTemplateVar2NuSmvVarMap(String qualifier, Set<String> varNames) {
+		val result = <String, String> newHashMap
 		varNames.forEach[result.put(it, createTadlVarName(qualifier, it))]
 		return result
 	}
 
+	/**
+	 * Creates a HashMultimap whose key is a TADL group and values are transitions.
+	 */
 	def private transToGroupVarName(Iterable<Transition> transitions) {
 		transitions.map[ transition |
 			
@@ -348,9 +350,12 @@ package class Lts2NusmvContext {
 			].flatten
 			
 		].flatten
-		.toMultimap
+		.toMultimap 
 	}
 	
+	/**
+	 * Creates a HashMultimap whose key is a pair of TADL group + vdefname and values are transitions.
+	 */
 	def private transToGroupVarNameTrans(Iterable<Transition> transitions) {
 		transitions.map[ transition |
 			// add variable names used in all temporal annotations
@@ -359,7 +364,7 @@ package class Lts2NusmvContext {
 			.map[(group -> variableDefinition.name) -> transition]
 			
 		].flatten
-		.toMultimap
+		.toMultimap // grouped by key, values with the same key will be stored in a set
 	}
 }
 

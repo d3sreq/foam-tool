@@ -2,7 +2,6 @@ package org.foam.transform.ltsreduction
 
 import com.google.common.base.Predicate
 import com.google.common.base.Predicates
-import java.util.ArrayList
 import java.util.Collection
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.EStructuralFeature.Setting
@@ -16,19 +15,21 @@ import org.foam.lts.Transition
 class LtsReduction {
 	
 	val Predicate<State> removeStatePredicate
-	val stateReducedEventListeners = new ArrayList<StateReducedEventListener>
 	
 	new(Predicate<State> removeStatePredicate) {
 		this.removeStatePredicate = removeStatePredicate
 	}
 	
 	def removeUnneededStates(Automaton lts) {
-		val predicate = Predicates.and(removeStatePredicate, new StateWithOneInputAndOneOutputTransition(lts.transitions))		
-		val filtered = lts.states.filter[predicate.apply(it)]
-		// extra list is needed to prevent ConcurrentModificationException
-		val statesToRemove = new ArrayList<State>
-		statesToRemove.addAll(filtered)
-		statesToRemove.forEach[reduceState(it, lts)]
+		val predicate = Predicates.and(
+			removeStatePredicate,
+			new StateWithOneInputAndOneOutputTransition(lts.transitions)
+		)
+		
+		lts.states
+			.filter[predicate.apply(it)]
+			.toList // extra list is needed to prevent ConcurrentModificationException
+			.forEach[reduceState(it, lts)]
 	}
 	
 	def private filterSettings(Collection<Setting> settings, EReference eReference) {
@@ -56,22 +57,7 @@ class LtsReduction {
 		// remove state from Automaton
 		EcoreUtil.remove(state)
 		
-		notifyStateReduced(state, toState, fromState, newTransition)
 	}
-	
-	def protected void notifyStateReduced(State removedState, Transition removedToStateTransition, Transition removedFromStateTransition, Transition addedTransition) {
-		val event = new StateReducedEvent(removedState, removedToStateTransition, removedFromStateTransition, addedTransition)
-		stateReducedEventListeners.forEach[it.stateReduced(event)]
-	}
-	
-	def void addStateReducedEventListener(StateReducedEventListener stateReducedEventListener) {
-		stateReducedEventListeners += stateReducedEventListener
-	}
-	
-	def void removeStateReducedEventListener(StateReducedEventListener stateReducedEventListener) {
-		stateReducedEventListeners.remove(stateReducedEventListener)
-	}
-	
 }
 
 @Data

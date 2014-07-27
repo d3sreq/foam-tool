@@ -38,7 +38,6 @@
 	org.foam.models.ctl;version=latest,\
 	org.foam.models.dot;version=latest,\
 	org.foam.models.flowannotation;version=latest,\
-	org.foam.models.foamannot;version=latest,\
 	org.foam.models.ltl;version=latest,\
 	org.foam.models.lts;version=latest,\
 	org.foam.models.propositionallogic;version=latest,\

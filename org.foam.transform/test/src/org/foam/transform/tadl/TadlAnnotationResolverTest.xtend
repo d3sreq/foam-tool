@@ -1,6 +1,5 @@
 package org.foam.transform.tadl
 
-import java.util.Collections
 import org.foam.annotation.AnnotationFactory
 import org.foam.propositionallogic.PropositionallogicFactory
 import org.foam.propositionallogic.VariableDefinition
@@ -12,35 +11,31 @@ import org.foam.ucm.UseCaseModel
 import org.junit.Test
 
 class TadlAnnotationResolverTest {
+
+	extension UcmFactory = UcmFactory.eINSTANCE
+	extension TadlFactory = TadlFactory.eINSTANCE
+	extension PropositionallogicFactory = PropositionallogicFactory.eINSTANCE
+	extension AnnotationFactory = AnnotationFactory.eINSTANCE
 	
 	val tadlAnnotationResolver = new TadlAnnotationResolver
-	val ucmFac = UcmFactory.eINSTANCE
-	val tadlFac = TadlFactory.eINSTANCE
-	val logicFac = PropositionallogicFactory.eINSTANCE
-	val annotationFac = AnnotationFactory.eINSTANCE
 	val checker = new TadlAnnotationChecker
 	
-	var VariableDefinition createDef
-	var VariableDefinition useDef
+	val VariableDefinition createDef = createVariableDefinition => [name = "create"]
+	val VariableDefinition useDef = createVariableDefinition => [name = "use"]
 	
-	val templateCreateUse = tadlFac.createTemplate => [
-		createDef = logicFac.createVariableDefinition => [
-			name = "create"
-		]
-		useDef = logicFac.createVariableDefinition => [
-			name = "use"
-		] 
-		variableDefinitions += newArrayList(createDef, useDef)
+	val templateCreateUse = createTemplate => [
+
+		variableDefinitions += #[createDef, useDef]
 		
 		// dummy formulas
 		formulaHolders += #[
-			tadlFac.createFormulaHolder => [
+			createFormulaHolder => [
 				formulaType = FormulaType.CTL
-				formula = logicFac.createTrue
+				formula = createTrue
 			],
-			tadlFac.createFormulaHolder => [
+			createFormulaHolder => [
 				formulaType = FormulaType.CTL
-				formula = logicFac.createFalse
+				formula = createFalse
 			]
 		]
 	]
@@ -50,13 +45,13 @@ class TadlAnnotationResolverTest {
 	 * of boilerplate code.
 	 */
 	def private UseCaseModel createSimpleUcm() {
-		return ucmFac.createUseCaseModel => [
-			useCases += ucmFac.createUseCase => [
+		return createUseCaseModel => [
+			useCases += createUseCase => [
 				id = "UC1"
 				name = "Tadl resolve test"
 				
-				mainScenario = ucmFac.createScenario => [
-					steps += ucmFac.createStep => [
+				mainScenario = createScenario => [
+					steps += createStep => [
 						text = "Use case step 1."
 					]
 				]
@@ -69,30 +64,30 @@ class TadlAnnotationResolverTest {
 			val uc1 = useCases.head
 			val step1 = uc1.mainScenario.steps.head
 			
-			step1.annotations += annotationFac.createUnknownAnnotation => [
-				parts += newArrayList("create", "zoom")
+			step1.annotations += createUnknownAnnotation => [
+				parts += #["create", "zoom"]
 			]
 		] 
 		
 		val expectedUcm = createSimpleUcm => [
 			val uc1 = useCases.head
 			val step1 = uc1.mainScenario.steps.head
-			val group = tadlFac.createGroup => [
+			val group = createGroup => [
 				qualifier = "zoom"
 				template = templateCreateUse
 			]
 			
-			annotations += tadlFac.createGroupAnnotation => [
+			annotations += createGroupAnnotation => [
 				it.group = group
 			]
 			
-			step1.annotations += tadlFac.createTemporalAnnotation => [
+			step1.annotations += createTemporalAnnotation => [
 				variableDefinition = createDef
 				it.group = group
 			]
 		]
 		
-		tadlAnnotationResolver.resolveAnnotations(inputUcm, Collections.singletonList(templateCreateUse))
+		tadlAnnotationResolver.resolveAnnotations(inputUcm, #[templateCreateUse])
 		checker.assertUseCaseModelEquals(expectedUcm, inputUcm)
 	}
 	
@@ -101,17 +96,17 @@ class TadlAnnotationResolverTest {
 			val uc1 = useCases.head
 			val step1 = uc1.mainScenario.steps.head
 			
-			step1.annotations += annotationFac.createUnknownAnnotation => [
-				// not resolved becouse has 3 parts (must have 2)
-				parts += newArrayList("create", "zoom", "third")
+			step1.annotations += createUnknownAnnotation => [
+				// not resolved because has 3 parts (must have 2)
+				parts += #["create", "zoom", "third"]
 			]
-			step1.annotations += annotationFac.createUnknownAnnotation => [
+			step1.annotations += createUnknownAnnotation => [
 				// not found in template
-				parts += newArrayList("unknown_annotation")
+				parts += "unknown_annotation"
 			]
 		]
 		
-		tadlAnnotationResolver.resolveAnnotations(inputUcm, Collections.singletonList(templateCreateUse))
+		tadlAnnotationResolver.resolveAnnotations(inputUcm, #[templateCreateUse])
 		checker.assertUseCaseModelEquals(inputUcm, inputUcm)
 	} 
 }

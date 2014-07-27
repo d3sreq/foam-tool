@@ -16,12 +16,12 @@ class ExistsTransitionWithMarkEndingInThisState implements Predicate<State> {
 	val Set<State> statesWithMarkTransitionEnd
 	
 	new(Collection<Transition> transitions) {
-		statesWithMarkTransitionEnd = <State> newHashSet
-		for (transition : transitions) {
-			if (transition.annotations.filter(Mark).head != null) {
-				statesWithMarkTransitionEnd += transition.end
-			}
-		}
+		
+		statesWithMarkTransitionEnd =
+			transitions
+			.filter[ annotations.exists[it instanceof Mark] ] // only transitions with Mark annotation
+			.map[end] // end state of a transition
+			.toSet
 	}
 	
 	override apply(State state) {

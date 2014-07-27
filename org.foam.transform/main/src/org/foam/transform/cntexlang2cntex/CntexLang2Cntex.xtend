@@ -13,12 +13,17 @@ import static extension org.foam.transform.utils.modeling.IterableExtensions.*
 
 class CntexLang2Cntex {
 	
-	static val SPECIFICATION_REGEXP = "-- specification (.*)  is (\\w+)"
+	// prefixes
 	static val COMMENT_PREFIX = "***"
+
+	// regular expressions
+	static val SPECIFICATION_REGEXP = "-- specification (.*)  is (\\w+)"
 	static val TRACE_DESCRIPTION_REGEXP = "Trace Description: (.*)"
 	static val TRACE_TYPE_REGEXP = "Trace Type: (.*)"
 	static val STATE_REGEXP = "-> State: ((\\d+)\\.(\\d+)) <-"
 	static val ASSIGNMENT_REGEXP = "(\\S+) = (\\S+)"
+	
+	// text visible to user when rendered
 	static val LOOP_LINE = "-- Loop starts here"
 	static val AS_DEMONSTRATED_LINE = "-- as demonstrated by the following execution sequence"
 	
@@ -27,13 +32,13 @@ class CntexLang2Cntex {
 	def CounterExample transform(CharSequence text) {
 		cntexFactory.createCounterExample => [
 			specifications += text.toString
-				.split("\n")
-				.map[trim]
-				.filter[!empty]
-				.filter[!startsWith(COMMENT_PREFIX)]
-				.split[matches(SPECIFICATION_REGEXP)]
-				.tail
-				.map[parseSpecification]
+				.split("\n") // each line is a single item in the list
+				.map[trim] // trim each line
+				.filter[!empty] // ignore empty lines
+				.filter[!startsWith(COMMENT_PREFIX)] // ignore comments
+				.split[matches(SPECIFICATION_REGEXP)] // split list into chunks (multiple smaller lists)
+				.tail // ignore the first chunk which are lines before the first matching SPECIFICATION_REGEXP
+				.map[parseSpecification] // parse each chunk to create Specifications
 		]
 	}
 	

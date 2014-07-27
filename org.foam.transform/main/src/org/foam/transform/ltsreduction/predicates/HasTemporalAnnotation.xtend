@@ -7,7 +7,6 @@ import org.foam.tadl.TemporalAnnotation
 class HasTemporalAnnotation implements Predicate<State> {
 	
 	override apply(State state) {
-		state.annotations.findFirst[it instanceof TemporalAnnotation] != null
-	}
-	
+		state.annotations.exists[it instanceof TemporalAnnotation]
+	}	
 }

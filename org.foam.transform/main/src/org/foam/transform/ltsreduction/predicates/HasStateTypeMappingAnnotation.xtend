@@ -2,7 +2,6 @@ package org.foam.transform.ltsreduction.predicates
 
 import com.google.common.base.Predicate
 import java.util.Collection
-import java.util.Collections
 import org.foam.lts.State
 import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
@@ -20,7 +19,7 @@ class HasStateTypeMappingAnnotation implements Predicate<State> {
 	}
 	
 	new (StateType stateTypeToRetain) {
-		this(Collections.singleton(stateTypeToRetain))
+		this( #[stateTypeToRetain] )
 	}
 	
 	new() {
