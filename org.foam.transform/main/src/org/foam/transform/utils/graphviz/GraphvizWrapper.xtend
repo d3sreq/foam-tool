@@ -22,8 +22,8 @@ class GraphvizWrapper {
 		'''Found GRAPHVIZ version: «graphvizVersion»'''.info
 	}
 
-	def private getGraphvizVersion() {
-		val process = Runtime.runtime.exec( newArrayList("dot", "-V") as String[] )
+	def getGraphvizVersion() {
+		val process = Runtime.runtime.exec( #["dot", "-V"] )
 		val procstdout = process.errorStream
 		val reader = new BufferedReader(new InputStreamReader(procstdout))
 		val version = reader.readLine
@@ -38,7 +38,7 @@ class GraphvizWrapper {
 		return version
 	}
 
-	def void runGraphviz(List<String> dotCommand) {
-		Runtime.runtime.exec(dotCommand as String[]).waitFor
+	def void runGraphviz(Iterable<String> dotCmdArgs) {
+		Runtime.runtime.exec(dotCmdArgs).waitFor
 	}
 }
