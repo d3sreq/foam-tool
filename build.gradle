@@ -1,96 +1,83 @@
-subprojects { 
-    apply plugin: 'eclipse' 
-}
+//subprojects {  apply plugin: 'eclipse'  }
 
 configure(subprojects.findAll {it.name != 'cnf'}) {
 
-    apply plugin: 'java'
+	//apply plugin: 'java'
+	apply plugin: 'xtend'
 
-    // Eclipse configuration for bndtools
-    eclipse {
-        project {
-            natures 'org.eclipse.jdt.core.javanature', 'bndtools.core.bndnature'
-            buildCommand 'org.eclipse.jdt.core.javabuilder'
-            buildCommand 'bndtools.core.bndbuilder'
-        }
-        classpath {
-            containers 'aQute.bnd.classpath.container'
-            // define a separate output folder for the main and test classes
-            file {
-                whenMerged { classpath ->
-                    classpath.entries.findAll { entry ->
-                        entry instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && entry.path.startsWith("src/main/")
-                    }*.output = "build/classes/main"
-                    classpath.entries.findAll { entry ->
-                        entry instanceof org.gradle.plugins.ide.eclipse.model.SourceFolder && entry.path.startsWith("src/test/")
-                    }*.output = "build/classes/test"
-                }
-            }
-            defaultOutputDir = file('build/classes/main')
-        }
-    }
-    
-    // initialize bnd ant task
-    task initializeBnd << {
-        ant.taskdef(resource: 'aQute/bnd/ant/taskdef.properties') {
-            classpath {
-                fileset(dir: "${projectDir}/../cnf/plugins/biz.aQute.bnd/", includes: '*.jar')
-                configurations.compile.asPath
-            }
-        }
-        ant.bndprepare(basedir:"${projectDir}", print:'false')
-        def projectBuildpath = ant.properties['project.buildpath']
-        def bndBuildDependencies = files(projectBuildpath.split(':'))
-        sourceSets.main.compileClasspath += bndBuildDependencies
-        sourceSets.main.runtimeClasspath += bndBuildDependencies
-        sourceSets.test.compileClasspath += bndBuildDependencies
-        sourceSets.test.runtimeClasspath += bndBuildDependencies
-    }
-    
-    // before compile source bnd ant task must be initialized
-    compileJava.dependsOn initializeBnd
-    
-    // build a OSGi bundle by using bnd
-    task bundle(dependsOn: test) << {
-         ant.bnd(command:'build', exceptions:'true', basedir:"${projectDir}")
-    }
-    
-    // before the jar task is invoked the bundle task should create the bundle
-    jar.dependsOn bundle
-    
-    // copy bnd build bundle to libs directory (workaround)
-    jar.doFirst {
-        FileTree bundleDirectory = fileTree(dir: "${projectDir}/build/bundles", include: '*.jar')
-        jar {
-            from { bundleDirectory.collect { it.isDirectory() ? it : zipTree(it) } }
-        }
-    }
-    jar.doLast {
-        copy {
-            from "${projectDir}/build/bundle"
-            into "${projectDir}/build/libs"
-            include '*.jar'
-        }
-    }
-    
-    // Run the bundle tests by the bnd ant task (integrated OSGi tests)
-    task testBundle(dependsOn: build) << {
-        if(project.name.endsWith('.test')) {
-            ant.bnd(command: "test", exceptions:true, basedir:"${projectDir}")
-        }
-        else {
-           logger.quiet("Bundle tests are not invoked for project: ${project.name}.")
-           logger.quiet("Bundle tests are only invoked on bndtools project which names ends with .test")
-        }
-    }
-    
-    // task release a bundle to the bnd release repository
-    task releaseBundle(dependsOn: bundle) << { ant.bndrelease() }
-    
-    // setup maven central repository for gradle build dependencies
-    repositories { mavenCentral() }
+	// initialize bnd ant task
+	task initializeBnd << {
+		ant.taskdef(resource: 'aQute/bnd/ant/taskdef.properties') {
+			classpath {
+				fileset(dir: "${projectDir}/../cnf/plugins/biz.aQute.bnd/", includes: '*.jar')
+				configurations.compile.asPath
+			}
+		}
+		ant.bndprepare(basedir:"${projectDir}", print:'false')
+		def projectBuildpath = ant.properties['project.buildpath']
+		def bndBuildDependencies = files(projectBuildpath.split(':'))
+		sourceSets.main.compileClasspath += bndBuildDependencies
+		sourceSets.main.runtimeClasspath += bndBuildDependencies
+		sourceSets.test.compileClasspath += bndBuildDependencies
+		sourceSets.test.runtimeClasspath += bndBuildDependencies
+	}
+
+	// before compile source bnd ant task must be initialized
+	compileJava.dependsOn initializeBnd
+
+	//	task genModels {
+	//		println "hello"
+	//	}
+
+	// build a OSGi bundle by using bnd
+	task bundle(dependsOn: test) << {
+		ant.bnd(command:'build', exceptions:'true', basedir:"${projectDir}")
+	}
+
+	// before the jar task is invoked the bundle task should create the bundle
+	jar.dependsOn bundle
+
+	// copy bnd build bundle to libs directory (workaround)
+	jar.doFirst {
+		FileTree bundleDirectory = fileTree(dir: "${projectDir}/build/bundles", include: '*.jar')
+		jar {
+			from { bundleDirectory.collect { it.isDirectory() ? it : zipTree(it) } }
+		}
+	}
+	jar.doLast {
+		copy {
+			from "${projectDir}/build/bundle"
+			into "${projectDir}/build/libs"
+			include '*.jar'
+		}
+	}
+
+	// Run the bundle tests by the bnd ant task (integrated OSGi tests)
+	task testBundle(dependsOn: build) << {
+		if(project.name.endsWith('.test')) {
+			ant.bnd(command: "test", exceptions:true, basedir:"${projectDir}")
+		}
+		else {
+			logger.quiet("Bundle tests are not invoked for project: ${project.name}.")
+			logger.quiet("Bundle tests are only invoked on bndtools project which names ends with .test")
+		}
+	}
+
+	// task release a bundle to the bnd release repository
+	task releaseBundle(dependsOn: bundle) << { ant.bndrelease() }
+
+	// setup maven central repository for gradle build dependencies
+	repositories { mavenCentral() }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.2'
-}
+task wrapper(type: Wrapper) { gradleVersion = '1.2' }
+
+//task hello(type: GreetingTask)
+//
+//class GreetingTask extends DefaultTask {
+//	@TaskAction
+//	def greet() {
+//		println 'hello from GreetingTask'
+//		new org.eclipse.emf.mwe.utils.StandaloneSetup()
+//	}
+//}
