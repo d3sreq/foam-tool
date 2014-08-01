@@ -1,3 +1,5 @@
+import java.nio.file.Files;
+
 //subprojects {  apply plugin: 'eclipse'  }
 
 buildscript {
@@ -9,8 +11,6 @@ repositories { mavenCentral() }
 
 configure(subprojects.findAll {it.name != 'cnf'}) {
 	apply plugin: 'xtend'
-//	apply plugin: 'java'
-	dependencies { compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.+' }
 
 	sourceSets {
 		main {
@@ -21,11 +21,15 @@ configure(subprojects.findAll {it.name != 'cnf'}) {
 					'main/xtend-gen'
 				]
 			}
-			// resources { srcDir 'src/resources' }
+			// resources { srcDir 'src/resources' }			
 		}
+		main.xtendOutputDir = 'main/xtend-gen'
+		//test.xtendOutputDir = 'test/xtend-gen'
 	}
-
-	//apply plugin: 'java'
+	
+	// hack - global property to be initialized in "initializeBnd" task and 
+	// used later in "dependencies" block 
+	def bndBuildDependencies = []
 
 	// initialize bnd ant task
 	task initializeBnd << {
@@ -37,14 +41,24 @@ configure(subprojects.findAll {it.name != 'cnf'}) {
 		}
 		ant.bndprepare(basedir:"${projectDir}", print:'false')
 		def projectBuildpath = ant.properties['project.buildpath']
-		def bndBuildDependencies = files(projectBuildpath.split(':'))
-		
-		println ">>> ${projectBuildpath}"
+		bndBuildDependencies = files(projectBuildpath.split(':'))
 		
 		sourceSets.main.compileClasspath += bndBuildDependencies
 		sourceSets.main.runtimeClasspath += bndBuildDependencies
 		sourceSets.test.compileClasspath += bndBuildDependencies
 		sourceSets.test.runtimeClasspath += bndBuildDependencies
+	}
+	
+	task runSimple(type: JavaExec) << {
+		main = 
+	}
+	
+	dependencies {
+		compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.2'
+
+		compile files {
+			bndBuildDependencies.findAll{File file -> file.name.endsWith(".jar")}
+		}
 	}
 
 	compileXtend.dependsOn initializeBnd
