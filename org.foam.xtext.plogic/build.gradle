@@ -1,0 +1,117 @@
+import java.awt.geom.Path2D.Double.CopyIterator;
+import java.io.File
+
+import org.eclipse.emf.mwe.utils.DirectoryCleaner
+import org.eclipse.emf.mwe.utils.FileCopy
+import org.eclipse.emf.mwe.utils.StandaloneSetup
+import org.eclipse.xtext.generator.Generator
+import org.eclipse.xtext.generator.LanguageConfig
+import org.eclipse.xtext.generator.ecore.EMFGeneratorFragment
+import org.eclipse.xtext.generator.grammarAccess.GrammarAccessFragment
+import org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+import org.eclipse.xtext.generator.serializer.SerializerFragment
+
+defaultTasks 'generatePlogicXtext'
+
+buildscript {
+	dependencies {
+		classpath files(
+			'../cnf/buildrepo/org.eclipse.emf.mwe.core/org.eclipse.emf.mwe.core-1.3.3.jar',
+			'../cnf/buildrepo/org.eclipse.emf.mwe.utils/org.eclipse.emf.mwe.utils-1.3.3.jar',
+			'../cnf/buildrepo/org.eclipse.emf.mwe2.lib/org.eclipse.emf.mwe2.lib-2.4.1.jar',
+			'../cnf/buildrepo/org.eclipse.emf.mwe2.runtime/org.eclipse.emf.mwe2.runtime-2.4.1.jar',
+			'../cnf/buildrepo/org.eclipse.emf.ecore/org.eclipse.emf.ecore-2.10.0.jar',
+			'../cnf/buildrepo/org.eclipse.emf.ecore.xmi/org.eclipse.emf.ecore.xmi-2.10.0.jar',
+			'../cnf/buildrepo/org.eclipse.emf.common/org.eclipse.emf.common-2.10.0.jar',
+			'../cnf/buildrepo/org.eclipse.emf.codegen/org.eclipse.emf.codegen-2.10.0.jar',
+			'../cnf/buildrepo/org.eclipse.emf.codegen.ecore/org.eclipse.emf.codegen.ecore-2.9.1.jar',
+			'../cnf/buildrepo/com.google.guava/com.google.guava-11.0.2.jar',
+			'../cnf/buildrepo/org.eclipse.xtext.generator/org.eclipse.xtext.generator-2.6.2.jar'
+		)
+	}
+}
+
+compileXtend.dependsOn('generatePlogicXtext')
+
+task generatePlogicXtext << {
+	final grammarURI = "classpath:/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
+	final projectName = "org.foam.xtext.plogic"
+	final runtimeProject = "../${projectName}"
+		
+    file("${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtextRuntimeModule.java").delete()
+    file("${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtextStandaloneSetup.java").delete()
+	
+	new StandaloneSetup().with {
+		scanClassPath  = true
+		platformUri = "${runtimeProject}/.."
+		
+		addRegisterGeneratedEPackage("org.foam.propositionallogic.PropositionallogicPackage")
+		addRegisterEcoreFile("platform:/resource/org.foam.models/models/propositionallogic.ecore")
+		addRegisterGenModelFile("platform:/resource/org.foam.models/models/propositionallogic.genmodel")
+	}
+		
+	new DirectoryCleaner().with {
+		directory = "${runtimeProject}/${XTEND_GEN_DIR}"
+		invoke = null
+	}
+		
+	// TODO - is this mkdir needed here ?
+	file(SRC_XTEND).mkdir()
+			
+	new DirectoryCleaner().with {
+    	directory = "${runtimeProject}/model/generated"
+		invoke = null
+	}
+	
+	final MANIFEST_PATH = "${runtimeProject}/META-INF/MANIFEST.MF"
+	final MANIFEST_CONTENT = """
+		Manifest-Version: 1.0
+		Bundle-ManifestVersion: 2
+		Bundle-Name: org.foam.xtext.plogic
+		Bundle-Vendor: My Company
+		Bundle-Version: 1.0.0.qualifier
+		Bundle-SymbolicName: org.foam.xtext.plogic; singleton:=true
+		Bundle-ActivationPolicy: lazy
+		Bundle-RequiredExecutionEnvironment: J2SE-1.5
+	"""
+
+	// replace MANIFEST.MF with new one which doesn't import any dependencies
+	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
+	
+	new Generator().with {
+		srcPath = SRC_DIR
+		srcGenPath = XTEND_GEN_DIR
+
+		pathRtProject = runtimeProject
+		projectNameRt = projectName
+		encoding = "UTF-8"
+		
+		addLanguage = new LanguageConfig().with {
+			uri = grammarURI
+			
+			// Java API to access grammar elements (required by several other fragments)
+			addFragment = new GrammarAccessFragment()
+							
+			// generates Java API for the generated EPackages
+			addFragment = new EMFGeneratorFragment()
+
+			// the Antlr parser
+			addFragment = new XtextAntlrGeneratorFragment()
+			
+			// serializer 2.0
+			addFragment = new SerializerFragment().with {
+				generateStub = false
+			}
+		}
+		
+		preInvoke(); invoke(null); postInvoke()
+	}
+	
+	// write MANIFEST.MF over generated one, this step is not needed
+	// but prevents error in eclipse
+	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
+	
+	file("plugin.xml").delete()
+	file("plugin.xml_gen").delete()
+
+}

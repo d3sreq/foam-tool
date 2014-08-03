@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="main/emf-gen"/>
+	<classpathentry kind="src" path="main/src"/>
+	<classpathentry kind="src" path="main/xtend-gen"/>
 	<classpathentry kind="con" path="aQute.bnd.classpath.container"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	
-	<classpathentry kind="src" output="test/bin" path="test/xtend-gen"/>
-	<classpathentry kind="src" output="test/bin" path="test/src"/>
-	<classpathentry kind="src" output="main/bin" path="main/emf-gen"/>
-	<classpathentry kind="src" output="main/bin" path="main/xtend-gen" excluding="**/*._trace|**/.gitignore"/>
-	<classpathentry kind="src" output="main/bin" path="main/src"/>
-
+	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
+	<classpathentry kind="con" path="org.springsource.ide.eclipse.gradle.dsld.classpathcontainer"/>
+	<classpathentry kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="output" path="main/bin"/>
 </classpath>
