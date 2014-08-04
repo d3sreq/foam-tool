@@ -39,13 +39,11 @@ task generateSettings << {
 }
 
 //Setup the workspace
-Workspace workspace
 def parentDir = project.projectDir
-
-workspace = Workspace.getWorkspace(parentDir)
+Workspace workspace = Workspace.getWorkspace(parentDir)
 
 subprojects { p ->
-	apply plugin: 'xtend'
+	apply plugin: 'xtend' // applies plugin 'java'
 
 	compileXtend.doFirst {
 		file(XTEND_GEN_DIR).mkdir()
@@ -53,29 +51,34 @@ subprojects { p ->
 	
 	repositories { mavenCentral() }
 
-	aQute.bnd.build.Project bndProject
-	bndProject = workspace.getProject(p.projectDir)
+	aQute.bnd.build.Project bndProject = workspace.getProject(p.projectDir)
 	
 	//Setup source and target directories
 	sourceCompatibility = 1.7
 	targetCompatibility = 1.7
-	//sourceSets.main.java.srcDirs = ['main/src', 'main/emf-gen', 'main/xtend-gen']
-	//sourceSets.main.resources.srcDirs = ['src']
-	//sourceSets.test.java.srcDirs = ['test']
-	//sourceSets.test.resources.srcDirs = ['test']sourceSets.main.output.classesDir = 'bin'
-	//sourceSets.main.output.resourcesDir = 'bin'
-	//sourceSets.test.output.classesDir = 'bin_test'
-	//sourceSets.test.output.resourcesDir = 'bin_test'
+
 	sourceSets {
 		main {
 			java.srcDirs = [SRC_DIR, 'main/emf-gen', XTEND_GEN_DIR]
+//			java.srcDirs = [SRC_DIR, XTEND_GEN_DIR]
+			resources.srcDirs = [SRC_DIR]
+			// output.classesDir property is somehow overriden by
+			// xtend gradle plugin and classes are always generated into
+			// build/classes/main directory. This is probably bug.
+//			output.classesDir = BIN_DIR
+//			output.resourcesDir = BIN_DIR
 			xtendOutputDir = XTEND_GEN_DIR
 		}
+		
+//		test {
+//			java.srcDirs = ['test/src', 'test/xtend-gen']
+//			resources.srcDirs = ['test/src']
+//			output.classesDir = 'test/bin'
+//			output.resourcesDir = 'test/bin'
+//		}
 	}
+	testResultsDirName = 'generated/test-reports'
 	
-	
-	//testResultsDirName = 'generated/test-reports'
-
 	//Setup project dependencies
 	bndProject.getDependson().each {
 		compileJava.dependsOn(':' +  it.name + ':bndbuild')

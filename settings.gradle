@@ -1,2 +1,1 @@
-include 'cnf',\
-		'org.foam.models'
+include 'org.foam.models', 'org.foam.xtext.plogic'
