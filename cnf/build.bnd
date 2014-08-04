@@ -10,6 +10,9 @@
 #-verbose:     true
 #src:          src
 #bin:          bin
+## Overriden because Xtend gradle plugin seems to ignore output.classesDir setting
+## and generates classes always into build/classes/main directory  
+bin:           build/classes/main
 #target:       ${project}/generated
 #build:        ${workspace}/cnf
 #plugin-dir:   ${build}/plugins
@@ -22,6 +25,7 @@
 
 #-sources:       true
 #-sourcepath:    ${project}/src
+-sourcepath:    ${project}/main
 
 ## Properties from ext/*.bnd can be referenced in order to extend them.
 ## For example, to add one additional plugin to the list defined in ext/repositories.bnd:
