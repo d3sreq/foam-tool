@@ -26,8 +26,9 @@ buildscript {
 	}
 }
 
-compileXtend.dependsOn('generateModels')
+sourceSets.main.java.srcDir 'main/emf-gen'
 
+// TODO - declare outputs to speed up build
 task generateModels << {
 	new StandaloneSetup().with {
 		scanClassPath = true
@@ -57,6 +58,8 @@ task generateModels << {
 	
 	println "done. don't forget to refresh the workspace"
 }
+
+compileXtend.dependsOn('generateModels')
 
 clean << {
 	file(EMF_GEN_DIR).deleteDir()
