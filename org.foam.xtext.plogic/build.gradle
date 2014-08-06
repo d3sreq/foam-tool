@@ -1,5 +1,4 @@
 import java.io.File
-
 import org.eclipse.emf.mwe.utils.DirectoryCleaner
 import org.eclipse.emf.mwe.utils.FileCopy
 import org.eclipse.emf.mwe.utils.StandaloneSetup
@@ -35,47 +34,41 @@ buildscript {
 			'../cnf/buildrepo/org.eclipse.jdt.core/org.eclipse.jdt.core-3.10.0.jar',
 			'../cnf/buildrepo/com.ibm.icu/com.ibm.icu-52.1.0.jar',
 			// TODO - hack
-			'../org.foam.models/generated/org.foam.models.propositionallogic.jar'
+			'../org.foam.models/generated/org.foam.models.propositionallogic.jar',
+			'../cnf/buildrepo/org.apache.httpcomponents.httpclient/org.apache.httpcomponents.httpclient-4.3.3.jar',
+			'./main/src' // needed for xtext compiler to find .xtext resource			
 		)
 	}
 }
 
-compileXtend.dependsOn('generatePlogicXtext')
+ext.XTEXT_DIR = 'main/xtext-gen'
+
+sourceSets.main.java.srcDir XTEXT_DIR
 
 task generatePlogicXtext << {
-	//final grammarURI = "classpath:/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
-	final grammarURI = file("${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtext.xtext").toURI().toString()
+	final grammarURI = "classpath:/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
 	final projectName = "org.foam.xtext.plogic"
-	//final runtimeProject = "../${projectName}"
-	final runtimeProject = projectDir.getAbsolutePath()
+	final runtimeProject = "../${projectName}"
 		
     file("${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtextRuntimeModule.java").delete()
     file("${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtextStandaloneSetup.java").delete()
 	
 	new StandaloneSetup().with {
 		scanClassPath  = true
-		platformUri = "${runtimeProject}/.."
+		platformUri = ".."
 		
 		addRegisterGeneratedEPackage("org.foam.propositionallogic.PropositionallogicPackage") // problem, solved by hack
 		addRegisterEcoreFile("platform:/resource/org.foam.models/models/propositionallogic.ecore")
 		addRegisterGenModelFile("platform:/resource/org.foam.models/models/propositionallogic.genmodel")
 	}
-
-	// TODO - gradle delete
-	new DirectoryCleaner().with {
-		directory = "${runtimeProject}/${XTEND_GEN_DIR}"
-		invoke(null)
-	}
-		
-	// TODO - is this mkdir needed here ?
-	file(XTEND_GEN_DIR).mkdir()
-			
-	new DirectoryCleaner().with {
-    	directory = "${runtimeProject}/model/generated"
-		invoke(null)
-	}
 	
-	final MANIFEST_PATH = "${runtimeProject}/META-INF/MANIFEST.MF"
+	file(XTEXT_DIR).deleteDir()
+	file(XTEXT_DIR).mkdir()
+	
+	file('model/generated').deleteDir()
+	
+	// replace MANIFEST.MF with new one which doesn't import any dependencies
+	final MANIFEST_PATH = "META-INF/MANIFEST.MF"
 	final MANIFEST_CONTENT = """\
 			Manifest-Version: 1.0
 			Bundle-ManifestVersion: 2
@@ -86,21 +79,19 @@ task generatePlogicXtext << {
 			Bundle-ActivationPolicy: lazy
 			Bundle-RequiredExecutionEnvironment: J2SE-1.5
 			""".stripIndent()
-
-	// replace MANIFEST.MF with new one which doesn't import any dependencies
 	file(MANIFEST_PATH).getParentFile().mkdirs()
 	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 	
 	new Generator().with {
-		srcPath = SRC_DIR
-		srcGenPath = XTEND_GEN_DIR
+		srcPath = "/main/src"
+		srcGenPath = "/main/xtext-gen"
 
-		pathRtProject = runtimeProject
+		pathRtProject = "../${projectName}"
+		
 		projectNameRt = projectName
 		encoding = "UTF-8"
 		
-		def lang = new LanguageConfig()
-		lang.with {
+		addLanguage(new LanguageConfig().with {
 			uri = grammarURI
 			
 			// Java API to access grammar elements (required by several other fragments)
@@ -114,8 +105,8 @@ task generatePlogicXtext << {
 			
 			// serializer 2.0
 			addFragment(new SerializerFragment(generateStub: false))
-		}
-		addLanguage(lang)
+			it
+		})
 		
 		preInvoke(); invoke(null); postInvoke()
 	}
@@ -128,6 +119,20 @@ task generatePlogicXtext << {
 	file("plugin.xml_gen").delete()
 }
 
+// workaround for xtext generator
+// generator downloads .antlr-generator-3.2.0.jar and .antlr-generator-3.2.0-patch.jar
+// into directory from which was gradle executed. It doesn't take into account project
+// structure. This workaround executes new gradle instance and runs xtext generation.
+// TODO - test with gradle wrapper only
+task generateRedirect(type: Exec) {	
+	workingDir projectDir
+	commandLine 'gradle', 'generatePlogicXtext'
+}
+
+compileXtend.dependsOn('generateRedirect')
+
 clean << {
-	file("META-INF").deleteDir()
+	["META-INF", XTEXT_DIR, "model"].each {
+		file(it).deleteDir()
+	}
 }

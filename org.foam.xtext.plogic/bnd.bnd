@@ -6,6 +6,7 @@
 	org.eclipse.emf.codegen.ecore,\
 	org.eclipse.emf.common,\
 	org.eclipse.emf.ecore,\
+	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.mwe2.launch,\
 	org.eclipse.emf.mwe2.runtime,\
 	org.eclipse.emf.mwe.core,\
@@ -17,7 +18,12 @@
 	org.eclipse.xtext.util,\
 	org.foam.models.propositionallogic;version=latest,\
 	org.objectweb.asm,\
-	org.eclipse.xtext.xbase.lib
+	org.eclipse.xtext.xbase.lib,\
+	org.apache.commons.logging,\
+	org.apache.log4j,\
+	com.google.guava,\
+	javax.inject,\
+	org.eclipse.emf.mwe2.lib
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.plogic,\
