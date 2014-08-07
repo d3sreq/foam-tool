@@ -1,11 +1,10 @@
-import org.eclipse.emf.mwe.utils.DirectoryCleaner
 import org.eclipse.emf.mwe.utils.StandaloneSetup
 import org.eclipse.emf.mwe2.ecore.EcoreGenerator
 
 
-ext.EMF_GEN_DIR	= "main/emf-gen"
-ext.MODELSDIR	= "models"
-ext.MODELS	= "platform:/resource/org.foam.models/" + MODELSDIR
+final EMF_GEN_DIR = "main/emf-gen"
+final MODELS_DIR = "models"
+final MODELS = "platform:/resource/org.foam.models/" + MODELS_DIR
 
 defaultTasks 'generateModels'
 
@@ -26,37 +25,43 @@ buildscript {
 	}
 }
 
-sourceSets.main.java.srcDir 'main/emf-gen'
+sourceSets.main.java.srcDir EMF_GEN_DIR
 
 // TODO - declare outputs to speed up build
-task generateModels << {
-	new StandaloneSetup().with {
-		scanClassPath = true
-		platformUri = ".."
-	}
-
-	file(EMF_GEN_DIR).deleteDir()
+task generateModels {
+	inputs.dir SRC_DIR
+	inputs.dir MODELS_DIR
+	outputs.dir EMF_GEN_DIR
 	
-	def genmodelNames = file(MODELSDIR)
-		.listFiles()
-		.collect{it.name}
-		.findAll{it.endsWith(".genmodel")}
-
-	for(genmodel in genmodelNames) {
-		new EcoreGenerator().with {
-			genModel = "${MODELS}/${genmodel}"
-			addSrcPath(SRC_DIR)
-			addSrcPath(XTEND_GEN_DIR)
-			generateEdit = false
-			generateEditor = false
-			invoke(null)
+	doLast {
+		new StandaloneSetup().with {
+			scanClassPath = true
+			platformUri = ".."
 		}
+	
+		file(EMF_GEN_DIR).deleteDir()
+		
+		def genmodelNames = file(MODELS_DIR)
+			.listFiles()
+			.collect{it.name}
+			.findAll{it.endsWith(".genmodel")}
+	
+		for(genmodel in genmodelNames) {
+			new EcoreGenerator().with {
+				genModel = "${MODELS}/${genmodel}"
+				addSrcPath(SRC_DIR)
+				addSrcPath(XTEND_GEN_DIR)
+				generateEdit = false
+				generateEditor = false
+				invoke(null)
+			}
+		}
+		
+		file("plugin.xml").delete()
+		file("plugin.properties").delete()
+		
+		println "done. don't forget to refresh the workspace"
 	}
-	
-	file("plugin.xml").delete()
-	file("plugin.properties").delete()
-	
-	println "done. don't forget to refresh the workspace"
 }
 
 compileXtend.dependsOn('generateModels')
