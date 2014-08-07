@@ -5,7 +5,6 @@
 	osgi.cmpn,\
 	biz.aQute.bnd.annotation,\
 	com.google.inject,\
-	org.antlr.runtime,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
 	org.foam.models.ctl;version=latest,\
@@ -29,4 +28,5 @@
 	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.common,\
 	org.eclipse.xtext,\
-	org.apache.servicemix.bundles.junit
+	org.apache.servicemix.bundles.junit,\
+	org.foam.xtext.plogic;version=latest
