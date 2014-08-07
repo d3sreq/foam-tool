@@ -16,42 +16,18 @@ buildscript {
 	}
 }
 
-//Generate settings.gradle containing all projects
-task generateSettings << {
-	def f = new File('.')
-	def bndProjects = []
-	f.eachFile {
-		if(new File(it, 'bnd.bnd').exists()) {
-			bndProjects << it.name
-		}
-	}
-
-	def settingsFile = new File('settings.gradle')
-	settingsFile.text = 'include '
-
-	bndProjects.eachWithIndex { item,idx ->
-		if(idx > 0) {
-			settingsFile << ', '
-		}
-
-		settingsFile << "'$item'"
-	}
-}
-
-//Setup the workspace
+// Setup the workspace
 def parentDir = project.projectDir
 Workspace workspace = Workspace.getWorkspace(parentDir)
 
 subprojects { p ->
 	apply plugin: 'xtend' // applies plugin 'java'
 
-	compileXtend.doFirst {
-		file(XTEND_GEN_DIR).mkdir()
+	dependencies {
+		compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.6.+'
 	}
 	
 	repositories { mavenCentral() }
-
-	aQute.bnd.build.Project bndProject = workspace.getProject(p.projectDir)
 	
 	//Setup source and target directories
 	sourceCompatibility = 1.7
@@ -59,8 +35,8 @@ subprojects { p ->
 
 	sourceSets {
 		main {
-			java.srcDirs = [SRC_DIR, 'main/emf-gen', XTEND_GEN_DIR]
-//			java.srcDirs = [SRC_DIR, XTEND_GEN_DIR]
+			// TODO - emf-gen
+			java.srcDirs = [SRC_DIR, XTEND_GEN_DIR, 'main/emf-gen']
 			resources.srcDirs = [SRC_DIR]
 			// output.classesDir property is somehow overriden by
 			// xtend gradle plugin and classes are always generated into
@@ -70,6 +46,7 @@ subprojects { p ->
 			xtendOutputDir = XTEND_GEN_DIR
 		}
 		
+		// TODO
 //		test {
 //			java.srcDirs = ['test/src', 'test/xtend-gen']
 //			resources.srcDirs = ['test/src']
@@ -79,9 +56,14 @@ subprojects { p ->
 	}
 	testResultsDirName = 'generated/test-reports'
 	
+	compileXtend.doFirst {
+		file(XTEND_GEN_DIR).mkdir()
+	}
+	
 	//Setup project dependencies
+	aQute.bnd.build.Project bndProject = workspace.getProject(p.projectDir)
 	bndProject.getDependson().each {
-		compileJava.dependsOn(':' +  it.name + ':bndbuild')
+		compileXtend.dependsOn(":${it.name}:bndbuild")
 	}
 
 	bndProject.getBuildpath().each {
@@ -106,9 +88,12 @@ subprojects { p ->
 		}
 	}
 
+//	bndbuild.dependsOn([
+//		'compileJava',
+//		'processResources'
+//	])
 	bndbuild.dependsOn([
-		'compileJava',
-		'processResources'
+		'build'
 	])
 
 	//Run integration tests
@@ -125,6 +110,7 @@ subprojects { p ->
 	}
 }
 
+// TODO
 //Collect generated and external bundles for deployment
 task release << {
 	delete "release"
