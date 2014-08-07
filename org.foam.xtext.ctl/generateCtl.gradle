@@ -1,8 +1,18 @@
+import org.eclipse.emf.mwe.utils.StandaloneSetup
+import org.eclipse.xtext.generator.Generator
+import org.eclipse.xtext.generator.LanguageConfig
+import org.eclipse.xtext.generator.ecore.EMFGeneratorFragment
+import org.eclipse.xtext.generator.grammarAccess.GrammarAccessFragment
+import org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+import org.eclipse.xtext.generator.serializer.SerializerFragment
+
 defaultTasks 'generateCtl'
 
 buildscript {
 	dependencies {
 		classpath files(
+			'../cnf/buildrepo/org.eclipse.equinox.common/org.eclipse.equinox.common-3.6.200.jar',
+			'../cnf/buildrepo/org.eclipse.xtext.xbase.lib/org.eclipse.xtext.xbase.lib-2.6.2.jar',
 			'../cnf/buildrepo/org.eclipse.emf.mwe.core/org.eclipse.emf.mwe.core-1.3.3.jar',
 			'../cnf/buildrepo/org.eclipse.emf.mwe.utils/org.eclipse.emf.mwe.utils-1.3.3.jar',
 			'../cnf/buildrepo/org.eclipse.emf.mwe2.lib/org.eclipse.emf.mwe2.lib-2.4.1.jar',
@@ -25,11 +35,17 @@ buildscript {
 			// TODO - hack
 			'../org.foam.models/generated/org.foam.models.propositionallogic.jar',
 			'../org.foam.models/generated/org.foam.models.ctl.jar',
-			'../org.foam.xtext.plogic/generated/org.foam.xtext.plogic.jar',
+			'../org.foam.xtext.plogic/build/libs/org.foam.xtext.plogic.jar',
 			'./main/src' // needed for xtext compiler to find .xtext resource
 		)
 	}
 }
+
+final SRC_DIR = "main/src"
+final MODEL_DIR = "model"
+final XTEXT_DIR = 'main/xtext-gen'
+final RUNTIME_MODULE_FILE = "${SRC_DIR}/org/foam/xtext/ctl/CtlXtextRuntimeModule.java"
+final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/ctl/CtlXtextStandaloneSetup.java"
 
 task generateCtl {
 	inputs.file "${SRC_DIR}/org/foam/xtext/ctl/CtlXtext.xtext"
