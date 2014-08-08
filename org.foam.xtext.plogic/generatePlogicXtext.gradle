@@ -46,11 +46,11 @@ final RUNTIME_MODULE_FILE = "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogic
 final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtextStandaloneSetup.java"
 
 task generatePlogicXtext {
-	inputs.file "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
-	outputs.dir XTEXT_DIR
-	outputs.dir MODEL_DIR
-	outputs.file RUNTIME_MODULE_FILE
-	outputs.file STANDALONE_SETUP_FILE
+//	inputs.file "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
+//	outputs.dir XTEXT_DIR
+//	outputs.dir MODEL_DIR
+//	outputs.file RUNTIME_MODULE_FILE
+//	outputs.file STANDALONE_SETUP_FILE
 	
 	doLast {
 		final grammarURI = "classpath:/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"

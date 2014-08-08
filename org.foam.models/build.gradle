@@ -34,9 +34,9 @@ task generateRedirect(type: Exec) {
 
 // TODO - declare outputs to speed up build
 task generateModels {
-	inputs.dir SRC_DIR
-	inputs.dir MODELS_DIR
-	outputs.dir EMF_GEN_DIR
+//	inputs.dir SRC_DIR
+//	inputs.dir MODELS_DIR
+//	outputs.dir EMF_GEN_DIR
 	
 	doLast {
 		new StandaloneSetup().with {

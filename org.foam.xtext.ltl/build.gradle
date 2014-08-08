@@ -48,11 +48,11 @@ final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/ltl/LtlXtextStandaloneS
 sourceSets.main.java.srcDir XTEXT_DIR
 
 task generateLtl {
-	inputs.file "${SRC_DIR}/org/foam/xtext/ltl/LtlXtext.xtext"
-	outputs.dir XTEXT_DIR
-	outputs.dir MODEL_DIR
-	outputs.file RUNTIME_MODULE_FILE
-	outputs.file STANDALONE_SETUP_FILE
+//	inputs.file "${SRC_DIR}/org/foam/xtext/ltl/LtlXtext.xtext"
+//	outputs.dir XTEXT_DIR
+//	outputs.dir MODEL_DIR
+//	outputs.file RUNTIME_MODULE_FILE
+//	outputs.file STANDALONE_SETUP_FILE
 	
 	doLast {
 		final grammarURI = "classpath:/org/foam/xtext/ltl/LtlXtext.xtext"
