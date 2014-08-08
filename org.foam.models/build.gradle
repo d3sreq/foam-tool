@@ -25,7 +25,12 @@ buildscript {
 	}
 }
 
-sourceSets.main.java.srcDir EMF_GEN_DIR
+//sourceSets.main.java.srcDir EMF_GEN_DIR
+
+task generateRedirect(type: Exec) {
+	workingDir projectDir
+	commandLine 'gradle', 'generateModels'
+}
 
 // TODO - declare outputs to speed up build
 task generateModels {
@@ -46,6 +51,8 @@ task generateModels {
 			.collect{it.name}
 			.findAll{it.endsWith(".genmodel")}
 	
+		// TODO - XTEND_GEN_DIR is passed to the generator but
+		// in the time of compilation is XTEND_GEN empty
 		for(genmodel in genmodelNames) {
 			new EcoreGenerator().with {
 				genModel = "${MODELS}/${genmodel}"
@@ -64,7 +71,7 @@ task generateModels {
 	}
 }
 
-compileXtend.dependsOn('generateModels')
+compileXtend.dependsOn('generateRedirect')
 
 clean << {
 	file(EMF_GEN_DIR).deleteDir()
