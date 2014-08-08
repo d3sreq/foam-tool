@@ -7,6 +7,5 @@
 	<classpathentry kind="src" output="main/bin" path="main/xtext-gen"/>
 	<classpathentry excluding="**/*._trace|**/.gitignore" kind="src" output="main/bin" path="main/xtend-gen"/>
 	<classpathentry kind="src" output="main/bin" path="main/src"/>
-	<classpathentry kind="src" path="main/build"/>
 	<classpathentry kind="output" path="main/bin"/>
 </classpath>

@@ -35,7 +35,6 @@
 	<natures>
 		<nature>org.springsource.ide.eclipse.gradle.core.nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.jdt.groovy.core.groovyNature</nature>
 		<nature>bndtools.core.bndnature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
