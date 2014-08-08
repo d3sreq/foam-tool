@@ -1,5 +1,6 @@
 package org.foam.cli.tools.report.utils
 
+import com.google.common.base.Preconditions
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -10,14 +11,8 @@ import java.io.OutputStream
 import java.net.JarURLConnection
 import java.net.URISyntaxException
 import java.net.URL
-import java.net.URLConnection
 import java.util.Enumeration
-import java.util.jar.JarEntry
-import java.util.jar.JarFile
-
-import org.osgi.framework.Bundle
 import org.osgi.framework.FrameworkUtil
-import com.google.common.base.Preconditions
 
 /**
  * From
@@ -107,11 +102,9 @@ public class FileUtils {
 		try {
 			val urlConnection = originUrl.openConnection
 			if (urlConnection instanceof JarURLConnection) {
-				return FileUtils.copyJarResourcesRecursively(destination,
-						urlConnection as JarURLConnection)
+				return FileUtils.copyJarResourcesRecursively(destination, urlConnection)
 			} else {
-				return FileUtils.copyFilesRecusively(
-						new File(originUrl.path), destination)
+				return FileUtils.copyFilesRecusively(new File(originUrl.path), destination)
 			}
 		} catch (IOException e) {
 			e.printStackTrace
