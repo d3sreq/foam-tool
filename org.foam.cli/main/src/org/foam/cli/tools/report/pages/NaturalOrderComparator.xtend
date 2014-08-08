@@ -24,120 +24,119 @@ misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 */
 
-import java.io.Serializable;
-import java.util.Comparator;
+import java.io.Serializable
+import java.util.Comparator
 
 public class NaturalOrderComparator implements Comparator<String>, Serializable {
-    private static final long serialVersionUID = -2937654218173343799L;
 
-    int compareRight(String a, String b) {
-        int bias = 0;
-        int ia = 0;
-        int ib = 0;
+    def int compareRight(String a, String b) {
+        var bias = 0
+        var ia = 0
+        var ib = 0
 
         // The longest run of digits wins. That aside, the greatest
         // value wins, but we can't know that it will until we've scanned
         // both numbers to know that they have the same magnitude, so we
         // remember it in BIAS.
-        for (;; ia++, ib++) {
-            char ca = charAt(a, ia);
-            char cb = charAt(b, ib);
+        for (;;ia += 1, ib += 1) {
+            var ca = charAt(a, ia)
+            var cb = charAt(b, ib)
 
             if (!Character.isDigit(ca) && !Character.isDigit(cb)) {
-                return bias;
+                return bias
             } else if (!Character.isDigit(ca)) {
-                return -1;
+                return -1
             } else if (!Character.isDigit(cb)) {
-                return +1;
+                return 1
             } else if (ca < cb) {
                 if (bias == 0) {
-                    bias = -1;
+                    bias = -1
                 }
             } else if (ca > cb) {
                 if (bias == 0)
-                    bias = +1;
+                    bias = 1
             } else if (ca == 0 && cb == 0) {
-                return bias;
+                return bias
             }
         }
+        0
     }
 
-    @Override
-    public int compare(String o1, String o2) {
+    override compare(String o1, String o2) {
     	if (o1 == null) {
-    		return 1;
+    		return 1
     	}
     	if (o2 == null) {
-    		return -1;
+    		return -1
     	}
     	
-        String a = o1.toString();
-        String b = o2.toString();
+        val a = o1.toString
+        val b = o2.toString
 
-        int ia = 0, ib = 0;
-        int nza = 0, nzb = 0;
-        char ca, cb;
-        int result;
+        var ia = 0; var ib = 0
+        var nza = 0; var nzb = 0
+        var char ca; var char cb
+        var int result
 
         while (true) {
             // only count the number of zeroes leading the last number compared
             nza = nzb = 0;
 
-            ca = charAt(a, ia);
-            cb = charAt(b, ib);
+            ca = charAt(a, ia)
+            cb = charAt(b, ib)
 
             // skip over leading spaces or zeros
             while (Character.isSpaceChar(ca) || ca == '0') {
                 if (ca == '0') {
-                    nza++;
+                    nza++
                 } else {
                     // only count consecutive zeroes
-                    nza = 0;
+                    nza = 0
                 }
 
-                ca = charAt(a, ++ia);
+                ca = charAt(a, ia += 1)
             }
 
             while (Character.isSpaceChar(cb) || cb == '0') {
                 if (cb == '0') {
-                    nzb++;
+                    nzb++
                 } else {
                     // only count consecutive zeroes
                     nzb = 0;
                 }
 
-                cb = charAt(b, ++ib);
+                cb = charAt(b, ib += 1)
             }
 
             // process run of digits
             if (Character.isDigit(ca) && Character.isDigit(cb)) {
                 if ((result = compareRight(a.substring(ia), b.substring(ib))) != 0) {
-                    return result;
+                    return result
                 }
             }
 
             if (ca == 0 && cb == 0) {
                 // The strings compare the same. Perhaps the caller
                 // will want to call strcmp to break the tie.
-                return nza - nzb;
+                return nza - nzb
             }
 
             if (ca < cb) {
-                return -1;
+                return -1
             } else if (ca > cb) {
-                return +1;
+                return 1
             }
 
-            ++ia;
-            ++ib;
+			ia += 1
+			ib += 1
         }
     }
 
-    static char charAt(String s, int i) {
+    def static char charAt(String s, int i) {
         if (i >= s.length()) {
-            return 0;
+            return 0 as char
         } else {
-            return s.charAt(i);
+            return s.charAt(i)
         }
     }
 
