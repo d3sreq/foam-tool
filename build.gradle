@@ -4,8 +4,10 @@ import aQute.bnd.build.Workspace
 
 defaultTasks 'clean', 'bndbuild'
 
-ext.SRC_DIR 		= "main/src"
-ext.XTEND_GEN_DIR 	= "main/xtend-gen"
+ext.SRC_DIR 			= "main/src"
+ext.XTEND_GEN_DIR 		= "main/xtend-gen"
+ext.TEST_SRC_DIR 		= "test/src"
+ext.TEST_XTEND_GEN_DIR 	= "test/xtend-gen"
 
 //Add bnd as a build dependency
 buildscript {
@@ -35,8 +37,7 @@ subprojects { p ->
 
 	sourceSets {
 		main {
-			// TODO - emf-gen
-			java.srcDirs = [SRC_DIR, XTEND_GEN_DIR, 'main/emf-gen']
+			java.srcDirs = [SRC_DIR, XTEND_GEN_DIR]
 			resources.srcDirs = [SRC_DIR]
 			// output.classesDir property is somehow overriden by
 			// xtend gradle plugin and classes are always generated into
@@ -46,18 +47,22 @@ subprojects { p ->
 			xtendOutputDir = XTEND_GEN_DIR
 		}
 		
-		// TODO
 //		test {
-//			java.srcDirs = ['test/src', 'test/xtend-gen']
-//			resources.srcDirs = ['test/src']
-//			output.classesDir = 'test/bin'
-//			output.resourcesDir = 'test/bin'
+//			java.srcDirs = [TEST_SRC_DIR, TEST_XTEND_GEN_DIR]
+//			resources.srcDirs = [TEST_SRC_DIR]
+////			output.classesDir = 'test/bin'
+////			output.resourcesDir = 'test/bin'
+//			xtendOutputDir = TEST_XTEND_GEN_DIR
 //		}
 	}
 	testResultsDirName = 'generated/test-reports'
 	
 	compileXtend.doFirst {
 		file(XTEND_GEN_DIR).mkdir()
+	}
+	
+	compileTestXtend.doFirst {
+		file(TEST_XTEND_GEN_DIR).mkdir()
 	}
 	
 	//Setup project dependencies
@@ -104,7 +109,7 @@ subprojects { p ->
 	}
 
 	clean << {
-		['generated', XTEND_GEN_DIR].each {
+		['generated', XTEND_GEN_DIR, TEST_XTEND_GEN_DIR].each {
 			p.file(it).deleteDir()
 		}
 	}
