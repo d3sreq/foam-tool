@@ -29,4 +29,6 @@
 	org.eclipse.emf.common,\
 	org.eclipse.xtext,\
 	org.apache.servicemix.bundles.junit,\
-	org.foam.xtext.plogic;version=latest
+	org.foam.xtext.plogic;version=latest,\
+	javax.inject,\
+	org.antlr.runtime
