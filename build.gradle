@@ -72,8 +72,15 @@ subprojects { p ->
 	}
 
 	bndProject.getBuildpath().each {
-		dependencies.add('compile', files(it.getFile()))
+		def f = files(it.getFile())
+		dependencies.add('compile', f)
+		
+		// to allow use of external libs in build script (e.g. mwe libs)
+		buildscript.dependencies.add('classpath', f)
 	}
+	
+	// needed for xtext compiler to find .xtext resource
+	//buildscript.dependencies.add('classpath', files(SRC_DIR))
 
 	//Add junit as a default dependency
 	dependencies.add('testCompile', 'junit:junit:4.+')

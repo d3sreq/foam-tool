@@ -23,7 +23,8 @@
 	org.apache.log4j,\
 	com.google.guava,\
 	javax.inject,\
-	org.eclipse.emf.mwe2.lib
+	org.eclipse.emf.mwe2.lib,\
+	org.eclipse.jdt.core
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.plogic,\

@@ -1,4 +1,21 @@
+import org.eclipse.emf.mwe.utils.StandaloneSetup
+import org.eclipse.xtext.generator.Generator
+import org.eclipse.xtext.generator.LanguageConfig
+import org.eclipse.xtext.generator.ecore.EMFGeneratorFragment
+import org.eclipse.xtext.generator.grammarAccess.GrammarAccessFragment
+import org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
+import org.eclipse.xtext.generator.serializer.SerializerFragment
+
 defaultTasks 'clean', 'build'
+
+buildscript {
+	dependencies {
+		classpath files(
+			// hack needed for xtext compiler to find .xtext resources
+			'./main/src'
+		)
+	}
+}
 
 final MODEL_DIR = "model"
 final XTEXT_DIR = 'main/xtext-gen'
@@ -7,6 +24,88 @@ final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLog
 
 sourceSets.main.java.srcDir XTEXT_DIR
 
+task generatePlogicXtext {
+	//	inputs.file "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
+	//	outputs.dir XTEXT_DIR
+	//	outputs.dir MODEL_DIR
+	//	outputs.file RUNTIME_MODULE_FILE
+	//	outputs.file STANDALONE_SETUP_FILE
+		
+	doLast {
+		final grammarURI = "classpath:/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
+		final projectName = "org.foam.xtext.plogic"
+			
+		file(RUNTIME_MODULE_FILE).delete()
+		file(STANDALONE_SETUP_FILE).delete()
+		
+		new StandaloneSetup().with {
+			scanClassPath  = true
+			platformUri = ".."
+			
+			addRegisterGeneratedEPackage("org.foam.propositionallogic.PropositionallogicPackage") // problem, solved by hack
+			addRegisterEcoreFile("platform:/resource/org.foam.models/models/propositionallogic.ecore")
+			addRegisterGenModelFile("platform:/resource/org.foam.models/models/propositionallogic.genmodel")
+		}
+		
+		file(XTEXT_DIR).deleteDir()
+		file(XTEXT_DIR).mkdir()
+		
+		file('model/generated').deleteDir()
+		file(RUNTIME_MODULE_FILE).delete()
+		file(STANDALONE_SETUP_FILE).delete()
+		
+		// replace MANIFEST.MF with new one which doesn't import any dependencies
+		final MANIFEST_PATH = "META-INF/MANIFEST.MF"
+		final MANIFEST_CONTENT = """\
+			Manifest-Version: 1.0
+			Bundle-ManifestVersion: 2
+			Bundle-Name: org.foam.xtext.plogic
+			Bundle-Vendor: My Company
+			Bundle-Version: 1.0.0.qualifier
+			Bundle-SymbolicName: org.foam.xtext.plogic; singleton:=true
+			Bundle-ActivationPolicy: lazy
+			Bundle-RequiredExecutionEnvironment: J2SE-1.5
+			""".stripIndent()
+		file(MANIFEST_PATH).getParentFile().mkdirs()
+		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
+		
+		new Generator().with {
+			srcPath = "/main/src"
+			srcGenPath = "/main/xtext-gen"
+	
+			pathRtProject = "../${projectName}"
+			projectNameRt = projectName
+			encoding = "UTF-8"
+			
+			addLanguage(new LanguageConfig().with {
+				uri = grammarURI
+				
+				// Java API to access grammar elements (required by several other fragments)
+				addFragment(new GrammarAccessFragment())
+								
+				// generates Java API for the generated EPackages
+				addFragment(new EMFGeneratorFragment())
+	
+				// the Antlr parser
+				addFragment(new XtextAntlrGeneratorFragment())
+				
+				// serializer 2.0
+				addFragment(new SerializerFragment(generateStub: false))
+				it
+			})
+			
+			preInvoke(); invoke(null); postInvoke()
+		}
+		
+		// write MANIFEST.MF over generated one, this step is not needed
+		// but prevents error in eclipse
+		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
+		
+		file("plugin.xml").delete()
+		file("plugin.xml_gen").delete()
+	}
+}
+
 // workaround for xtext generator
 // generator downloads .antlr-generator-3.2.0.jar and .antlr-generator-3.2.0-patch.jar
 // into directory from which was gradle executed. It doesn't take into account project
@@ -14,7 +113,7 @@ sourceSets.main.java.srcDir XTEXT_DIR
 // TODO - test with gradle wrapper only
 task generateRedirect(type: Exec) {	
 	workingDir projectDir
-	commandLine 'gradle', '-b', 'generatePlogicXtext.gradle', 'generatePlogicXtext'
+	commandLine 'gradle', 'generatePlogicXtext'
 }
 
 compileXtend.dependsOn('generateRedirect')

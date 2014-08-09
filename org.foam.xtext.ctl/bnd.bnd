@@ -19,7 +19,9 @@
 	org.objectweb.asm,\
 	org.foam.xtext.plogic;version=latest,\
 	org.eclipse.xtext.xbase.lib,\
-	org.foam.models.propositionallogic;version=latest
+	org.foam.models.propositionallogic;version=latest,\
+	org.eclipse.emf.ecore.xmi,\
+	org.eclipse.jdt.core
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.ctl,\
