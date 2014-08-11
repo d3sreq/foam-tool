@@ -33,9 +33,14 @@ task generateModels {
 			.listFiles()
 			.collect{it.name}
 			.findAll{it.endsWith(".genmodel")}
+			
+		// generate empty *ImplCustom.java files to outsmart ecore generator
+		def fakeImpls = fileTree(dir: SRC_DIR, include: '**/*ImplCustom.xtend').collect {
+			def name = it.name.replace('.xtend', '.java')
+			new File(it.parent, name)
+		}
+		fakeImpls.each { it.createNewFile() }
 	
-		// TODO - XTEND_GEN_DIR is passed to the generator but
-		// in the time of compilation is XTEND_GEN empty
 		for(genmodel in genmodelNames) {
 			new EcoreGenerator().with {
 				genModel = "${MODELS}/${genmodel}"
@@ -46,6 +51,9 @@ task generateModels {
 				invoke(null)
 			}
 		}
+		
+		// delete fake *ImplCustom.java files
+		fakeImpls.each { it.delete() }
 		
 		file("plugin.xml").delete()
 		file("plugin.properties").delete()

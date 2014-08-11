@@ -1,13 +1,13 @@
-package org.foam.ucm.impl.xtend
+package org.foam.ucm.impl
 
 import org.foam.ucm.Scenario
-import org.foam.ucm.Step
+import org.foam.ucm.impl.StepImpl
 
-class StepImplCustomXtend {
+class StepImplCustom extends StepImpl {
 	
-	def static getLabel(Step step) {
-		val parent = step.eContainer as Scenario 
-		val num = parent.steps.indexOf(step) + 1
+	override getLabel() {
+		val parent = this.eContainer as Scenario 
+		val num = parent.steps.indexOf(this) + 1
 		parent.label + num
 	}
 	
