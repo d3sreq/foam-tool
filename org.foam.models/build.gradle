@@ -55,8 +55,9 @@ task generateModels {
 		// delete fake *ImplCustom.java files
 		fakeImpls.each { it.delete() }
 		
-		file("plugin.xml").delete()
-		file("plugin.properties").delete()
+		["plugin.xml", "plugin.properties", "build.properties"].each {
+			file(it).delete()
+		}
 		
 		println "done. don't forget to refresh the workspace"
 	}
@@ -65,5 +66,5 @@ task generateModels {
 compileXtend.dependsOn('generateRedirect')
 
 clean << {
-	file(EMF_GEN_DIR).deleteDir()
+	file(EMF_GEN_DIR).deleteDir()	
 }
