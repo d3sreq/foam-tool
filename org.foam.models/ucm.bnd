@@ -2,5 +2,5 @@ Bundle-Name: FOAM Model (Use-case model)
 Bundle-Version: 1.0.0
 Export-Package: org.foam.ucm,\
 	org.foam.ucm.util
-Private-Package: org.foam.ucm.impl,\
-	org.foam.ucm.impl.xtend
+Private-Package:  \
+	org.foam.ucm.impl
