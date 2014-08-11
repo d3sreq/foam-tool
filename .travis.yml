@@ -1,4 +1,6 @@
 language: java
+script:
+  - gradle build --stacktrace
 jdk:
   - oraclejdk7
-install: gradle build --stacktrace
+
