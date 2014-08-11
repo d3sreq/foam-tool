@@ -3,4 +3,4 @@ FOAM tool
 
 Formal Verification of Annotated Textual Use-Cases
 
-[[https://travis-ci.org/d3sreq/foam-tool.svg?branch=master]]
+[![Build Status](https://travis-ci.org/d3sreq/foam-tool.svg?branch=master)](https://travis-ci.org/d3sreq/foam-tool)
