@@ -23,6 +23,9 @@ plugin.xml_gen
 
 /org.foam.xtext.ltl/META-INF/
 
+/cnf/bin/
+/cnf/cache
+
 # global
 !**/.gitkeep
 /build/
