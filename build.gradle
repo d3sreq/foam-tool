@@ -47,6 +47,7 @@ subprojects { p ->
 			xtendOutputDir = XTEND_GEN_DIR
 		}
 		
+		// TODO
 //		test {
 //			java.srcDirs = [TEST_SRC_DIR, TEST_XTEND_GEN_DIR]
 //			resources.srcDirs = [TEST_SRC_DIR]
@@ -67,12 +68,12 @@ subprojects { p ->
 	
 	//Setup project dependencies
 	aQute.bnd.build.Project bndProject = workspace.getProject(p.projectDir)
-	bndProject.getDependson().each {
+	bndProject.dependson.each {
 		compileXtend.dependsOn(":${it.name}:bndbuild")
 	}
 
 	bndProject.getBuildpath().each {
-		def f = files(it.getFile())
+		def f = files(it.file)
 		dependencies.add('compile', f)
 		
 		// to allow use of external libs in build script (e.g. mwe libs)
@@ -90,12 +91,12 @@ subprojects { p ->
 		bndProject.build()
 
 		//Report errors and warnings to the Gradle output
-		bndProject.getWarnings().each { logger.warn it }
+		bndProject.warnings.each { logger.warn it }
 
-		bndProject.getErrors().each { logger.error it }
+		bndProject.errors.each { logger.error it }
 
 		//Fail the build if there are build errors
-		if(bndProject.getErrors()) {
+		if(bndProject.errors) {
 			throw new  GradleException("Bnd build failure. Check build logs for error messages")
 		}
 	}
@@ -122,13 +123,12 @@ subprojects { p ->
 	}
 }
 
-// TODO
 //Collect generated and external bundles for deployment
 task release << {
 	delete "release"
 
 	ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.4.0.jar')
-	ant.bndrelease(allowsnapshots: true, bndfile: 'run/webshop.bndrun', rootdir: './', outputdir: 'release')
+	ant.bndrelease(allowsnapshots: true, bndfile: 'org.foam.cli/runnable-foam.bndrun', rootdir: './', outputdir: 'release')
 }
 
 //Generate a Gradle wrapper
