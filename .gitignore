@@ -1,6 +1,7 @@
 /.gradle/
 /reports/
 /.metadata/
+/release/
 
 # common
 **/main/bin/
