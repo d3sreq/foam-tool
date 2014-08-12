@@ -66,7 +66,7 @@ task generateLtl {
 				Bundle-Version: 1.0.0.qualifier
 				Bundle-SymbolicName: org.foam.xtext.ltl; singleton:=true
 				Bundle-ActivationPolicy: lazy
-				Bundle-RequiredExecutionEnvironment: J2SE-1.5
+				Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 				""".stripIndent()
 		file(MANIFEST_PATH).getParentFile().mkdirs()
 		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
@@ -103,7 +103,7 @@ task generateLtl {
 		// but prevents error in eclipse
 		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 		
-		["plugin.xml", "plugin.xml_gen", "build.properties"].each {
+		["plugin.xml", "plugin.xml_gen"].each {
 			file(it).delete()
 		}
 	}
