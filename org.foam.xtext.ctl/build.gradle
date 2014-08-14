@@ -37,8 +37,8 @@ task generateCtl {
 		final grammarURI = "classpath:/org/foam/xtext/ctl/CtlXtext.xtext"
 		final projectName = "org.foam.xtext.ctl"
 			
-		file("${SRC_DIR}/org/foam/xtext/ctl/CtlLogicXtextRuntimeModule.java").delete()
-		file("${SRC_DIR}/org/foam/xtext/ctl/CtlLogicXtextStandaloneSetup.java").delete()
+		delete "${SRC_DIR}/org/foam/xtext/ctl/CtlLogicXtextRuntimeModule.java"
+		delete "${SRC_DIR}/org/foam/xtext/ctl/CtlLogicXtextStandaloneSetup.java"
 		
 		new StandaloneSetup().with {
 			scanClassPath  = true
@@ -49,12 +49,10 @@ task generateCtl {
 			addRegisterGenModelFile("platform:/resource/org.foam.xtext.plogic/model/generated/PropositionalLogicXtext.genmodel")
 		}
 		
-		file(XTEXT_DIR).deleteDir()
+		delete XTEXT_DIR
 		file(XTEXT_DIR).mkdir()
 		
-		file('model/generated').deleteDir()
-		file(RUNTIME_MODULE_FILE).delete()
-		file(STANDALONE_SETUP_FILE).delete()
+		delete 'model/generated', RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 		
 		// replace MANIFEST.MF with new one which doesn't import any dependencies
 		final MANIFEST_PATH = "META-INF/MANIFEST.MF"
@@ -103,9 +101,7 @@ task generateCtl {
 		// but prevents error in eclipse
 		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 		
-		["plugin.xml", "plugin.xml_gen"].each {
-			file(it).delete()
-		}
+		delete "plugin.xml", "plugin.xml_gen"
 	}
 }
 
@@ -130,9 +126,5 @@ bndProject.getDependson().each {
 }
 
 clean << {
-	["META-INF", XTEXT_DIR, MODEL_DIR].each {
-		file(it).deleteDir()
-	}
-	file(RUNTIME_MODULE_FILE).delete()
-	file(STANDALONE_SETUP_FILE).delete()
+	delete "META-INF", XTEXT_DIR, MODEL_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 }

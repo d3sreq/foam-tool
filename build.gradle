@@ -1,6 +1,8 @@
 // build script is based on http://paulonjava.blogspot.de/2013/11/building-bndtools-projects-with-gradle.html
 
 import aQute.bnd.build.Workspace
+import org.osgi.service.indexer.ResourceIndexer
+import org.osgi.service.indexer.impl.RepoIndex
 
 defaultTasks 'clean', 'bndbuild'
 
@@ -15,6 +17,7 @@ buildscript {
 	dependencies {
 		classpath files('cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.4.0.jar')
 		classpath 'org.xtend:xtend-gradle-plugin:0.1.+'
+		classpath files('cnf/buildrepo/org.osgi.impl.bundle.repoindex.lib/org.osgi.impl.bundle.repoindex.lib-2.1.2.jar')
 	}
 }
 
@@ -79,9 +82,6 @@ subprojects { p ->
 		// to allow use of external libs in build script (e.g. mwe libs)
 		buildscript.dependencies.add('classpath', f)
 	}
-	
-	// needed for xtext compiler to find .xtext resource
-	//buildscript.dependencies.add('classpath', files(SRC_DIR))
 
 	//Add junit as a default dependency
 	dependencies.add('testCompile', 'junit:junit:4.+')
@@ -97,14 +97,10 @@ subprojects { p ->
 
 		//Fail the build if there are build errors
 		if(bndProject.errors) {
-			throw new  GradleException("Bnd build failure. Check build logs for error messages")
+			throw new GradleException("Bnd build failure. Check build logs for error messages")
 		}
 	}
 
-//	bndbuild.dependsOn([
-//		'compileJava',
-//		'processResources'
-//	])
 	bndbuild.dependsOn([
 		'build'
 	])
@@ -112,14 +108,12 @@ subprojects { p ->
 	//Run integration tests
 	task bndtest << { task ->
 		if(bndProject.getProperty("Test-Cases")) {
-			bndProject.test();
+			bndProject.test()
 		}
 	}
 
 	clean << {
-		['generated', XTEND_GEN_DIR, TEST_XTEND_GEN_DIR].each {
-			p.file(it).deleteDir()
-		}
+		delete 'generated', XTEND_GEN_DIR, TEST_XTEND_GEN_DIR
 	}
 }
 
@@ -129,6 +123,16 @@ task release << {
 
 	ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.4.0.jar')
 	ant.bndrelease(allowsnapshots: true, bndfile: 'org.foam.cli/runnable-foam.bndrun', rootdir: './', outputdir: 'release')
+	
+	// generate index	 
+	def indexer = new RepoIndex()
+	
+	def config = [(ResourceIndexer.ROOT_URL): "release",
+		(ResourceIndexer.REPOSITORY_NAME): "FOAM tool repository"]
+	
+	def inputs = fileTree(dir: 'release', include: '*.jar') as Set
+	def output = new FileOutputStream("release/index.xml.gz")
+	indexer.index(inputs, output, config)
 }
 
 //Generate a Gradle wrapper

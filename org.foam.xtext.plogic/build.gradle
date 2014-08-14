@@ -35,8 +35,7 @@ task generatePlogicXtext {
 		final grammarURI = "classpath:/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
 		final projectName = "org.foam.xtext.plogic"
 			
-		file(RUNTIME_MODULE_FILE).delete()
-		file(STANDALONE_SETUP_FILE).delete()
+		delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 		
 		new StandaloneSetup().with {
 			scanClassPath  = true
@@ -47,12 +46,10 @@ task generatePlogicXtext {
 			addRegisterGenModelFile("platform:/resource/org.foam.models/models/propositionallogic.genmodel")
 		}
 		
-		file(XTEXT_DIR).deleteDir()
+		delete XTEXT_DIR
 		file(XTEXT_DIR).mkdir()
 		
-		file('model/generated').deleteDir()
-		file(RUNTIME_MODULE_FILE).delete()
-		file(STANDALONE_SETUP_FILE).delete()
+		delete 'model/generated', RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 		
 		// replace MANIFEST.MF with new one which doesn't import any dependencies
 		final MANIFEST_PATH = "META-INF/MANIFEST.MF"
@@ -101,9 +98,7 @@ task generatePlogicXtext {
 		// but prevents error in eclipse
 		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 		
-		["plugin.xml", "plugin.xml_gen"].each {
-			file(it).delete()
-		}
+		delete "plugin.xml", "plugin.xml_gen"
 	}
 }
 
@@ -120,9 +115,5 @@ task generateRedirect(type: Exec) {
 compileXtend.dependsOn('generateRedirect')
 
 clean << {
-	["META-INF", XTEXT_DIR, MODEL_DIR].each {
-		file(it).deleteDir()
-	}
-	file(RUNTIME_MODULE_FILE).delete()
-	file(STANDALONE_SETUP_FILE).delete()
+	delete "META-INF", XTEXT_DIR, MODEL_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 }

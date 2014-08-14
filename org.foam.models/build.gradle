@@ -27,7 +27,7 @@ task generateModels {
 			platformUri = ".."
 		}
 	
-		file(EMF_GEN_DIR).deleteDir()
+		delete EMF_GEN_DIR
 		
 		def genmodelNames = file(MODELS_DIR)
 			.listFiles()
@@ -55,9 +55,7 @@ task generateModels {
 		// delete fake *ImplCustom.java files
 		fakeImpls.each { it.delete() }
 		
-		["plugin.xml", "plugin.properties", "build.properties"].each {
-			file(it).delete()
-		}
+		delete "plugin.xml", "plugin.properties"
 		
 		println "done. don't forget to refresh the workspace"
 	}
@@ -66,5 +64,5 @@ task generateModels {
 compileXtend.dependsOn('generateRedirect')
 
 clean << {
-	file(EMF_GEN_DIR).deleteDir()	
+	delete EMF_GEN_DIR	
 }
