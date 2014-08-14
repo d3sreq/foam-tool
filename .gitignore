@@ -27,6 +27,8 @@ plugin.xml_gen
 /cnf/bin/
 /cnf/cache
 
+/bin/
+
 # global
 !**/.gitkeep
 /build/
