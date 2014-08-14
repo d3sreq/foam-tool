@@ -32,4 +32,3 @@ plugin.xml_gen
 # global
 !**/.gitkeep
 /build/
-
