@@ -21,6 +21,6 @@ Gradle is used to build foam-tool. The workspace root has a `build.gradle` file 
 
 
 ## Release
-foam-tool is continuously built and released on [CloudBees](https://bndtools.ci.cloudbees.com/).
+foam-tool is continuously built and released on [CloudBees](https://foam-tool.ci.cloudbees.com/).
 
 [![Built on DEV@cloud](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png)](http://www.cloudbees.com/foss/foss-dev.cb)
