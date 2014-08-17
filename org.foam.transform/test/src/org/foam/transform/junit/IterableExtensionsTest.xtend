@@ -69,9 +69,9 @@ class IterableExtensionsTest {
 		assertEquals(6, mmap.size)
 		assertEquals(3, mmap.keySet.size)
 
-		assertArrayEquals(#[30,31], mmap.get(3))
-		assertArrayEquals(#[20,21], mmap.get(2))
-		assertArrayEquals(#[10,11], mmap.get(1))
+		assertArrayEquals(#[30,31], mmap.get(3).sort.toArray)
+		assertArrayEquals(#[20,21], mmap.get(2).sort.toArray)
+		assertArrayEquals(#[10,11], mmap.get(1).sort.toArray)
 
 	}
 	
@@ -82,8 +82,8 @@ class IterableExtensionsTest {
 		assertEquals(7, mmap.size)
 		assertEquals(3, mmap.keySet.size)
 
-		assertArrayEquals(#[10,11,12,14], mmap.get(1))
+		assertArrayEquals(#[10,11,12,14], mmap.get(1).sort.toArray)
 		assertArrayEquals(#[20], mmap.get(2))
-		assertArrayEquals(#[30,31], mmap.get(3))
+		assertArrayEquals(#[30,31], mmap.get(3).sort.toArray)
 	}
 }
