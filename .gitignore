@@ -13,8 +13,11 @@
 *RuntimeModule.java
 *StandaloneSetup.java
 plugin.xml_gen
+**/.settings/
 
 # project-specific
+/org.foam.models/build.properties
+
 /org.foam.xtext.plogic/plugin.xml
 /org.foam.xtext.plogic/plugin.xml_gen
 /org.foam.xtext.plogic/model/
