@@ -27,91 +27,88 @@ sourceSets.main.java.srcDir XTEXT_DIR
 sourceSets.main.resources.srcDir XTEXT_DIR
 sourceSets.main.resources.exclude '**/*.java'
 
-task generateLtl {
-//	inputs.file "${SRC_DIR}/org/foam/xtext/ltl/LtlXtext.xtext"
-//	outputs.dir XTEXT_DIR
-//	outputs.dir MODEL_DIR
-//	outputs.file RUNTIME_MODULE_FILE
-//	outputs.file STANDALONE_SETUP_FILE
+task generateLtl << {
+	final grammarURI = "classpath:/org/foam/xtext/ltl/LtlXtext.xtext"
+	final projectName = "org.foam.xtext.ltl"
+		
+    delete "${SRC_DIR}/org/foam/xtext/ltl/LtlLogicXtextRuntimeModule.java"
+    delete "${SRC_DIR}/org/foam/xtext/ltl/LtlLogicXtextStandaloneSetup.java"
 	
-	doLast {
-		final grammarURI = "classpath:/org/foam/xtext/ltl/LtlXtext.xtext"
-		final projectName = "org.foam.xtext.ltl"
-			
-	    delete "${SRC_DIR}/org/foam/xtext/ltl/LtlLogicXtextRuntimeModule.java"
-	    delete "${SRC_DIR}/org/foam/xtext/ltl/LtlLogicXtextStandaloneSetup.java"
+	new StandaloneSetup().with {
+		scanClassPath  = true
+		platformUri = ".."
 		
-		new StandaloneSetup().with {
-			scanClassPath  = true
-			platformUri = ".."
-			
-			addRegisterGeneratedEPackage("org.foam.ltl.LtlPackage") // problem, solved by hack
-			addRegisterGenModelFile("platform:/resource/org.foam.models/models/ltl.genmodel")
-			addRegisterGenModelFile("platform:/resource/org.foam.xtext.plogic/model/model/PropositionalLogicXtext.genmodel")
-		}
-		
-		delete XTEXT_DIR
-		file(XTEXT_DIR).mkdir()
-		
-		delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
-		
-		// replace MANIFEST.MF with new one which doesn't import any dependencies
-		final MANIFEST_PATH = "META-INF/MANIFEST.MF"
-		final MANIFEST_CONTENT = """\
-				Manifest-Version: 1.0
-				Bundle-ManifestVersion: 2
-				Bundle-Name: org.foam.xtext.ltl
-				Bundle-Vendor: My Company
-				Bundle-Version: 1.0.0.qualifier
-				Bundle-SymbolicName: org.foam.xtext.ltl; singleton:=true
-				Bundle-ActivationPolicy: lazy
-				Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-				""".stripIndent()
-		file(MANIFEST_PATH).getParentFile().mkdirs()
-		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
-		
-		new Generator().with {
-			srcPath = "/main/src"
-			srcGenPath = "/main/xtext-gen"
-	
-			pathRtProject = "../${projectName}"
-			projectNameRt = projectName
-			encoding = "UTF-8"
-			
-			addLanguage(new LanguageConfig().with {
-				uri = grammarURI
-				
-				// Java API to access grammar elements (required by several other fragments)
-				addFragment(new GrammarAccessFragment())
-								
-				// generates Java API for the generated EPackages
-				addFragment(new EMFGeneratorFragment())
-	
-				// the Antlr parser
-				addFragment(new XtextAntlrGeneratorFragment())
-				
-				// serializer 2.0
-				addFragment(new SerializerFragment(generateStub: false))
-				it
-			})
-			
-			preInvoke(); invoke(null); postInvoke()
-		}
-		
-		// write MANIFEST.MF over generated one, this step is not needed
-		// but prevents error in eclipse
-		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
-		
-		delete "plugin.xml", "plugin.xml_gen"
+		addRegisterGeneratedEPackage("org.foam.ltl.LtlPackage") // problem, solved by hack
+		addRegisterGenModelFile("platform:/resource/org.foam.models/models/ltl.genmodel")
+		addRegisterGenModelFile("platform:/resource/org.foam.xtext.plogic/model/model/PropositionalLogicXtext.genmodel")
 	}
+	
+	delete XTEXT_DIR
+	file(XTEXT_DIR).mkdir()
+	
+	delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	
+	// replace MANIFEST.MF with new one which doesn't import any dependencies
+	final MANIFEST_PATH = "META-INF/MANIFEST.MF"
+	final MANIFEST_CONTENT = """\
+			Manifest-Version: 1.0
+			Bundle-ManifestVersion: 2
+			Bundle-Name: org.foam.xtext.ltl
+			Bundle-Vendor: My Company
+			Bundle-Version: 1.0.0.qualifier
+			Bundle-SymbolicName: org.foam.xtext.ltl; singleton:=true
+			Bundle-ActivationPolicy: lazy
+			Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+			""".stripIndent()
+	file(MANIFEST_PATH).getParentFile().mkdirs()
+	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
+	
+	new Generator().with {
+		srcPath = "/main/src"
+		srcGenPath = "/main/xtext-gen"
+
+		pathRtProject = "../${projectName}"
+		projectNameRt = projectName
+		encoding = "UTF-8"
+		
+		addLanguage(new LanguageConfig().with {
+			uri = grammarURI
+			
+			// Java API to access grammar elements (required by several other fragments)
+			addFragment(new GrammarAccessFragment())
+							
+			// generates Java API for the generated EPackages
+			addFragment(new EMFGeneratorFragment())
+
+			// the Antlr parser
+			addFragment(new XtextAntlrGeneratorFragment())
+			
+			// serializer 2.0
+			addFragment(new SerializerFragment(generateStub: false))
+			it
+		})
+		
+		preInvoke(); invoke(null); postInvoke()
+	}
+	
+	// write MANIFEST.MF over generated one, this step is not needed
+	// but prevents error in eclipse
+	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
+	
+	delete "plugin.xml", "plugin.xml_gen"
 }
 
 // workaround for xtext generator
 // generator downloads .antlr-generator-3.2.0.jar and .antlr-generator-3.2.0-patch.jar
 // into directory from which was gradle executed. It doesn't take into account project
 // structure. This workaround executes new gradle instance and runs xtext generation.
-// TODO - test with gradle wrapper only
-task generateRedirect(type: Exec) {	
+task generateRedirect(type: Exec) {
+	inputs.file "${SRC_DIR}/org/foam/xtext/ltl/LtlXtext.xtext"
+	outputs.dir XTEXT_DIR
+	outputs.dir MODEL_DIR
+	outputs.file RUNTIME_MODULE_FILE
+	outputs.file STANDALONE_SETUP_FILE
+	
 	workingDir projectDir
 	commandLine 'gradle', 'generateLtl'
 }

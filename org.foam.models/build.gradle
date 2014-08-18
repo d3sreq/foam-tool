@@ -5,64 +5,77 @@ import org.eclipse.emf.mwe2.ecore.EcoreGenerator
 final EMF_GEN_DIR = "main/emf-gen"
 final MODELS_DIR = "models"
 final MODELS = "platform:/resource/org.foam.models/" + MODELS_DIR
+final BUILD_PROPERTIES_FILE = "build.properties"
 
 defaultTasks 'generateModels'
 
 sourceSets.main.java.srcDir EMF_GEN_DIR
 
 task generateRedirect(type: Exec) {
+	inputs.dir SRC_DIR
+	inputs.dir MODELS_DIR
+	outputs.dir EMF_GEN_DIR
+	outputs.file 'build.properties'
+	
 	workingDir projectDir
 	commandLine 'gradle', 'generateModels'
 }
 
-// TODO - declare outputs to speed up build
-task generateModels {
-//	inputs.dir SRC_DIR
-//	inputs.dir MODELS_DIR
-//	outputs.dir EMF_GEN_DIR
-	
-	doLast {
-		new StandaloneSetup().with {
-			scanClassPath = true
-			platformUri = ".."
-		}
-	
-		delete EMF_GEN_DIR
-		
-		def genmodelNames = file(MODELS_DIR)
-			.listFiles()
-			.collect{it.name}
-			.findAll{it.endsWith(".genmodel")}
-			
-		// generate empty *ImplCustom.java files to outsmart ecore generator
-		def fakeImpls = fileTree(dir: SRC_DIR, include: '**/*ImplCustom.xtend').collect {
-			def name = it.name.replace('.xtend', '.java')
-			new File(it.parent, name)
-		}
-		fakeImpls.each { it.createNewFile() }
-	
-		for(genmodel in genmodelNames) {
-			new EcoreGenerator().with {
-				genModel = "${MODELS}/${genmodel}"
-				addSrcPath(SRC_DIR)
-				addSrcPath(XTEND_GEN_DIR)
-				generateEdit = false
-				generateEditor = false
-				invoke(null)
-			}
-		}
-		
-		// delete fake *ImplCustom.java files
-		fakeImpls.each { it.delete() }
-		
-		delete "plugin.xml", "plugin.properties"
-		
-		println "done. don't forget to refresh the workspace"
+task generateModels << {
+	new StandaloneSetup().with {
+		scanClassPath = true
+		platformUri = ".."
 	}
+
+	delete EMF_GEN_DIR
+	
+	def genmodelNames = file(MODELS_DIR)
+		.listFiles()
+		.collect{it.name}
+		.findAll{it.endsWith(".genmodel")}
+		
+	// generate empty *ImplCustom.java files to outsmart ecore generator
+	def fakeImpls = fileTree(dir: SRC_DIR, include: '**/*ImplCustom.xtend').collect {
+		def name = it.name.replace('.xtend', '.java')
+		new File(it.parent, name)
+	}
+	fakeImpls.each { it.createNewFile() }
+
+	for(genmodel in genmodelNames) {
+		new EcoreGenerator().with {
+			genModel = "${MODELS}/${genmodel}"
+			addSrcPath(SRC_DIR)
+			addSrcPath(XTEND_GEN_DIR)
+			generateEdit = false
+			generateEditor = false
+			invoke(null)
+		}
+	}
+	
+	// delete fake *ImplCustom.java files
+	fakeImpls.each { it.delete() }
+	
+	delete "plugin.xml", "plugin.properties"
+	
+	// replace generated build.properties (eclipse produces warnings 
+	// with generated one)
+	final BUILD_PROPERTIES_CONTENT = """\
+			jars.compile.order = .
+			source.. = main/src/,\\
+			main/xtend-gen/,\\
+			test/src/,\\
+			test/xtend-gen/,\\
+			main/emf-gen/
+			output.. = main/bin/,\\
+			test/bin/
+			""".stripIndent()
+	file(BUILD_PROPERTIES_FILE).write(BUILD_PROPERTIES_CONTENT)
+	
+	println "done. don't forget to refresh the workspace"
 }
 
 compileXtend.dependsOn('generateRedirect')
 
 clean << {
-	project.delete EMF_GEN_DIR	
+	project.delete EMF_GEN_DIR, BUILD_PROPERTIES_FILE
 }
