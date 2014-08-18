@@ -39,3 +39,5 @@ Export-Package:  \
 	org.foam.xtext.plogic,\
 	org.foam.xtext.plogic.parser.antlr,\
 	org.foam.xtext.plogic.services
+Include-Resource:  model,\
+	build/resources/main/

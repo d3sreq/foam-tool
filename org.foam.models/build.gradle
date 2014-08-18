@@ -64,5 +64,5 @@ task generateModels {
 compileXtend.dependsOn('generateRedirect')
 
 clean << {
-	delete EMF_GEN_DIR	
+	project.delete EMF_GEN_DIR	
 }

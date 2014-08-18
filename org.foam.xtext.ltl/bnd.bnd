@@ -30,3 +30,4 @@ Export-Package:  \
 	org.foam.xtext.ltl.services,\
 	org.foam.xtext.ltl.parser.antlr.internal,\
 	org.foam.xtext.ltl.serializer
+Include-Resource: build/resources/main/

@@ -19,12 +19,13 @@ buildscript {
 	}
 }
 
-final MODEL_DIR = "model"
 final XTEXT_DIR = 'main/xtext-gen'
 final RUNTIME_MODULE_FILE = "${SRC_DIR}/org/foam/xtext/ctl/CtlXtextRuntimeModule.java"
 final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/ctl/CtlXtextStandaloneSetup.java"
 
 sourceSets.main.java.srcDir XTEXT_DIR
+sourceSets.main.resources.srcDir XTEXT_DIR
+sourceSets.main.resources.exclude '**/*.java'
 
 task generateCtl {
 	//	inputs.file "${SRC_DIR}/org/foam/xtext/ctl/CtlXtext.xtext"
@@ -46,13 +47,13 @@ task generateCtl {
 			
 			addRegisterGeneratedEPackage("org.foam.ctl.CtlPackage") // problem, solved by hack
 			addRegisterGenModelFile("platform:/resource/org.foam.models/models/ctl.genmodel")
-			addRegisterGenModelFile("platform:/resource/org.foam.xtext.plogic/model/generated/PropositionalLogicXtext.genmodel")
+			addRegisterGenModelFile("platform:/resource/org.foam.xtext.plogic/model/model/PropositionalLogicXtext.genmodel")
 		}
 		
 		delete XTEXT_DIR
 		file(XTEXT_DIR).mkdir()
 		
-		delete 'model/generated', RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+		delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 		
 		// replace MANIFEST.MF with new one which doesn't import any dependencies
 		final MANIFEST_PATH = "META-INF/MANIFEST.MF"
@@ -81,7 +82,10 @@ task generateCtl {
 				uri = grammarURI
 				
 				// Java API to access grammar elements (required by several other fragments)
-				addFragment(new GrammarAccessFragment())
+				// setting of property "xmlVersion" to value "1.0" causes generation
+				// of CtlXtext.xmi file (instead of CtlXtext.xtextbin used by newer xtext).
+				// CtlXtext.xmi is needed during gradle tests
+				addFragment(new GrammarAccessFragment(xmlVersion: "1.0"))
 								
 				// generates Java API for the generated EPackages
 				addFragment(new EMFGeneratorFragment())
@@ -105,6 +109,15 @@ task generateCtl {
 	}
 }
 
+processResources {
+	from("${XTEXT_DIR}") {
+		include '**/*.xmi'
+	}
+
+	into 'build/resources/main'
+	includeEmptyDirs = false
+}
+
 // workaround for xtext generator
 // generator downloads .antlr-generator-3.2.0.jar and .antlr-generator-3.2.0-patch.jar
 // into directory from which was gradle executed. It doesn't take into account project
@@ -126,5 +139,5 @@ bndProject.getDependson().each {
 }
 
 clean << {
-	delete "META-INF", XTEXT_DIR, MODEL_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	project.delete "META-INF", XTEXT_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 }

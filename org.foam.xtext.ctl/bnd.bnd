@@ -29,3 +29,4 @@ Export-Package:  \
 	org.foam.xtext.ctl.parser.antlr,\
 	org.foam.xtext.ctl.parser.antlr.internal,\
 	org.foam.xtext.ctl.serializer
+Include-Resource: build/resources/main/

@@ -23,6 +23,9 @@ final RUNTIME_MODULE_FILE = "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogic
 final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtextStandaloneSetup.java"
 
 sourceSets.main.java.srcDir XTEXT_DIR
+sourceSets.main.resources.srcDir MODEL_DIR
+sourceSets.main.resources.srcDir XTEXT_DIR
+sourceSets.main.resources.exclude '**/*.java'
 
 task generatePlogicXtext {
 	//	inputs.file "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
@@ -49,7 +52,7 @@ task generatePlogicXtext {
 		delete XTEXT_DIR
 		file(XTEXT_DIR).mkdir()
 		
-		delete 'model/generated', RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+		delete 'model/model', RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 		
 		// replace MANIFEST.MF with new one which doesn't import any dependencies
 		final MANIFEST_PATH = "META-INF/MANIFEST.MF"
@@ -99,6 +102,10 @@ task generatePlogicXtext {
 		file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 		
 		delete "plugin.xml", "plugin.xml_gen"
+		
+		// rename directory "model/generated" to "model/model", final bundle
+		// shall contain only 2nd level "model" directory
+		file("model/generated").renameTo(file("model/model"))
 	}
 }
 
@@ -115,5 +122,5 @@ task generateRedirect(type: Exec) {
 compileXtend.dependsOn('generateRedirect')
 
 clean << {
-	delete "META-INF", XTEXT_DIR, MODEL_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	project.delete "META-INF", XTEXT_DIR, MODEL_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 }

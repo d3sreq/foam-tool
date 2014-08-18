@@ -51,13 +51,13 @@ subprojects { p ->
 		}
 		
 		// TODO
-//		test {
-//			java.srcDirs = [TEST_SRC_DIR, TEST_XTEND_GEN_DIR]
-//			resources.srcDirs = [TEST_SRC_DIR]
-////			output.classesDir = 'test/bin'
-////			output.resourcesDir = 'test/bin'
-//			xtendOutputDir = TEST_XTEND_GEN_DIR
-//		}
+		test {
+			java.srcDirs = [TEST_SRC_DIR, TEST_XTEND_GEN_DIR]
+			resources.srcDirs = [TEST_SRC_DIR]
+//			output.classesDir = 'test/bin'
+//			output.resourcesDir = 'test/bin'
+			xtendOutputDir = TEST_XTEND_GEN_DIR
+		}
 	}
 	testResultsDirName = 'generated/test-reports'
 	
@@ -113,7 +113,7 @@ subprojects { p ->
 	}
 
 	clean << {
-		delete 'generated', XTEND_GEN_DIR, TEST_XTEND_GEN_DIR
+		project.delete 'generated', XTEND_GEN_DIR, TEST_XTEND_GEN_DIR
 	}
 }
 

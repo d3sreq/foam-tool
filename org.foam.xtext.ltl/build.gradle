@@ -19,12 +19,13 @@ buildscript {
 	}
 }
 
-final MODEL_DIR = "model"
 final XTEXT_DIR = 'main/xtext-gen'
 final RUNTIME_MODULE_FILE = "${SRC_DIR}/org/foam/xtext/ltl/LtlXtextRuntimeModule.java"
 final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/ltl/LtlXtextStandaloneSetup.java"
 
 sourceSets.main.java.srcDir XTEXT_DIR
+sourceSets.main.resources.srcDir XTEXT_DIR
+sourceSets.main.resources.exclude '**/*.java'
 
 task generateLtl {
 //	inputs.file "${SRC_DIR}/org/foam/xtext/ltl/LtlXtext.xtext"
@@ -46,13 +47,13 @@ task generateLtl {
 			
 			addRegisterGeneratedEPackage("org.foam.ltl.LtlPackage") // problem, solved by hack
 			addRegisterGenModelFile("platform:/resource/org.foam.models/models/ltl.genmodel")
-			addRegisterGenModelFile("platform:/resource/org.foam.xtext.plogic/model/generated/PropositionalLogicXtext.genmodel")
+			addRegisterGenModelFile("platform:/resource/org.foam.xtext.plogic/model/model/PropositionalLogicXtext.genmodel")
 		}
 		
 		delete XTEXT_DIR
 		file(XTEXT_DIR).mkdir()
 		
-		delete 'model/generated', RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+		delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 		
 		// replace MANIFEST.MF with new one which doesn't import any dependencies
 		final MANIFEST_PATH = "META-INF/MANIFEST.MF"
@@ -126,5 +127,5 @@ bndProject.getDependson().each {
 }
 
 clean << {
-	delete "META-INF", XTEXT_DIR, MODEL_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	project.delete "META-INF", XTEXT_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 }
