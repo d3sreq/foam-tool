@@ -7,7 +7,7 @@ final MODELS_DIR = "models"
 final MODELS = "platform:/resource/org.foam.models/" + MODELS_DIR
 final BUILD_PROPERTIES_FILE = "build.properties"
 
-defaultTasks 'generateModels'
+defaultTasks 'clean', 'build'
 
 sourceSets.main.java.srcDir EMF_GEN_DIR
 

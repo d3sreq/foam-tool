@@ -7,7 +7,7 @@ import org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
 import org.eclipse.xtext.generator.serializer.SerializerFragment
 import aQute.bnd.build.Workspace
 
-defaultTasks 'generateLtl'
+defaultTasks 'clean', 'build'
 
 buildscript {
 	dependencies {
