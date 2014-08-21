@@ -4,7 +4,7 @@ import aQute.bnd.build.Workspace
 import org.osgi.service.indexer.ResourceIndexer
 import org.osgi.service.indexer.impl.RepoIndex
 
-defaultTasks 'clean', 'bndbuild', 'release'
+defaultTasks 'clean', 'build', 'release'
 
 ext.SRC_DIR 			= "main/src"
 ext.XTEND_GEN_DIR 		= "main/xtend-gen"
