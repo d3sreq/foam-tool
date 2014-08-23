@@ -5,7 +5,6 @@ import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.util.List
 import java.util.Map
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.osgi.service.log.LogService
