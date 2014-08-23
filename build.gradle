@@ -72,7 +72,7 @@ subprojects { p ->
 	//Setup project dependencies
 	aQute.bnd.build.Project bndProject = workspace.getProject(p.projectDir)
 	bndProject.dependson.each {
-		compileXtend.dependsOn(":${it.name}:bndbuild")
+		compileXtend.dependsOn(":${it.name}:build")
 	}
 
 	bndProject.getBuildpath().each {
@@ -87,7 +87,7 @@ subprojects { p ->
 	dependencies.add('testCompile', 'junit:junit:4.+')
 
 	//Perform the actual bnd build
-	task bndbuild << { task ->
+	build << { task ->
 		bndProject.build()
 
 		//Report errors and warnings to the Gradle output
@@ -101,16 +101,12 @@ subprojects { p ->
 		}
 	}
 
-	bndbuild.dependsOn([
-		'build'
-	])
-
-	//Run integration tests
-	task bndtest << { task ->
-		if(bndProject.getProperty("Test-Cases")) {
-			bndProject.test()
-		}
-	}
+	//Run integration tests - commented as no integration tests are present yet	 
+//	task bndtest << { task ->
+//		if(bndProject.getProperty("Test-Cases")) {
+//			bndProject.test()
+//		}
+//	}
 
 	clean << {
 		project.delete 'generated', XTEND_GEN_DIR, TEST_XTEND_GEN_DIR

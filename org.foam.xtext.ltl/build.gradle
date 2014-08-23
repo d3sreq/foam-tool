@@ -121,7 +121,7 @@ def parentDir = project.projectDir.getParentFile()
 def workspace = Workspace.getWorkspace(parentDir)
 def bndProject = workspace.getProject(projectDir)
 bndProject.getDependson().each {
-	generateRedirect.dependsOn(":${it.name}:bndbuild")
+	generateRedirect.dependsOn(":${it.name}:build")
 }
 
 clean << {
