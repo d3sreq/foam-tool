@@ -21,7 +21,8 @@
 	org.eclipse.xtext.xbase.lib,\
 	org.foam.models.propositionallogic;version=latest,\
 	org.eclipse.emf.ecore.xmi,\
-	org.eclipse.jdt.core
+	org.eclipse.jdt.core,\
+	javax.inject
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.ctl,\
