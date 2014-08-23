@@ -32,8 +32,7 @@ task generateCtl << {
 	final grammarURI = "classpath:/org/foam/xtext/ctl/CtlXtext.xtext"
 	final projectName = "org.foam.xtext.ctl"
 		
-	delete "${SRC_DIR}/org/foam/xtext/ctl/CtlLogicXtextRuntimeModule.java"
-	delete "${SRC_DIR}/org/foam/xtext/ctl/CtlLogicXtextStandaloneSetup.java"
+	delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 	
 	new StandaloneSetup().with {
 		scanClassPath  = true
