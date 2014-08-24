@@ -6,10 +6,17 @@ Formal Verification of Annotated Textual Use-Cases
 [![Build Status](https://foam-tool.ci.cloudbees.com/job/foam-tool/badge/icon)](https://foam-tool.ci.cloudbees.com/job/foam-tool/)
 
 ## Installation
-Latest version is available at the following indexed repository:
+
+Runnable jar can be downloaded from:
 
 ```
-https://foam-tool.ci.cloudbees.com/job/foam-tool/lastSuccessfulBuild/artifact/release/
+https://foam-tool.ci.cloudbees.com/job/foam-tool/lastSuccessfulBuild/artifact/release/distribution/
+```
+
+Indexed repository with latest artifacts is available at:
+
+```
+https://foam-tool.ci.cloudbees.com/job/foam-tool/lastSuccessfulBuild/artifact/release/repository/
 ```
 
 ## Building

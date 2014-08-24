@@ -116,17 +116,20 @@ subprojects { p ->
 //Collect generated and external bundles for deployment
 task release << {
 	delete "release"
-
-	ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.4.0.jar')
-	ant.bndrelease(allowsnapshots: true, bndfile: 'org.foam.cli/runnable-foam.bndrun', rootdir: './', outputdir: 'release')
+	
+	// place jars into "repository" directory
+	file("release/repository").mkdirs()
+	ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.4.0.jar')	
+	ant.bndrelease(allowsnapshots: true, bndfile: 'org.foam.cli/runnable-foam.bndrun', rootdir: './', outputdir: 'release/repository')
 	
 	// generate index	 
 	def indexer = new RepoIndex()
-	
-	def config = [(ResourceIndexer.ROOT_URL): "release",
-		(ResourceIndexer.REPOSITORY_NAME): "FOAM tool repository"]
-	
-	def inputs = fileTree(dir: 'release', include: '*.jar') as Set
-	def output = new FileOutputStream("release/index.xml.gz")
+	def config = [(ResourceIndexer.ROOT_URL): "release/repository", (ResourceIndexer.REPOSITORY_NAME): "FOAM tool repository"]
+	def inputs = fileTree(dir: 'release/repository', include: '*.jar') as Set
+	def output = new FileOutputStream("release/repository/index.xml.gz")
 	indexer.index(inputs, output, config)
+	
+	// generate runnable .jar
+	file('release/distribution').mkdirs()
+	workspace.getProject('org.foam.cli').export('runnable-foam.bndrun', false, file('release/distribution/foam-tool.jar'))
 }
