@@ -25,6 +25,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 	Map<UseCase, Graph> useCase2Graph
 
 	val dotFactory = DotFactory.eINSTANCE
+	val SCENARIO_TEXT_MAXLEN = 30
 
 	override process(State state) {
 		addScenarioSubGraph(state)
@@ -43,11 +44,13 @@ class AddScenarioStateProcessor implements StateProcessor {
 
 					if (!scenario.isMainScenario) {
 						statements += dotFactory.createAssignment => [
+							val text = if (scenario.text.length < SCENARIO_TEXT_MAXLEN) scenario.text else scenario.text.substring(0, SCENARIO_TEXT_MAXLEN) + "..." 
+							
 							key = "label"
 							value = '''
 								«IF scenario.isExtensionBranch»Extension: «scenario.label».\l«ENDIF»
 								«IF scenario.isVariationBranch»Variation: «scenario.label».\l«ENDIF»
-								«scenario.text»
+								«text»
 							'''.toString.replaceAll("\\s+", " ")
 						]
 						statements += dotFactory.createAssignment => [
