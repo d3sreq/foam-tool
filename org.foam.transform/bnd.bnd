@@ -31,4 +31,5 @@
 	org.apache.servicemix.bundles.junit,\
 	org.foam.xtext.plogic;version=latest,\
 	javax.inject,\
-	org.antlr.runtime
+	org.antlr.runtime,\
+	osgi.core;version=4.3

@@ -95,6 +95,7 @@ class Lts2Dot {
 		graph
 	}
 
+	@Deprecated
 	def transformOverview(Automaton lts, Graph graph) {
 		val state2Node = new HashMap<State, Node>
 

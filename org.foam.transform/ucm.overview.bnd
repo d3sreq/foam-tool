@@ -1,0 +1,5 @@
+Bundle-Version: 1.0.0
+Service-Component:  \
+	*
+Export-Package:  \
+	org.foam.transform.ucm.overview
