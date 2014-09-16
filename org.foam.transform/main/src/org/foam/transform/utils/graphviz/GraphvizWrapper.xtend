@@ -8,6 +8,9 @@ import java.io.InputStreamReader
 import java.util.Map
 import org.foam.transform.utils.logger.LogServiceExtension
 import org.osgi.service.log.LogService
+import java.io.File
+import com.google.common.io.Files
+import com.google.common.base.Charsets
 
 @Component(provide = GraphvizWrapper)
 class GraphvizWrapper {
@@ -40,4 +43,21 @@ class GraphvizWrapper {
 	def void runGraphviz(Iterable<String> dotCmdArgs) {
 		Runtime.runtime.exec(dotCmdArgs).waitFor
 	}
+	
+	def void createSvg(CharSequence dotContent, String outputFileName) {
+		val outputFile  = new File(outputFileName)
+		outputFile.mkdirs
+		
+		// TODO: use stdin instead of writing a file to the filesystem
+
+		// write dot to file
+		val dotFileName = '''«outputFileName».dot'''
+		Files.write(dotContent, outputFile, Charsets.UTF_8) 
+		
+		val dotCommand = #["dot", "-Tsvg", "-o", outputFileName, dotFileName]
+		
+		'''Creating svg image with dot: "«dotCommand.join(" ")»"'''.info
+		runGraphviz(dotCommand)
+	}
+	
 }
