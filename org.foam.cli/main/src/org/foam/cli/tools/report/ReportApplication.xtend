@@ -43,7 +43,7 @@ import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.lts2dot.Lts2Dot
 import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService
 import org.foam.transform.tadllang2tadl.TadlLang2Tadl
-import org.foam.transform.ucm.dot.UcmOverviewUsingDot
+import org.foam.transform.ucm.overview.dot.UcmOverviewUsingDot
 import org.foam.transform.ucm2lts.Ucm2LtsFacade
 import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver

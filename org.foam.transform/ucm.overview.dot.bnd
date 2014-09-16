@@ -2,4 +2,4 @@ Bundle-Version: 1.0.0
 Service-Component:  \
 	*
 Export-Package:  \
-	org.foam.transform.ucm.dot
+	org.foam.transform.ucm.overview.dot

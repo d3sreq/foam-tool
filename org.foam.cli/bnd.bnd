@@ -35,4 +35,5 @@
 	org.eclipse.emf.common,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
-	org.foam.transform.utils.logger;version=latest
+	org.foam.transform.utils.logger;version=latest,\
+	org.foam.transform.ucm.overview.dot;version=latest

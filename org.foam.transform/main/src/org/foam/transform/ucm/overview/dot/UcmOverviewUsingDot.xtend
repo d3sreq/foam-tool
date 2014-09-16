@@ -1,4 +1,4 @@
-package org.foam.transform.ucm.dot
+package org.foam.transform.ucm.overview.dot
 
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference

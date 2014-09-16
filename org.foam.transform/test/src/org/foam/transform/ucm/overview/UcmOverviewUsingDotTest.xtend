@@ -1,11 +1,11 @@
 package org.foam.transform.ucm.overview
 
+import org.foam.flowannotation.FlowannotationFactory
+import org.foam.transform.ucm.overview.dot.UcmOverviewUsingDot
 import org.foam.ucm.UcmFactory
 import org.foam.ucm.UseCase
 import org.junit.Assert
 import org.junit.Test
-import org.foam.flowannotation.FlowannotationFactory
-import org.foam.transform.ucm.dot.UcmOverviewUsingDot
 
 class UcmOverviewUsingDotTest {
 	
@@ -52,7 +52,7 @@ class UcmOverviewUsingDotTest {
 		// generate names for all use-cases
 		useCases.forEach[name = '''Name of use-case «id»''']
 	]
-	
+		
 	val service = new UcmOverviewUsingDot => [
 		logService = null
 		ucmOverviewCreator = new UcmOverviewCreator
