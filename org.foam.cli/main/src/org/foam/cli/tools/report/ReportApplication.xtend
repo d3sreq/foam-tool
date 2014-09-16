@@ -435,7 +435,7 @@ class SpecificationWrapper {
 	@Property val Specification specification
 	
 	new(Specification specification) {
-		this.specification = specification
+		_specification = specification
 	}
 	
 	override hashCode() {
