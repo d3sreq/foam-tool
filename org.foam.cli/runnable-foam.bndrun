@@ -50,6 +50,8 @@
 	org.foam.transform.lts2dot;version=latest,\
 	org.foam.transform.lts2nusmvlang;version=latest,\
 	org.foam.transform.tadllang2tadl;version=latest,\
+	org.foam.transform.ucm.overview;version=latest,\
+	org.foam.transform.ucm.overview.dot;version=latest,\
 	org.foam.transform.ucm2lts;version=latest,\
 	org.foam.transform.ucm2ucm;version=latest,\
 	org.foam.transform.utils.graphviz;version=latest,\
