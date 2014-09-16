@@ -43,8 +43,8 @@ import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.lts2dot.Lts2Dot
 import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService
 import org.foam.transform.tadllang2tadl.TadlLang2Tadl
+import org.foam.transform.ucm.dot.UcmOverviewUsingDot
 import org.foam.transform.ucm2lts.Ucm2LtsFacade
-import org.foam.transform.ucm2lts.Ucm2LtsOverviewGraph
 import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
@@ -87,6 +87,11 @@ class ReportApplication implements IExecutableTool {
 	private Lts2NusmvLangService lts2NusmvLangService
 	@Reference def void setLts2NusmvLangService(Lts2NusmvLangService serviceRef) {
 		this.lts2NusmvLangService = serviceRef
+	}
+
+	private UcmOverviewUsingDot ucmOverviewUsingDot
+	@Reference def void setUcmOverviewCreator(UcmOverviewUsingDot ucmOverviewUsingDot) {
+		this.ucmOverviewUsingDot = ucmOverviewUsingDot
 	}
 
 	override execute(String[] args) {
@@ -240,27 +245,13 @@ class ReportApplication implements IExecutableTool {
 		}
 	}
 	
-	def private createOverviewPage(UseCaseModel useCaseModel, Menu menu, String outputDirName) {
-		// ucm -> lts -> dot
-		val automaton = (new Ucm2LtsOverviewGraph).transform(useCaseModel)
-		'''Validating overview LTS'''.debug
-		EmfCommons.basicValidate(automaton)
+	def private createOverviewPage(UseCaseModel ucm, Menu menu, String outputDirName) {
 		
-		// load XMI from bundle
-		val overviewGraphTemplate = FrameworkUtil.getBundle(class).getResource("/report/dot/OverviewGraphTemplate.xmi").openStream
-		val initGraph = EmfCommons.readModel(overviewGraphTemplate) as Graph
+		val dotCode = ucmOverviewUsingDot.transform(ucm)
+		val svgFileName = '''«outputDirName»/overview.svg'''
+		graphvizWrapper.createSvg(dotCode, svgFileName)
 		
-		'''Validating init overview DOT graph'''.debug
-		EmfCommons.basicValidate(initGraph)
-		
-		val dotGraph = new Lts2Dot().transformOverview(automaton, initGraph)
-		'''Validating overview DOT graph'''.debug
-		EmfCommons.basicValidate(dotGraph)
-		
-		// dot -> svg (with links)
-		val image = createImageAndImageMap(dotGraph, outputDirName, "overview")
-		
-		new OverviewPage(menu, image)
+		new OverviewPage(menu, svgFileName)
 	}
 	
 	def private createUseCasePage(UseCase useCase, Menu menu, String outputDirName) {
@@ -314,6 +305,7 @@ class ReportApplication implements IExecutableTool {
 		new MenuItem(id, '''../«id»/«id».html''', tadlTemplatePage)
 	}
 	
+	@Deprecated
 	def private createImageAndImageMap(Graph graph, String outputDirName, String outputFileName) {
 		val imageDir = new File(new File(outputDirName), outputFileName)
 		imageDir.mkdir
@@ -443,7 +435,7 @@ class SpecificationWrapper {
 	@Property val Specification specification
 	
 	new(Specification specification) {
-		_specification = specification
+		this.specification = specification
 	}
 	
 	override hashCode() {
