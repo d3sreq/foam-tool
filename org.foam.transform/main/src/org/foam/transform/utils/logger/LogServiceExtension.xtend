@@ -8,6 +8,8 @@ import org.osgi.service.log.LogService
  */
 class LogServiceExtension {
 	
+	org.eclipse.xtext.xbase.lib.Exceptions e
+	
 	private LogService logService
 	new(LogService logService) {
 		this.logService = logService

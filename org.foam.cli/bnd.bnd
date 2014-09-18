@@ -15,8 +15,9 @@
 	org.foam.transform.utils.graphviz;version=latest,\
 	org.foam.transform.utils.modeling;version=latest,\
 	osgi.core;version=4.3,\
-	org.eclipse.xtend.lib,\
-	org.eclipse.xtext.xbase.lib,\
+	org.eclipse.xtend.lib;version=2.7.2,\
+	org.eclipse.xtend.lib.macro;version=2.7.2,\
+	org.eclipse.xtext.xbase.lib;version=2.7.2,\
 	com.google.guava,\
 	org.eclipse.xtend2.lib,\
 	org.foam.models.annotation;version=latest,\
@@ -37,3 +38,4 @@
 	org.eclipse.emf.ecore.xmi,\
 	org.foam.transform.utils.logger;version=latest,\
 	org.foam.transform.ucm.overview.dot;version=latest
+	

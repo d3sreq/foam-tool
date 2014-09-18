@@ -1,6 +1,7 @@
 package org.foam.transform.lts2dot.processor.transition
 
 import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.dot.DotFactory
 import org.foam.dot.Edge
 import org.foam.dot.Graph

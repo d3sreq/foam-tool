@@ -1,7 +1,8 @@
 package org.foam.transform.lts2dot.processor.state.label
 
-import org.foam.dot.RecordNode
 import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
+import org.foam.dot.RecordNode
 import org.foam.lts.State
 import org.foam.transform.lts2dot.processor.state.StateProcessor
 import org.foam.ucm.Step

@@ -18,9 +18,9 @@
 	org.foam.models.traceability;version=latest,\
 	org.foam.models.ucm;version=latest,\
 	org.foam.models.verification;version=latest,\
-	org.eclipse.xtend.lib,\
-	org.eclipse.xtext.util,\
-	org.eclipse.xtext.xbase.lib,\
+	org.eclipse.xtend.lib;version=2.7.2,\
+	org.eclipse.xtext.util;version=2.7.2,\
+	org.eclipse.xtext.xbase.lib;version=2.7.2,\
 	com.google.guava,\
 	org.foam.xtext.ctl;version=latest,\
 	org.foam.xtext.ltl;version=latest,\
@@ -32,4 +32,5 @@
 	org.foam.xtext.plogic;version=latest,\
 	javax.inject,\
 	org.antlr.runtime,\
-	osgi.core;version=4.3
+	osgi.core;version=4.3,\
+	org.eclipse.xtend.lib.macro;version=2.7.2

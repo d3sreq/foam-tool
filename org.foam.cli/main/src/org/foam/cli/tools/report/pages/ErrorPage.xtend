@@ -3,6 +3,8 @@ package org.foam.cli.tools.report.pages
 import com.google.common.base.Preconditions
 import java.util.HashMap
 import java.util.List
+import org.eclipse.xtend.lib.annotations.Accessors
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.annotation.Annotation
 import org.foam.cntex.CntExState
 import org.foam.cntex.Specification
@@ -15,15 +17,15 @@ import org.foam.traceability.StateMappingAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
+import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
 import org.foam.ucm.Step
 import org.foam.ucm.util.UcmUtils
 
 import static extension org.foam.cli.tools.report.utils.Utils.*
-import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
 
 class StepTrace {
-	@Property val List<Step> steps = newArrayList
-	@Property var Step loopStart = null
+	@Accessors val List<Step> steps = newArrayList
+	@Accessors var Step loopStart = null
 }
 
 @Data
@@ -38,22 +40,22 @@ class ErrorPage implements Page {
 	 * Additional identifier as multiple formulas with same group may produce
 	 * error traces
 	 */
-	@Property String orderId
+	String orderId
 	
 	val renderer = new TadlFormulaRenderer
 	
 	new(Menu menu, Specification specification, String orderId) {
 
-		this._menu = menu
-		this._specification = specification
-		this._orderId = orderId
+		this.menu = menu
+		this.specification = specification
+		this.orderId = orderId
 		
 		// retrieve FormulaHolder and qualifier from annotation
 		val annotations = specification.annotations.filter(FormulaIdentificationAnnotation)
 		Preconditions.checkState(annotations.size == 1)
 		
-		_formulaHolder = annotations.head.formulaHolder
-		_group = annotations.head.group
+		formulaHolder = annotations.head.formulaHolder
+		group = annotations.head.group
 	}
 	
 	override getId() '''error-«joinedVars»-«group.qualifier»«IF !orderId.empty»-«orderId»«ENDIF»''' 
@@ -173,12 +175,12 @@ class ErrorPage implements Page {
 		'''
 	}
 	
-	extension FoamCommonAnnotationRenderer = new FoamCommonAnnotationRenderer
+	val fr = new FoamCommonAnnotationRenderer
 	
 	def private printStep(Step step, Iterable<? extends Annotation> annotations) '''
 		«step.text»
 		«FOR annotation : annotations BEFORE ' ' SEPARATOR ', '»
-			<span class="annot">«annotation.render»</span>
+			<span class="annot">«fr.render(annotation)»</span>
 		«ENDFOR»
 	'''
 	

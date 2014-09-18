@@ -1,7 +1,7 @@
 package org.foam.cli.tools.report.pages;
 
 /*
-NaturalOrderComparator.java -- Perform 'natural order' comparisons of strings in Java.
+Based on the NaturalOrderComparator.java -- Perform 'natural order' comparisons of strings in Java.
 Copyright (C) 2003 by Pierre-Luc Paour <natorder@paour.com>
 
 Based on the C version by Martin Pool, of which this is more or less a straight conversion.
@@ -31,16 +31,17 @@ public class NaturalOrderComparator implements Comparator<String>, Serializable 
 
     def int compareRight(String a, String b) {
         var bias = 0
-        var ia = 0
-        var ib = 0
+        var i = 0
 
         // The longest run of digits wins. That aside, the greatest
         // value wins, but we can't know that it will until we've scanned
         // both numbers to know that they have the same magnitude, so we
         // remember it in BIAS.
-        for (;;ia += 1, ib += 1) {
-            var ca = charAt(a, ia)
-            var cb = charAt(b, ib)
+        var char ca = ' '
+        var char cb = ' '
+        while (ca != 0 || cb != 0) {
+            ca = charAt(a, i)
+            cb = charAt(b, i)
 
             if (!Character.isDigit(ca) && !Character.isDigit(cb)) {
                 return bias
@@ -49,19 +50,19 @@ public class NaturalOrderComparator implements Comparator<String>, Serializable 
             } else if (!Character.isDigit(cb)) {
                 return 1
             } else if (ca < cb) {
-                if (bias == 0) {
+                if (bias == 0)
                     bias = -1
-                }
             } else if (ca > cb) {
                 if (bias == 0)
                     bias = 1
-            } else if (ca == 0 && cb == 0) {
-                return bias
             }
+            // else -> ca == cb -> continue
+            i += 1
         }
-        0
+        
+        return bias
     }
-
+    
     override compare(String o1, String o2) {
     	if (o1 == null) {
     		return 1

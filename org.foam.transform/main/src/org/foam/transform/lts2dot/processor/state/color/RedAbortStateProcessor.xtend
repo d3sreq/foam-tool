@@ -1,9 +1,10 @@
 package org.foam.transform.lts2dot.processor.state.color
 
 import com.google.common.base.Predicates
+import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.dot.RecordNode
 import org.foam.flowannotation.Abort
-import java.util.Map
 import org.foam.lts.State
 import org.foam.transform.lts2dot.processor.state.StateProcessor
 import org.foam.ucm.Step

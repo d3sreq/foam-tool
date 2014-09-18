@@ -64,4 +64,9 @@ class IterableExtensions {
 	def static <K,V> Multimap<K,V> toMultimap(Iterable<V> input, (V) => Pair<K,V> computeKeyValuePair) {
 		input.map[computeKeyValuePair.apply(it)].toMultimap
 	}
+	
+	def static <T,U> Iterable<Pair<T,U>> zip(Iterable<T> fst, Iterable<U> snd) {
+		val sndIter = snd.iterator
+		fst.map[it -> sndIter.next]
+	}
 }

@@ -1,16 +1,17 @@
 package org.foam.transform.lts2dot.processor.state
 
+import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.dot.DotFactory
 import org.foam.dot.Graph
 import org.foam.dot.Node
 import org.foam.dot.RecordNode
-import java.util.Map
 import org.foam.lts.State
-import org.foam.ucm.Step
 import org.foam.traceability.StateType
+import org.foam.ucm.Step
 
-import static extension org.foam.ucm.util.UcmUtils.*
 import static extension org.foam.transform.utils.modeling.ModelUtils.*
+import static extension org.foam.ucm.util.UcmUtils.*
 
 /**
  * @param mapping in parameter

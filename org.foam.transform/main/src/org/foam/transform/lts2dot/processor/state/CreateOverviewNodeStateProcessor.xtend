@@ -1,12 +1,12 @@
 package org.foam.transform.lts2dot.processor.state
 
-import org.foam.transform.lts2dot.processor.state.StateProcessor
-import org.foam.lts.State
+import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.dot.DotFactory
-import org.foam.traceability.UseCaseMappingAnnotation
 import org.foam.dot.Graph
 import org.foam.dot.Node
-import java.util.Map
+import org.foam.lts.State
+import org.foam.traceability.UseCaseMappingAnnotation
 
 @Data
 class CreateOverviewNodeStateProcessor implements StateProcessor {

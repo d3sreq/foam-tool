@@ -13,6 +13,8 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.regex.Pattern
+import org.eclipse.xtend.lib.annotations.Accessors
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.annotation.Annotation
 import org.foam.annotation.AnnotationFactory
 import org.foam.transform.utils.logger.LogServiceExtension
@@ -204,7 +206,7 @@ class UcmLang2UcmService {
 				return scenario
 			
 			// check step label
-			labelTextAnnotations.label
+			//labelTextAnnotations.label
 			val expectedLabel = prefix + (scenario.steps.size + 1)
 
 			if (labelTextAnnotations.label != expectedLabel)
@@ -347,11 +349,11 @@ class UcmLang2UcmService {
 }
 
 class LabeledAnnotatedText {
-	@Property String label
-	@Property AnnotatedText annotatedText
+	@Accessors String label
+	@Accessors AnnotatedText annotatedText
 }
 
 class AnnotatedText {
-	@Property String text
-	@Property List<Annotation> annotations
+	@Accessors String text
+	@Accessors List<Annotation> annotations
 }

@@ -1,9 +1,9 @@
 package org.foam.transform.lts2dot.processor.state
 
-import org.foam.dot.Node
 import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
+import org.foam.dot.Node
 import org.foam.lts.State
-import org.eclipse.xtend.lib.Data
 
 import static extension org.foam.transform.utils.modeling.ModelUtils.*
 

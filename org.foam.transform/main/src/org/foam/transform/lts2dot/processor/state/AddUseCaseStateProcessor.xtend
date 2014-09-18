@@ -1,8 +1,9 @@
 package org.foam.transform.lts2dot.processor.state
 
+import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.dot.DotFactory
 import org.foam.dot.Graph
-import java.util.Map
 import org.foam.lts.State
 import org.foam.ucm.UseCase
 import org.foam.ucm.util.UcmUtils

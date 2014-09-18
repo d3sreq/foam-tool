@@ -1,11 +1,12 @@
 package org.foam.transform.lts2dot.processor.state.label
 
-import org.foam.dot.Node
 import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
+import org.foam.dot.Node
 import org.foam.lts.State
-import org.foam.transform.lts2dot.processor.state.StateProcessor
 import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
+import org.foam.transform.lts2dot.processor.state.StateProcessor
 
 /**
  * Adds bullet to JMP states.

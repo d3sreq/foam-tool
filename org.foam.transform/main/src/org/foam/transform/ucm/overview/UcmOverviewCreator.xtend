@@ -1,6 +1,7 @@
 package org.foam.transform.ucm.overview
 
 import aQute.bnd.annotation.component.Component
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.ucm.UseCaseModel
 
 import static extension org.foam.ucm.util.UcmUtils.*

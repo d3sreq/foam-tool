@@ -1,8 +1,9 @@
 package org.foam.transform.lts2dot.processor.state
 
+import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.dot.DotFactory
 import org.foam.dot.Node
-import java.util.Map
 import org.foam.lts.State
 import org.foam.traceability.UseCaseMappingAnnotation
 
@@ -10,7 +11,7 @@ import org.foam.traceability.UseCaseMappingAnnotation
 class StyleIncludeNodeStateProcessor implements StateProcessor {
 	
 	val dotFactory = DotFactory.eINSTANCE
-	var Map<State, Node> state2Node
+	Map<State, Node> state2Node
 	
 	override process(State state) {
 		val useCaseMappingAnnotations = state.annotations.filter(UseCaseMappingAnnotation)

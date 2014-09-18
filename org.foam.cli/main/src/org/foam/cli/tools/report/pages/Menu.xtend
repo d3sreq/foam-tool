@@ -2,6 +2,7 @@ package org.foam.cli.tools.report.pages
 
 import java.util.ArrayList
 import java.util.List
+import org.eclipse.xtend.lib.annotations.Data
 
 /**
  * Represents menu.

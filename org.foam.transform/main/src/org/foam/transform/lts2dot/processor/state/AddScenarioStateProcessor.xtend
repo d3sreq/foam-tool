@@ -1,16 +1,17 @@
 package org.foam.transform.lts2dot.processor.state
 
+import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.dot.DotFactory
 import org.foam.dot.Graph
-import java.util.Map
 import org.foam.lts.State
 import org.foam.ucm.Scenario
 import org.foam.ucm.ScenarioHolder
 import org.foam.ucm.UseCase
 import org.foam.ucm.util.UcmUtils
 
-import static extension org.foam.ucm.util.UcmUtils.*
 import static extension org.foam.transform.utils.modeling.ModelUtils.*
+import static extension org.foam.ucm.util.UcmUtils.*
 
 /**
  * Creates subgraph (cluster) for use case and scenario of the given state if this subgraph is

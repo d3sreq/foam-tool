@@ -6,6 +6,7 @@ import java.util.Collection
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.EStructuralFeature.Setting
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtend.lib.annotations.Data
 import org.foam.lts.Automaton
 import org.foam.lts.LtsFactory
 import org.foam.lts.LtsPackage

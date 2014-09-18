@@ -1,10 +1,10 @@
 package org.foam.transform.lts2dot.processor.state.color
 
-import org.foam.dot.Node
 import java.util.Map
+import org.eclipse.xtend.lib.annotations.Data
+import org.foam.dot.Node
 import org.foam.lts.State
 import org.foam.transform.lts2dot.processor.state.StateProcessor
-import org.eclipse.xtend.lib.Data
 
 /**
  * @param mapping in parameter

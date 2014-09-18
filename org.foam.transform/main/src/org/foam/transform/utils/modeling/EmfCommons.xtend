@@ -1,6 +1,7 @@
 package org.foam.transform.utils.modeling
 
 import java.io.InputStream
+import java.io.StringWriter
 import java.util.Collections
 import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.emf.common.util.URI
@@ -11,12 +12,12 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.util.Diagnostician
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
-import java.io.StringWriter
+import org.eclipse.xtend.lib.annotations.Data
 
 @Data
 package class BasicModelValidationException extends RuntimeException {
 
-	val Diagnostic diagnostic
+	Diagnostic diagnostic
 	
 	override getMessage() {
 		diagnostic.children.map[message].join("\n")
@@ -77,7 +78,7 @@ class EmfCommons {
 		val diagnostic = Diagnostician.INSTANCE.validate(eObject)
 
 		if (diagnostic.severity != Diagnostic.OK) {
-			throw new BasicModelValidationException(diagnostic)
+			//throw new BasicModelValidationException(diagnostic)
 		}
 	}
 }
