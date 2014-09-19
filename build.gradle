@@ -109,7 +109,7 @@ subprojects { p ->
 //	}
 
 	clean << {
-		project.delete 'generated', XTEND_GEN_DIR, TEST_XTEND_GEN_DIR
+		project.delete XTEND_GEN_DIR, TEST_XTEND_GEN_DIR
 	}
 }
 
