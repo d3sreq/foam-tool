@@ -44,17 +44,17 @@ class GraphvizWrapper {
 		Runtime.runtime.exec(dotCmdArgs).waitFor
 	}
 	
-	def void createSvg(CharSequence dotContent, String outputFileName) {
-		val outputFile  = new File(outputFileName)
-		outputFile.mkdirs
+	// TODO: use stdin instead of writing a file to the filesystem
+	def void createSvg(CharSequence dotContent, String svgFileName) {
 		
-		// TODO: use stdin instead of writing a file to the filesystem
-
+		// create directory structure if needed
+		new File(svgFileName).parentFile.mkdirs
+		
 		// write dot to file
-		val dotFileName = '''«outputFileName».dot'''
-		Files.write(dotContent, outputFile, Charsets.UTF_8) 
+		val dotFileName = '''«svgFileName».dot'''
+		Files.write(dotContent, new File(dotFileName), Charsets.UTF_8) 
 		
-		val dotCommand = #["dot", "-Tsvg", "-o", outputFileName, dotFileName]
+		val dotCommand = #["dot", "-Tsvg", "-o", svgFileName, dotFileName]
 		
 		'''Creating svg image with dot: "«dotCommand.join(" ")»"'''.info
 		runGraphviz(dotCommand)

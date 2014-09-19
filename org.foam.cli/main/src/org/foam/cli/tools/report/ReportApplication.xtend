@@ -248,7 +248,7 @@ class ReportApplication implements IExecutableTool {
 	def private createOverviewPage(UseCaseModel ucm, Menu menu, String outputDirName) {
 		
 		val dotCode = ucmOverviewUsingDot.transform(ucm)
-		val svgFileName = '''«outputDirName»/overview.svg'''
+		val svgFileName = '''«outputDirName»/overview/overview.svg'''
 		graphvizWrapper.createSvg(dotCode, svgFileName)
 		
 		new OverviewPage(menu, svgFileName)
