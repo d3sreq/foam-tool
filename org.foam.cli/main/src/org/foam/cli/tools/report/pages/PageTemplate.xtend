@@ -93,10 +93,6 @@ class PageTemplate {
 			
 			<hr>
 			
-			<footer>
-				<p>FOAM tool report 2014</p>
-			</footer>
-			
 			</div><!--/.fluid-container-->
 			
 			<!-- Le javascript
