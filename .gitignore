@@ -22,10 +22,13 @@ plugin.xml_gen
 /org.foam.xtext.plogic/plugin.xml_gen
 /org.foam.xtext.plogic/model/
 /org.foam.xtext.plogic/META-INF/
+/org.foam.xtext.plogic/build.properties
 
 /org.foam.xtext.ctl/META-INF/
+/org.foam.xtext.ctl/build.properties
 
 /org.foam.xtext.ltl/META-INF/
+/org.foam.xtext.ltl/build.properties
 
 /cnf/bin/
 /cnf/cache

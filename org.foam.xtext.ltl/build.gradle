@@ -1,3 +1,4 @@
+import aQute.bnd.build.Workspace
 import org.eclipse.emf.mwe.utils.StandaloneSetup
 import org.eclipse.xtext.generator.Generator
 import org.eclipse.xtext.generator.LanguageConfig
@@ -5,7 +6,6 @@ import org.eclipse.xtext.generator.ecore.EMFGeneratorFragment
 import org.eclipse.xtext.generator.grammarAccess.GrammarAccessFragment
 import org.eclipse.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment
 import org.eclipse.xtext.generator.serializer.SerializerFragment
-import aQute.bnd.build.Workspace
 
 defaultTasks 'clean', 'build'
 
@@ -14,7 +14,7 @@ buildscript {
 		classpath files(
 			// hack needed for xtext compiler to find .xtext resources
 			'../org.foam.xtext.plogic/main/src',
-			'./main/src' 
+			'./main/src'
 		)
 	}
 }
@@ -23,17 +23,20 @@ final XTEXT_DIR = 'main/xtext-gen'
 final RUNTIME_MODULE_FILE = "${SRC_DIR}/org/foam/xtext/ltl/LtlXtextRuntimeModule.java"
 final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/ltl/LtlXtextStandaloneSetup.java"
 final META_INF_DIR = 'META-INF'
+final BUILD_PROPERTIES_FILE = "build.properties"
 
 sourceSets.main.java.srcDir XTEXT_DIR
 sourceSets.main.resources.srcDir XTEXT_DIR
-sourceSets.main.resources.exclude '**/*.java'
 
 task generateLtl << {
 	final grammarURI = "classpath:/org/foam/xtext/ltl/LtlXtext.xtext"
 	final projectName = "org.foam.xtext.ltl"
-		
-    delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 	
+	delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	
+	// generate build.properties indicating that we use custom build
+	file(BUILD_PROPERTIES_FILE).write("custom = true\n")
+
 	new StandaloneSetup().with {
 		scanClassPath  = true
 		platformUri = ".."
@@ -51,15 +54,15 @@ task generateLtl << {
 	// replace MANIFEST.MF with new one which doesn't import any dependencies
 	final MANIFEST_PATH = "${META_INF_DIR}/MANIFEST.MF"
 	final MANIFEST_CONTENT = """\
-			Manifest-Version: 1.0
-			Bundle-ManifestVersion: 2
-			Bundle-Name: org.foam.xtext.ltl
-			Bundle-Vendor: My Company
-			Bundle-Version: 1.0.0.qualifier
-			Bundle-SymbolicName: org.foam.xtext.ltl; singleton:=true
-			Bundle-ActivationPolicy: lazy
-			Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-			""".stripIndent()
+		Manifest-Version: 1.0
+		Bundle-ManifestVersion: 2
+		Bundle-Name: org.foam.xtext.ltl
+		Bundle-Vendor: My Company
+		Bundle-Version: 1.0.0.qualifier
+		Bundle-SymbolicName: org.foam.xtext.ltl; singleton:=true
+		Bundle-ActivationPolicy: lazy
+		Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+		""".stripIndent()
 	file(META_INF_DIR).mkdirs()
 	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 	
@@ -75,6 +78,9 @@ task generateLtl << {
 			uri = grammarURI
 			
 			// Java API to access grammar elements (required by several other fragments)
+			// setting of property "xmlVersion" to value "1.0" causes generation
+			// of xmi file (instead of xtextbin used by newer xtext).
+			// xmi is needed during gradle tests
 			addFragment(new GrammarAccessFragment())
 							
 			// generates Java API for the generated EPackages
@@ -124,5 +130,5 @@ bndProject.getDependson().each {
 }
 
 clean << {
-	project.delete META_INF_DIR, XTEXT_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	project.delete META_INF_DIR, XTEXT_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE, BUILD_PROPERTIES_FILE
 }

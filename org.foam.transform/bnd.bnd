@@ -27,7 +27,7 @@
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.common,\
-	org.eclipse.xtext,\
+	org.eclipse.xtext;version=2.7.2,\
 	org.apache.servicemix.bundles.junit,\
 	org.foam.xtext.plogic;version=latest,\
 	javax.inject,\

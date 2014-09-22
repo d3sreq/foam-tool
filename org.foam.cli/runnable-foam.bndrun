@@ -26,7 +26,6 @@
 	org.eclipse.emf.common;version='[2.10.0,2.10.1)',\
 	org.eclipse.emf.ecore;version='[2.10.0,2.10.1)',\
 	org.eclipse.emf.ecore.xmi;version='[2.10.0,2.10.1)',\
-	org.eclipse.xtend.lib;version='[2.6.2,2.6.3)',\
 	org.eclipse.xtext;version='[2.6.2,2.6.3)',\
 	org.eclipse.xtext.util;version='[2.6.2,2.6.3)',\
 	org.eclipse.xtext.xbase.lib;version='[2.6.2,2.6.3)',\

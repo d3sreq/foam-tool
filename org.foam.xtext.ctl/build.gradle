@@ -23,10 +23,10 @@ final XTEXT_DIR = 'main/xtext-gen'
 final RUNTIME_MODULE_FILE = "${SRC_DIR}/org/foam/xtext/ctl/CtlXtextRuntimeModule.java"
 final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/ctl/CtlXtextStandaloneSetup.java"
 final META_INF_DIR = 'META-INF'
+final BUILD_PROPERTIES_FILE = "build.properties"
 
 sourceSets.main.java.srcDir XTEXT_DIR
 sourceSets.main.resources.srcDir XTEXT_DIR
-sourceSets.main.resources.exclude '**/*.java'
 
 task generateCtl << {
 	final grammarURI = "classpath:/org/foam/xtext/ctl/CtlXtext.xtext"
@@ -63,6 +63,9 @@ task generateCtl << {
 	file(META_INF_DIR).mkdirs()
 	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 	
+	// generate build.properties indicating that we use custom build
+	file(BUILD_PROPERTIES_FILE).write("custom = true\n")
+
 	new Generator().with {
 		srcPath = "/main/src"
 		srcGenPath = "/main/xtext-gen"
@@ -76,9 +79,9 @@ task generateCtl << {
 			
 			// Java API to access grammar elements (required by several other fragments)
 			// setting of property "xmlVersion" to value "1.0" causes generation
-			// of CtlXtext.xmi file (instead of CtlXtext.xtextbin used by newer xtext).
-			// CtlXtext.xmi is needed during gradle tests
-			addFragment(new GrammarAccessFragment(xmlVersion: "1.0"))
+			// of xmi file (instead of xtextbin used by newer xtext).
+			// xmi is needed during gradle tests
+			addFragment(new GrammarAccessFragment())
 							
 			// generates Java API for the generated EPackages
 			addFragment(new EMFGeneratorFragment())
@@ -99,15 +102,6 @@ task generateCtl << {
 	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 	
 	delete "plugin.xml", "plugin.xml_gen"
-}
-
-processResources {
-	from("${XTEXT_DIR}") {
-		include '**/*.xmi'
-	}
-
-	into 'build/resources/main'
-	includeEmptyDirs = false
 }
 
 // workaround for xtext generator
@@ -136,5 +130,5 @@ bndProject.getDependson().each {
 }
 
 clean << {
-	project.delete META_INF_DIR, XTEXT_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	project.delete META_INF_DIR, XTEXT_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE, BUILD_PROPERTIES_FILE
 }
