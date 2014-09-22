@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="main/src"/>
+	<classpathentry excluding="**/packageinfo" kind="src" path="main/src"/>
 	<classpathentry excluding="**/*._trace|**/.gitignore" kind="src" path="main/xtend-gen"/>
 	<classpathentry kind="src" path="main/xtext-gen"/>
 	<classpathentry kind="src" output="build/classes/test" path="test/src"/>
