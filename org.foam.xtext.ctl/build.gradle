@@ -64,7 +64,7 @@ task generateCtl << {
 	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 	
 	// generate build.properties indicating that we use custom build
-	file(BUILD_PROPERTIES_FILE).write("custom = true")
+	file(BUILD_PROPERTIES_FILE).write("custom = true\n")
 
 	new Generator().with {
 		srcPath = "/main/src"

@@ -31,9 +31,12 @@ sourceSets.main.resources.srcDir XTEXT_DIR
 task generateLtl << {
 	final grammarURI = "classpath:/org/foam/xtext/ltl/LtlXtext.xtext"
 	final projectName = "org.foam.xtext.ltl"
-		
-    delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 	
+	delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	
+	// generate build.properties indicating that we use custom build
+	file(BUILD_PROPERTIES_FILE).write("custom = true\n")
+
 	new StandaloneSetup().with {
 		scanClassPath  = true
 		platformUri = ".."

@@ -34,7 +34,8 @@ task generatePlogicXtext << {
 	delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 	
 	// generate build.properties indicating that we use custom build
-	file(BUILD_PROPERTIES_FILE).write("custom = true")
+	file(BUILD_PROPERTIES_FILE).write("custom = true\n")
+
 	new StandaloneSetup().with {
 		scanClassPath  = true
 		platformUri = ".."
@@ -64,9 +65,6 @@ task generatePlogicXtext << {
 	file(META_INF_DIR).mkdirs()
 	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 	
-	// generate build.properties indicating that we use custom build
-	file(BUILD_PROPERTIES_FILE).write("custom = true")
-
 	new Generator().with {
 		srcPath = "/main/src"
 		srcGenPath = "/main/xtext-gen"

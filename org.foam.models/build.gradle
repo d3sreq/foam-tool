@@ -58,7 +58,7 @@ task generateModels << {
 	delete "plugin.xml", "plugin.properties"
 	
 	// generate build.properties indicating that we use custom build
-	file(BUILD_PROPERTIES_FILE).write("custom = true")
+	file(BUILD_PROPERTIES_FILE).write("custom = true\n")
 	
 	println "done. don't forget to refresh the workspace"
 }
