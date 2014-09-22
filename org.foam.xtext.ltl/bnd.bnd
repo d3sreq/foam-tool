@@ -1,6 +1,5 @@
 -buildpath:  \
 	com.google.inject,\
-	com.ibm.icu,\
 	org.antlr.runtime,\
 	org.eclipse.emf.codegen,\
 	org.eclipse.emf.codegen.ecore,\
@@ -12,9 +11,9 @@
 	org.eclipse.emf.mwe.utils,\
 	org.eclipse.xpand,\
 	org.eclipse.xtend,\
-	org.eclipse.xtext,\
-	org.eclipse.xtext.generator,\
-	org.eclipse.xtext.util,\
+	org.eclipse.xtext;version=2.7.2,\
+	org.eclipse.xtext.generator;version=2.7.2,\
+	org.eclipse.xtext.util;version=2.7.2,\
 	org.foam.models.ltl;version=latest,\
 	org.objectweb.asm,\
 	org.foam.xtext.plogic;version=latest,\
@@ -31,4 +30,3 @@ Export-Package:  \
 	org.foam.xtext.ltl.services,\
 	org.foam.xtext.ltl.parser.antlr.internal,\
 	org.foam.xtext.ltl.serializer
-Include-Resource: build/resources/main/

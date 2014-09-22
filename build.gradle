@@ -40,20 +40,35 @@ subprojects { p ->
 
 	sourceSets {
 		main {
+
 			java.srcDirs = [SRC_DIR, XTEND_GEN_DIR]
+
+			// IMPORTANT: we want to achieve the same behaviour as the Eclipse build system
+			// which copies all files from source folders to bin folders
 			resources.srcDirs = [SRC_DIR]
+			resources.exclude '**/*.xtend'
+			resources.exclude '**/*.java'
+			resources.exclude '**/packageinfo'
+			resources.exclude '**/*.xtext'
+			output.resourcesDir = output.classesDir
+
 			// output.classesDir property is somehow overriden by
 			// xtend gradle plugin and classes are always generated into
 			// build/classes/main directory. This is probably bug.
-//			output.classesDir = BIN_DIR
-//			output.resourcesDir = BIN_DIR
+//			output.classesDir = 'build/classes/main'
 			xtendOutputDir = XTEND_GEN_DIR
 		}
 		
 		// TODO
 		test {
+
 			java.srcDirs = [TEST_SRC_DIR, TEST_XTEND_GEN_DIR]
+
 			resources.srcDirs = [TEST_SRC_DIR]
+			resources.exclude '**/*.xtend'
+			resources.exclude '**/*.java'
+			resources.exclude '**/packageinfo'
+
 //			output.classesDir = 'test/bin'
 //			output.resourcesDir = 'test/bin'
 			xtendOutputDir = TEST_XTEND_GEN_DIR
@@ -99,6 +114,10 @@ subprojects { p ->
 		if(bndProject.errors) {
 			throw new GradleException("Bnd build failure. Check build logs for error messages")
 		}
+
+		// now, we need to delete all temporary files that are needed only during the build
+		// note: they are not intended as output artefacts
+		project.delete "build/tmp", "build/xtend-temp", "build/libs", "build/dependency-cache"
 	}
 
 	//Run integration tests - commented as no integration tests are present yet	 

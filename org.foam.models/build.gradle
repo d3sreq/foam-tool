@@ -57,19 +57,8 @@ task generateModels << {
 	
 	delete "plugin.xml", "plugin.properties"
 	
-	// replace generated build.properties (eclipse produces warnings 
-	// with generated one)
-	final BUILD_PROPERTIES_CONTENT = """\
-			jars.compile.order = .
-			source.. = main/src/,\\
-			main/xtend-gen/,\\
-			test/src/,\\
-			test/xtend-gen/,\\
-			main/emf-gen/
-			output.. = main/bin/,\\
-			test/bin/
-			""".stripIndent()
-	file(BUILD_PROPERTIES_FILE).write(BUILD_PROPERTIES_CONTENT)
+	// generate build.properties indicating that we use custom build
+	file(BUILD_PROPERTIES_FILE).write("custom = true")
 	
 	println "done. don't forget to refresh the workspace"
 }

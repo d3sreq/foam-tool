@@ -1,7 +1,7 @@
 -buildpath:  \
 	com.google.inject,\
-	com.ibm.icu,\
 	org.antlr.runtime,\
+	biz.aQute.bnd.annotation,\
 	org.eclipse.emf.codegen,\
 	org.eclipse.emf.codegen.ecore,\
 	org.eclipse.emf.common,\
@@ -13,12 +13,12 @@
 	org.eclipse.emf.mwe.utils,\
 	org.eclipse.xpand,\
 	org.eclipse.xtend,\
-	org.eclipse.xtext,\
-	org.eclipse.xtext.generator,\
-	org.eclipse.xtext.util,\
+	org.eclipse.xtext;version=2.7.2,\
+	org.eclipse.xtext.generator;version=2.7.2,\
+	org.eclipse.xtext.util;version=2.7.2,\
+	org.eclipse.xtext.xbase.lib,\
 	org.foam.models.propositionallogic;version=latest,\
 	org.objectweb.asm,\
-	org.eclipse.xtext.xbase.lib,\
 	org.apache.commons.logging,\
 	org.apache.log4j,\
 	com.google.guava,\
@@ -38,6 +38,7 @@ Export-Package:  \
 	org.foam.xtext.plogic.services,\
 	org.foam.xtext.plogic,\
 	org.foam.xtext.plogic.parser.antlr,\
-	org.foam.xtext.plogic.services
-Include-Resource:  model,\
-	build/resources/main/
+	org.foam.xtext.plogic.services,\
+	org.foam.xtext.plogic.osgi
+Service-Component:  \
+	*

@@ -22,11 +22,10 @@ final XTEXT_DIR = 'main/xtext-gen'
 final RUNTIME_MODULE_FILE = "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtextRuntimeModule.java"
 final STANDALONE_SETUP_FILE = "${SRC_DIR}/org/foam/xtext/plogic/PropositionalLogicXtextStandaloneSetup.java"
 final META_INF_DIR = 'META-INF'
+final BUILD_PROPERTIES_FILE = "build.properties"
 
 sourceSets.main.java.srcDir XTEXT_DIR
-sourceSets.main.resources.srcDir MODEL_DIR
 sourceSets.main.resources.srcDir XTEXT_DIR
-sourceSets.main.resources.exclude '**/*.java'
 
 task generatePlogicXtext << {
 	final grammarURI = "classpath:/org/foam/xtext/plogic/PropositionalLogicXtext.xtext"
@@ -34,6 +33,8 @@ task generatePlogicXtext << {
 		
 	delete RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
 	
+	// generate build.properties indicating that we use custom build
+	file(BUILD_PROPERTIES_FILE).write("custom = true")
 	new StandaloneSetup().with {
 		scanClassPath  = true
 		platformUri = ".."
@@ -63,6 +64,9 @@ task generatePlogicXtext << {
 	file(META_INF_DIR).mkdirs()
 	file(MANIFEST_PATH).write(MANIFEST_CONTENT)
 	
+	// generate build.properties indicating that we use custom build
+	file(BUILD_PROPERTIES_FILE).write("custom = true")
+
 	new Generator().with {
 		srcPath = "/main/src"
 		srcGenPath = "/main/xtext-gen"
@@ -88,7 +92,9 @@ task generatePlogicXtext << {
 			it
 		})
 		
-		preInvoke(); invoke(null); postInvoke()
+		preInvoke()
+		invoke(null)
+		postInvoke()
 	}
 	
 	// write MANIFEST.MF over generated one, this step is not needed
@@ -121,5 +127,5 @@ task generateRedirect(type: Exec) {
 compileXtend.dependsOn('generateRedirect')
 
 clean << {
-	project.delete META_INF_DIR, XTEXT_DIR, MODEL_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE
+	project.delete META_INF_DIR, XTEXT_DIR, MODEL_DIR, RUNTIME_MODULE_FILE, STANDALONE_SETUP_FILE, BUILD_PROPERTIES_FILE
 }
