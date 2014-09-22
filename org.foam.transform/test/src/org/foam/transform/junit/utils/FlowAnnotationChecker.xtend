@@ -5,9 +5,10 @@ import org.foam.flowannotation.Guard
 import org.foam.flowannotation.Include
 import org.foam.flowannotation.Mark
 
+// TODO: this should be an extension
 class FlowAnnotationChecker extends UcmChecker {
 	
-	val propChecker = new PropositionalLogicFormulaChecker
+	private extension PropositionalLogicFormulaChecker = new PropositionalLogicFormulaChecker
 	
 	def dispatch void assertAnnotationEquals(Goto expected, Goto actual) {
 		assertStepEquals(expected.target, actual.target)
@@ -22,7 +23,7 @@ class FlowAnnotationChecker extends UcmChecker {
 	}
 	
 	def dispatch void assertAnnotationEquals(Guard expected, Guard actual) {
-		propChecker.check(expected.formula, actual.formula)
+		check(expected.formula, actual.formula)
 	}
 	
 }

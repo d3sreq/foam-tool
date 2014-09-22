@@ -18,11 +18,12 @@ class CtlParserTest {
 	// and BinaryFormula and class type
 	private extension PropositionalLogicFormulaChecker = new PropositionalLogicFormulaChecker
 
-	val ctlFac = CtlFactory::eINSTANCE
-	val propFac = PropositionallogicFactory::eINSTANCE
-	val propXtextFac = PropositionalLogicXtextFactory::eINSTANCE
+	val ctlFac = CtlFactory.eINSTANCE
+	val propFac = PropositionallogicFactory.eINSTANCE
+	val propXtextFac = PropositionalLogicXtextFactory.eINSTANCE
 
-	val CtlXtextParser ctlParser	
+	val CtlXtextParser ctlParser
+	
 	new() {
 		// Added to manually register package when running outside the eclipse.
 		// In eclipse package is recognized by extension point.
@@ -32,8 +33,8 @@ class CtlParserTest {
 		//
 		// Package should be probably registered in GenerateLtlXtext.mwe2 file
 		// but wasn't able to figure out how to do it.
-		if (!EPackage.Registry::INSTANCE.containsKey(CtlPackage::eNS_URI)) {
-			EPackage.Registry::INSTANCE.put(CtlPackage::eNS_URI, CtlPackage::eINSTANCE)
+		if (!EPackage.Registry.INSTANCE.containsKey(CtlPackage.eNS_URI)) {
+			EPackage.Registry.INSTANCE.put(CtlPackage.eNS_URI, CtlPackage.eINSTANCE)
 		}
 
 		// TODO - use guice annotations to inject parser instead ?

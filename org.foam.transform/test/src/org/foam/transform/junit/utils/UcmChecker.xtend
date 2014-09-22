@@ -16,6 +16,7 @@ import org.foam.ucm.UseCaseModel
 
 import static org.junit.Assert.*
 
+// TODO: this should be an extension
 class UcmChecker {
 
 	def void assertUseCaseModelEquals(UseCaseModel expected, UseCaseModel actual) {

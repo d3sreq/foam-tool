@@ -42,7 +42,7 @@ import static extension org.foam.ucm.util.UcmUtils.*
  * <p><b>Warning</b> - notifier add/remove is <b>not thread safe</b>
  */
 class Ucm2Lts {
-	
+		
 	// TODO: reimplement using OSGi DS
 	private static val logger = Logger.getLogger(Ucm2Lts.canonicalName) // TODO: use OSGi LogService
 	private extension FoamNamingExtension = new FoamNamingExtension

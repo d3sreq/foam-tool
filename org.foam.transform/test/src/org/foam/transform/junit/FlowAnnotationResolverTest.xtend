@@ -7,16 +7,20 @@ import org.foam.propositionallogic.PropositionallogicFactory
 import org.foam.transform.junit.utils.FlowAnnotationChecker
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.ucm.UcmFactory
+import org.foam.xtext.plogic.PropositionalLogicXtextStandaloneSetup
 import org.junit.Test
 
 class FlowAnnotationResolverTest {
-	val ucmFac = UcmFactory::eINSTANCE
-	val flowFac = FlowannotationFactory::eINSTANCE
-	val propFac = PropositionallogicFactory::eINSTANCE
-	val annotationFac = AnnotationFactory::eINSTANCE
+	val ucmFac = UcmFactory.eINSTANCE
+	val flowFac = FlowannotationFactory.eINSTANCE
+	val propFac = PropositionallogicFactory.eINSTANCE
+	val annotationFac = AnnotationFactory.eINSTANCE
 	val flowAnnotationResolver = new FlowAnnotationResolver
 	val flowAnnotationChecker = new FlowAnnotationChecker
 	
+	// TODO: this constructor is only needed for headless unit-testing
+	new() {PropositionalLogicXtextStandaloneSetup.doSetup}
+
 	@Test
 	def resolveAbort() {
 		val ucmAbortInput = ucmFac.createUseCaseModel => [
@@ -28,7 +32,7 @@ class FlowAnnotationResolverTest {
 					steps += ucmFac.createStep => [
 						text = "Use case aborts."
 						annotations += annotationFac.createUnknownAnnotation => [
-							parts += Collections::singletonList("abort")
+							parts += Collections.singletonList("abort")
 						]
 					]				
 				]

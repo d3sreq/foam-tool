@@ -21,7 +21,7 @@ class ScenarioImplCustom extends ScenarioImpl {
 	}
 	
 	override String getText() {
-		// overridden becouse main scenario has no "text" associated but
+		// overridden because main scenario has no "text" associated but
 		// EMF constraint is defined so that "text" shouldn't be null.
 		val scenarioParent = this.eContainer
 		if (scenarioParent instanceof ScenarioHolder) {

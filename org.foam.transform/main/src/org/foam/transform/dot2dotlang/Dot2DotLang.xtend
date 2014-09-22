@@ -21,7 +21,7 @@ class Dot2DotLang {
 		}
 	'''
 	
-	def private dispatch print(Graph subgraph) '''
+	def private dispatch CharSequence print(Graph subgraph) '''
 		subgraph cluster_«subgraph.id» {
 			«FOR statement : subgraph.statements»
 				«statement.print»
@@ -29,17 +29,24 @@ class Dot2DotLang {
 		}
 	'''
 	
-	def private dispatch print(Node node) {
-		// for record node add label with its inner nodes 
-		if (node instanceof RecordNode) {
-			val labelValue = node.innerNodes.join("{", "|", "}", [
+	/**
+	 * For record node add label with its inner nodes.
+	 */
+	def private dispatch print(RecordNode node) {
+		val labelValue = node.innerNodes.join(
+			"{", // before
+			"|", // separator
+			"}", // after
+			[
 				val innerNodeLabel = it.attributes.get(LABEL_ATTRIBUTE_KEY) ?: ""
 				'''<«it.id»>«innerNodeLabel.escape»'''
 			])
-			
-			node.attributes.put(LABEL_ATTRIBUTE_KEY, labelValue)
-		}
 		
+		node.attributes.put(LABEL_ATTRIBUTE_KEY, labelValue)
+		return '''"«node.id»" «node.createAttributeList»'''
+	}
+
+	def private dispatch print(Node node) {
 		'''"«node.id»" «node.createAttributeList»'''
 	}
 	
@@ -50,7 +57,7 @@ class Dot2DotLang {
 	def private dispatch print(Assignment assignment) '''
 		«assignment.key»="«assignment.value.escape»"
 	'''
-
+	
 	def private dispatch print(Settings settings) '''
 		«settings.type.literal» [
 			«FOR attribute : settings.attributes SEPARATOR ","»
@@ -58,6 +65,8 @@ class Dot2DotLang {
 			«ENDFOR»
 		]
 	'''
+
+	def private String escape(String strToEscape) '''«strToEscape?.replaceAll('"', '\\\\"')»'''
 
 	def private edgeNodeId(Node node) {
 		if (node instanceof InnerNode) {
@@ -74,12 +83,10 @@ class Dot2DotLang {
 		}
 		
 		attributedItem.attributes.entrySet.join(
-			"[", // before
+			"[",  // before
 			", ", // separator
-			"]", // after
+			"]",  // after
 			['''«it.key»="«it.value.escape»"''']
 		)
 	}
-	
-	def private String escape(String toEscape) '''«toEscape?.replaceAll('"', '\\\\"')»'''
 }

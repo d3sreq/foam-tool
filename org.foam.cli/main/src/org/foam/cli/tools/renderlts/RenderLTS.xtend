@@ -111,7 +111,7 @@ class RenderLTS implements IExecutableTool {
 		
 		// transformation
 		'''Running the transformation'''.info
-		val lts2dot = new Lts2Dot		
+		val lts2dot = new Lts2Dot
 		val graph = if (isOverview) {
 			lts2dot.transformOverview(automaton, initGraph)
 		} else {
