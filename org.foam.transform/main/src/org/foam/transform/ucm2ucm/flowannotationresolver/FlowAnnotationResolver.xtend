@@ -41,9 +41,7 @@ class FlowAnnotationResolver {
 			EPackage.Registry.INSTANCE.put(PropositionallogicPackage.eNS_URI, PropositionallogicPackage.eINSTANCE)
 		}
 		
-		// TODO - use guice annotations to inject parser instead ?
-		val setup = new PropositionalLogicXtextStandaloneSetup
-		val propLogicInjector = setup.createInjectorAndDoEMFRegistration
+		val propLogicInjector = new PropositionalLogicXtextStandaloneSetup().createInjectorAndDoEMFRegistration
 		propLogicParser = propLogicInjector.getInstance(PropositionalLogicXtextParser)
 	}
 	
