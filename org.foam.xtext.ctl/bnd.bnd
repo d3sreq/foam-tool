@@ -21,7 +21,8 @@
 	org.foam.models.propositionallogic;version=latest,\
 	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.jdt.core,\
-	javax.inject
+	javax.inject,\
+	com.ibm.icu;version=4.8
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.ctl,\

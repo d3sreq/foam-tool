@@ -24,7 +24,8 @@
 	com.google.guava,\
 	javax.inject,\
 	org.eclipse.emf.mwe2.lib,\
-	org.eclipse.jdt.core
+	org.eclipse.jdt.core,\
+	com.ibm.icu;version=4.8
 Bundle-Version: 1.0.0
 Export-Package:  \
 	org.foam.xtext.plogic,\
