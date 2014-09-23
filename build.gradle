@@ -26,7 +26,21 @@ def parentDir = project.projectDir
 Workspace workspace = Workspace.getWorkspace(parentDir)
 
 subprojects { p ->
+
 	apply plugin: 'xtend' // applies plugin 'java'
+
+	// Each 'build' task should create OSGi bundles from compiled classes
+	p.tasks.getByName("build").configure {
+		inputs.dir "build/classes"
+		outputs.dir "build/osgi-bundles"
+	}
+
+	// Incremental Java compilation should speed-up the build.
+	// It is currently an incubating feature in the new Gradle version
+	// but seems to be working fine for FOAM so far.
+	tasks.withType(JavaCompile) {
+		options.incremental = true
+	}
 
 	dependencies {
 		compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.2'
@@ -46,7 +60,7 @@ subprojects { p ->
 			// IMPORTANT: we want to achieve the same behaviour as the Eclipse build system
 			// which copies all files from source folders to bin folders
 			resources.srcDirs = [SRC_DIR]
-			resources.exclude '**/*.xtend'
+			//resources.exclude '**/*.xtend'
 			resources.exclude '**/*.java'
 			resources.exclude '**/packageinfo'
 			resources.exclude '**/*.xtext'
@@ -65,12 +79,11 @@ subprojects { p ->
 			java.srcDirs = [TEST_SRC_DIR, TEST_XTEND_GEN_DIR]
 
 			resources.srcDirs = [TEST_SRC_DIR]
-			resources.exclude '**/*.xtend'
+			//resources.exclude '**/*.xtend'
 			resources.exclude '**/*.java'
 			resources.exclude '**/packageinfo'
+			output.resourcesDir = output.classesDir
 
-//			output.classesDir = 'test/bin'
-//			output.resourcesDir = 'test/bin'
 			xtendOutputDir = TEST_XTEND_GEN_DIR
 		}
 	}
@@ -103,6 +116,7 @@ subprojects { p ->
 
 	//Perform the actual bnd build
 	build << { task ->
+
 		bndProject.build()
 
 		//Report errors and warnings to the Gradle output
@@ -117,7 +131,7 @@ subprojects { p ->
 
 		// now, we need to delete all temporary files that are needed only during the build
 		// note: they are not intended as output artefacts
-		project.delete "build/tmp", "build/xtend-temp", "build/libs", "build/dependency-cache"
+		//project.delete "build/tmp", "build/xtend-temp", "build/libs", "build/dependency-cache"
 	}
 
 	//Run integration tests - commented as no integration tests are present yet	 
@@ -130,6 +144,7 @@ subprojects { p ->
 	clean << {
 		project.delete XTEND_GEN_DIR, TEST_XTEND_GEN_DIR
 	}
+
 }
 
 //Collect generated and external bundles for deployment
