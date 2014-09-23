@@ -39,7 +39,8 @@ subprojects { p ->
 	// It is currently an incubating feature in the new Gradle version
 	// but seems to be working fine for FOAM so far.
 	tasks.withType(JavaCompile) {
-		options.incremental = true
+		// temporarily disabled due to cloudbees
+		//options.incremental = true
 	}
 
 	dependencies {
