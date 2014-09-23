@@ -1,10 +1,6 @@
 -sub: *.bnd
 -buildpath:  \
 	com.google.guava,\
-	com.google.inject,\
-	org.apache.commons.cli,\
-	org.apache.commons.logging,\
-	org.apache.log4j,\
 	org.apache.servicemix.bundles.junit,\
 	org.eclipse.emf.codegen,\
 	org.eclipse.emf.codegen.ecore,\
@@ -15,13 +11,4 @@
 	org.eclipse.emf.mwe.core,\
 	org.eclipse.emf.mwe2.lib,\
 	org.eclipse.emf.mwe2.runtime,\
-	org.eclipse.emf.mwe2.launch,\
-	org.eclipse.emf.mwe2.language,\
-	org.eclipse.xtend.lib;version=2.7.2,\
-	org.eclipse.xtend.lib.macro;version=2.7.2,\
-	org.eclipse.xtext.xbase.lib;version=2.7.2,\
-	org.eclipse.xtext.util;version=2.7.2,\
-	org.eclipse.xtext;version=2.7.2,\
-	org.eclipse.xtext.common.types;version=2.7.2,\
-	org.objectweb.asm,\
-	javax.inject
+	org.eclipse.xtext.xbase.lib

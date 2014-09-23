@@ -1,28 +1,28 @@
 -buildpath:  \
+	org.foam.models.ltl;version=latest,\
+	org.foam.models.propositionallogic;version=latest,\
+	org.foam.xtext.plogic;version=latest,\
 	com.google.inject,\
 	org.antlr.runtime,\
+	biz.aQute.bnd.annotation,\
 	org.eclipse.emf.codegen,\
 	org.eclipse.emf.codegen.ecore,\
 	org.eclipse.emf.common,\
 	org.eclipse.emf.ecore,\
-	org.eclipse.emf.mwe2.launch,\
-	org.eclipse.emf.mwe2.runtime,\
-	org.eclipse.emf.mwe.core,\
+	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.mwe.utils,\
+	org.eclipse.emf.mwe.core,\
+	org.eclipse.emf.mwe2.lib,\
+	org.eclipse.emf.mwe2.runtime,\
 	org.eclipse.xpand,\
 	org.eclipse.xtend,\
-	org.eclipse.xtext;version=2.7.2,\
-	org.eclipse.xtext.generator;version=2.7.2,\
-	org.eclipse.xtext.util;version=2.7.2,\
-	org.foam.models.ltl;version=latest,\
-	org.objectweb.asm,\
-	org.foam.xtext.plogic;version=latest,\
+	org.eclipse.xtext,\
+	org.eclipse.xtext.generator,\
+	org.eclipse.xtext.util,\
 	org.eclipse.xtext.xbase.lib,\
-	org.foam.models.propositionallogic;version=latest,\
-	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.jdt.core,\
-	javax.inject,\
-	com.ibm.icu;version=4.8
+	com.ibm.icu
+
 Bundle-Version: 1.0.0
 
 Export-Package:  \

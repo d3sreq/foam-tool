@@ -1,10 +1,5 @@
 -sub: *.bnd
 -buildpath:  \
-	org.apache.log4j,\
-	org.apache.commons.lang,\
-	osgi.cmpn,\
-	biz.aQute.bnd.annotation,\
-	com.google.inject,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
 	org.foam.models.ctl;version=latest,\
@@ -18,19 +13,25 @@
 	org.foam.models.traceability;version=latest,\
 	org.foam.models.ucm;version=latest,\
 	org.foam.models.verification;version=latest,\
-	org.eclipse.xtend.lib;version=2.7.2,\
-	org.eclipse.xtext.util;version=2.7.2,\
-	org.eclipse.xtext.xbase.lib;version=2.7.2,\
-	com.google.guava,\
 	org.foam.xtext.ctl;version=latest,\
 	org.foam.xtext.ltl;version=latest,\
+	org.foam.xtext.plogic;version=latest,\
+	com.google.guava,\
+	com.google.inject,\
+	biz.aQute.bnd.annotation,\
+	org.apache.log4j,\
+	org.apache.commons.lang,\
+	org.apache.servicemix.bundles.junit,\
+	org.eclipse.xtend.lib,\
+	org.eclipse.xtend.lib.macro,\
+	org.eclipse.xtext.util,\
+	org.eclipse.xtext.xbase.lib,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.common,\
-	org.eclipse.xtext;version=2.7.2,\
-	org.apache.servicemix.bundles.junit,\
-	org.foam.xtext.plogic;version=latest,\
-	javax.inject,\
+	org.eclipse.xtext,\
 	org.antlr.runtime,\
+	osgi.cmpn,\
 	osgi.core;version=4.3,\
-	org.eclipse.xtend.lib.macro;version=2.7.2
+	javax.inject,\
+	com.ibm.icu

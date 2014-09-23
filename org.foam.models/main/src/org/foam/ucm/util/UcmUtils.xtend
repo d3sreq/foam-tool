@@ -1,12 +1,12 @@
 package org.foam.ucm.util
 
-import com.google.common.base.Preconditions
 import java.util.Set
 import org.foam.flowannotation.Include
 import org.foam.ucm.Scenario
 import org.foam.ucm.ScenarioHolder
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase
+import com.google.common.base.Preconditions
 
 class UcmUtils {
 	

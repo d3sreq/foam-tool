@@ -2,7 +2,6 @@
 -buildpath:  \
 	biz.aQute.bnd.annotation,\
 	osgi.cmpn,\
-	org.apache.commons.io,\
 	org.apache.servicemix.bundles.jopt-simple,\
 	org.foam.transform.ucm2lts;version=latest,\
 	org.foam.transform.cntexlang2cntex;version=latest,\
@@ -15,10 +14,10 @@
 	org.foam.transform.utils.graphviz;version=latest,\
 	org.foam.transform.utils.modeling;version=latest,\
 	osgi.core;version=4.3,\
+	com.google.guava,\
 	org.eclipse.xtend.lib;version=2.7.2,\
 	org.eclipse.xtend.lib.macro;version=2.7.2,\
 	org.eclipse.xtext.xbase.lib;version=2.7.2,\
-	com.google.guava,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
 	org.foam.models.ctl;version=latest,\
