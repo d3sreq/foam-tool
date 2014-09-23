@@ -26,9 +26,11 @@
 	org.eclipse.emf.common;version='[2.10.0,2.10.1)',\
 	org.eclipse.emf.ecore;version='[2.10.0,2.10.1)',\
 	org.eclipse.emf.ecore.xmi;version='[2.10.0,2.10.1)',\
-	org.eclipse.xtext;version='[2.6.2,2.6.3)',\
-	org.eclipse.xtext.util;version='[2.6.2,2.6.3)',\
-	org.eclipse.xtext.xbase.lib;version='[2.6.2,2.6.3)',\
+	org.eclipse.equinox.common;version='[3.6.200,3.6.201)',\
+	org.eclipse.equinox.supplement;version='[1.5.0,1.5.1)',\
+	org.eclipse.xtext;version='[2.7.2,2.7.3)',\
+	org.eclipse.xtext.util;version='[2.7.2,2.7.3)',\
+	org.eclipse.xtext.xbase.lib;version='[2.7.2,2.7.3)',\
 	org.foam.cli.launcher;version=latest,\
 	org.foam.cli.launcher.api;version=latest,\
 	org.foam.cli.tools.report;version=latest,\
