@@ -5,13 +5,11 @@
 -resolve.effective: active
 
 -runbundles:  \
-	com.google.guava;version='[11.0.2,11.0.3)',\
 	com.google.guava;version='[12.0.1,12.0.2)',\
 	com.google.inject;version='[3.0.0,3.0.1)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
 	javax.servlet;version='[2.5.0,2.5.1)',\
 	org.antlr.runtime;version='[3.2.0,3.2.1)',\
-	org.apache.commons.io;version='[2.0.1,2.0.2)',\
 	org.apache.commons.lang;version='[2.6.0,2.6.1)',\
 	org.apache.felix.configadmin;version='[1.8.0,1.8.1)',\
 	org.apache.felix.gogo.command;version='[0.12.0,0.12.1)',\

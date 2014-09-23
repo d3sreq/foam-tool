@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<repository increment='1411461770094' name='Local' xmlns='http://www.osgi.org/xmlns/repository/v1.0.0'>
+<repository increment='1411485539692' name='Local' xmlns='http://www.osgi.org/xmlns/repository/v1.0.0'>
   <resource>
     <capability namespace='osgi.identity'>
       <attribute name='osgi.identity' value='org.apache.log4j'/>
@@ -314,42 +314,50 @@
     <capability namespace='osgi.identity'>
       <attribute name='osgi.identity' value='com.google.inject'/>
       <attribute name='type' value='osgi.bundle'/>
-      <attribute name='version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <capability namespace='osgi.content'>
-      <attribute name='osgi.content' value='874e320cd3fc8c77804b55c4d3a62e85b457be6979aa1d9adecfca1aeae20346'/>
+      <attribute name='osgi.content' value='4173d4768276c57a613d63adb09b1360cb27346024a0d2765849b56c0dced696'/>
       <attribute name='url' value='com.google.inject/com.google.inject-3.0.0.jar'/>
-      <attribute name='size' type='Long' value='520616'/>
+      <attribute name='size' type='Long' value='520626'/>
       <attribute name='mime' value='application/vnd.osgi.bundle'/>
     </capability>
     <capability namespace='osgi.wiring.bundle'>
       <attribute name='osgi.wiring.bundle' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <capability namespace='osgi.wiring.host'>
       <attribute name='osgi.wiring.host' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <capability namespace='osgi.wiring.package'>
       <attribute name='osgi.wiring.package' value='com.google.inject'/>
       <attribute name='version' type='Version' value='1.3.0'/>
       <attribute name='aop' value='false'/>
       <attribute name='bundle-symbolic-name' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <capability namespace='osgi.wiring.package'>
       <attribute name='osgi.wiring.package' value='com.google.inject.binder'/>
       <attribute name='version' type='Version' value='1.3.0'/>
       <attribute name='aop' value='false'/>
       <attribute name='bundle-symbolic-name' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <capability namespace='osgi.wiring.package'>
       <attribute name='osgi.wiring.package' value='com.google.inject.internal'/>
       <attribute name='version' type='Version' value='1.3.0'/>
       <attribute name='aop' value='false'/>
       <attribute name='bundle-symbolic-name' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
+      <directive name='x-internal' value='true'/>
+    </capability>
+    <capability namespace='osgi.wiring.package'>
+      <attribute name='osgi.wiring.package' value='com.google.inject.internal.util'/>
+      <attribute name='version' type='Version' value='1.3.0'/>
+      <attribute name='aop' value='false'/>
+      <attribute name='bundle-symbolic-name' value='com.google.inject'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
       <directive name='x-internal' value='true'/>
     </capability>
     <capability namespace='osgi.wiring.package'>
@@ -357,28 +365,28 @@
       <attribute name='version' type='Version' value='1.3.0'/>
       <attribute name='aop' value='false'/>
       <attribute name='bundle-symbolic-name' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <capability namespace='osgi.wiring.package'>
       <attribute name='osgi.wiring.package' value='com.google.inject.name'/>
       <attribute name='version' type='Version' value='1.3.0'/>
       <attribute name='aop' value='false'/>
       <attribute name='bundle-symbolic-name' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <capability namespace='osgi.wiring.package'>
       <attribute name='osgi.wiring.package' value='com.google.inject.spi'/>
       <attribute name='version' type='Version' value='1.3.0'/>
       <attribute name='aop' value='false'/>
       <attribute name='bundle-symbolic-name' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <capability namespace='osgi.wiring.package'>
       <attribute name='osgi.wiring.package' value='com.google.inject.util'/>
       <attribute name='version' type='Version' value='1.3.0'/>
       <attribute name='aop' value='false'/>
       <attribute name='bundle-symbolic-name' value='com.google.inject'/>
-      <attribute name='bundle-version' type='Version' value='3.0.0.v201203062045'/>
+      <attribute name='bundle-version' type='Version' value='3.0.0.v201312141243'/>
     </capability>
     <requirement namespace='osgi.wiring.package'>
       <directive name='filter' value='(osgi.wiring.package=javax.inject)'/>
@@ -594,103 +602,6 @@
     </capability>
     <requirement namespace='osgi.ee'>
       <directive name='filter' value='(&amp;(osgi.ee=JavaSE)(version=1.3))'/>
-    </requirement>
-  </resource>
-  <resource>
-    <capability namespace='osgi.identity'>
-      <attribute name='osgi.identity' value='com.google.guava'/>
-      <attribute name='type' value='osgi.bundle'/>
-      <attribute name='version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.content'>
-      <attribute name='osgi.content' value='ee7720e8cd514f68d852795133965d2236c21af27363c5ed1e1823100078fb33'/>
-      <attribute name='url' value='com.google.guava/com.google.guava-11.0.2.jar'/>
-      <attribute name='size' type='Long' value='1746230'/>
-      <attribute name='mime' value='application/vnd.osgi.bundle'/>
-    </capability>
-    <capability namespace='osgi.wiring.bundle'>
-      <attribute name='osgi.wiring.bundle' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.host'>
-      <attribute name='osgi.wiring.host' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.annotations'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.base'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.base.internal'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-      <directive name='x-internal' value='true'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.cache'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.collect'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.eventbus'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.hash'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.io'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.math'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.net'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.primitives'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='com.google.common.util.concurrent'/>
-      <attribute name='version' type='Version' value='11.0.2'/>
-      <attribute name='bundle-symbolic-name' value='com.google.guava'/>
-      <attribute name='bundle-version' type='Version' value='11.0.2.v201303041551'/>
-    </capability>
-    <requirement namespace='osgi.ee'>
-      <directive name='filter' value='(&amp;(osgi.ee=JavaSE)(version=1.5))'/>
     </requirement>
   </resource>
   <resource>
@@ -2112,39 +2023,6 @@
     </requirement>
     <requirement namespace='osgi.ee'>
       <directive name='filter' value='(&amp;(osgi.ee=JavaSE)(version=1.5))'/>
-    </requirement>
-  </resource>
-  <resource>
-    <capability namespace='osgi.identity'>
-      <attribute name='osgi.identity' value='org.apache.commons.cli'/>
-      <attribute name='type' value='osgi.bundle'/>
-      <attribute name='version' type='Version' value='1.2.0.v201105210650'/>
-    </capability>
-    <capability namespace='osgi.content'>
-      <attribute name='osgi.content' value='d28b8cec131a521d704ac66a1857d4c1e1b385124a415180ddfb9527033124af'/>
-      <attribute name='url' value='org.apache.commons.cli/org.apache.commons.cli-1.2.0.jar'/>
-      <attribute name='size' type='Long' value='54360'/>
-      <attribute name='mime' value='application/vnd.osgi.bundle'/>
-    </capability>
-    <capability namespace='osgi.wiring.bundle'>
-      <attribute name='osgi.wiring.bundle' value='org.apache.commons.cli'/>
-      <attribute name='bundle-version' type='Version' value='1.2.0.v201105210650'/>
-    </capability>
-    <capability namespace='osgi.wiring.host'>
-      <attribute name='osgi.wiring.host' value='org.apache.commons.cli'/>
-      <attribute name='bundle-version' type='Version' value='1.2.0.v201105210650'/>
-    </capability>
-    <capability namespace='osgi.wiring.package'>
-      <attribute name='osgi.wiring.package' value='org.apache.commons.cli'/>
-      <attribute name='version' type='Version' value='1.2.0'/>
-      <attribute name='bundle-symbolic-name' value='org.apache.commons.cli'/>
-      <attribute name='bundle-version' type='Version' value='1.2.0.v201105210650'/>
-    </capability>
-    <requirement namespace='osgi.wiring.bundle'>
-      <directive name='filter' value='(&amp;(osgi.wiring.bundle=org.apache.commons.lang)(bundle-version&gt;=2.0.0)(!(bundle-version&gt;=3.0.0)))'/>
-    </requirement>
-    <requirement namespace='osgi.wiring.bundle'>
-      <directive name='filter' value='(&amp;(osgi.wiring.bundle=org.apache.commons.logging)(bundle-version&gt;=1.0.0)(!(bundle-version&gt;=2.0.0)))'/>
     </requirement>
   </resource>
 </repository>

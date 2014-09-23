@@ -9,17 +9,17 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.JarURLConnection
-import java.net.URISyntaxException
 import java.net.URL
-import java.util.Enumeration
 import org.osgi.framework.FrameworkUtil
 
 /**
- * From
+ * Inspired by
  * http://stackoverflow.com/questions/1386809/copy-directory-from-a-jar-file
+ * @author Viliam Simko
  */
 public class FileUtils {
 	
+	@Deprecated
 	def static boolean copyFile(File toCopy, File destFile) {
 		try {
 			
@@ -33,6 +33,7 @@ public class FileUtils {
 		return false
 	}
 
+	@Deprecated
 	def private static boolean copyFilesRecusively(File srcFileOrDir, File destDir) {
 		
 		Preconditions.checkArgument(srcFileOrDir.canRead)
@@ -57,6 +58,7 @@ public class FileUtils {
 		return true
 	}
 
+	@Deprecated
 	def static boolean copyJarResourcesRecursively(File destDir,
 			JarURLConnection jarConnection) throws IOException {
 
@@ -87,6 +89,7 @@ public class FileUtils {
 	/**
 	 * From Apache StringUtils.
 	 */
+	@Deprecated
 	def final static String removeStart(String str, String remove) {
 		if (isEmpty(str) || isEmpty(remove)) {
 			return str
@@ -97,8 +100,8 @@ public class FileUtils {
 		return str
 	}
 
-	def static boolean copyResourcesRecursively(
-			URL originUrl, File destination) {
+	@Deprecated
+	def static boolean copyResourcesRecursively(URL originUrl, File destination) {
 		try {
 			val urlConnection = originUrl.openConnection
 			if (urlConnection instanceof JarURLConnection) {
@@ -139,6 +142,7 @@ public class FileUtils {
 		return false
 	}
 
+	@Deprecated
 	def private static boolean ensureDirectoryExists(File f) {
 		return f.exists || f.mkdir
 	}
@@ -146,32 +150,43 @@ public class FileUtils {
 	/**
 	 * From Apache StringUtils.
 	 */
+	@Deprecated
 	def public static boolean isEmpty(CharSequence cs) {
 		return cs == null || cs.length == 0
 	}
 
 	/**
-	 * Copied from http://stackoverflow.com/questions/4582375/how-to-test-if-a-url-from-an-eclipse-bundle-is-a-directory
+	 * Inspired by http://stackoverflow.com/questions/4582375/how-to-test-if-a-url-from-an-eclipse-bundle-is-a-directory
 	 */
-	def public static void bundleCopy(String dir, String destination)
-			throws IOException, URISyntaxException {
+	def public static void bundleCopy(String sourceDirName, String destDirName) {
 
+		Preconditions.checkArgument( ! sourceDirName.empty )
+		Preconditions.checkArgument( ! destDirName.empty )
+
+		val destDir = new File(destDirName)
+		
+		// we need to create the output directory first because copyStream() needs it
+		if( ! destDir.exists ) {
+			destDir.mkdir
+		}
+		
+		Preconditions.checkArgument( destDir.isDirectory )
+		
 		val bundle = FrameworkUtil.getBundle(FileUtils)
 		
-		val Enumeration<URL> en = bundle.findEntries(dir, "*", true)
+		val en = bundle.findEntries(sourceDirName, "*", true)
 		while (en.hasMoreElements) {
 			val url = en.nextElement
-			val pathFromBase = url.path.substring(dir.length + 1)
-			val toFileName = destination + pathFromBase
-			val toFile = new File(toFileName)
+			val pathFromBase = url.path.substring(sourceDirName.length + 1)
+			val destFileName = destDirName + pathFromBase
+			val destFile = new File(destFileName)
 
 			if (pathFromBase.endsWith("/")) {
 				// This is a directory - create it and recurse
 				// Don't fail if directory exists
-				toFile.mkdir
+				destFile.mkdir
 			} else {
-				// This is a file - copy it
-				org.apache.commons.io.FileUtils.copyURLToFile(url, toFile)
+				copyStream(url.openStream, destFile);
 			}
 		}
 	}
