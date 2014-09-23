@@ -4,6 +4,7 @@
 /release/
 
 # common
+**/java_pid*.hprof
 **/main/bin/
 **/test/bin/
 **/build/
