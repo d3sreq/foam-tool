@@ -14,7 +14,8 @@
 ## and generates classes always into build/classes/main directory  
 bin:           build/classes/main
 #target:       ${project}/generated
-target-dir:       ${project}/build/osgi-bundles
+
+target-dir:    build/osgi-bundles
 #build:        ${workspace}/cnf
 #plugin-dir:   ${build}/plugins
 
