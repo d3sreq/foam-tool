@@ -4,6 +4,14 @@ import "http://foam.org/models/propositionallogic" // refers to an *.ecore file 
 import "http://foam.org/models/ltl" // refers to an *.ecore file (here using nsURI)
 import "http://foam.org/models/plogicXtext"
 
+// =================================================================================
+// NOTE: all the "=>" operators were added when fixing issue #23
+// (https://github.com/d3sreq/foam-tool/issues/23)
+// They prevent warning messages from ANTLR complaining about grammar ambiguity
+// see also http://www.eclipse.org/Xtext/documentation.html#antlr_errors
+// and also http://zarnekow.blogspot.de/2012/10/xtext-corner-5-backtracking-vs.html 
+// =================================================================================
+
 // precedence order: 
 // - the unary operators bind stronger than the binary ones.
 // - ! and G, F, X, H, O bind equally strong. 
@@ -15,7 +23,7 @@ import "http://foam.org/models/plogicXtext"
 // Without this rule only RuleSimple and RuleUnaryLtl would be used
 // as accepting grammar rules
 RuleStart returns Formula:
-	RuleArrow ((
+	RuleArrow =>((
 		{Until.left=current}		'U' |
 		{Releases.left=current}		'R' |
 		{Since.left=current}		'S' |

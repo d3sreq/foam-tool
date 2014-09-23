@@ -4,17 +4,25 @@ import "http://foam.org/models/propositionallogic" // refers to an *.ecore file 
 
 generate propositionalLogicXtext "http://foam.org/models/plogicXtext"
 
+// =================================================================================
+// NOTE: all the "=>" operators were added when fixing issue #23
+// (https://github.com/d3sreq/foam-tool/issues/23)
+// They prevent warning messages from ANTLR complaining about grammar ambiguity
+// see also http://www.eclipse.org/Xtext/documentation.html#antlr_errors
+// and also http://zarnekow.blogspot.de/2012/10/xtext-corner-5-backtracking-vs.html 
+// =================================================================================
+
 RuleStart returns Formula:
 	RuleArrow;
 
 RuleArrow returns Formula:
-	RuleDisjunction (({Implication.left=current} '->' | {Equivalence.left=current} '<->') right=RuleDisjunction)*;
+	RuleDisjunction =>(({Implication.left=current} '->' | {Equivalence.left=current} '<->') right=RuleDisjunction)*;
 
 RuleDisjunction returns Formula:
-	RuleConjunction ({Or.left=current} '|' right=RuleConjunction)*;
+	RuleConjunction =>({Or.left=current} '|' right=RuleConjunction)*;
 
 RuleConjunction returns Formula:
-	RuleSimple ({And.left=current} '&' right=RuleSimple)*;
+	RuleSimple =>({And.left=current} '&' right=RuleSimple)*;
 
 // added to be easily overwritten in ltl or ctl grammar 
 RuleSimple returns Formula:
