@@ -103,7 +103,7 @@ package class Lts2NusmvContext {
 		trans2guards.put(newTransition, guardAnnot)
 	}
 	
-	private val markvar2trans = <VariableDefinition, List<Transition>>newHashMap
+	private val markvar2trans = <VariableDefinition, List<Transition>> newHashMap
 	def private dispatch void prepareTransitionAnnotationMapping(Automaton automaton, Transition transition, Mark markAnnot) {
 		if(!markvar2trans.containsKey(markAnnot.variableDefinition)) {
 			markvar2trans.put(markAnnot.variableDefinition, newArrayList)

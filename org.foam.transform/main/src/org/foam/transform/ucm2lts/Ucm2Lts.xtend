@@ -4,8 +4,6 @@ import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Preconditions
 import com.google.common.base.Predicates
 import java.util.Map
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.foam.flowannotation.Abort
 import org.foam.flowannotation.FlowannotationFactory
@@ -470,10 +468,6 @@ class Ucm2Lts {
 				}
 			}
 		}
-	}
-	
-	def debug(Logger logger, String string) {
-		logger.log(Level.DEBUG, string)
 	}
 	
 	/**

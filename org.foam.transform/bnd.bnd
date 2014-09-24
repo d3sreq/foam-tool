@@ -19,12 +19,10 @@
 	com.google.guava,\
 	com.google.inject,\
 	biz.aQute.bnd.annotation,\
-	org.apache.log4j,\
 	org.apache.commons.lang,\
 	org.apache.servicemix.bundles.junit,\
 	org.eclipse.xtend.lib,\
 	org.eclipse.xtend.lib.macro,\
-	org.eclipse.xtext.util,\
 	org.eclipse.xtext.xbase.lib,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
