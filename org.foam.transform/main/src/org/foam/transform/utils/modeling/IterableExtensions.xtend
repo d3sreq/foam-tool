@@ -3,6 +3,7 @@ package org.foam.transform.utils.modeling
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
 import java.util.Collection
+import org.eclipse.xtext.xbase.lib.Functions.Function2
 
 class IterableExtensions {
 
@@ -77,5 +78,9 @@ class IterableExtensions {
 		// 
 		//   val sndIter = snd.iterator
 		//   return fst.map[it -> sndIter.next]
+	}
+	
+	def static <T,U,V> Iterable<V> zipWith(Iterable<T> first, Iterable<U> second, Function2<T,U,V> fn) {
+		return new ZippingWithIterable(first, second, fn)
 	}
 }
