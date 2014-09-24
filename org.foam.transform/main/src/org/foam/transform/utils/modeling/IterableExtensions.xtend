@@ -65,8 +65,17 @@ class IterableExtensions {
 		input.map[computeKeyValuePair.apply(it)].toMultimap
 	}
 	
-	def static <T,U> Iterable<Pair<T,U>> zip(Iterable<T> fst, Iterable<U> snd) {
-		val sndIter = snd.iterator
-		fst.map[it -> sndIter.next]
+	/**
+	 * Zips two iterables without throwing NoSuchElementException.
+	 * The zipped iterable will have the same length as the shorter of the two input iterables.
+	 */
+	def static <T,U> Iterable<Pair<T,U>> zip(Iterable<T> first, Iterable<U> second) {
+		return new ZippingIterable(first, second)
+		
+		// NOTE: The following approach works only
+		// for iterables with the same cardinality
+		// 
+		//   val sndIter = snd.iterator
+		//   return fst.map[it -> sndIter.next]
 	}
 }

@@ -86,4 +86,23 @@ class IterableExtensionsTest {
 		assertArrayEquals(#[20], mmap.get(2))
 		assertArrayEquals(#[30,31], mmap.get(3).sort.toArray)
 	}
+	
+	@Test def void testZipIterables() {
+		assertArrayEquals(
+			#[1->1, 2->2],
+			zip(#[1,2,3], #[1,2])
+		)
+		assertArrayEquals(
+			#[1->1, 2->2],
+			zip(#[1,2], #[1,2,3])
+		)
+		assertArrayEquals(
+			#[1->1, 2->2, 3->3],
+			zip(#[1,2,3], #[1,2,3])
+		)
+		assertArrayEquals(
+			#[],
+			zip(#[], #[])
+		)
+	}
 }
