@@ -1,4 +1,4 @@
-package org.foam.cli.tools.report.utils
+package org.foam.transform.utils.osgi
 
 import com.google.common.base.Preconditions
 import java.io.File
@@ -19,6 +19,69 @@ import org.osgi.framework.FrameworkUtil
  */
 public class FileUtils {
 	
+	/**
+	 * Inspired by http://stackoverflow.com/questions/4582375/how-to-test-if-a-url-from-an-eclipse-bundle-is-a-directory
+	 */
+	def public static void bundleCopy(String sourceDirName, String destDirName) {
+
+		Preconditions.checkArgument( ! sourceDirName.empty )
+		Preconditions.checkArgument( ! destDirName.empty )
+
+		val destDir = new File(destDirName)
+		
+		// we need to create the output directory first because copyStream() needs it
+		if( ! destDir.exists ) {
+			destDir.mkdir
+		}
+		
+		Preconditions.checkArgument( destDir.isDirectory )
+		
+		val bundle = FrameworkUtil.getBundle(FileUtils)
+		
+		val en = bundle.findEntries(sourceDirName, "*", true)
+		while (en.hasMoreElements) {
+			val url = en.nextElement
+			val pathFromBase = url.path.substring(sourceDirName.length + 1)
+			val destFileName = destDirName + pathFromBase
+			val destFile = new File(destFileName)
+
+			if (pathFromBase.endsWith("/")) {
+				// This is a directory - create it and recurse
+				// Don't fail if directory exists
+				destFile.mkdir
+			} else {
+				copyStream(url.openStream, destFile);
+			}
+		}
+	}
+
+	def private static boolean copyStream(InputStream is, File f) {
+		try {
+			return FileUtils.copyStream(is, new FileOutputStream(f))
+		} catch (FileNotFoundException e) {
+			e.printStackTrace
+		}
+		return false
+	}
+	
+	def private static boolean copyStream(InputStream is, OutputStream os) {
+		try {
+			val buf = newByteArrayOfSize(4096)
+
+			var len = 0
+			while ((len = is.read(buf)) > 0) {
+				os.write(buf, 0, len)
+			}
+			return true
+		} catch (IOException e) {
+			e.printStackTrace
+		} finally {
+			try {is.close} catch(IOException e) {}
+			try {os.close} catch(IOException e) {}
+		}
+		return false
+	}
+
 	@Deprecated
 	def static boolean copyFile(File toCopy, File destFile) {
 		try {
@@ -115,33 +178,6 @@ public class FileUtils {
 		return false
 	}
 
-	def private static boolean copyStream(InputStream is, File f) {
-		try {
-			return FileUtils.copyStream(is, new FileOutputStream(f))
-		} catch (FileNotFoundException e) {
-			e.printStackTrace
-		}
-		return false
-	}
-	
-	def private static boolean copyStream(InputStream is, OutputStream os) {
-		try {
-			val buf = newByteArrayOfSize(4096)
-
-			var len = 0
-			while ((len = is.read(buf)) > 0) {
-				os.write(buf, 0, len)
-			}
-			return true
-		} catch (IOException e) {
-			e.printStackTrace
-		} finally {
-			try {is.close} catch(IOException e) {}
-			try {os.close} catch(IOException e) {}
-		}
-		return false
-	}
-
 	@Deprecated
 	def private static boolean ensureDirectoryExists(File f) {
 		return f.exists || f.mkdir
@@ -153,41 +189,5 @@ public class FileUtils {
 	@Deprecated
 	def public static boolean isEmpty(CharSequence cs) {
 		return cs == null || cs.length == 0
-	}
-
-	/**
-	 * Inspired by http://stackoverflow.com/questions/4582375/how-to-test-if-a-url-from-an-eclipse-bundle-is-a-directory
-	 */
-	def public static void bundleCopy(String sourceDirName, String destDirName) {
-
-		Preconditions.checkArgument( ! sourceDirName.empty )
-		Preconditions.checkArgument( ! destDirName.empty )
-
-		val destDir = new File(destDirName)
-		
-		// we need to create the output directory first because copyStream() needs it
-		if( ! destDir.exists ) {
-			destDir.mkdir
-		}
-		
-		Preconditions.checkArgument( destDir.isDirectory )
-		
-		val bundle = FrameworkUtil.getBundle(FileUtils)
-		
-		val en = bundle.findEntries(sourceDirName, "*", true)
-		while (en.hasMoreElements) {
-			val url = en.nextElement
-			val pathFromBase = url.path.substring(sourceDirName.length + 1)
-			val destFileName = destDirName + pathFromBase
-			val destFile = new File(destFileName)
-
-			if (pathFromBase.endsWith("/")) {
-				// This is a directory - create it and recurse
-				// Don't fail if directory exists
-				destFile.mkdir
-			} else {
-				copyStream(url.openStream, destFile);
-			}
-		}
 	}
 }

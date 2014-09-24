@@ -5,7 +5,7 @@ import org.eclipse.xtend.lib.annotations.Data
 import org.foam.dot.Node
 import org.foam.lts.State
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
+import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
 
 /**
  * @param mapping in parameter

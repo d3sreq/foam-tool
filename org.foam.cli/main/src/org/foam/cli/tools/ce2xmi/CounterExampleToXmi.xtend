@@ -15,7 +15,7 @@ import org.foam.tadl.TadlPackage
 import org.foam.traceability.TraceabilityPackage
 import org.foam.transform.cntexlang2cntex.CntexLang2Cntex
 import org.foam.transform.cntexlang2cntex.CntexStateResolver
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
 import org.osgi.service.log.LogService

@@ -20,7 +20,7 @@ import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.transform.utils.modeling.FoamNamingExtension
 import org.foam.ucm.Step
 import org.foam.verification.Action

@@ -5,8 +5,8 @@ import aQute.bnd.annotation.component.Reference
 import com.google.common.io.CharStreams
 import java.io.InputStreamReader
 import org.foam.cli.launcher.api.IExecutableTool
-import org.foam.cli.tools.report.utils.FileUtils
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.FileUtils
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.osgi.framework.FrameworkUtil
 import org.osgi.service.log.LogService
 

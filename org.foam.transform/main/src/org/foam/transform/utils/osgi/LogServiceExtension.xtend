@@ -1,4 +1,4 @@
-package org.foam.transform.utils.logger
+package org.foam.transform.utils.osgi
 
 import org.osgi.service.log.LogService
 

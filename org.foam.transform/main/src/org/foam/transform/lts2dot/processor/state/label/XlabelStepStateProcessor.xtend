@@ -7,7 +7,7 @@ import org.foam.lts.State
 import org.foam.transform.lts2dot.processor.state.StateProcessor
 import org.foam.ucm.Step
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
+import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
 
 /**
  * @param mapping in parameter

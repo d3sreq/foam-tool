@@ -8,7 +8,7 @@ import joptsimple.OptionParser
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.transform.ucm.overview.dot.UcmOverviewUsingDot
 import org.foam.transform.utils.graphviz.GraphvizWrapper
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.ucm.UseCaseModel
 import org.osgi.service.log.LogService

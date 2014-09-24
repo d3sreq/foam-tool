@@ -11,7 +11,7 @@ import java.io.File
 import java.io.InputStreamReader
 import java.util.Map
 import java.util.regex.Pattern
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.osgi.service.log.LogService
 
 /**

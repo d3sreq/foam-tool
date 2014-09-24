@@ -10,8 +10,8 @@ import org.foam.ucm.ScenarioHolder
 import org.foam.ucm.UseCase
 import org.foam.ucm.util.UcmUtils
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
 import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
 
 /**
  * Creates subgraph (cluster) for use case and scenario of the given state if this subgraph is

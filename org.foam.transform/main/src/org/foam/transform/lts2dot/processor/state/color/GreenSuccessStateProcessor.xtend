@@ -9,7 +9,7 @@ import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
+import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
 
 /**
  * @param mapping in parameter

@@ -6,7 +6,7 @@ import aQute.bnd.annotation.component.Reference
 import java.util.Map
 import java.util.concurrent.ConcurrentHashMap
 import org.foam.cli.launcher.api.IExecutableTool
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.osgi.framework.BundleContext
 import org.osgi.service.log.LogService
 

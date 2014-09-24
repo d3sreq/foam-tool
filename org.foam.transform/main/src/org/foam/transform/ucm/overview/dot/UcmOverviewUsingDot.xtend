@@ -6,7 +6,7 @@ import org.foam.dot.DotFactory
 import org.foam.dot.SettingsType
 import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.ucm.overview.UcmOverviewCreator
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.ucm.UseCaseModel
 import org.osgi.service.log.LogService

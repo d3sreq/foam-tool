@@ -4,7 +4,7 @@ import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Preconditions
 import org.foam.cli.launcher.api.IExecutableTool
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.transform.utils.nusmv.NusmvWrapper
 import org.osgi.service.log.LogService
 

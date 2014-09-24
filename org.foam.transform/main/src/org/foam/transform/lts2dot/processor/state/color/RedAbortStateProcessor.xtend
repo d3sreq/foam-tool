@@ -10,7 +10,7 @@ import org.foam.transform.lts2dot.processor.state.StateProcessor
 import org.foam.ucm.Step
 import org.foam.ucm.util.UcmUtils
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
+import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
 
 /**
  * @param mapping in parameter

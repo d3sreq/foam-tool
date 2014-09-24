@@ -21,7 +21,7 @@ import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
 import org.foam.ucm.Step
 import org.foam.ucm.util.UcmUtils
 
-import static extension org.foam.cli.tools.report.utils.Utils.*
+import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
 
 class StepTrace {
 	@Accessors val List<Step> steps = newArrayList

@@ -28,12 +28,12 @@ import org.foam.propositionallogic.Or
 import org.foam.propositionallogic.True
 import org.foam.propositionallogic.VariableUse
 
-// TODO:
-// TADL formulae must be properly translated to NuSMV formulae.
-// Make sure, the semantics of operators X,G,U is equivalent for UCM and LTS
-// We will use the special "jmp" variable that is TRUE when the current state has type=JMP
-// There is always an exactly one JMP state for each use-case step
-
+/**
+ * TADL formulae must be properly translated to NuSMV formulae.
+ * Make sure, the semantics of operators X,G,U is equivalent for UCM and LTS
+ * We will use the special "jmp" variable that is TRUE when the current state has type=JMP
+ * There is always an exactly one JMP state for each use-case step
+ */
 class NusmvFormulaRenderer {
 	
 	val Map<String, String> varNameMapping

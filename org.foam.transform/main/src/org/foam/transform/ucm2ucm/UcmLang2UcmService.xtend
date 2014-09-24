@@ -17,7 +17,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Data
 import org.foam.annotation.Annotation
 import org.foam.annotation.AnnotationFactory
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UcmFactory
