@@ -12,6 +12,7 @@ import java.util.LinkedHashSet
 import java.util.List
 import java.util.Map
 import joptsimple.OptionParser
+import org.eclipse.xtend.lib.annotations.Accessors
 import org.foam.annotation.AnnotationPackage
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.cli.tools.report.pages.ErrorPage
@@ -22,7 +23,6 @@ import org.foam.cli.tools.report.pages.OverviewPage
 import org.foam.cli.tools.report.pages.Page
 import org.foam.cli.tools.report.pages.TadlTemplatePage
 import org.foam.cli.tools.report.pages.UseCasePage
-import org.foam.cli.tools.report.utils.FileUtils
 import org.foam.cntex.Specification
 import org.foam.ctl.CtlPackage
 import org.foam.dot.DotPackage
@@ -49,9 +49,10 @@ import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizWrapper
-import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.transform.utils.nusmv.NusmvWrapper
+import org.foam.transform.utils.osgi.FileUtils
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.ucm.UcmPackage
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
@@ -59,7 +60,7 @@ import org.foam.verification.VerificationPackage
 import org.osgi.framework.FrameworkUtil
 import org.osgi.service.log.LogService
 
-import static extension org.foam.cli.tools.report.utils.Utils.*
+import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
 
 @Component
 class ReportApplication implements IExecutableTool {
@@ -432,10 +433,12 @@ class ReportApplication implements IExecutableTool {
  * all fields and don't check all preconditions (e.g. null-ness in equals).
  */
 class SpecificationWrapper {
-	@Property val Specification specification
+	
+	@Accessors(PUBLIC_GETTER)
+	val Specification specification
 	
 	new(Specification specification) {
-		_specification = specification
+		this.specification = specification
 	}
 	
 	override hashCode() {
@@ -443,10 +446,10 @@ class SpecificationWrapper {
 	}
 	
 	override equals(Object obj) {
-		val otherSpecification = (obj as SpecificationWrapper).specification
+		val otherSpecification = (obj as SpecificationWrapper).getSpecification
 		
-		// both specification null or references equals
-		if (specification == otherSpecification) {
+		// both specifications null or references equals
+		if (specification === otherSpecification) {
 			return true
 		}
 		
