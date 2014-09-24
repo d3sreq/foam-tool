@@ -1,5 +1,6 @@
 package org.foam.transform.ucm2lts
 
+import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Preconditions
 import com.google.common.base.Predicates
 import java.util.Map
@@ -25,12 +26,14 @@ import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.TraceabilityFactory
 import org.foam.transform.utils.modeling.FoamNamingExtension
+import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 import org.foam.verification.Action
 import org.foam.verification.VerificationFactory
+import org.osgi.service.log.LogService
 
 import static extension org.foam.ucm.util.UcmUtils.*
 
@@ -42,9 +45,12 @@ import static extension org.foam.ucm.util.UcmUtils.*
  * <p><b>Warning</b> - notifier add/remove is <b>not thread safe</b>
  */
 class Ucm2Lts {
+
+	private extension LogServiceExtension logServiceExtension
+	@Reference def void setLogService(LogService logService) {
+		logServiceExtension = new LogServiceExtension(logService)
+	}
 		
-	// TODO: reimplement using OSGi DS
-	private static val logger = Logger.getLogger(Ucm2Lts.canonicalName) // TODO: use OSGi LogService
 	private extension FoamNamingExtension = new FoamNamingExtension
 	
 	val ltsFactory = LtsFactory.eINSTANCE
@@ -432,19 +438,19 @@ class Ucm2Lts {
 					if( ! lastStepOfMainScenario.annotations.exists[it instanceof Goto]) {
 						returnStates += stepToStateMap.get(lastStepOfMainScenario -> StateType.OUT)
 					} else {
-						logger.debug('''The included use-case «include.inlinedUseCase.id» contains "goto" annotation, therefore we won't add a "return" transition to «useCase.id»''')
+						debug('''The included use-case «include.inlinedUseCase.id» contains "goto" annotation, therefore we won't add a "return" transition to «useCase.id»''')
 					}
 					
 					// covers the (ii) case:
 					include.inlinedUseCase.allSteps.filter[annotations.exists[it instanceof Abort]].forEach[
-						logger.debug('''Found a step with ABORT annotation: «it.label» in use-case «include.inlinedUseCase.id»''')
+						debug('''Found a step with ABORT annotation: «it.label» in use-case «include.inlinedUseCase.id»''')
 						returnStates += stepToStateMap.get(it -> StateType.OUT)
 					]
 										
 					// now adding the return transitions from the collected return states:
 					for( returnState: returnStates) {
 						
-						logger.debug('''Adding "return" transition: «returnState.id»->«stepExtState.id»''')
+						debug('''Adding "return" transition: «returnState.id»->«stepExtState.id»''')
 						val returnTransition = addTransition(returnState, stepExtState, resultAutomaton, transitionMap)
 						
 						// adding an action to the return transition that sets the "incl" variable to FALSE
