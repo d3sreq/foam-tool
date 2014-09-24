@@ -105,4 +105,23 @@ class IterableExtensionsTest {
 			zip(#[], #[])
 		)
 	}
+	
+	@Test def void testZipWithIterables() {
+		assertArrayEquals(
+			#[2, 4],
+			zipWith(#[1,2,3], #[1,2], [a, b | a + b])
+		)
+		assertArrayEquals(
+			#[2, 4],
+			zipWith(#[1,2], #[1,2,3], [a, b | a + b])
+		)
+		assertArrayEquals(
+			#[2, 4, 6],
+			zipWith(#[1,2,3], #[1,2,3], [a, b | a + b])
+		)
+		assertArrayEquals(
+			#[],
+			zipWith(#[], #[], [a, b | a + b])
+		)
+	}
 }
