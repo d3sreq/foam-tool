@@ -36,4 +36,3 @@
 	org.eclipse.emf.ecore.xmi,\
 	osgi.cmpn,\
 	osgi.core;version=4.3
-	

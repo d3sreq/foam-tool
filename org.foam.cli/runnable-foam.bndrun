@@ -54,9 +54,9 @@
 	org.foam.transform.ucm2lts;version=latest,\
 	org.foam.transform.ucm2ucm;version=latest,\
 	org.foam.transform.utils.graphviz;version=latest,\
-	org.foam.transform.utils.logger;version=latest,\
 	org.foam.transform.utils.modeling;version=latest,\
 	org.foam.transform.utils.nusmv;version=latest,\
+	org.foam.transform.utils.osgi;version=latest,\
 	org.foam.xtext.ctl;version=latest,\
 	org.foam.xtext.ltl;version=latest,\
 	org.foam.xtext.plogic;version=latest,\
