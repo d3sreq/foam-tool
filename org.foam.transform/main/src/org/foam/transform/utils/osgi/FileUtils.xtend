@@ -22,10 +22,11 @@ public class FileUtils {
 	/**
 	 * Inspired by http://stackoverflow.com/questions/4582375/how-to-test-if-a-url-from-an-eclipse-bundle-is-a-directory
 	 */
-	def public static void bundleCopy(String sourceDirName, String destDirName) {
+	def public static void bundleCopy(Class<?> classFromBundle, String sourceDirName, String destDirName) {
 
-		Preconditions.checkArgument( ! sourceDirName.empty )
-		Preconditions.checkArgument( ! destDirName.empty )
+		Preconditions.checkNotNull(classFromBundle)
+		Preconditions.checkArgument( ! sourceDirName.empty)
+		Preconditions.checkArgument( ! destDirName.empty)
 
 		val destDir = new File(destDirName)
 		
@@ -36,7 +37,7 @@ public class FileUtils {
 		
 		Preconditions.checkArgument( destDir.isDirectory )
 		
-		val bundle = FrameworkUtil.getBundle(FileUtils)
+		val bundle = FrameworkUtil.getBundle(classFromBundle)
 		
 		val en = bundle.findEntries(sourceDirName, "*", true)
 		while (en.hasMoreElements) {
