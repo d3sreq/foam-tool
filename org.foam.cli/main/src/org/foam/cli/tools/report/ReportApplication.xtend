@@ -12,6 +12,7 @@ import java.util.LinkedHashSet
 import java.util.List
 import java.util.Map
 import joptsimple.OptionParser
+import org.apache.log4j.Logger
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.foam.annotation.AnnotationPackage
 import org.foam.cli.launcher.api.IExecutableTool
@@ -51,23 +52,18 @@ import org.foam.transform.utils.graphviz.GraphvizWrapper
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.transform.utils.nusmv.NusmvWrapper
 import org.foam.transform.utils.osgi.FileUtils
-import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.ucm.UcmPackage
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 import org.foam.verification.VerificationPackage
 import org.osgi.framework.FrameworkUtil
-import org.osgi.service.log.LogService
 
 import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
 
 @Component
 class ReportApplication implements IExecutableTool {
 	
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(ReportApplication)
 
 	private NusmvWrapper nusmvWrapper
 	@Reference def void setNusmvWrapper(NusmvWrapper nusmvWrapper) {
@@ -273,7 +269,9 @@ class ReportApplication implements IExecutableTool {
 		EmfCommons.basicValidate(dotGraph)
 		
 		// dot -> svg (with links)
-		val imageFileName = createImageAndImageMap(dotGraph, outputDirName, useCase.id)
+		val dotContent = new Dot2DotLang().transform(dotGraph)
+		val imageFileName = '''«outputDirName»/«useCase.id»/«useCase.id».svg'''
+		graphvizWrapper.createSvg(dotContent, imageFileName)
 		
 		new UseCasePage(useCase, menu, imageFileName)
 	}
@@ -303,31 +301,6 @@ class ReportApplication implements IExecutableTool {
 	def private createTadlPageMenuItem(TadlTemplatePage tadlTemplatePage, Menu menu) {
 		val id = tadlTemplatePage.id
 		new MenuItem(id, '''../«id»/«id».html''', tadlTemplatePage)
-	}
-	
-	@Deprecated
-	def private createImageAndImageMap(Graph graph, String outputDirName, String outputFileName) {
-		val imageDir = new File(new File(outputDirName), outputFileName)
-		imageDir.mkdir
-		
-		val fullOutputFileWithoutExtension = '''«imageDir»/«outputFileName»'''
-		
-		// write dot to file
-		val dotContent = new Dot2DotLang().transform(graph)
-		val dotFileName = '''«fullOutputFileWithoutExtension».dot'''
-		Files.write(dotContent, new File(dotFileName), Charsets.UTF_8) 
-		
-		val imageFileName = '''«outputFileName».svg'''
-		val fullImageFileName = '''«fullOutputFileWithoutExtension».svg'''
-		
-		val dotCommand = newArrayList("dot", 
-							"-Tsvg", "-o", fullImageFileName, 
-							dotFileName)
-		
-		'''Creating svg image with dot: "«dotCommand.join(" ")»"'''.info
-		graphvizWrapper.runGraphviz(dotCommand)
-		
-		return imageFileName
 	}
 	
 	def private writePage(Page page, String outputDirName) {
@@ -413,7 +386,7 @@ class ReportApplication implements IExecutableTool {
 	}
 	
 	def private copyWebFiles(String outputDir) {
-		'''Copying template web files to output directory «outputDir»'''.info
+		'''Copying template web files to output directory «outputDir»'''.debug
 		FileUtils.bundleCopy(ReportApplication, "report/web", outputDir)
 	}
 	
