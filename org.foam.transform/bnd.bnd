@@ -28,8 +28,10 @@
 	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.common,\
 	org.eclipse.xtext,\
+	org.eclipse.xtext.util,\
 	org.antlr.runtime,\
 	osgi.cmpn,\
 	osgi.core;version=4.3,\
 	javax.inject,\
-	com.ibm.icu
+	com.ibm.icu,\
+	org.ops4j.pax.logging.pax-logging-api
