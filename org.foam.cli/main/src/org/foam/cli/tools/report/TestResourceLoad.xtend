@@ -20,7 +20,7 @@ class TestResourceLoad implements IExecutableTool {
 
 	override execute(String[] args) {
 		'''Trying to copy files from bundle'''.info
-		FileUtils.bundleCopy("report/web", "/home/vlx/tmp/testik");
+		FileUtils.bundleCopy(TestResourceLoad, "report/web", "/home/vlx/tmp/testik");
 		
 		val is = FrameworkUtil.getBundle(class).getResource("/report/dot/OverviewGraphTemplate.xmi").openStream
 		CharStreams.readLines(new InputStreamReader(is)).forEach[println(it)]

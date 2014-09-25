@@ -415,7 +415,7 @@ class ReportApplication implements IExecutableTool {
 	
 	def private copyWebFiles(String outputDir) {
 		'''Copying template web files to output directory «outputDir»'''.info
-		FileUtils.bundleCopy("report/web", outputDir)
+		FileUtils.bundleCopy(ReportApplication, "report/web", outputDir)
 	}
 	
 	/**
