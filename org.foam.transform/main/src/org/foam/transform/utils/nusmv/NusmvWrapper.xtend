@@ -2,7 +2,6 @@ package org.foam.transform.utils.nusmv
 
 import aQute.bnd.annotation.component.Activate
 import aQute.bnd.annotation.component.Component
-import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Charsets
 import com.google.common.base.Preconditions
 import com.google.common.io.CharStreams
@@ -11,8 +10,7 @@ import java.io.File
 import java.io.InputStreamReader
 import java.util.Map
 import java.util.regex.Pattern
-import org.foam.transform.utils.osgi.LogServiceExtension
-import org.osgi.service.log.LogService
+import org.apache.log4j.Logger
 
 /**
  * This service handles communication with the NuSMV tool
@@ -23,10 +21,7 @@ import org.osgi.service.log.LogService
 @Component(provide = NusmvWrapper)
 class NusmvWrapper {
 	
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(NusmvWrapper)
 
 	//TODO:implement multiple ways of obtaining a path to the nusmv executable file
 	val nusmvExecFile = "NuSMV"

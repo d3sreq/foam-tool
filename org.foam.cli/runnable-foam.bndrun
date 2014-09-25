@@ -10,7 +10,7 @@
 
 
 -runproperties:  \
-	org.ops4j.pax.logging.DefaultServiceLog.level=WARN,\
+	org.ops4j.pax.logging.DefaultServiceLog.level=INFO,\
 	org.ops4j.pax.logging.service.frameworkEventsLogLevel=DEBUG
 
 	# defines jetty port for running the webconsole

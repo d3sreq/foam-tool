@@ -35,4 +35,5 @@
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
 	osgi.cmpn,\
-	osgi.core;version=4.3
+	osgi.core;version=4.3,\
+	org.ops4j.pax.logging.pax-logging-api

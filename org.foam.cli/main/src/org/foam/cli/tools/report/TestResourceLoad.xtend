@@ -1,22 +1,17 @@
 package org.foam.cli.tools.report
 
 import aQute.bnd.annotation.component.Component
-import aQute.bnd.annotation.component.Reference
 import com.google.common.io.CharStreams
 import java.io.InputStreamReader
+import org.apache.log4j.Logger
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.transform.utils.osgi.FileUtils
-import org.foam.transform.utils.osgi.LogServiceExtension
 import org.osgi.framework.FrameworkUtil
-import org.osgi.service.log.LogService
 
 @Component
 class TestResourceLoad implements IExecutableTool {
 	
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(TestResourceLoad)
 
 	override execute(String[] args) {
 		'''Trying to copy files from bundle'''.info

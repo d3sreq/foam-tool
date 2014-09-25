@@ -1,11 +1,10 @@
 package org.foam.transform.ucm2ucm.tadlannotationresolver
 
-import org.foam.annotation.Annotation
-import org.foam.annotation.UnknownAnnotation
-import java.util.Collection
 import java.util.HashMap
 import java.util.Map
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.foam.annotation.Annotation
+import org.foam.annotation.UnknownAnnotation
 import org.foam.propositionallogic.VariableDefinition
 import org.foam.tadl.Group
 import org.foam.tadl.TadlFactory

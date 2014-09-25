@@ -54,7 +54,6 @@ class UcmOverviewUsingDotTest {
 	]
 		
 	val service = new UcmOverviewUsingDot => [
-		logService = null
 		ucmOverviewCreator = new UcmOverviewCreator
 	]
 	
