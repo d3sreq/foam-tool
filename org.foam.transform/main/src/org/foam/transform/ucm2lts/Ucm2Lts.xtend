@@ -23,7 +23,6 @@ import org.foam.propositionallogic.VariableDefinition
 import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.TraceabilityFactory
-import org.foam.transform.utils.modeling.FoamNamingExtension
 import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
@@ -33,14 +32,21 @@ import org.foam.verification.Action
 import org.foam.verification.VerificationFactory
 import org.osgi.service.log.LogService
 
+import static extension org.foam.transform.utils.modeling.FoamNamingExtensions.*
 import static extension org.foam.ucm.util.UcmUtils.*
 
 /**
  * Performs transformation from {@link UseCaseModel} to {@link Automaton}.
- * Transformation is based on paper Formal Verification of Annotated Use-Cases (FOAM Method)
- * from Viliam Simko, Petr Hnetynka, Tomas Bures and Frantisek Plasil
- * 
  * <p><b>Warning</b> - notifier add/remove is <b>not thread safe</b>
+ * 
+ * <hr/>
+ * <b>NOTE:</b> The transformation is based on the following paper:
+ * <p>
+ * Šimko V., Hauzar D., Hnětynka P., Bureš T., Plášil F.: <b>Formal Verification
+ * of Annotated Textual Use-Cases</b>, The Computer Journal, September 2014
+ * <a href="http://dx.doi.org/10.1093/comjnl/bxu068">doi:10.1093/comjnl/bxu068</a>
+ * </p>
+ *
  */
 class Ucm2Lts {
 
@@ -49,8 +55,6 @@ class Ucm2Lts {
 		logServiceExtension = new LogServiceExtension(logService)
 	}
 		
-	private extension FoamNamingExtension = new FoamNamingExtension
-	
 	val ltsFactory = LtsFactory.eINSTANCE
 	val flowannotationFactory = FlowannotationFactory.eINSTANCE
 	val propositionalLogicFactory = PropositionallogicFactory.eINSTANCE

@@ -4,6 +4,8 @@ import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
 import java.util.Collection
 import org.eclipse.xtext.xbase.lib.Functions.Function2
+import org.eclipse.xtend.lib.annotations.Data
+import java.util.Iterator
 
 class IterableExtensions {
 
@@ -71,7 +73,7 @@ class IterableExtensions {
 	 * The zipped iterable will have the same length as the shorter of the two input iterables.
 	 */
 	def static <T,U> Iterable<Pair<T,U>> zip(Iterable<T> first, Iterable<U> second) {
-		return new ZippingIterable(first, second)
+		return zipWith( first, second, [ a,b | a->b ] )
 		
 		// NOTE: The following approach works only
 		// for iterables with the same cardinality
@@ -80,7 +82,34 @@ class IterableExtensions {
 		//   return fst.map[it -> sndIter.next]
 	}
 	
-	def static <T,U,V> Iterable<V> zipWith(Iterable<T> first, Iterable<U> second, Function2<T,U,V> fn) {
-		return new ZippingWithIterable(first, second, fn)
+	def static <T,U,V> Iterable<V> zipWith(Iterable<T> first, Iterable<U> second, Function2<T,U,V> mapFunction) {
+		return new ZippingWithIterable(first, second, mapFunction)
+	}
+	
+	@Data private static class ZippingWithIterable<T, U, V> implements Iterable<V> {
+	
+		private val Iterable<T> iterable1
+		private val Iterable<U> iterable2
+		private val Function2<T,U,V> mapFunction
+	
+		override iterator() {
+			return new Iterator<V>() {
+	
+				private val iterator1 = iterable1.iterator
+				private val iterator2 = iterable2.iterator
+	
+				override hasNext() {
+					iterator1.hasNext && iterator2.hasNext
+				}
+	
+				override next() {
+					mapFunction.apply(iterator1.next, iterator2.next)
+				}
+	
+				override remove() {
+					throw new UnsupportedOperationException
+				}
+			}
+		}
 	}
 }
