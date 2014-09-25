@@ -1,16 +1,17 @@
 package org.foam.ucm.util
 
+import com.google.common.base.Preconditions
 import java.util.Set
 import org.foam.flowannotation.Include
 import org.foam.ucm.Scenario
 import org.foam.ucm.ScenarioHolder
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase
-import com.google.common.base.Preconditions
 
+// TODO: rename to UcmUtilExtension
 class UcmUtils {
 	
-	def static getStepAnnotations(UseCase useCase) {
+	@Pure def static getStepAnnotations(UseCase useCase) {
 		val holders = useCase.branches.values
 		val extScenarioLists = holders.map[extensions]
 		val varScenarioLists = holders.map[variations]
@@ -18,20 +19,20 @@ class UcmUtils {
 		allScenarios.map[getStepAnnotations].flatten
 	}
 	
-	def static getStepAnnotations(Scenario scenario) {
+	@Pure def static getStepAnnotations(Scenario scenario) {
 		scenario.steps.map[annotations].flatten
 	}
 	
-	def static allSteps(UseCase useCase) {
+	@Pure def static allSteps(UseCase useCase) {
 		useCase.allScenarios.map[steps].flatten
 	}
 	
-	def static allScenarios(UseCase useCase) {
+	@Pure def static allScenarios(UseCase useCase) {
 		#[useCase.mainScenario]
 		+ useCase.branches.values.map[branches.map[value as Scenario]].flatten
 	}
 	
-	def static Set<UseCase> getPreceededTransitively(UseCase useCase) {
+	@Pure def static Set<UseCase> getPreceededTransitively(UseCase useCase) {
 		Preconditions.checkNotNull(useCase)
 		
 		val result = <UseCase> newHashSet
@@ -39,6 +40,7 @@ class UcmUtils {
 		result
 	}
 	
+	// TODO: try to make this function pure
 	def private static void getPreceededRecursively(UseCase useCase, Set<UseCase> result) {
 		for (preceededUseCase : useCase.preceeded) {
 			if (!result.contains(preceededUseCase)) {
@@ -48,20 +50,21 @@ class UcmUtils {
 		}
 	}
 	
-	def static getIncluded(UseCase useCase) {
+	@Pure def static getIncluded(UseCase useCase) {
 		useCase.allSteps.map[
 			annotations.filter(Include).map[inlinedUseCase]
 		].flatten.toSet
 	}
 	
-	def static getIncludedTransitively(UseCase useCase) {
+	@Pure def static getIncludedTransitively(UseCase useCase) {
 		Preconditions.checkNotNull(useCase)
 		
 		val result = <UseCase> newHashSet
 		getIncludedUseCasesRecursively(useCase, result)
-		result
+		return result
 	}
 	
+	// TODO: try to make this function pure
 	def private static void getIncludedUseCasesRecursively(UseCase useCase, Set<UseCase> result) {
 		for (includedUseCase  : useCase.getIncluded) {
 			if (!result.contains(includedUseCase)) {
@@ -71,12 +74,12 @@ class UcmUtils {
 		}
 	}
 	
-	def static UseCase getUseCase(Step step) {
+	@Pure def static UseCase getUseCase(Step step) {
 		Preconditions.checkNotNull(step)
 		(step.eContainer as Scenario).getUseCase
 	}
 	
-	def static UseCase getUseCase(Scenario scenario) {
+	@Pure def static UseCase getUseCase(Scenario scenario) {
 		Preconditions.checkNotNull(scenario)
 		val scenarioParent = scenario.eContainer
 		return switch scenarioParent {
@@ -89,7 +92,7 @@ class UcmUtils {
 		}
 	}
 	
-	def static Scenario getScenario(Step step) {
+	@Pure def static Scenario getScenario(Step step) {
 		Preconditions.checkNotNull(step)
 		step.eContainer as Scenario
 	}
