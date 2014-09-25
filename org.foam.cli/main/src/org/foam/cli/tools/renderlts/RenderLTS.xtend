@@ -134,7 +134,6 @@ class RenderLTS implements IExecutableTool {
 
 		if( ! dotCommand.empty ) {
 	
-			dotCommand.add(0, "dot")
 			dotCommand += outputFileName
 			
 			'''Running Graphviz DOT tool: «dotCommand.join(" ")»'''.info

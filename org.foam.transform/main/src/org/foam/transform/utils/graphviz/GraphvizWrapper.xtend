@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions
 import com.google.common.io.Files
 import java.io.BufferedReader
 import java.io.File
+import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Map
 import org.apache.log4j.Logger
@@ -36,13 +37,42 @@ class GraphvizWrapper {
 		return version
 	}
 
+	/**
+	 * Executes the dot tool available on system PATH.
+	 * 
+	 * <p/>
+	 * <b>Note:</b> the tool name "dot" is automatically used as a command to be executed.
+	 * Only the arguments should be passed to this method.
+	 * 
+	 * @param dotCmdArgs A list of arguments for the dot tool
+	 * 
+	 */
 	def void runGraphviz(Iterable<String> dotCmdArgs) {
+		
+		Preconditions.checkArgument(! dotCmdArgs.empty)
+		Preconditions.checkArgument(
+			dotCmdArgs.filter[equals("dot")].empty,
+			"the string 'dot' is not allowed as an argument"
+		)
+		
+		val String[] wholeCommand = #["dot"] + dotCmdArgs 
 		if(debugEnabled) {
-			'''Executing: "«dotCmdArgs.join(" ")»"'''.debug
+			'''Executing command: «wholeCommand.join(" ")»'''.debug
 		}
-		Runtime.runtime.exec(dotCmdArgs).waitFor
+		val returnCode = Runtime.runtime.exec( wholeCommand ).waitFor
+		if(returnCode != 0) {
+			val errorMessage = "Cannot run program. Error code " + returnCode 
+			errorMessage.debug
+			throw new IOException(errorMessage);
+		}
 	}
 	
+	/**
+	 * Takes code written in DOT language and generated an SVG file
+	 * using the binary "dot" executable available on system PATH.
+	 * This function also creates all necessary directories for the
+	 * generated SVG image.
+	 */
 	def void createSvg(CharSequence dotContent, String absoluteSvgFileName) {
 		
 		Preconditions.checkNotNull(dotContent)
@@ -60,7 +90,7 @@ class GraphvizWrapper {
 		val dotFileName = '''«absoluteSvgFileName».dot'''
 		Files.write(dotContent, new File(dotFileName), Charsets.UTF_8) 
 		
-		#["dot", "-Tsvg", "-o", absoluteSvgFileName, dotFileName].runGraphviz
+		#["-Tsvg", "-o", absoluteSvgFileName, dotFileName].runGraphviz
 		
 		'''SVG image "«svgFile.name»" generated'''.info
 	}
