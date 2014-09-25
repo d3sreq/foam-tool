@@ -14,11 +14,12 @@ import org.foam.ucm.UseCaseModel
 
 import static extension org.foam.ucm.util.UcmUtils.*
 
+//TODO: refactoring needed
 class TadlAnnotationResolver {
 	
 	val tadlFac = TadlFactory.eINSTANCE
 	
-	def void resolveAnnotations(UseCaseModel useCaseModel, Collection<Template> templates) {
+	def void resolveAnnotations(UseCaseModel useCaseModel, Iterable<Template> templates) {
 		val varDefName2Template = new HashMap<String, Template>
 		val varDefName2VarDef = new HashMap<String, VariableDefinition>
 		for (template : templates) {

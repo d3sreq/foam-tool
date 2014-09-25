@@ -7,7 +7,6 @@ import com.google.common.collect.HashMultimap
 import com.google.common.collect.Lists
 import com.google.common.collect.Multimap
 import java.text.ParseException
-import java.util.Collection
 import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
@@ -50,7 +49,7 @@ class UcmLang2UcmService {
 	static private val BRANCHING_LABELED_ANNOTATED_TEXT_PATTERN = Pattern.compile('''(\w+):\s+(.*)''')
 	static private val LABEL_AND_REST_PATTERN = Pattern.compile('''(\d\w*)[.]?\s+(.*)''')
 
-	def UseCaseModel transform(Collection<? extends CharSequence> texts) {
+	def UseCaseModel transform(Iterable<? extends CharSequence> texts) {
 		usecaseFactory.createUseCaseModel => [
 			
 			val precedingMap = HashMultimap.<UseCase, String>create
@@ -170,7 +169,7 @@ class UcmLang2UcmService {
 		val line = lines.pop
 		
 		
-		val matcher = org.foam.transform.ucm2ucm.UcmLang2UcmService.PRIMARY_UC_PATTERN.matcher(line)
+		val matcher = UcmLang2UcmService.PRIMARY_UC_PATTERN.matcher(line)
 		
 		if (matcher.matches) {
 			Boolean.parseBoolean(matcher.group(1))
@@ -186,7 +185,7 @@ class UcmLang2UcmService {
 		
 		val list = <String> newArrayList
 		
-		if (line.startsWith(org.foam.transform.ucm2ucm.UcmLang2UcmService.PRECEDING_PREFIX)) {
+		if (line.startsWith(UcmLang2UcmService.PRECEDING_PREFIX)) {
 			val matcher = UC_ID_PATTERN.matcher(line)
 			while (matcher.find) {
 				list += matcher.group(1)
@@ -278,7 +277,7 @@ class UcmLang2UcmService {
 			}
 			val line = lines.pop
 			
-			val matcher = org.foam.transform.ucm2ucm.UcmLang2UcmService.LABEL_AND_REST_PATTERN.matcher(line)
+			val matcher = UcmLang2UcmService.LABEL_AND_REST_PATTERN.matcher(line)
 			if (!firstLineMatched) {
 				if (line.startsWith(extensionStart) || line.startsWith(variationStart)) {
 					// start of the branching and no step matched - end of the scenario
@@ -316,7 +315,7 @@ class UcmLang2UcmService {
 		
 		popEmptyLines(lines)
 		val line = lines.pop
-		val matcher = org.foam.transform.ucm2ucm.UcmLang2UcmService.BRANCHING_LABELED_ANNOTATED_TEXT_PATTERN.matcher(line)
+		val matcher = UcmLang2UcmService.BRANCHING_LABELED_ANNOTATED_TEXT_PATTERN.matcher(line)
 		
 		if (!matcher.matches) {
 			throw new ParseException('''Branching has invalid format: «line»''', -1)

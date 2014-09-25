@@ -31,7 +31,6 @@ import org.foam.flowannotation.FlowannotationPackage
 import org.foam.ltl.LtlPackage
 import org.foam.lts.LtsPackage
 import org.foam.propositionallogic.PropositionallogicPackage
-import org.foam.tadl.FormulaHolder
 import org.foam.tadl.Group
 import org.foam.tadl.TadlPackage
 import org.foam.tadl.Template
@@ -365,8 +364,8 @@ class ReportApplication implements IExecutableTool {
 				val automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase)
 				
 				'''transforming LTS to NuSMV code'''.debug
-				val holderGroupList = <Pair<FormulaHolder, Group>> newArrayList
-				val code = lts2NusmvLangService.transform(automaton, holderGroupList) // TODO:comment on this out parameter
+				val code = lts2NusmvLangService.transform(automaton)
+				val holderGroupList = lts2NusmvLangService.getHolderGroupList(automaton) 
 				
 				'''running NuSMV verification'''.debug
 				val cntexCode = nusmvWrapper.runNusmvCode(code).join("\n") //TODO: do we really need to convert this to String from an array?
@@ -395,7 +394,7 @@ class ReportApplication implements IExecutableTool {
 		useCaseModel
 	}
 	
-	def private List<Template> tadlLang2Templates(String tadlDirName) {
+	def private Iterable<Template> tadlLang2Templates(String tadlDirName) {
 		val tadlLang2Tadl = new TadlLang2Tadl
 		
 		'''Reading TADL definitions from file "«tadlDirName»" and parsing'''.info
@@ -408,7 +407,7 @@ class ReportApplication implements IExecutableTool {
 		return templates
 	}
 	
-	def private resolveTadlAnnotations(UseCaseModel useCaseModel, List<Template> templates) {
+	def private resolveTadlAnnotations(UseCaseModel useCaseModel, Iterable<Template> templates) {
 		'''Resolving TADL annotations'''.debug
 		new TadlAnnotationResolver().resolveAnnotations(useCaseModel, templates)
 	}
@@ -421,8 +420,15 @@ class ReportApplication implements IExecutableTool {
 	/**
 	 * Gets String content of each file in the given directory
 	 */
-	def private List<String> readTexts(String inputDir) {
+	def private Iterable<String> readTexts(String inputDir) {
+
+		Preconditions.checkNotNull( inputDir )
+		Preconditions.checkArgument( ! inputDir.empty )
+		
 		val dir = new File(inputDir)
+		Preconditions.checkState(dir.exists)
+		Preconditions.checkState(dir.isDirectory)
+		
 		dir.listFiles.map[Files.toString(it, Charsets.UTF_8)]
 	}
 }

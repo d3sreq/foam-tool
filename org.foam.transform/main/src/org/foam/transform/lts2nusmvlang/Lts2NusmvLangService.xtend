@@ -2,6 +2,8 @@ package org.foam.transform.lts2nusmvlang
 
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
+import com.google.common.collect.Multimap
+import com.google.common.collect.SetMultimap
 import java.util.HashMap
 import java.util.List
 import java.util.Set
@@ -21,14 +23,20 @@ import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
 import org.foam.transform.utils.osgi.LogServiceExtension
-import org.foam.transform.utils.modeling.FoamNamingExtension
 import org.foam.ucm.Step
 import org.foam.verification.Action
 import org.osgi.service.log.LogService
 
+
 import static extension org.apache.commons.lang.WordUtils.*
 import static extension org.foam.transform.utils.modeling.IterableExtensions.*
+import static extension org.foam.transform.utils.modeling.FoamNamingExtensions.*
+import static extension org.foam.transform.lts2nusmvlang.Lts2NusmvExtensions.*
+import com.google.common.base.Preconditions
 
+/**
+ * @author Viliam Simko
+ */
 @Component(provide = Lts2NusmvLangService)
 class Lts2NusmvLangService {
 	
@@ -37,24 +45,85 @@ class Lts2NusmvLangService {
 		logServiceExtension = new LogServiceExtension(logService)
 	}
 	
+	/**
+	 * When called, the transformation will be performed using a new instance
+	 * of Lts2NusmvContext class.
+	 */
 	def transform(Automaton automaton) {
-		return transform(automaton, newArrayList)
+		return new Lts2NusmvContext().transform(automaton)
 	}
 	
-	def transform(Automaton automaton, List<Pair<FormulaHolder, Group>> holderGroupList) {
-		return new Lts2NusmvContext().transform(automaton, holderGroupList)
+	// TODO: simplify as a map operation
+	def getHolderGroupList(Automaton automaton) {
+		val holderGroupList = <Pair<FormulaHolder, Group>> newArrayList
+		val groupToVarNameMap = automaton.transitions.transToGroupVarName
+		for(group : groupToVarNameMap.keySet){
+			for(fh : group.template.formulaHolders) {
+			 	holderGroupList += fh -> group
+			}
+		}
+		return holderGroupList.unmodifiableView as Iterable<Pair<FormulaHolder, Group>>
 	}
 }
 
+/**
+ * This utility class can be used as a static extension.
+ * Currently, we use it only inside {@link Lts2NusmvLangService} and {@link Lts2NusmvContext}.
+ * @author Viliam Simko
+ */
+package abstract class Lts2NusmvExtensions {
+
+	/**
+	 * Creates a HashMultimap whose key is a TADL group and values are transitions.
+	 */
+	@Pure final package static def transToGroupVarName(Iterable<Transition> transitions) {
+		transitions.map[ transition |
+			
+			// FIRST: add variable names used in all temporal annotations
+			transition.start.annotations
+			.filter(TemporalAnnotation) // all temporal annotations of a single transition
+			.map[group -> variableDefinition.name]
+			
+			+ // joining these two lists of pairs
+			
+			// SECOND: add all variable names from template
+			transition.start.annotations
+			.filter(TemporalAnnotation) // all temporal annotations of a single transition
+			.map[a|
+				a.group.template.variableDefinitions.map[a.group -> name]
+			].flatten
+			
+		].flatten
+		.toMultimap 
+	}
+	
+	/**
+	 * Creates a HashMultimap whose key is a pair of TADL group + vdefname and values are transitions.
+	 */
+	@Pure final package static def transToGroupVarNameTrans(Iterable<Transition> transitions) {
+		transitions.map[ transition |
+			// add variable names used in all temporal annotations
+			transition.start.annotations
+			.filter(TemporalAnnotation) // all temporal annotations of a single transition
+			.map[(group -> variableDefinition.name) -> transition]
+			
+		].flatten
+		.toMultimap // grouped by key, values with the same key will be stored in a set
+	}
+}
+
+/**
+ * Implements the actual transformation from LTS to NuSMV code.
+ * Currently, each transformation run requires a fresh instance of this class.
+ * Therefore, we have here Lts2NusmvLangService, Lts2NusmvExtensions and Lts2NusmvContext.
+ * TODO: possible refactoring without the need of a context.
+ */
 package class Lts2NusmvContext {
 	
-	private extension FoamNamingExtension = new FoamNamingExtension
-
 	private static val NUSMV_CODE_WRAP_LENGTH = 120
 	private static val NUSMV_CODE_ABBREVIATE_LENGTH = 60
 	
-	
-	def private stateId(State s) {
+	@Pure final static private def stateId(State s) {
 		// TODO - check that state.id is valid nusmv identifier ?
 		s.id
 	}
@@ -145,12 +214,12 @@ package class Lts2NusmvContext {
 		actvar2acttrans.get(actionAnnot.variableDefinition).add(actionAnnot -> transition)
 	}
 	
-	def private isGuarded(Transition transition) {
+	@Pure def private isGuarded(Transition transition) {
 		trans2guards.containsKey(transition)
 	}
 	
 	def private getGuardingFormula(Transition transition) {
-		val nuSmvFormulaRenderer = new NusmvFormulaRenderer
+		val nuSmvFormulaRenderer = new NusmvFormulaRenderer // TODO: is this really correct?
 		nuSmvFormulaRenderer.evalFormula(trans2guards.get(transition).formula).toString
 	}
 	
@@ -178,11 +247,24 @@ package class Lts2NusmvContext {
 		return '''«step.label». «step.text»'''
 	}
 	
-	def private getType(State state){
+	private  def getType(State state){
 		state2type.get(state)
 	}
 	
-	package def transform(Automaton automaton, List<Pair<FormulaHolder, Group>> holderGroupList) {
+	private var transformMethodAlreadyCalled = false
+	
+	/**
+	 * @param automaton
+	 */
+	package def transform(Automaton automaton) {
+		
+		// ==============================================================
+		// SANITY CHECK: we expect that each transformation requires
+		// a fresh instance of this class.
+		// ==============================================================
+		Preconditions.checkState(transformMethodAlreadyCalled === false)
+		transformMethodAlreadyCalled = true
+		// ==============================================================
 		
 		automaton.initState.stateId
 
@@ -205,10 +287,18 @@ package class Lts2NusmvContext {
 			mapStateToTransitions.get(trans.start).add(trans)
 		}
 		
-		val groupToVarNameMap = automaton.transitions.transToGroupVarName
-		val groupVarNameToTransMap = automaton.transitions.transToGroupVarNameTrans
-		
-		return '''
+		return generateNusmvCodeUsingTemplate(
+			automaton,
+			automaton.transitions.transToGroupVarName,
+			automaton.transitions.transToGroupVarNameTrans
+		)
+	}
+	
+	private def generateNusmvCodeUsingTemplate(
+		Automaton automaton,
+		SetMultimap<Group,String> groupToVarNameMap,
+		Multimap<Pair<Group, String>, Transition> groupVarNameToTransMap
+	) '''
 		MODULE main
 		
 		-- Variable "s" represents all the possible states of the automaton
@@ -307,64 +397,20 @@ package class Lts2NusmvContext {
 			
 ««« 		CTL/LTS formulas
 ««« 		create translation map from template variable (e.g. "create") to concrete variable ("create_zoom")
-			«val map = createTemplateVar2NuSmvVarMap(group.qualifier, templateVarNames)»
+			«val map = createTemplateVar2NusmvVarMap(group.qualifier, templateVarNames)»
 			«val tadlRenderer = new TadlFormulaRenderer(map)»
 			«FOR fh : group.template.formulaHolders»
 			 	-- Formula: "«fh.comment»"
 			 	-- TADL «tadlRenderer.evalFormula(fh.formula)»
 			 	«fh.formulaType.literal»SPEC «tadlRenderer.evalFormula(fh.formula)»
-			 	«addFormulaHolderAndGroup(fh, group, holderGroupList)»
 			«ENDFOR»
 		«ENDFOR»
-		'''
-	}
+	'''
 	
-	def private void addFormulaHolderAndGroup(FormulaHolder fh, Group group, List<Pair<FormulaHolder, Group>> holderGroupList) {
-	 	holderGroupList += fh -> group
-	}
-	
-	def private createTemplateVar2NuSmvVarMap(String qualifier, Set<String> varNames) {
+	@Pure private def createTemplateVar2NusmvVarMap(String qualifier, Set<String> varNames) {
 		val result = <String, String> newHashMap
 		varNames.forEach[result.put(it, createTadlVarName(qualifier, it))]
 		return result
-	}
-
-	/**
-	 * Creates a HashMultimap whose key is a TADL group and values are transitions.
-	 */
-	def private transToGroupVarName(Iterable<Transition> transitions) {
-		transitions.map[ transition |
-			
-			// FIRST: add variable names used in all temporal annotations
-			transition.start.annotations
-			.filter(TemporalAnnotation) // all temporal annotations of a single transition
-			.map[group -> variableDefinition.name]
-			
-			+ // joining these two lists of pairs
-			
-			// SECOND: add all variable names from template
-			transition.start.annotations
-			.filter(TemporalAnnotation) // all temporal annotations of a single transition
-			.map[a|
-				a.group.template.variableDefinitions.map[a.group -> name]
-			].flatten
-			
-		].flatten
-		.toMultimap 
-	}
-	
-	/**
-	 * Creates a HashMultimap whose key is a pair of TADL group + vdefname and values are transitions.
-	 */
-	def private transToGroupVarNameTrans(Iterable<Transition> transitions) {
-		transitions.map[ transition |
-			// add variable names used in all temporal annotations
-			transition.start.annotations
-			.filter(TemporalAnnotation) // all temporal annotations of a single transition
-			.map[(group -> variableDefinition.name) -> transition]
-			
-		].flatten
-		.toMultimap // grouped by key, values with the same key will be stored in a set
 	}
 }
 
