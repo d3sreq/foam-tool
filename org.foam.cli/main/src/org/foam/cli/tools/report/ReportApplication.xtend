@@ -59,6 +59,7 @@ import org.foam.verification.VerificationPackage
 import org.osgi.framework.FrameworkUtil
 
 import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
+import org.eclipse.xtend.lib.annotations.Data
 
 @Component
 class ReportApplication implements IExecutableTool {
@@ -158,16 +159,6 @@ class ReportApplication implements IExecutableTool {
 	Runs the whole FOAM workflow and generates an HTML report. 
 	'''
 
-	def private uniqueSpecifications(Iterable<Specification> specifications) {
-		// LinkedHashSet to retain order of specifications
-		// repeated executions of report generation should
-		// show errors in same order
-		val set = new LinkedHashSet<SpecificationWrapper>
-		set += specifications.map[new SpecificationWrapper(it)]
-		
-		set.map[it.specification]
-	}
-	
 	def private createReport(UseCaseModel useCaseModel, Iterable<Template> templates, Iterable<Specification> specifications, String outputDirName) {
 		'''Writing the results'''.debug
 		copyWebFiles(outputDirName)
@@ -370,7 +361,7 @@ class ReportApplication implements IExecutableTool {
 	def private Iterable<Template> tadlLang2Templates(String tadlDirName) {
 		val tadlLang2Tadl = new TadlLang2Tadl
 		
-		'''Reading TADL definitions from file "«tadlDirName»" and parsing'''.info
+		'''Reading TADL definitions from file "«tadlDirName»"'''.info
 		val texts = readTexts(tadlDirName)
 		 
 		val templates = texts.map[tadlLang2Tadl.parse(it)]
@@ -404,45 +395,65 @@ class ReportApplication implements IExecutableTool {
 		
 		dir.listFiles.map[Files.toString(it, Charsets.UTF_8)]
 	}
-}
 
-/**
- * Used only to remove duplicated Specification objects with Set.
- * Note that hashCode and equals are simplified - they don't compare/use
- * all fields and don't check all preconditions (e.g. null-ness in equals).
- */
-class SpecificationWrapper {
-	
-	@Accessors(PUBLIC_GETTER)
-	val Specification specification
-	
-	new(Specification specification) {
-		this.specification = specification
+	/**
+	 * We want to retain the order of specifications.
+	 * Repeated executions of report generation should
+	 * show errors in the same order.
+	 */
+	@Pure
+	def private uniqueSpecifications(Iterable<Specification> specifications) {
+		specifications.map[group.qualifier -> it].toSet.map[value]
+		//TODO: check that this newly created method works the same way as uniqueSpecifications_usingWrapper()
 	}
-	
-	override hashCode() {
-		Objects.hashCode(specification.textFormula, specification.group)
-	}
-	
-	override equals(Object obj) {
-		val otherSpecification = (obj as SpecificationWrapper).getSpecification
+
+	@Deprecated
+	def private uniqueSpecifications_usingWrapper(Iterable<Specification> specifications) {
+		// LinkedHashSet to retain order of specifications
+		// repeated executions of report generation should
+		// show errors in the same order
+		val set = <SpecificationWrapper> newLinkedHashSet
+		set += specifications.map[new SpecificationWrapper(it)]
 		
-		// both specifications null or references equals
-		if (specification === otherSpecification) {
-			return true
+		set.map[it.specification]
+	}
+
+	/**
+	 * Used only to remove duplicated Specification objects with Set.
+	 * Note that hashCode and equals are simplified - they don't compare/use
+	 * all fields and don't check all preconditions (e.g. null-ness in equals).
+	 */
+	@Deprecated
+	@Data private static class SpecificationWrapper {
+		
+		Specification specification
+		
+		@Pure
+		override hashCode() {
+			Objects.hashCode(specification.textFormula, specification.group)
 		}
 		
-		if (specification.textFormula != otherSpecification.textFormula
-			|| specification.group != otherSpecification.group
-		) {
-			return false
+		@Pure
+		override equals(Object obj) {
+			val otherSpecification = (obj as SpecificationWrapper).getSpecification
+			
+			// both specifications null or references equals
+			if (specification === otherSpecification) {
+				return true
+			}
+			
+			if (specification.textFormula != otherSpecification.textFormula
+				|| specification.group != otherSpecification.group
+			) {
+				return false
+			}
+			
+			// traces not compared - specifications with same group and formula
+			// are considered equal as counterexamples will be probably same
+			// (no need to distinguish two different counter examples)
+			
+			true
 		}
-		
-		// traces not compared - specifications with same group and formula
-		// are considered equal as counterexamples will be probably same
-		// (no need to distinguish two different counter examples)
-		
-		true
+			
 	}
-		
 }
