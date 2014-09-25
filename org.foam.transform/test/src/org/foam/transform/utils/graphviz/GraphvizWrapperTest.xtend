@@ -6,7 +6,7 @@ import java.io.IOException
 
 class GraphvizWrapperTest {
 	
-	extension GraphvizWrapper = new GraphvizWrapper => [logService = null]
+	extension GraphvizWrapper = new GraphvizWrapper
 	
 	@Test def void testGraphvizVersion() {
 		assertNotNull(graphvizVersion)

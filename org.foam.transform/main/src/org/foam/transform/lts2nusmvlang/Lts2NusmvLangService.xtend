@@ -1,7 +1,7 @@
 package org.foam.transform.lts2nusmvlang
 
 import aQute.bnd.annotation.component.Component
-import aQute.bnd.annotation.component.Reference
+import com.google.common.base.Preconditions
 import com.google.common.collect.Multimap
 import com.google.common.collect.SetMultimap
 import java.util.HashMap
@@ -22,28 +22,20 @@ import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
-import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.ucm.Step
 import org.foam.verification.Action
-import org.osgi.service.log.LogService
 
+import static org.foam.transform.utils.modeling.FoamNamingExtensions.*
 
 import static extension org.apache.commons.lang.WordUtils.*
-import static extension org.foam.transform.utils.modeling.IterableExtensions.*
-import static extension org.foam.transform.utils.modeling.FoamNamingExtensions.*
 import static extension org.foam.transform.lts2nusmvlang.Lts2NusmvExtensions.*
-import com.google.common.base.Preconditions
+import static extension org.foam.transform.utils.modeling.IterableExtensions.*
 
 /**
  * @author Viliam Simko
  */
 @Component(provide = Lts2NusmvLangService)
 class Lts2NusmvLangService {
-	
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
 	
 	/**
 	 * When called, the transformation will be performed using a new instance

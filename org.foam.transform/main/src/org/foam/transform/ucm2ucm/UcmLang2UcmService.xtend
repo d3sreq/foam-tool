@@ -1,7 +1,6 @@
 package org.foam.transform.ucm2ucm
 
 import aQute.bnd.annotation.component.Component
-import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Splitter
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Lists
@@ -11,17 +10,16 @@ import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.regex.Pattern
+import org.apache.log4j.Logger
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Data
 import org.foam.annotation.Annotation
 import org.foam.annotation.AnnotationFactory
-import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UcmFactory
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
-import org.osgi.service.log.LogService
 
 public enum BranchingType {
 	Extension, Variation
@@ -30,11 +28,8 @@ public enum BranchingType {
 @Component(provide = UcmLang2UcmService)
 class UcmLang2UcmService {
 
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
-	
+	static extension Logger = Logger.getLogger(UcmLang2UcmService)
+
 	val usecaseFactory = UcmFactory.eINSTANCE
 	val annotationFactory = AnnotationFactory.eINSTANCE
 	

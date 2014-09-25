@@ -2,23 +2,19 @@ package org.foam.transform.ucm.overview.dot
 
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
+import org.apache.log4j.Logger
 import org.foam.dot.DotFactory
 import org.foam.dot.SettingsType
 import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.ucm.overview.UcmOverviewCreator
-import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.ucm.UseCaseModel
-import org.osgi.service.log.LogService
 
 @Component(provide = UcmOverviewUsingDot)
 class UcmOverviewUsingDot {
 
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
-	
+	static extension Logger = Logger.getLogger(UcmOverviewUsingDot)
+
 	private UcmOverviewCreator ucmOverviewCreator
 	@Reference def void setUcmOverviewCreator(UcmOverviewCreator ucmOverviewCreator) {
 		this.ucmOverviewCreator = ucmOverviewCreator

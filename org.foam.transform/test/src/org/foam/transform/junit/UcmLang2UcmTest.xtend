@@ -13,10 +13,7 @@ class UcmLang2UcmTest {
 	
 	val ucmFac = UcmFactory.eINSTANCE
 	val annotationFac = AnnotationFactory.eINSTANCE
-	val ucmLang2Ucm = new UcmLang2UcmService => [
-		logService = null
-	]
-	
+	val ucmLang2Ucm = new UcmLang2UcmService
 	val ucmChecker = new UcmChecker
 	
 	val uc1 = '''

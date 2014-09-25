@@ -3,6 +3,7 @@ package org.foam.transform.utils.modeling
 import java.io.InputStream
 import java.io.StringWriter
 import java.util.Collections
+import org.apache.log4j.Logger
 import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
@@ -14,17 +15,9 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
 import org.eclipse.xtend.lib.annotations.Data
 
-@Data
-package class BasicModelValidationException extends RuntimeException {
-
-	Diagnostic diagnostic
-	
-	override getMessage() {
-		diagnostic.children.map[message].join("\n")
-	}
-}
-
 class EmfCommons {
+
+	static extension Logger = Logger.getLogger(EmfCommons)
 
 	/**
 	 * Register the XMI resource factory for the all extensions
@@ -78,7 +71,16 @@ class EmfCommons {
 		val diagnostic = Diagnostician.INSTANCE.validate(eObject)
 
 		if (diagnostic.severity != Diagnostic.OK) {
+			"Silently ignoring a Diagnostic object within basicValidate method".warn
 			//throw new BasicModelValidationException(diagnostic)
+		}
+	}
+
+	@Data private static class BasicModelValidationException extends RuntimeException {
+		Diagnostic diagnostic
+		
+		@Pure override getMessage() {
+			diagnostic.children.map[message].join("\n")
 		}
 	}
 }

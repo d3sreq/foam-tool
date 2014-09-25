@@ -1,9 +1,9 @@
 package org.foam.transform.ucm2lts
 
-import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Preconditions
 import com.google.common.base.Predicates
 import java.util.Map
+import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.foam.flowannotation.Abort
 import org.foam.flowannotation.FlowannotationFactory
@@ -23,16 +23,15 @@ import org.foam.propositionallogic.VariableDefinition
 import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.TraceabilityFactory
-import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 import org.foam.verification.Action
 import org.foam.verification.VerificationFactory
-import org.osgi.service.log.LogService
 
-import static extension org.foam.transform.utils.modeling.FoamNamingExtensions.*
+import static org.foam.transform.utils.modeling.FoamNamingExtensions.*
+
 import static extension org.foam.ucm.util.UcmUtils.*
 
 /**
@@ -50,10 +49,7 @@ import static extension org.foam.ucm.util.UcmUtils.*
  */
 class Ucm2Lts {
 
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(Ucm2Lts)
 		
 	val ltsFactory = LtsFactory.eINSTANCE
 	val flowannotationFactory = FlowannotationFactory.eINSTANCE

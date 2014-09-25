@@ -5,22 +5,17 @@ import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Preconditions
 import java.io.StringWriter
 import joptsimple.OptionParser
+import org.apache.log4j.Logger
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.transform.ucm.overview.dot.UcmOverviewUsingDot
 import org.foam.transform.utils.graphviz.GraphvizWrapper
-import org.foam.transform.utils.osgi.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.ucm.UseCaseModel
-import org.osgi.service.log.LogService
 
 @Component
 class UcmToOverview implements IExecutableTool {
 	
-	// -------------------- injected services -------------------------
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(UcmToOverview)
 
 	private UcmOverviewUsingDot ucmOverviewUsingDot
 	@Reference def void setUcmOverviewCreator(UcmOverviewUsingDot ucmOverviewUsingDot) {
@@ -31,7 +26,6 @@ class UcmToOverview implements IExecutableTool {
 	@Reference def void setGraphvizWrapper(GraphvizWrapper graphvizWrapper) {
 		this.graphvizWrapper = graphvizWrapper
 	}
-	// ----------------------------------------------------------------
 
 	val optionParser = new OptionParser => [
 		acceptsAll(#["h", "?"], "show help")

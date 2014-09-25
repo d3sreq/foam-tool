@@ -2,23 +2,19 @@ package org.foam.transform.utils.graphviz
 
 import aQute.bnd.annotation.component.Activate
 import aQute.bnd.annotation.component.Component
-import aQute.bnd.annotation.component.Reference
+import com.google.common.base.Charsets
+import com.google.common.base.Preconditions
+import com.google.common.io.Files
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 import java.util.Map
-import org.foam.transform.utils.osgi.LogServiceExtension
-import org.osgi.service.log.LogService
-import java.io.File
-import com.google.common.io.Files
-import com.google.common.base.Charsets
+import org.apache.log4j.Logger
 
 @Component(provide = GraphvizWrapper)
 class GraphvizWrapper {
 	
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(GraphvizWrapper)
 	
 	@Activate def final void activate(Map<String,Object> props) {
 		'''Found GRAPHVIZ version: «graphvizVersion»'''.info
@@ -41,23 +37,32 @@ class GraphvizWrapper {
 	}
 
 	def void runGraphviz(Iterable<String> dotCmdArgs) {
+		if(debugEnabled) {
+			'''Executing: "«dotCmdArgs.join(" ")»"'''.debug
+		}
 		Runtime.runtime.exec(dotCmdArgs).waitFor
 	}
 	
-	// TODO: use stdin instead of writing a file to the filesystem
-	def void createSvg(CharSequence dotContent, String svgFileName) {
+	def void createSvg(CharSequence dotContent, String absoluteSvgFileName) {
+		
+		Preconditions.checkNotNull(dotContent)
+		Preconditions.checkNotNull(absoluteSvgFileName)
 		
 		// create directory structure if needed
-		new File(svgFileName).parentFile.mkdirs
+		val svgFile = new File(absoluteSvgFileName)
+		Preconditions.checkArgument(svgFile.isAbsolute)
+		svgFile.parentFile.mkdirs
+
+		Preconditions.checkArgument(svgFile.parentFile.exists)
+		Preconditions.checkArgument(svgFile.parentFile.isDirectory)
 		
-		// write dot to file
-		val dotFileName = '''«svgFileName».dot'''
+		// TODO: use stdin instead of writing a file to the filesystem
+		val dotFileName = '''«absoluteSvgFileName».dot'''
 		Files.write(dotContent, new File(dotFileName), Charsets.UTF_8) 
 		
-		val dotCommand = #["dot", "-Tsvg", "-o", svgFileName, dotFileName]
+		#["dot", "-Tsvg", "-o", absoluteSvgFileName, dotFileName].runGraphviz
 		
-		'''Creating svg image with dot: "«dotCommand.join(" ")»"'''.info
-		runGraphviz(dotCommand)
+		'''SVG image "«svgFile.name»" generated'''.info
 	}
 	
 }
