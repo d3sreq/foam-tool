@@ -71,21 +71,24 @@ class IterableExtensions {
 	/**
 	 * Zips two iterables without throwing NoSuchElementException.
 	 * The zipped iterable will have the same length as the shorter of the two input iterables.
+	 * The result is a stream of pairs.
 	 */
-	def static <T,U> Iterable<Pair<T,U>> zip(Iterable<T> first, Iterable<U> second) {
-		return zipWith( first, second, [ a,b | a->b ] )
-		
-		// NOTE: The following approach works only
-		// for iterables with the same cardinality
-		// 
-		//   val sndIter = snd.iterator
-		//   return fst.map[it -> sndIter.next]
+	def static <T,U> zip(Iterable<T> first, Iterable<U> second) {
+		zipWith( first, second, [ a,b | a->b ] )
 	}
 	
+	/**
+	 * Similar to the zip() function, however, the last argument is a lambda
+	 * which produces the output items.
+	 */
 	def static <T,U,V> Iterable<V> zipWith(Iterable<T> first, Iterable<U> second, Function2<T,U,V> mapFunction) {
-		return new ZippingWithIterable(first, second, mapFunction)
+		new ZippingWithIterable(first, second, mapFunction)
 	}
 	
+	/**
+	 * Helper class that encapsulates the zipping behavior.
+	 * Its constructor is generated automagically by Xtend due to the @Data annotation.
+	 */
 	@Data private static class ZippingWithIterable<T, U, V> implements Iterable<V> {
 	
 		private val Iterable<T> iterable1
