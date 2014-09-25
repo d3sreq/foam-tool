@@ -7,7 +7,7 @@
 # ====================
 # org.ops4j.pax.logging.DefaultServiceLog.level controls logging to console
 # org.ops4j.pax.logging.service.frameworkEventsLogLevel controls logging to webconsole
-
+#
 
 -runproperties:  \
 	org.ops4j.pax.logging.DefaultServiceLog.level=INFO,\
@@ -22,7 +22,12 @@
 -runsystemcapabilities: ${native_capability}
 
 
+# IMPORTANT: Make sure that "org.ops4j.pax.logging.pax-logging-api" is listed
+# as a FIRST bundle in the -runbundles section and that
+# "org.apache.felix.gogo.shell" bundle is listed as LAST
 -runbundles:  \
+	org.ops4j.pax.logging.pax-logging-api;version='[1.7.4,1.7.5)',\
+	org.ops4j.pax.logging.pax-logging-service;version='[1.7.4,1.7.5)',\
 	com.google.guava;version='[12.0.1,12.0.2)',\
 	com.google.inject;version='[3.0.0,3.0.1)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
@@ -32,7 +37,6 @@
 	org.apache.felix.configadmin;version='[1.8.0,1.8.1)',\
 	org.apache.felix.gogo.command;version='[0.12.0,0.12.1)',\
 	org.apache.felix.gogo.runtime;version='[0.10.0,0.10.1)',\
-	org.apache.felix.gogo.shell;version='[0.10.0,0.10.1)',\
 	org.apache.felix.http.jetty;version='[2.2.2,2.2.3)',\
 	org.apache.felix.log;version='[1.0.1,1.0.2)',\
 	org.apache.felix.metatype;version='[1.0.10,1.0.11)',\
@@ -78,8 +82,7 @@
 	org.foam.xtext.ctl;version=latest,\
 	org.foam.xtext.ltl;version=latest,\
 	org.foam.xtext.plogic;version=latest,\
-	org.ops4j.pax.logging.pax-logging-api;version='[1.7.4,1.7.5)',\
-	org.ops4j.pax.logging.pax-logging-service;version='[1.7.4,1.7.5)',\
+	org.apache.felix.gogo.shell;version='[0.10.0,0.10.1)',\
 	osgi.enterprise;version='[4.2.0,4.2.1)',\
 	osgi.residential;version='[4.3.0,4.3.1)'
 
