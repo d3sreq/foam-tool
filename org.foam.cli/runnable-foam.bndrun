@@ -1,7 +1,26 @@
+# Useful command for testing:
+# ===========================
+# run ReportApplication -i /home/vlx/Work/spec-db/CoCoME/derived/use-cases/ -t /home/vlx/Work/spec-db/CoCoME/derived/tadl/ -o /home/vlx/Work/spec-db/CoCoME/generated/foam-html-report/ 
+
+
+# Notes about logging:
+# ====================
+# org.ops4j.pax.logging.DefaultServiceLog.level controls logging to console
+# org.ops4j.pax.logging.service.frameworkEventsLogLevel controls logging to webconsole
+
+
+-runproperties:  \
+	org.ops4j.pax.logging.DefaultServiceLog.level=WARN,\
+	org.ops4j.pax.logging.service.frameworkEventsLogLevel=DEBUG
+
+	# defines jetty port for running the webconsole
+	# org.osgi.service.http.port=8080 
+
 -runfw: org.apache.felix.framework;version='[4.4.0,4.4.0]'
 
 -runee: JavaSE-1.7
 -runsystemcapabilities: ${native_capability}
+
 
 -runbundles:  \
 	com.google.guava;version='[12.0.1,12.0.2)',\
@@ -76,11 +95,6 @@
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.http.jetty)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.launcher)',\
 	osgi.identity;filter:='(osgi.identity=org.foam.cli.tools.report)'
-
--runproperties:  \
-	org.ops4j.pax.logging.DefaultServiceLog.level=WARN,\
-	org.ops4j.pax.logging.service.frameworkEventsLogLevel=DEBUG
-	#org.osgi.service.http.port=8080
 
 -runrepos:  \
 	Workspace,\
