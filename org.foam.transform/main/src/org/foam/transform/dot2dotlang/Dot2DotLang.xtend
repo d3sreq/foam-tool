@@ -66,27 +66,19 @@ class Dot2DotLang {
 		]
 	'''
 
-	def private String escape(String strToEscape) '''«strToEscape?.replaceAll('"', '\\\\"')»'''
+	@Pure def private static String escape(String strToEscape)
+		'''«strToEscape?.replaceAll('"', '\\\\"')»'''
 
-	def private edgeNodeId(Node node) {
-		if (node instanceof InnerNode) {
-			'''"«node.recordNode.id»":"«node.id»"'''
-		} else {
-			'''"«node.id»"'''
-		}
-	}
+	@Pure def private static dispatch edgeNodeId(Node node) '''"«node.id»"'''
+	@Pure def private static dispatch edgeNodeId(InnerNode node) '''"«node.recordNode.id»":"«node.id»"'''
 	
-	
-	def private createAttributeList(AttributedItem attributedItem) {
-		if (attributedItem.attributes.empty) {
-			return ""
-		}
-		
-		attributedItem.attributes.entrySet.join(
+	@Pure def private static createAttributeList(AttributedItem attributedItem) {
+		if (attributedItem.attributes.empty) ""
+		else attributedItem.attributes.entrySet.join(
 			"[",  // before
 			", ", // separator
 			"]",  // after
-			['''«it.key»="«it.value.escape»"''']
+			['''«key»="«value.escape»"''']
 		)
 	}
 }

@@ -11,7 +11,7 @@ import org.foam.tadl.TadlFactory
 import org.foam.tadl.Template
 import org.foam.ucm.UseCaseModel
 
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 //TODO: refactoring needed
 class TadlAnnotationResolver {

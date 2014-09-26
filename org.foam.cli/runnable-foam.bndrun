@@ -51,6 +51,7 @@
 	org.eclipse.xtext;version='[2.7.2,2.7.3)',\
 	org.eclipse.xtext.util;version='[2.7.2,2.7.3)',\
 	org.eclipse.xtext.xbase.lib;version='[2.7.2,2.7.3)',\
+	org.foam.bootstrap.bundle;version=latest,\
 	org.foam.cli.launcher;version=latest,\
 	org.foam.cli.launcher.api;version=latest,\
 	org.foam.cli.tools.report;version=latest,\
@@ -82,8 +83,8 @@
 	org.foam.xtext.ctl;version=latest,\
 	org.foam.xtext.ltl;version=latest,\
 	org.foam.xtext.plogic;version=latest,\
-	org.apache.felix.gogo.shell;version='[0.10.0,0.10.1)',\
 	osgi.enterprise;version='[4.2.0,4.2.1)',\
+	org.apache.felix.gogo.shell;version='[0.10.0,0.10.1)',\
 	osgi.residential;version='[4.3.0,4.3.1)'
 
 -runrequires:  \

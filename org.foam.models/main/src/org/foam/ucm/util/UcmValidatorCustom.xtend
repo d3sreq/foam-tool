@@ -1,6 +1,5 @@
 package org.foam.ucm.util
 
-import java.util.Collections
 import java.util.Map
 import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.emf.common.util.DiagnosticChain
@@ -11,7 +10,7 @@ import org.foam.flowannotation.Guard
 import org.foam.ucm.Scenario
 import org.foam.ucm.UseCase
 
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 public class UcmValidatorCustom extends UcmValidator {
 	
@@ -48,8 +47,8 @@ public class UcmValidatorCustom extends UcmValidator {
 		// - 208 is preceeded by 1 and X but validated use case 1 is not preceeded
 		//   by X.  
 		
-		val includedOrSelf = useCase.includedTransitively + Collections.singleton(useCase)
-		val preceededOrSelf = (useCase.preceededTransitively + Collections.singleton(useCase)).toSet
+		val includedOrSelf = (useCase.includedTransitively + #[useCase]).toSet
+		val preceededOrSelf = (useCase.preceededTransitively + #[useCase]).toSet
 		
 		for (includedUseCase : includedOrSelf) {
 			if (!preceededOrSelf.containsAll(includedUseCase.preceeded)) {				
