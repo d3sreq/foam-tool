@@ -9,9 +9,8 @@ import org.foam.ucm.Scenario
 import org.foam.ucm.ScenarioHolder
 import org.foam.ucm.UseCase
 
-import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
+import static extension org.foam.lts.util.LtsModelExtensions.*
 import static extension org.foam.ucm.util.UseCaseModelExtensions.*
-import org.foam.ucm.util.UseCaseModelExtensions
 
 /**
  * Creates subgraph (cluster) for use case and scenario of the given state if this subgraph is
@@ -38,7 +37,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 		val graphForNode = if (step == null) {
 			resultDot
 		} else {
-			val scenario = UseCaseModelExtensions.getScenario(step)
+			val scenario = step.getScenario
 			if (!scenario2Graph.containsKey(scenario)) {
 				val subGraph = dotFactory.createGraph => [
 					id = '''«scenario.useCase.id»_«scenario.label»''' // assert: id does not contain spaces
@@ -84,7 +83,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 				]
 				scenario2Graph.put(scenario, subGraph)
 				// add scenario graph into use case graph
-				val uc = UseCaseModelExtensions.getUseCase(step)
+				val uc = step.getUseCase
 				val ucGraph = useCase2Graph.get(uc)
 				ucGraph.statements += subGraph
 			}

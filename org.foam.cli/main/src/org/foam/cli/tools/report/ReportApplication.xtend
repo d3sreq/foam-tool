@@ -12,6 +12,7 @@ import java.util.Map
 import joptsimple.OptionParser
 import org.apache.log4j.Logger
 import org.foam.annotation.AnnotationPackage
+import org.foam.bootstrap.FileUtils
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.cli.tools.report.pages.ErrorPage
 import org.foam.cli.tools.report.pages.Menu
@@ -48,14 +49,13 @@ import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizWrapper
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.transform.utils.nusmv.NusmvWrapper
-import org.foam.transform.utils.osgi.FileUtils
 import org.foam.ucm.UcmPackage
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 import org.foam.verification.VerificationPackage
 import org.osgi.framework.FrameworkUtil
 
-import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
+import static extension org.foam.cntex.util.CntexModelExtensions.*
 
 @Component
 class ReportApplication implements IExecutableTool {

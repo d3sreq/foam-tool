@@ -4,8 +4,8 @@ import aQute.bnd.annotation.component.Component
 import com.google.common.io.CharStreams
 import java.io.InputStreamReader
 import org.apache.log4j.Logger
+import org.foam.bootstrap.FileUtils
 import org.foam.cli.launcher.api.IExecutableTool
-import org.foam.transform.utils.osgi.FileUtils
 import org.osgi.framework.FrameworkUtil
 
 @Component

@@ -1,5 +1,6 @@
 -sub: *.bnd
 -buildpath:  \
+	org.foam.bootstrap.bundle;version=latest,\
 	org.foam.transform.cntexlang2cntex;version=latest,\
 	org.foam.transform.dot2dotlang;version=latest,\
 	org.foam.transform.lts2dot;version=latest,\
@@ -11,7 +12,6 @@
 	org.foam.transform.utils.nusmv;version=latest,\
 	org.foam.transform.utils.graphviz;version=latest,\
 	org.foam.transform.utils.modeling;version=latest,\
-	org.foam.transform.utils.osgi;version=latest,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
 	org.foam.models.ctl;version=latest,\
