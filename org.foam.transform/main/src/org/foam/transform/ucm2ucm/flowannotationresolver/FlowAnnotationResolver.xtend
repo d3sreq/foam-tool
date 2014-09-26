@@ -18,7 +18,7 @@ import org.foam.xtext.plogic.PropositionalLogicXtextStandaloneSetup
 import org.foam.xtext.plogic.parser.antlr.PropositionalLogicXtextParser
 import org.foam.xtext.plogic.propositionalLogicXtext.RuleVariableUse
 
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 class FlowAnnotationResolver {
 	private static val MARK_PREFIX = "mark_"

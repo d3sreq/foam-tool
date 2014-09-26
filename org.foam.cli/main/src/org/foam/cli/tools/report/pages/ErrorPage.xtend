@@ -19,9 +19,9 @@ import org.foam.traceability.StateTypeMappingAnnotation
 import org.foam.traceability.StepMappingAnnotation
 import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
 import org.foam.ucm.Step
-import org.foam.ucm.util.UcmUtils
 
 import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
+import org.foam.ucm.util.UseCaseModelExtensions
 
 class StepTrace {
 	@Accessors val List<Step> steps = newArrayList
@@ -159,7 +159,7 @@ class ErrorPage implements Page {
 			<h2>Trace:</h2>
 			<table class="trace">
 			«FOR step : stepTrace.steps»
-				«val useCase = UcmUtils.getUseCase(step)»
+				«val useCase = UseCaseModelExtensions.getUseCase(step)»
 				<tr>
 					<td><a href="../«useCase.id»/«useCase.id».html">«useCase.id»</a></td>
 					<td class="tracecell">«step.label»</td>

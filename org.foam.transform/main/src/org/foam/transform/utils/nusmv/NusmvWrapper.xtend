@@ -27,7 +27,7 @@ class NusmvWrapper {
 	val nusmvExecFile = "NuSMV"
 
 	@Activate def final void activate(Map<String,Object> props) {
-		'''Found NuSMV version: «nusmvVersion»'''.info
+		'''Found NuSMV version: «nusmvVersion»'''.debug
 	}
 
 	val NUSMV_VERSION_PATTERN = Pattern.compile(".*NuSMV (\\S+).*")

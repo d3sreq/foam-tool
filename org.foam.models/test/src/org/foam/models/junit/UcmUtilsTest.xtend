@@ -3,8 +3,8 @@ package org.foam.models.junit
 import org.foam.flowannotation.FlowannotationFactory
 import org.junit.Test
 import org.foam.ucm.UcmFactory
-import static extension org.foam.ucm.util.UcmUtils.*
 import static org.junit.Assert.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 class UcmUtilsTest {
 	val ucmFac = UcmFactory::eINSTANCE

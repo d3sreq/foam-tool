@@ -1,11 +1,12 @@
-package org.foam.transform.utils.modeling
+package org.foam.bootstrap
 
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
 import java.util.Collection
-import org.eclipse.xtext.xbase.lib.Functions.Function2
-import org.eclipse.xtend.lib.annotations.Data
 import java.util.Iterator
+import org.eclipse.xtend.lib.annotations.Data
+import java.util.Set
+import com.google.common.base.Preconditions
 
 class IterableExtensions {
 
@@ -48,7 +49,7 @@ class IterableExtensions {
 	 * Converts a stream of pairs into a MultiMap where the keys are the keys from the pairs
 	 * and each item in the MultiMap is a set of values with the same key.
 	 */
-	def static <K,V> HashMultimap<K,V> toMultimap(Iterable<Pair<K,V>> input) {
+	@Pure def static <K,V> HashMultimap<K,V> toMultimap(Iterable<Pair<K,V>> input) {
 		input.fold(
 			// this transforms the list into a MultiMap
 			HashMultimap.<K, V>create,
@@ -64,7 +65,7 @@ class IterableExtensions {
 	 * are computed using a lambda function which returns a Pair<K,V>
 	 * Example: users.toMultimap[user| user.id -> user ]
 	 */
-	def static <K,V> Multimap<K,V> toMultimap(Iterable<V> input, (V) => Pair<K,V> computeKeyValuePair) {
+	@Pure def static <K,V> Multimap<K,V> toMultimap(Iterable<V> input, (V) => Pair<K,V> computeKeyValuePair) {
 		input.map[computeKeyValuePair.apply(it)].toMultimap
 	}
 	
@@ -73,7 +74,7 @@ class IterableExtensions {
 	 * The zipped iterable will have the same length as the shorter of the two input iterables.
 	 * The result is a stream of pairs.
 	 */
-	def static <T,U> zip(Iterable<T> first, Iterable<U> second) {
+	@Pure def static <T,U> zip(Iterable<T> first, Iterable<U> second) {
 		zipWith( first, second, [ a,b | a->b ] )
 	}
 	
@@ -81,7 +82,7 @@ class IterableExtensions {
 	 * Similar to the zip() function, however, the last argument is a lambda
 	 * which produces the output items.
 	 */
-	def static <T,U,V> Iterable<V> zipWith(Iterable<T> first, Iterable<U> second, Function2<T,U,V> mapFunction) {
+	@Pure def static <T,U,V> Iterable<V> zipWith(Iterable<T> first, Iterable<U> second, (T,U) => V mapFunction) {
 		new ZippingWithIterable(first, second, mapFunction)
 	}
 	
@@ -93,7 +94,7 @@ class IterableExtensions {
 	
 		private val Iterable<T> iterable1
 		private val Iterable<U> iterable2
-		private val Function2<T,U,V> mapFunction
+		private val (T,U) => V mapFunction
 	
 		override iterator() {
 			return new Iterator<V>() {
@@ -115,4 +116,56 @@ class IterableExtensions {
 			}
 		}
 	}
+	
+	/**
+	 * Computes a transitive closure over a graph using a given lambda closure function.
+	 * It returns an {@link Set} of visited objects.
+	 * If the given graph is <b>not</b> a DAG, the algorithm performs a topological sort first.
+	 * Example usage:
+	 * <pre>
+	 * // collects all preceded use-cases of the use-case uc9 (uc9 will also be returned)
+	 * uc9.trasitiveClosure[preceded]
+	 * </pre>
+	 * 
+	 * @param node starting node
+	 * @param closureFunction the lambda function that determines the computation of a closure.
+	 */
+	@Pure def static <T> Set<T> trasitiveClosure(T node, (T) => Iterable<T> closureFunction) {
+		trasitiveClosure(node, closureFunction, true)
+	}
+
+	@Pure def static <T> Set<T> trasitiveClosureWithoutStart(T node, (T) => Iterable<T> closureFunction) {
+		trasitiveClosure(node, closureFunction, false)
+	}
+	
+	@Pure def static <T> Set<T> trasitiveClosure(T node, (T) => Iterable<T> closureFunction, boolean withStartingNode) {
+		
+		Preconditions.checkNotNull(node)
+		Preconditions.checkNotNull(closureFunction)
+		
+		val visited = if(withStartingNode) <T> newHashSet(node) else <T> newHashSet
+		trasitiveClosureHelper(node, closureFunction, visited)
+		return visited
+	}
+	
+	def private static <T> void trasitiveClosureHelper(T node, (T) => Iterable<T> closureFunction, Set<T> visited) {
+		val nextList = closureFunction.apply(node)
+		if(nextList != null) {
+			for(next : nextList) {
+				if( ! visited.contains(next) ) {
+					visited += next
+					trasitiveClosureHelper(next, closureFunction, visited)
+				}
+			}
+		}
+	}
+
+	/**
+	 * This version works on DAGs only, but should perform better in a multi-threaded environment
+	 * because there is no shared stated. 
+	 */
+	@Pure def static <T> Iterable<T> trasitiveClosureDAG(T node, (T) => Iterable<T> closureFunction) {
+		#[node] + closureFunction.apply(node).map[trasitiveClosureDAG(closureFunction)].flatten
+	}
+	
 }

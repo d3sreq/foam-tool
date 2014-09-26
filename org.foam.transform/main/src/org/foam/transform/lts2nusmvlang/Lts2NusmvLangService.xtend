@@ -29,7 +29,7 @@ import static org.foam.transform.utils.modeling.FoamNamingExtensions.*
 
 import static extension org.apache.commons.lang.WordUtils.*
 import static extension org.foam.transform.lts2nusmvlang.Lts2NusmvExtensions.*
-import static extension org.foam.transform.utils.modeling.IterableExtensions.*
+import static extension org.foam.bootstrap.IterableExtensions.*
 
 /**
  * @author Viliam Simko

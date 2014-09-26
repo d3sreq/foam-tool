@@ -9,11 +9,11 @@ import org.foam.dot.Node
 import org.foam.flowannotation.Guard
 import org.foam.lts.State
 import org.foam.lts.Transition
-import org.foam.ucm.util.UcmUtils
 import org.foam.verification.Action
 
 import org.foam.transform.utils.modeling.FoamModelExtensions
 import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
+import org.foam.ucm.util.UseCaseModelExtensions
 
 /**
  * @param resultDot out parameter, populated in this processor
@@ -42,7 +42,7 @@ class CreateEdgeTransitionProcessor implements TransitionProcessor {
 			// find reference from the transition to the original use-case step
 			val step = FoamModelExtensions.getStepFromStepMappingAnnotation(transition.start)
 			if(step != null) {
-				attributes.put("URL", '''#«UcmUtils.getUseCase(step).id»_«step.label»''' )
+				attributes.put("URL", '''#«UseCaseModelExtensions.getUseCase(step).id»_«step.label»''' )
 			}
 			
 			for(action : transition.annotations.filter(Action) ) {

@@ -1,5 +1,6 @@
 -sub: *.bnd
 -buildpath:  \
+	org.foam.bootstrap.bundle;version=latest,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
 	org.foam.models.ctl;version=latest,\

@@ -32,7 +32,7 @@ import org.foam.verification.VerificationFactory
 
 import static org.foam.transform.utils.modeling.FoamNamingExtensions.*
 
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 /**
  * Performs transformation from {@link UseCaseModel} to {@link Automaton}.

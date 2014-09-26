@@ -4,7 +4,7 @@ import aQute.bnd.annotation.component.Component
 import org.eclipse.xtend.lib.annotations.Data
 import org.foam.ucm.UseCaseModel
 
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 @Data
 class UseCaseNode {

@@ -1,0 +1,14 @@
+-sub: *.bnd
+-buildpath:  \
+	com.google.guava,\
+	biz.aQute.bnd.annotation,\
+	org.apache.servicemix.bundles.junit,\
+	org.eclipse.xtend.lib,\
+	org.eclipse.xtend.lib.macro,\
+	org.eclipse.xtext.xbase.lib,\
+	org.eclipse.emf.ecore,\
+	org.eclipse.emf.ecore.xmi,\
+	org.eclipse.emf.common,\
+	osgi.cmpn,\
+	osgi.core;version=4.3,\
+	org.ops4j.pax.logging.pax-logging-api

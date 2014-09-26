@@ -18,9 +18,12 @@ class GraphvizWrapper {
 	static extension Logger = Logger.getLogger(GraphvizWrapper)
 	
 	@Activate def final void activate(Map<String,Object> props) {
-		'''Found GRAPHVIZ version: «graphvizVersion»'''.info
+		'''Found GRAPHVIZ version: «graphvizVersion»'''.debug
 	}
 
+	/**
+	 * @return not null
+	 */
 	def getGraphvizVersion() {
 		val process = Runtime.runtime.exec( #["dot", "-V"] )
 		val procstdout = process.errorStream
@@ -31,7 +34,7 @@ class GraphvizWrapper {
 		
 		if(version == null || ! version.contains("graphviz version")) {
 			'''Graphviz version not found'''.error
-			return null
+			return "none"
 		}
 
 		return version

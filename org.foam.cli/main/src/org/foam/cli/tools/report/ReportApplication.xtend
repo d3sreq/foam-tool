@@ -3,17 +3,14 @@ package org.foam.cli.tools.report
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Charsets
-import com.google.common.base.Objects
 import com.google.common.base.Preconditions
 import com.google.common.io.Files
 import java.io.File
 import java.util.HashMap
-import java.util.LinkedHashSet
 import java.util.List
 import java.util.Map
 import joptsimple.OptionParser
 import org.apache.log4j.Logger
-import org.eclipse.xtend.lib.annotations.Accessors
 import org.foam.annotation.AnnotationPackage
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.cli.tools.report.pages.ErrorPage
@@ -59,7 +56,6 @@ import org.foam.verification.VerificationPackage
 import org.osgi.framework.FrameworkUtil
 
 import static extension org.foam.transform.utils.modeling.FoamModelExtensions.*
-import org.eclipse.xtend.lib.annotations.Data
 
 @Component
 class ReportApplication implements IExecutableTool {
@@ -407,53 +403,53 @@ class ReportApplication implements IExecutableTool {
 		//TODO: check that this newly created method works the same way as uniqueSpecifications_usingWrapper()
 	}
 
-	@Deprecated
-	def private uniqueSpecifications_usingWrapper(Iterable<Specification> specifications) {
-		// LinkedHashSet to retain order of specifications
-		// repeated executions of report generation should
-		// show errors in the same order
-		val set = <SpecificationWrapper> newLinkedHashSet
-		set += specifications.map[new SpecificationWrapper(it)]
-		
-		set.map[it.specification]
-	}
-
-	/**
-	 * Used only to remove duplicated Specification objects with Set.
-	 * Note that hashCode and equals are simplified - they don't compare/use
-	 * all fields and don't check all preconditions (e.g. null-ness in equals).
-	 */
-	@Deprecated
-	@Data private static class SpecificationWrapper {
-		
-		Specification specification
-		
-		@Pure
-		override hashCode() {
-			Objects.hashCode(specification.textFormula, specification.group)
-		}
-		
-		@Pure
-		override equals(Object obj) {
-			val otherSpecification = (obj as SpecificationWrapper).getSpecification
-			
-			// both specifications null or references equals
-			if (specification === otherSpecification) {
-				return true
-			}
-			
-			if (specification.textFormula != otherSpecification.textFormula
-				|| specification.group != otherSpecification.group
-			) {
-				return false
-			}
-			
-			// traces not compared - specifications with same group and formula
-			// are considered equal as counterexamples will be probably same
-			// (no need to distinguish two different counter examples)
-			
-			true
-		}
-			
-	}
+//	@Deprecated
+//	def private uniqueSpecifications_usingWrapper(Iterable<Specification> specifications) {
+//		// LinkedHashSet to retain order of specifications
+//		// repeated executions of report generation should
+//		// show errors in the same order
+//		val set = <SpecificationWrapper> newLinkedHashSet
+//		set += specifications.map[new SpecificationWrapper(it)]
+//		
+//		set.map[it.specification]
+//	}
+//
+//	/**
+//	 * Used only to remove duplicated Specification objects with Set.
+//	 * Note that hashCode and equals are simplified - they don't compare/use
+//	 * all fields and don't check all preconditions (e.g. null-ness in equals).
+//	 */
+//	@Deprecated
+//	@Data private static class SpecificationWrapper {
+//		
+//		Specification specification
+//		
+//		@Pure
+//		override hashCode() {
+//			Objects.hashCode(specification.textFormula, specification.group)
+//		}
+//		
+//		@Pure
+//		override equals(Object obj) {
+//			val otherSpecification = (obj as SpecificationWrapper).getSpecification
+//			
+//			// both specifications null or references equals
+//			if (specification === otherSpecification) {
+//				return true
+//			}
+//			
+//			if (specification.textFormula != otherSpecification.textFormula
+//				|| specification.group != otherSpecification.group
+//			) {
+//				return false
+//			}
+//			
+//			// traces not compared - specifications with same group and formula
+//			// are considered equal as counterexamples will be probably same
+//			// (no need to distinguish two different counter examples)
+//			
+//			true
+//		}
+//			
+//	}
 }
