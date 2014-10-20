@@ -11,6 +11,8 @@ ext.XTEND_GEN_DIR 		= "main/xtend-gen"
 ext.TEST_SRC_DIR 		= "test/src"
 ext.TEST_XTEND_GEN_DIR 	= "test/xtend-gen"
 
+compileJava.options.encoding = 'UTF-8'
+
 //Add bnd as a build dependency
 buildscript {
 	repositories { mavenCentral() }
