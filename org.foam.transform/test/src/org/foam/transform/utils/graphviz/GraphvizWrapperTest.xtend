@@ -8,6 +8,7 @@ import org.junit.Ignore
 // Tests added to ignore - running them at compile time makes little sense
 // as they only discover whether build server has or has not graphviz
 // installed.
+//
 // They should be executed at test environment.
 @Ignore
 class GraphvizWrapperTest {
