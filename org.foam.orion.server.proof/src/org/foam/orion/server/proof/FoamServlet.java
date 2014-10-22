@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -16,6 +15,8 @@ import org.eclipse.orion.server.core.ServerStatus;
 import org.eclipse.orion.server.core.metastore.ProjectInfo;
 import org.eclipse.orion.server.servlets.OrionServlet;
 import org.eclipse.osgi.util.NLS;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FoamServlet extends OrionServlet {
 
@@ -55,9 +56,17 @@ public class FoamServlet extends OrionServlet {
 				return;
 			}
 			
-			String absolutePath = project.getProjectStore().toLocalFile(EFS.NONE, null).getAbsolutePath();
-			response.getWriter().write("Response from FoamServlet class:\n" + absolutePath);
-		} catch (CoreException e) {
+			System.out.println(">> returning result");
+			
+			JSONObject result = new JSONObject().put("JSON", "Hello, World!");
+			
+			// TODO - is this safe ?
+			response.setHeader("Access-Control-Allow-Origin", "*");
+			
+//			String absolutePath = project.getProjectStore().toLocalFile(EFS.NONE, null).getAbsolutePath();
+//			response.getWriter().write("Response from FoamServlet class:\n" + absolutePath);
+			OrionServlet.writeJSONResponse(request, response, result);
+		} catch (CoreException | JSONException e) {
 			throw new RuntimeException(e);
 		}
 	}
