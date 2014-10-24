@@ -1,0 +1,10 @@
+-sub: *.bnd
+-buildpath:  \
+	osgi.core,\
+	osgi.cmpn,\
+	biz.aQute.bnd.annotation,\
+	org.eclipse.xtend.lib;version=2.7.2,\
+	org.eclipse.xtend.lib.macro;version=2.7.2,\
+	org.eclipse.xtext.xbase.lib;version=2.7.2,\
+	org.apache.felix.http.jetty
+Bundle-Version: 0.0.0.${tstamp}
