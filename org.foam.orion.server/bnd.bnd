@@ -6,5 +6,12 @@
 	org.eclipse.xtend.lib;version=2.7.2,\
 	org.eclipse.xtend.lib.macro;version=2.7.2,\
 	org.eclipse.xtext.xbase.lib;version=2.7.2,\
-	org.apache.felix.http.jetty
+	org.apache.felix.http.jetty,\
+	org.foam.cli.tools.report;version=latest,\
+	org.eclipse.equinox.common,\
+	org.eclipse.osgi,\
+	org.eclipse.orion.server.core,\
+	org.eclipse.orion.server.servlets,\
+	org.json,\
+	com.google.guava
 Bundle-Version: 0.0.0.${tstamp}
