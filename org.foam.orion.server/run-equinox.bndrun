@@ -66,3 +66,5 @@
 	osgi.identity;filter:='(osgi.identity=org.foam.orion.server.servlet)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.http.whiteboard)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.http.jetty)'
+-runproperties:  \
+	org.osgi.service.http.port=8081
