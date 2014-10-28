@@ -7,6 +7,7 @@ import com.google.common.base.Preconditions
 import com.google.common.io.CharStreams
 import com.google.common.io.Files
 import java.io.File
+import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Map
 import java.util.regex.Pattern
@@ -37,11 +38,10 @@ class NusmvWrapper {
 	 */
 	def private getNusmvVersion() {
 		
-		val firstLine = runNusmvFile("-h").head
-		
+		val firstLine = runNusmvFile("-h").head ?: ""
 		val matcher = NUSMV_VERSION_PATTERN.matcher(firstLine)
-		
-		if (firstLine == null || ! matcher.matches) {
+
+		if (! matcher.matches) {
 			return null
 		}
 
@@ -54,18 +54,32 @@ class NusmvWrapper {
 		return runNusmvFile(tempFile.absolutePath)
 	}
 	
+	/**
+	 * Runs the NuSMV executable available on PATH.
+	 * @return result from NuSMV or an empty list if NuSMV has crashed
+	 */
 	def runNusmvFile(String inputFileName) {
+		
 		Preconditions.checkArgument( ! inputFileName.nullOrEmpty, "Invalid input file given as an input for NuSMV" );
 		
 		val builder = new ProcessBuilder(nusmvExecFile, inputFileName)
 		builder.redirectErrorStream(true)
-		val process = builder.start
 
-		val reader = new InputStreamReader(process.inputStream)
-		val result = CharStreams.readLines(reader)
-						.map[replaceAll("WARNING \\*\\*\\*","***")]
-		process.destroy
+		try {
+			val process = builder.start
+			val reader = new InputStreamReader(process.inputStream)
+			
+			return try {
+				CharStreams.readLines(reader).map[replaceAll("WARNING \\*\\*\\*","***")]
+			} finally {
+				reader.close
+				process.destroy
+			}
+
+		} catch(IOException e) {
+			'''Could not run the NuSMV program. Make sure it is available on your PATH and is executable (e.g. on UNIX: chmod +x NuSMV)'''.error
+			return emptyList
+		}
 		
-		return result
 	}
 }
