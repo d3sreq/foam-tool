@@ -3,6 +3,7 @@
 import aQute.bnd.build.Workspace
 import org.osgi.service.indexer.ResourceIndexer
 import org.osgi.service.indexer.impl.RepoIndex
+import java.nio.file.Files
 
 defaultTasks 'clean', 'build', 'release'
 
@@ -154,17 +155,50 @@ task release << {
 	
 	// place jars into "repository" directory
 	file("release/repository").mkdirs()
-	ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.4.0.jar')	
-	ant.bndrelease(allowsnapshots: true, bndfile: 'org.foam.cli/runnable-foam.bndrun', rootdir: './', outputdir: 'release/repository')
-	
-	// generate index	 
+	file('release/distribution').mkdirs()
+
+	ant.taskdef(name: 'bndrelease', classname: 'aQute.bnd.ant.RunconfigToDistributionTask', classpath: 'cnf/plugins/biz.aQute.bnd/biz.aQute.bnd-2.4.0.jar')
+
+
+	def tree = fileTree(dir:"org.foam.cli", include:"**/*.bndrun")
+
+	tree.each { File bndrunFile ->
+		println bndrunFile.name
+
+		def tmpdir = Files.createTempDirectory("tmprelease").toFile().getAbsolutePath()
+
+		// export required bundles
+		ant.bndrelease(
+			allowsnapshots: true,
+			bndfile: "org.foam.cli/" + bndrunFile.name,
+			rootdir: './',
+			outputdir: tmpdir
+		)
+
+		copy {
+			from tmpdir
+			into "release/repository"
+			include "**/*.jar"
+		}
+
+		delete tmpdir
+
+		// generate runnable .jar
+		def jarName = 'release/distribution/' + bndrunFile.name.replace(".bndrun", ".jar")
+
+		workspace.getProject('org.foam.cli').export(
+			bndrunFile.name,
+			false,
+			file(jarName)
+		)
+		file(jarName).setExecutable(true)
+
+	}
+
+	// generate index
 	def indexer = new RepoIndex()
 	def config = [(ResourceIndexer.ROOT_URL): "release/repository", (ResourceIndexer.REPOSITORY_NAME): "FOAM tool repository"]
 	def inputs = fileTree(dir: 'release/repository', include: '*.jar') as Set
 	def output = new FileOutputStream("release/repository/index.xml.gz")
 	indexer.index(inputs, output, config)
-	
-	// generate runnable .jar
-	file('release/distribution').mkdirs()
-	workspace.getProject('org.foam.cli').export('runnable-foam.bndrun', false, file('release/distribution/foam-tool.jar'))
 }
