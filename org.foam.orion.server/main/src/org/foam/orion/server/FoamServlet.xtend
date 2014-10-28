@@ -13,14 +13,27 @@ import org.eclipse.orion.server.servlets.OrionServlet
 import org.eclipse.osgi.util.NLS
 import org.foam.cli.tools.report.ReportApplication
 import org.json.JSONObject
+import org.foam.transform.utils.nusmv.NusmvWrapper
+import org.foam.transform.utils.logger.LogServiceExtension
+import org.osgi.service.log.LogService
 
 @Component(provide=Servlet, properties=#["alias=/foam"])
 public class FoamServlet extends OrionServlet {
 
-//	private ReportApplication reportApplication
-//	@Reference def void setReportApplication(ReportApplication reportApplication) {
-//		this.reportApplication = reportApplication
-//	}
+	private ReportApplication reportApplication
+	@Reference def void setReportApplication(ReportApplication reportApplication) {
+		this.reportApplication = reportApplication
+	}
+
+	private LogService logService 
+	@Reference def void setLogService(LogService logService) {
+		this.logService = logService
+	}
+	
+	private NusmvWrapper nusmvWrapper
+	@Reference def void setNusmvWrapper(NusmvWrapper nusmvWrapper) {
+		this.nusmvWrapper = nusmvWrapper
+	}
 
 	override doGet(HttpServletRequest req, HttpServletResponse resp) {
 		val pathInfo = req.pathInfo
@@ -53,22 +66,29 @@ public class FoamServlet extends OrionServlet {
 			return
 		}
 		
-		System.out.println(">> returning result");
+//		System.out.println(">> returning result");
 		
-		val result = new JSONObject().put("JSON", "Hello, World!")
+//		val result = new JSONObject().put("JSON", "Hello, World!\n" + nusmvWrapper.testLabel)
+//val result = new JSONObject().put("JSON", "Hello, World!\n")
 		
 		// TODO - is this safe ?
 		resp.setHeader("Access-Control-Allow-Origin", "*")
 		
 //			String absolutePath = project.getProjectStore().toLocalFile(EFS.NONE, null).getAbsolutePath();
-//			response.getWriter().write("Response from FoamServlet class:\n" + absolutePath);
-		OrionServlet.writeJSONResponse(req, resp, result)
+//		resp.writer.write("Response from FoamServlet class: " + (nusmvWrapper == null) + " " + (logService == null) + " " + (reportApplication == null))
+//		logServiceExtension.info(">>> Foam")
+//		OrionServlet.writeJSONResponse(req, resp, result)
 		
 		//		Thread.sleep(2000);
 //		resp.writer.append("Current thread: " + Thread.currentThread.id);
 
 		// run verification
 		// TODO - refactor cli
+		reportApplication.execute(#[
+			"-i", "/home/jirka/projects/foam-cocome/ucs",
+			"-t", "/home/jirka/projects/foam-cocome/tadl",
+			"-o", "/home/jirka/projects/foam-cocome/out"
+		])
 	}
 
 }
