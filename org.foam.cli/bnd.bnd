@@ -1,23 +1,17 @@
 -sub: *.bnd
 -buildpath:  \
-	biz.aQute.bnd.annotation,\
-	osgi.cmpn,\
-	org.apache.servicemix.bundles.jopt-simple,\
-	org.foam.transform.ucm2lts;version=latest,\
+	org.foam.bootstrap.bundle;version=latest,\
 	org.foam.transform.cntexlang2cntex;version=latest,\
 	org.foam.transform.dot2dotlang;version=latest,\
 	org.foam.transform.lts2dot;version=latest,\
 	org.foam.transform.lts2nusmvlang;version=latest,\
-	org.foam.transform.ucm2ucm;version=latest,\
 	org.foam.transform.tadllang2tadl;version=latest,\
+	org.foam.transform.ucm2lts;version=latest,\
+	org.foam.transform.ucm2ucm;version=latest,\
+	org.foam.transform.ucm.overview.dot;version=latest,\
 	org.foam.transform.utils.nusmv;version=latest,\
 	org.foam.transform.utils.graphviz;version=latest,\
 	org.foam.transform.utils.modeling;version=latest,\
-	osgi.core;version=4.3,\
-	com.google.guava,\
-	org.eclipse.xtend.lib;version=2.7.2,\
-	org.eclipse.xtend.lib.macro;version=2.7.2,\
-	org.eclipse.xtext.xbase.lib;version=2.7.2,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
 	org.foam.models.ctl;version=latest,\
@@ -31,8 +25,15 @@
 	org.foam.models.traceability;version=latest,\
 	org.foam.models.ucm;version=latest,\
 	org.foam.models.verification;version=latest,\
+	biz.aQute.bnd.annotation,\
+	com.google.guava,\
+	org.apache.servicemix.bundles.jopt-simple,\
+	org.eclipse.xtend.lib;version=2.7.2,\
+	org.eclipse.xtend.lib.macro;version=2.7.2,\
+	org.eclipse.xtext.xbase.lib;version=2.7.2,\
 	org.eclipse.emf.common,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
-	org.foam.transform.utils.logger;version=latest,\
-	org.foam.transform.ucm.overview.dot;version=latest
+	osgi.cmpn,\
+	osgi.core;version=4.3,\
+	org.ops4j.pax.logging.pax-logging-api

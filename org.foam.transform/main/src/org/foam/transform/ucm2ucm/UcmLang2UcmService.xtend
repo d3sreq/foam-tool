@@ -1,29 +1,25 @@
 package org.foam.transform.ucm2ucm
 
 import aQute.bnd.annotation.component.Component
-import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Splitter
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Lists
 import com.google.common.collect.Multimap
 import java.text.ParseException
-import java.util.ArrayList
-import java.util.Collection
 import java.util.HashMap
 import java.util.LinkedList
 import java.util.List
 import java.util.regex.Pattern
+import org.apache.log4j.Logger
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtend.lib.annotations.Data
 import org.foam.annotation.Annotation
 import org.foam.annotation.AnnotationFactory
-import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UcmFactory
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
-import org.osgi.service.log.LogService
 
 public enum BranchingType {
 	Extension, Variation
@@ -32,24 +28,23 @@ public enum BranchingType {
 @Component(provide = UcmLang2UcmService)
 class UcmLang2UcmService {
 
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
-	
+	static extension Logger = Logger.getLogger(UcmLang2UcmService)
+
 	val usecaseFactory = UcmFactory.eINSTANCE
 	val annotationFactory = AnnotationFactory.eINSTANCE
 	
-	val PRECEDING = '''Preceding:'''
-	val PRIMARY = '''Primary:\s+(\w+)'''
-	val ANNOTATION_REGEXP = '''#\(([^)]*)\)'''
-	val UC_REGEXP = '''(UC\d+)[:.]?'''
-	val UCIDANDNAME_PATTERN = Pattern.compile('''«UC_REGEXP»\s+(.*)''')
-	val BranchingLabeledAnnotatedText_PATTERN = Pattern.compile('''(\w+):\s+(.*)''')
-	val LabelAndRest_PATTERN = Pattern.compile('''(\d\w*)[.]?\s+(.*)''')
+	static private val PRECEDING_PREFIX = "Preceding:"
 
+	static private val UC_ID_REGEXP = '''(UC\d+)[:.]?'''
 
-	def UseCaseModel transform(Collection<? extends CharSequence> texts) {
+	static private val UC_ID_PATTERN = Pattern.compile(UC_ID_REGEXP);
+	static private val UC_IDANDNAME_PATTERN = Pattern.compile(UC_ID_REGEXP + "\\s+(.*)")
+	static private val PRIMARY_UC_PATTERN = Pattern.compile('''Primary:\s+(\w+)''')
+	static private val ANNOTATION_PATTERN = Pattern.compile('''#\(([^)]*)\)''')
+	static private val BRANCHING_LABELED_ANNOTATED_TEXT_PATTERN = Pattern.compile('''(\w+):\s+(.*)''')
+	static private val LABEL_AND_REST_PATTERN = Pattern.compile('''(\d\w*)[.]?\s+(.*)''')
+
+	def UseCaseModel transform(Iterable<? extends CharSequence> texts) {
 		usecaseFactory.createUseCaseModel => [
 			
 			val precedingMap = HashMultimap.<UseCase, String>create
@@ -58,7 +53,7 @@ class UcmLang2UcmService {
 				parseUseCase(text, it, precedingMap)
 			}
 			
-			'''collected use-cases: «useCases.map[id].join(", ")»'''.debug
+			'''Collected use-cases: «useCases.map[id].join(", ")»'''.debug
 
 			resolvePreceding(precedingMap, it)
 		]	
@@ -78,6 +73,7 @@ class UcmLang2UcmService {
 		}
 	}
 	
+	@Deprecated // TODO: Jirka should implement the new parser for textual representation of a use-case
 	def private parseUseCase(CharSequence text, UseCaseModel useCaseModel, Multimap<UseCase, String> precedingMap) {
 		val useCase = usecaseFactory.createUseCase
 		useCaseModel.useCases += useCase
@@ -149,11 +145,12 @@ class UcmLang2UcmService {
 		}
 	}
 
+	@Deprecated // TODO: side effect on the "lines" parameter
 	def private parseIdAndName(LinkedList<String> lines) {
 		popEmptyLines(lines)
 		val line = lines.pop			
 		
-		val matcher = UCIDANDNAME_PATTERN.matcher(line)
+		val matcher = UC_IDANDNAME_PATTERN.matcher(line)
 
 		if (!matcher.matches)
 			throw new ParseException('''Unable to parse use case name from line: «line»''', -1)
@@ -161,12 +158,13 @@ class UcmLang2UcmService {
 		return new IdAndName(matcher.group(1), matcher.group(2))
 	}
 	
+	@Deprecated // TODO: side effect on the "lines" parameter
 	def private parseIsPrimary(LinkedList<String> lines) {
 		popEmptyLines(lines)
 		val line = lines.pop
 		
-		val pattern = Pattern.compile(PRIMARY)
-		val matcher = pattern.matcher(line)
+		
+		val matcher = UcmLang2UcmService.PRIMARY_UC_PATTERN.matcher(line)
 		
 		if (matcher.matches) {
 			Boolean.parseBoolean(matcher.group(1))
@@ -176,15 +174,14 @@ class UcmLang2UcmService {
 		}
 	}
 	
-	def private parsePreceding(LinkedList<String> lines) {		
-		popEmptyLines(lines)
+	@Deprecated // TODO: side effect on the "lines" parameter
+	def private parsePreceding(LinkedList<String> lines) {
 		val line = lines.pop
 		
-		val list = new ArrayList<String>
+		val list = <String> newArrayList
 		
-		if (line.startsWith(PRECEDING)) {
-			val pattern = Pattern.compile(UC_REGEXP)
-			val matcher = pattern.matcher(line)
+		if (line.startsWith(UcmLang2UcmService.PRECEDING_PREFIX)) {
+			val matcher = UC_ID_PATTERN.matcher(line)
 			while (matcher.find) {
 				list += matcher.group(1)
 			}
@@ -196,6 +193,7 @@ class UcmLang2UcmService {
 		list
 	}
 	
+	@Deprecated // TODO: side effect on the "lines" parameter
 	def private Scenario parseScenario(LinkedList<String> lines, String prefix) {
 		val scenario = usecaseFactory.createScenario
 		
@@ -223,8 +221,7 @@ class UcmLang2UcmService {
 	}
 	
 	def private AnnotatedText separateTextAndAnnotations(String textWithAnnotations) {
-		val pattern = Pattern.compile(ANNOTATION_REGEXP)
-		val matcher = pattern.matcher(textWithAnnotations)
+		val matcher = ANNOTATION_PATTERN.matcher(textWithAnnotations)
 		
 		val hasAnnotations = matcher.find
 		
@@ -258,7 +255,8 @@ class UcmLang2UcmService {
 		]
 	}
 
-	def private LabeledAnnotatedText parseLabeledAnnotatedText(LinkedList<String> lines) {		
+	@Deprecated // TODO: side effect on the "lines" parameter
+	def private LabeledAnnotatedText parseLabeledAnnotatedText(LinkedList<String> lines) {
 		// TODO - recognize continuation of the step by indentation instead of number ?
 
 		val extensionStart = BranchingType.Extension + ":"
@@ -274,7 +272,7 @@ class UcmLang2UcmService {
 			}
 			val line = lines.pop
 			
-			val matcher = LabelAndRest_PATTERN.matcher(line)
+			val matcher = UcmLang2UcmService.LABEL_AND_REST_PATTERN.matcher(line)
 			if (!firstLineMatched) {
 				if (line.startsWith(extensionStart) || line.startsWith(variationStart)) {
 					// start of the branching and no step matched - end of the scenario
@@ -307,11 +305,12 @@ class UcmLang2UcmService {
 		result
 	}
 	
+	@Deprecated // TODO: side effect on the "lines" parameter
 	def private BranchingLabeledAnnotatedText parseBranching(LinkedList<String> lines) {
 		
 		popEmptyLines(lines)
 		val line = lines.pop
-		val matcher = BranchingLabeledAnnotatedText_PATTERN.matcher(line)
+		val matcher = UcmLang2UcmService.BRANCHING_LABELED_ANNOTATED_TEXT_PATTERN.matcher(line)
 		
 		if (!matcher.matches) {
 			throw new ParseException('''Branching has invalid format: «line»''', -1)
@@ -327,6 +326,7 @@ class UcmLang2UcmService {
 		new BranchingLabeledAnnotatedText(branchingType, brachingTextAndAnnotations)
 	}
 	
+	@Deprecated // TODO: side effect on the "lines" parameter
 	def private popEmptyLines(LinkedList<String> lines) {
 		while(!lines.empty) {
 			val line = lines.pop

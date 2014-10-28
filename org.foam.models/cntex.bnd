@@ -1,3 +1,5 @@
 Bundle-Version: 1.0.0
-Export-Package: org.foam.cntex
+Export-Package:  \
+	org.foam.cntex,\
+	org.foam.cntex.util
 Private-Package: org.foam.cntex.impl

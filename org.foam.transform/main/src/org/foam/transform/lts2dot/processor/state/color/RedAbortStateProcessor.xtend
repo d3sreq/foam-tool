@@ -8,9 +8,9 @@ import org.foam.flowannotation.Abort
 import org.foam.lts.State
 import org.foam.transform.lts2dot.processor.state.StateProcessor
 import org.foam.ucm.Step
-import org.foam.ucm.util.UcmUtils
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
+import static extension org.foam.lts.util.LtsModelExtensions.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 /**
  * @param mapping in parameter
@@ -26,7 +26,7 @@ class RedAbortStateProcessor implements StateProcessor {
 		// make "abort" node red
 		val step = state.stepFromStepMappingAnnotation
 		if (step != null) {
-			val useCase = UcmUtils.getUseCase(step) 
+			val useCase = step.getUseCase 
 			if (useCase != null) {
 				val isAbort = Predicates.instanceOf(Abort)
 				val aborts = step.annotations.filter(isAbort)

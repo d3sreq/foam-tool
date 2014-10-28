@@ -1,5 +1,6 @@
 -sub: *.bnd
 -buildpath:  \
+	org.foam.bootstrap.bundle;version=latest,\
 	org.foam.models.annotation;version=latest,\
 	org.foam.models.cntex;version=latest,\
 	org.foam.models.ctl;version=latest,\
@@ -19,19 +20,19 @@
 	com.google.guava,\
 	com.google.inject,\
 	biz.aQute.bnd.annotation,\
-	org.apache.log4j,\
 	org.apache.commons.lang,\
 	org.apache.servicemix.bundles.junit,\
 	org.eclipse.xtend.lib,\
 	org.eclipse.xtend.lib.macro,\
-	org.eclipse.xtext.util,\
 	org.eclipse.xtext.xbase.lib,\
 	org.eclipse.emf.ecore,\
 	org.eclipse.emf.ecore.xmi,\
 	org.eclipse.emf.common,\
 	org.eclipse.xtext,\
+	org.eclipse.xtext.util,\
 	org.antlr.runtime,\
 	osgi.cmpn,\
 	osgi.core;version=4.3,\
 	javax.inject,\
-	com.ibm.icu
+	com.ibm.icu,\
+	org.ops4j.pax.logging.pax-logging-api

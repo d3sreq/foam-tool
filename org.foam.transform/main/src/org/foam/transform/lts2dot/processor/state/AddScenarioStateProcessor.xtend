@@ -8,10 +8,9 @@ import org.foam.lts.State
 import org.foam.ucm.Scenario
 import org.foam.ucm.ScenarioHolder
 import org.foam.ucm.UseCase
-import org.foam.ucm.util.UcmUtils
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.lts.util.LtsModelExtensions.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 /**
  * Creates subgraph (cluster) for use case and scenario of the given state if this subgraph is
@@ -38,7 +37,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 		val graphForNode = if (step == null) {
 			resultDot
 		} else {
-			val scenario = UcmUtils.getScenario(step)
+			val scenario = step.getScenario
 			if (!scenario2Graph.containsKey(scenario)) {
 				val subGraph = dotFactory.createGraph => [
 					id = '''«scenario.useCase.id»_«scenario.label»''' // assert: id does not contain spaces
@@ -84,7 +83,7 @@ class AddScenarioStateProcessor implements StateProcessor {
 				]
 				scenario2Graph.put(scenario, subGraph)
 				// add scenario graph into use case graph
-				val uc = UcmUtils.getUseCase(step)
+				val uc = step.getUseCase
 				val ucGraph = useCase2Graph.get(uc)
 				ucGraph.statements += subGraph
 			}
@@ -93,23 +92,28 @@ class AddScenarioStateProcessor implements StateProcessor {
 		state2Graph.put(state, graphForNode)
 	}
 	
-	def private isMainScenario(Scenario scenario) {
+	//TODO:could be an extension method for "Scenario"
+	@Pure def private static isMainScenario(Scenario scenario) {
 		 scenario.eContainer instanceof UseCase
 	}
 	
-	def private isExtensionBranch(Scenario scenario) {
+	//TODO:could be an extension method for "Scenario"
+	@Pure def private static isExtensionBranch(Scenario scenario) {
 		val container = scenario.eContainer
-		if(! (container instanceof ScenarioHolder) )
+		if(! (container instanceof ScenarioHolder) ) {
 			return false
+		}
 		
 		val scenHolder = container as ScenarioHolder
 		scenHolder.extensions.contains(scenario)
 	}
 
-	def private isVariationBranch(Scenario scenario) {
+	//TODO:could be an extension method for "Scenario"
+	@Pure def private static isVariationBranch(Scenario scenario) {
 		val container = scenario.eContainer
-		if(! (container instanceof ScenarioHolder) )
+		if(! (container instanceof ScenarioHolder) ) {
 			return false
+		}
 		
 		val scenHolder = container as ScenarioHolder
 		scenHolder.variations.contains(scenario)

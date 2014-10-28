@@ -3,7 +3,6 @@ package org.foam.transform.ucm2lts
 import com.google.common.base.Preconditions
 import com.google.common.base.Predicates
 import java.util.Map
-import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.foam.flowannotation.Abort
@@ -24,7 +23,6 @@ import org.foam.propositionallogic.VariableDefinition
 import org.foam.tadl.TemporalAnnotation
 import org.foam.traceability.StateType
 import org.foam.traceability.TraceabilityFactory
-import org.foam.transform.utils.modeling.FoamNamingExtension
 import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UseCase
@@ -32,21 +30,27 @@ import org.foam.ucm.UseCaseModel
 import org.foam.verification.Action
 import org.foam.verification.VerificationFactory
 
-import static extension org.foam.ucm.util.UcmUtils.*
+import static org.foam.transform.utils.modeling.FoamNamingExtensions.*
+
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 /**
  * Performs transformation from {@link UseCaseModel} to {@link Automaton}.
- * Transformation is based on paper Formal Verification of Annotated Use-Cases (FOAM Method)
- * from Viliam Simko, Petr Hnetynka, Tomas Bures and Frantisek Plasil
- * 
  * <p><b>Warning</b> - notifier add/remove is <b>not thread safe</b>
+ * 
+ * <hr/>
+ * <b>NOTE:</b> The transformation is based on the following paper:
+ * <p>
+ * Šimko V., Hauzar D., Hnětynka P., Bureš T., Plášil F.: <b>Formal Verification
+ * of Annotated Textual Use-Cases</b>, The Computer Journal, September 2014
+ * <a href="http://dx.doi.org/10.1093/comjnl/bxu068">doi:10.1093/comjnl/bxu068</a>
+ * </p>
+ *
  */
 class Ucm2Lts {
+
+	static extension Logger = Logger.getLogger(Ucm2Lts)
 		
-	// TODO: reimplement using OSGi DS
-	private static val logger = Logger.getLogger(Ucm2Lts.canonicalName) // TODO: use OSGi LogService
-	private extension FoamNamingExtension = new FoamNamingExtension
-	
 	val ltsFactory = LtsFactory.eINSTANCE
 	val flowannotationFactory = FlowannotationFactory.eINSTANCE
 	val propositionalLogicFactory = PropositionallogicFactory.eINSTANCE
@@ -432,19 +436,19 @@ class Ucm2Lts {
 					if( ! lastStepOfMainScenario.annotations.exists[it instanceof Goto]) {
 						returnStates += stepToStateMap.get(lastStepOfMainScenario -> StateType.OUT)
 					} else {
-						logger.debug('''The included use-case «include.inlinedUseCase.id» contains "goto" annotation, therefore we won't add a "return" transition to «useCase.id»''')
+						debug('''The included use-case «include.inlinedUseCase.id» contains "goto" annotation, therefore we won't add a "return" transition to «useCase.id»''')
 					}
 					
 					// covers the (ii) case:
 					include.inlinedUseCase.allSteps.filter[annotations.exists[it instanceof Abort]].forEach[
-						logger.debug('''Found a step with ABORT annotation: «it.label» in use-case «include.inlinedUseCase.id»''')
+						debug('''Found a step with ABORT annotation: «it.label» in use-case «include.inlinedUseCase.id»''')
 						returnStates += stepToStateMap.get(it -> StateType.OUT)
 					]
 										
 					// now adding the return transitions from the collected return states:
 					for( returnState: returnStates) {
 						
-						logger.debug('''Adding "return" transition: «returnState.id»->«stepExtState.id»''')
+						debug('''Adding "return" transition: «returnState.id»->«stepExtState.id»''')
 						val returnTransition = addTransition(returnState, stepExtState, resultAutomaton, transitionMap)
 						
 						// adding an action to the return transition that sets the "incl" variable to FALSE
@@ -464,10 +468,6 @@ class Ucm2Lts {
 				}
 			}
 		}
-	}
-	
-	def debug(Logger logger, String string) {
-		logger.log(Level.DEBUG, string)
 	}
 	
 	/**

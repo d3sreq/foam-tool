@@ -1,7 +1,8 @@
-include\
-	'org.foam.models'\
-	, 'org.foam.xtext.plogic'\
-	, 'org.foam.xtext.ctl'\
-	, 'org.foam.xtext.ltl'\
-	, 'org.foam.transform'\
-	, 'org.foam.cli'
+include \
+	'org.foam.bootstrap', \
+	'org.foam.models', \
+	'org.foam.xtext.plogic', \
+	'org.foam.xtext.ctl', \
+	'org.foam.xtext.ltl', \
+	'org.foam.transform', \
+	'org.foam.cli'

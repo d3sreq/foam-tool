@@ -4,6 +4,7 @@ import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import java.io.PrintWriter
 import joptsimple.OptionParser
+import org.apache.log4j.Logger
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.ctl.CtlPackage
 import org.foam.flowannotation.FlowannotationPackage
@@ -13,20 +14,15 @@ import org.foam.lts.LtsPackage
 import org.foam.propositionallogic.PropositionallogicPackage
 import org.foam.tadl.TadlPackage
 import org.foam.traceability.TraceabilityPackage
-import org.foam.transform.utils.logger.LogServiceExtension
+import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
-import org.osgi.service.log.LogService
-import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService
 
 @Component
 @Deprecated
 class LtsToNusmv implements IExecutableTool {
 
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(LtsToNusmv)
 
 	private Lts2NusmvLangService lts2NuSMVLangService
 	@Reference def void setLts2NuSMVLangService(Lts2NusmvLangService serviceRef) {

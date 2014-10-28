@@ -1,6 +1,5 @@
 package org.foam.transform.lts2nusmvlang
 
-import java.util.HashSet
 import java.util.Map
 import java.util.Set
 import org.eclipse.emf.ecore.EClass
@@ -48,7 +47,7 @@ class TadlFormulaRenderer {
 	}
 	
 	def collectTemporalOperatorDescriptions(Iterable<Formula> list) {
-		val collected = new HashSet<EClass>
+		val collected = <EClass> newHashSet
 		list.forEach[it.collect(collected)]
 		collected.map[operator2Description.get(it)].filterNull
 	}

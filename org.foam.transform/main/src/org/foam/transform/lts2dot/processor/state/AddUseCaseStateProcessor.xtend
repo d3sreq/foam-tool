@@ -6,9 +6,9 @@ import org.foam.dot.DotFactory
 import org.foam.dot.Graph
 import org.foam.lts.State
 import org.foam.ucm.UseCase
-import org.foam.ucm.util.UcmUtils
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
+import static extension org.foam.lts.util.LtsModelExtensions.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 /**
  * Creates subgraph (cluster) for use case and scenario of the given state if this subgraph is
@@ -36,7 +36,7 @@ class AddUseCaseStateProcessor implements StateProcessor {
 		val step = state.stepFromStepMappingAnnotation
 		
 		if (step != null) {
-			val useCase = UcmUtils.getUseCase(step)
+			val useCase = step.getUseCase
 			if (!useCase2Graph.containsKey(useCase)) {
 				val subGraph = dotFactory.createGraph => [
 					id = useCase.id

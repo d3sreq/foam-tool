@@ -3,22 +3,18 @@ package org.foam.cli.tools.nusmv
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Preconditions
+import org.apache.log4j.Logger
 import org.foam.cli.launcher.api.IExecutableTool
-import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.nusmv.NusmvWrapper
-import org.osgi.service.log.LogService
 
 @Component
 class RunNativeNusmv implements IExecutableTool {
 	
+	static extension Logger = Logger.getLogger(RunNativeNusmv)
+
 	private NusmvWrapper nusmvWrapper
 	@Reference def void setNusmvWrapper(NusmvWrapper nusmvWrapper) {
 		this.nusmvWrapper = nusmvWrapper
-	}
-
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
 	}
 
 	override execute(String[] args) {

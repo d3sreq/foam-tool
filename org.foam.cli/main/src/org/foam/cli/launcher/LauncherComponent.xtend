@@ -5,10 +5,9 @@ import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import java.util.Map
 import java.util.concurrent.ConcurrentHashMap
+import org.apache.log4j.Logger
 import org.foam.cli.launcher.api.IExecutableTool
-import org.foam.transform.utils.logger.LogServiceExtension
 import org.osgi.framework.BundleContext
-import org.osgi.service.log.LogService
 
 @Component(
 	immediate = true,
@@ -20,10 +19,7 @@ import org.osgi.service.log.LogService
 )
 class LauncherComponent {
 
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(LauncherComponent)
 
 	var String[] args
 	

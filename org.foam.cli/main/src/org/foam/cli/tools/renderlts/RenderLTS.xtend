@@ -6,6 +6,7 @@ import com.google.common.base.Charsets
 import com.google.common.io.Files
 import java.io.File
 import joptsimple.OptionParser
+import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.dot.DotPackage
@@ -18,19 +19,14 @@ import org.foam.traceability.TraceabilityPackage
 import org.foam.transform.dot2dotlang.Dot2DotLang
 import org.foam.transform.lts2dot.Lts2Dot
 import org.foam.transform.utils.graphviz.GraphvizWrapper
-import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
-import org.osgi.service.log.LogService
 import org.osgi.framework.FrameworkUtil
 
 @Component(enabled = false)
 class RenderLTS implements IExecutableTool {
 	
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(RenderLTS)
 
 	private GraphvizWrapper graphvizWrapper
 	@Reference def void setGraphvizWrapper(GraphvizWrapper graphvizWrapper) {
@@ -138,7 +134,6 @@ class RenderLTS implements IExecutableTool {
 
 		if( ! dotCommand.empty ) {
 	
-			dotCommand.add(0, "dot")
 			dotCommand += outputFileName
 			
 			'''Running Graphviz DOT tool: «dotCommand.join(" ")»'''.info

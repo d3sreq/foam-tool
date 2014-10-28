@@ -20,7 +20,7 @@ import org.foam.ucm.Step
 import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 /**
  * Simplified API for work with {@link Ucm2Lts}.
@@ -29,8 +29,8 @@ class Ucm2LtsFacade {
 	
 	def static Automaton transformAllUseCases(UseCaseModel useCaseModel) {
 		val ucm2lts = createUcm2lts
-		val allUseCases = useCaseModel.useCases 
-		transformUcmToLts(useCaseModel, allUseCases, useCaseModel.useCases.filter[it.isPrimary], ucm2lts)
+		val allUseCases = useCaseModel.useCases
+		transformUcmToLts(useCaseModel, allUseCases, useCaseModel.useCases.filter[primary], ucm2lts)
 	}
 	
 	def static Automaton transformSingleUseCase( UseCaseModel useCaseModel, UseCase useCase) {

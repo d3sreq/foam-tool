@@ -1,24 +1,24 @@
 package org.foam.transform.ucm2ucm.tadlannotationresolver
 
-import org.foam.annotation.Annotation
-import org.foam.annotation.UnknownAnnotation
-import java.util.Collection
 import java.util.HashMap
 import java.util.Map
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.foam.annotation.Annotation
+import org.foam.annotation.UnknownAnnotation
 import org.foam.propositionallogic.VariableDefinition
 import org.foam.tadl.Group
 import org.foam.tadl.TadlFactory
 import org.foam.tadl.Template
 import org.foam.ucm.UseCaseModel
 
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
+//TODO: refactoring needed
 class TadlAnnotationResolver {
 	
 	val tadlFac = TadlFactory.eINSTANCE
 	
-	def void resolveAnnotations(UseCaseModel useCaseModel, Collection<Template> templates) {
+	def void resolveAnnotations(UseCaseModel useCaseModel, Iterable<Template> templates) {
 		val varDefName2Template = new HashMap<String, Template>
 		val varDefName2VarDef = new HashMap<String, VariableDefinition>
 		for (template : templates) {

@@ -1,11 +1,11 @@
 package org.foam.cli.tools.ce2xmi
 
 import aQute.bnd.annotation.component.Component
-import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Charsets
 import com.google.common.io.Files
 import java.io.File
 import joptsimple.OptionParser
+import org.apache.log4j.Logger
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.cntex.CntexPackage
 import org.foam.flowannotation.FlowannotationPackage
@@ -15,19 +15,14 @@ import org.foam.tadl.TadlPackage
 import org.foam.traceability.TraceabilityPackage
 import org.foam.transform.cntexlang2cntex.CntexLang2Cntex
 import org.foam.transform.cntexlang2cntex.CntexStateResolver
-import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.verification.VerificationPackage
-import org.osgi.service.log.LogService
 
 @Component
 @Deprecated
 class CounterExampleToXmi implements IExecutableTool {
 
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(CounterExampleToXmi)
 
 	override execute(String[] args) {
 

@@ -3,16 +3,16 @@ package org.foam.cli.tools.report
 import aQute.bnd.annotation.component.Component
 import aQute.bnd.annotation.component.Reference
 import com.google.common.base.Charsets
-import com.google.common.base.Objects
 import com.google.common.base.Preconditions
 import com.google.common.io.Files
 import java.io.File
 import java.util.HashMap
-import java.util.LinkedHashSet
 import java.util.List
 import java.util.Map
 import joptsimple.OptionParser
+import org.apache.log4j.Logger
 import org.foam.annotation.AnnotationPackage
+import org.foam.bootstrap.FileUtils
 import org.foam.cli.launcher.api.IExecutableTool
 import org.foam.cli.tools.report.pages.ErrorPage
 import org.foam.cli.tools.report.pages.Menu
@@ -22,7 +22,6 @@ import org.foam.cli.tools.report.pages.OverviewPage
 import org.foam.cli.tools.report.pages.Page
 import org.foam.cli.tools.report.pages.TadlTemplatePage
 import org.foam.cli.tools.report.pages.UseCasePage
-import org.foam.cli.tools.report.utils.FileUtils
 import org.foam.cntex.Specification
 import org.foam.ctl.CtlPackage
 import org.foam.dot.DotPackage
@@ -31,7 +30,6 @@ import org.foam.flowannotation.FlowannotationPackage
 import org.foam.ltl.LtlPackage
 import org.foam.lts.LtsPackage
 import org.foam.propositionallogic.PropositionallogicPackage
-import org.foam.tadl.FormulaHolder
 import org.foam.tadl.Group
 import org.foam.tadl.TadlPackage
 import org.foam.tadl.Template
@@ -49,7 +47,6 @@ import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizWrapper
-import org.foam.transform.utils.logger.LogServiceExtension
 import org.foam.transform.utils.modeling.EmfCommons
 import org.foam.transform.utils.nusmv.NusmvWrapper
 import org.foam.ucm.UcmPackage
@@ -57,17 +54,13 @@ import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 import org.foam.verification.VerificationPackage
 import org.osgi.framework.FrameworkUtil
-import org.osgi.service.log.LogService
 
-import static extension org.foam.cli.tools.report.utils.Utils.*
+import static extension org.foam.cntex.util.CntexModelExtensions.*
 
 @Component
 class ReportApplication implements IExecutableTool {
 	
-	private extension LogServiceExtension logServiceExtension
-	@Reference def void setLogService(LogService logService) {
-		logServiceExtension = new LogServiceExtension(logService)
-	}
+	static extension Logger = Logger.getLogger(ReportApplication)
 
 	private NusmvWrapper nusmvWrapper
 	@Reference def void setNusmvWrapper(NusmvWrapper nusmvWrapper) {
@@ -162,16 +155,6 @@ class ReportApplication implements IExecutableTool {
 	Runs the whole FOAM workflow and generates an HTML report. 
 	'''
 
-	def private uniqueSpecifications(Iterable<Specification> specifications) {
-		// LinkedHashSet to retain order of specifications
-		// repeated executions of report generation should
-		// show errors in same order
-		val set = new LinkedHashSet<SpecificationWrapper>
-		set += specifications.map[new SpecificationWrapper(it)]
-		
-		set.map[it.specification]
-	}
-	
 	def private createReport(UseCaseModel useCaseModel, Iterable<Template> templates, Iterable<Specification> specifications, String outputDirName) {
 		'''Writing the results'''.debug
 		copyWebFiles(outputDirName)
@@ -273,7 +256,9 @@ class ReportApplication implements IExecutableTool {
 		EmfCommons.basicValidate(dotGraph)
 		
 		// dot -> svg (with links)
-		val imageFileName = createImageAndImageMap(dotGraph, outputDirName, useCase.id)
+		val dotContent = new Dot2DotLang().transform(dotGraph)
+		val imageFileName = '''«outputDirName»/«useCase.id»/«useCase.id».svg'''
+		graphvizWrapper.createSvg(dotContent, imageFileName)
 		
 		new UseCasePage(useCase, menu, imageFileName)
 	}
@@ -303,31 +288,6 @@ class ReportApplication implements IExecutableTool {
 	def private createTadlPageMenuItem(TadlTemplatePage tadlTemplatePage, Menu menu) {
 		val id = tadlTemplatePage.id
 		new MenuItem(id, '''../«id»/«id».html''', tadlTemplatePage)
-	}
-	
-	@Deprecated
-	def private createImageAndImageMap(Graph graph, String outputDirName, String outputFileName) {
-		val imageDir = new File(new File(outputDirName), outputFileName)
-		imageDir.mkdir
-		
-		val fullOutputFileWithoutExtension = '''«imageDir»/«outputFileName»'''
-		
-		// write dot to file
-		val dotContent = new Dot2DotLang().transform(graph)
-		val dotFileName = '''«fullOutputFileWithoutExtension».dot'''
-		Files.write(dotContent, new File(dotFileName), Charsets.UTF_8) 
-		
-		val imageFileName = '''«outputFileName».svg'''
-		val fullImageFileName = '''«fullOutputFileWithoutExtension».svg'''
-		
-		val dotCommand = newArrayList("dot", 
-							"-Tsvg", "-o", fullImageFileName, 
-							dotFileName)
-		
-		'''Creating svg image with dot: "«dotCommand.join(" ")»"'''.info
-		graphvizWrapper.runGraphviz(dotCommand)
-		
-		return imageFileName
 	}
 	
 	def private writePage(Page page, String outputDirName) {
@@ -364,8 +324,8 @@ class ReportApplication implements IExecutableTool {
 				val automaton = Ucm2LtsFacade.transformSingleUseCase(useCaseModel, useCase)
 				
 				'''transforming LTS to NuSMV code'''.debug
-				val holderGroupList = <Pair<FormulaHolder, Group>> newArrayList
-				val code = lts2NusmvLangService.transform(automaton, holderGroupList) // TODO:comment on this out parameter
+				val code = lts2NusmvLangService.transform(automaton)
+				val holderGroupList = lts2NusmvLangService.getHolderGroupList(automaton) 
 				
 				'''running NuSMV verification'''.debug
 				val cntexCode = nusmvWrapper.runNusmvCode(code).join("\n") //TODO: do we really need to convert this to String from an array?
@@ -394,10 +354,10 @@ class ReportApplication implements IExecutableTool {
 		useCaseModel
 	}
 	
-	def private List<Template> tadlLang2Templates(String tadlDirName) {
+	def private Iterable<Template> tadlLang2Templates(String tadlDirName) {
 		val tadlLang2Tadl = new TadlLang2Tadl
 		
-		'''Reading TADL definitions from file "«tadlDirName»" and parsing'''.info
+		'''Reading TADL definitions from file "«tadlDirName»"'''.info
 		val texts = readTexts(tadlDirName)
 		 
 		val templates = texts.map[tadlLang2Tadl.parse(it)]
@@ -407,60 +367,89 @@ class ReportApplication implements IExecutableTool {
 		return templates
 	}
 	
-	def private resolveTadlAnnotations(UseCaseModel useCaseModel, List<Template> templates) {
+	def private resolveTadlAnnotations(UseCaseModel useCaseModel, Iterable<Template> templates) {
 		'''Resolving TADL annotations'''.debug
 		new TadlAnnotationResolver().resolveAnnotations(useCaseModel, templates)
 	}
 	
 	def private copyWebFiles(String outputDir) {
-		'''Copying template web files to output directory «outputDir»'''.info
-		FileUtils.bundleCopy("report/web", outputDir)
+		'''Copying template web files to output directory «outputDir»'''.debug
+		FileUtils.bundleCopy(ReportApplication, "report/web", outputDir)
 	}
 	
 	/**
 	 * Gets String content of each file in the given directory
 	 */
-	def private List<String> readTexts(String inputDir) {
+	def private Iterable<String> readTexts(String inputDir) {
+
+		Preconditions.checkNotNull( inputDir )
+		Preconditions.checkArgument( ! inputDir.empty )
+		
 		val dir = new File(inputDir)
+		Preconditions.checkState(dir.exists)
+		Preconditions.checkState(dir.isDirectory)
+		
 		dir.listFiles.map[Files.toString(it, Charsets.UTF_8)]
 	}
-}
 
-/**
- * Used only to remove duplicated Specification objects with Set.
- * Note that hashCode and equals are simplified - they don't compare/use
- * all fields and don't check all preconditions (e.g. null-ness in equals).
- */
-class SpecificationWrapper {
-	@Property val Specification specification
-	
-	new(Specification specification) {
-		_specification = specification
+	/**
+	 * We want to retain the order of specifications.
+	 * Repeated executions of report generation should
+	 * show errors in the same order.
+	 */
+	@Pure
+	def private uniqueSpecifications(Iterable<Specification> specifications) {
+		specifications.map[group.qualifier -> it].toSet.map[value]
+		//TODO: check that this newly created method works the same way as uniqueSpecifications_usingWrapper()
 	}
-	
-	override hashCode() {
-		Objects.hashCode(specification.textFormula, specification.group)
-	}
-	
-	override equals(Object obj) {
-		val otherSpecification = (obj as SpecificationWrapper).specification
-		
-		// both specification null or references equals
-		if (specification == otherSpecification) {
-			return true
-		}
-		
-		if (specification.textFormula != otherSpecification.textFormula
-			|| specification.group != otherSpecification.group
-		) {
-			return false
-		}
-		
-		// traces not compared - specifications with same group and formula
-		// are considered equal as counterexamples will be probably same
-		// (no need to distinguish two different counter examples)
-		
-		true
-	}
-		
+
+//	@Deprecated
+//	def private uniqueSpecifications_usingWrapper(Iterable<Specification> specifications) {
+//		// LinkedHashSet to retain order of specifications
+//		// repeated executions of report generation should
+//		// show errors in the same order
+//		val set = <SpecificationWrapper> newLinkedHashSet
+//		set += specifications.map[new SpecificationWrapper(it)]
+//		
+//		set.map[it.specification]
+//	}
+//
+//	/**
+//	 * Used only to remove duplicated Specification objects with Set.
+//	 * Note that hashCode and equals are simplified - they don't compare/use
+//	 * all fields and don't check all preconditions (e.g. null-ness in equals).
+//	 */
+//	@Deprecated
+//	@Data private static class SpecificationWrapper {
+//		
+//		Specification specification
+//		
+//		@Pure
+//		override hashCode() {
+//			Objects.hashCode(specification.textFormula, specification.group)
+//		}
+//		
+//		@Pure
+//		override equals(Object obj) {
+//			val otherSpecification = (obj as SpecificationWrapper).getSpecification
+//			
+//			// both specifications null or references equals
+//			if (specification === otherSpecification) {
+//				return true
+//			}
+//			
+//			if (specification.textFormula != otherSpecification.textFormula
+//				|| specification.group != otherSpecification.group
+//			) {
+//				return false
+//			}
+//			
+//			// traces not compared - specifications with same group and formula
+//			// are considered equal as counterexamples will be probably same
+//			// (no need to distinguish two different counter examples)
+//			
+//			true
+//		}
+//			
+//	}
 }

@@ -9,7 +9,7 @@ import org.foam.cntex.CounterExample
 import org.foam.cntex.Specification
 import org.foam.cntex.Trace
 
-import static extension org.foam.transform.utils.modeling.IterableExtensions.*
+import static extension org.foam.bootstrap.IterableExtensions.*
 
 class CntexLang2Cntex {
 	

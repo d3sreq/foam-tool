@@ -10,8 +10,8 @@ import org.foam.lts.State
 import org.foam.traceability.StateType
 import org.foam.ucm.Step
 
-import static extension org.foam.transform.utils.modeling.ModelUtils.*
-import static extension org.foam.ucm.util.UcmUtils.*
+import static extension org.foam.lts.util.LtsModelExtensions.*
+import static extension org.foam.ucm.util.UseCaseModelExtensions.*
 
 /**
  * @param mapping in parameter
