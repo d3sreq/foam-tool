@@ -29,6 +29,10 @@ Workspace workspace = Workspace.getWorkspace(parentDir)
 subprojects { p ->
 
 	apply plugin: 'xtend' // applies plugin 'java'
+	
+	// set explicitly encoding for java sources
+	// xtend sources have UTF-8 as default
+	compileJava.options.encoding = 'UTF-8'
 
 	// Each 'build' task should create OSGi bundles from compiled classes
 	p.tasks.getByName("build").configure {
