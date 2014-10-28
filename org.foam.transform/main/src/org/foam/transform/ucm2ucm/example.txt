@@ -1,0 +1,12 @@
+val text = new Block("Hello\nWorld")
+            
+val newblocks = text.original.split("\n").map[new Block(it)].map[
+        if(it.original.contains("W")) {
+                return #[it, new Block("WWW")]
+        }
+        return #[it]
+].flatten
+
+text += newblocks
+
+println(text)
