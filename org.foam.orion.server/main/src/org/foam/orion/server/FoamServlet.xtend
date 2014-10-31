@@ -14,10 +14,14 @@ import javax.servlet.http.HttpServletResponse
 //import org.foam.cli.tools.report.ReportApplication
 //import org.foam.transform.utils.nusmv.NusmvWrapper
 import javax.servlet.http.HttpServlet
+import org.eclipse.orion.server.servlets.OrionServlet
+import org.eclipse.core.runtime.Path
+import org.foam.cli.tools.report.ReportApplication
+import aQute.bnd.annotation.component.Reference
 
 @Component(provide=Servlet, properties=#["alias=/foam"])
-//public class FoamServlet extends OrionServlet {
-public class FoamServlet extends HttpServlet {
+public class FoamServlet extends OrionServlet {
+//public class FoamServlet extends HttpServlet {
 
 //	private ReportApplication reportApplication
 //	@Reference def void setReportApplication(ReportApplication reportApplication) {
@@ -30,8 +34,8 @@ public class FoamServlet extends HttpServlet {
 //	}
 
 	override doGet(HttpServletRequest req, HttpServletResponse resp) {
-//		val pathInfo = req.pathInfo
-//		val Path path = if (pathInfo == null) Path.EMPTY else new Path(pathInfo)
+		val pathInfo = req.pathInfo
+		val Path path = if (pathInfo == null) Path.EMPTY else new Path(pathInfo)
 //		
 //		if (path.segmentCount < 3) {
 //			val message = NLS.bind("Path must have at least 3 segments : {0}", pathInfo)
