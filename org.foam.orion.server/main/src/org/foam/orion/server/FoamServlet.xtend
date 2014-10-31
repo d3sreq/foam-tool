@@ -12,12 +12,13 @@ import javax.servlet.http.HttpServletResponse
 //import org.eclipse.orion.server.servlets.OrionServlet
 //import org.eclipse.osgi.util.NLS
 //import org.foam.cli.tools.report.ReportApplication
-//import org.foam.transform.utils.nusmv.NusmvWrapper
+import org.foam.transform.utils.nusmv.NusmvWrapper
 import javax.servlet.http.HttpServlet
 import org.eclipse.orion.server.servlets.OrionServlet
 import org.eclipse.core.runtime.Path
 import org.foam.cli.tools.report.ReportApplication
 import aQute.bnd.annotation.component.Reference
+import org.foam.transform.ucm2ucm.UcmLang2UcmService
 
 @Component(provide=Servlet, properties=#["alias=/foam"])
 public class FoamServlet extends OrionServlet {
@@ -32,6 +33,11 @@ public class FoamServlet extends OrionServlet {
 //	@Reference def void setNusmvWrapper(NusmvWrapper nusmvWrapper) {
 //		this.nusmvWrapper = nusmvWrapper
 //	}
+
+	private UcmLang2UcmService ucmLang2UcmService
+	@Reference def void setUcmLang2Ucm(UcmLang2UcmService serviceRef) {
+		this.ucmLang2UcmService = serviceRef
+	}
 
 	override doGet(HttpServletRequest req, HttpServletResponse resp) {
 		val pathInfo = req.pathInfo
@@ -78,7 +84,8 @@ public class FoamServlet extends OrionServlet {
 //		OrionServlet.writeJSONResponse(req, resp, result)
 		
 		//		Thread.sleep(2000);
-		resp.writer.append("Current thread: " + Thread.currentThread.id);
+		resp.writer.append("Current thread: " + Thread.currentThread.id + " " + ucmLang2UcmService.toString)
+		
 
 		// run verification
 		// TODO - refactor cli
