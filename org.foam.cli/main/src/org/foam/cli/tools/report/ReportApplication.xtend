@@ -57,7 +57,7 @@ import org.osgi.framework.FrameworkUtil
 
 import static extension org.foam.cntex.util.CntexModelExtensions.*
 
-@Component
+@Component(provide=ReportApplication)
 class ReportApplication implements IExecutableTool {
 	
 	static extension Logger = Logger.getLogger(ReportApplication)

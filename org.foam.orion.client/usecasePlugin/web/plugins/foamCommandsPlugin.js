@@ -1,16 +1,24 @@
 /*eslint-env browser, amd*/
-define(["orion/plugin", "orion/xhr"], function(PluginProvider, xhr) {
-//define(["orion/plugin"], function(PluginProvider) {
+//define(["orion/plugin", "orion/xhr"], function(PluginProvider, xhr) {
+define(["orion/plugin"], function(PluginProvider) {
 	var headers = {
 		name: "FOAM Commands Plugin1",
 		version: "1.0",
 		description: "FOAM Commands Plugin1"
 	};
 	var provider = new PluginProvider(headers);
-	//var provider = new orion.PluginProvider({postInstallUrl:"../plugin/list.html"});
 	
-	provider.registerService("orion.navigate.command", {
-		run : function(item) {
+	var serviceProperties = {
+		name: "Run FOAM verification",
+		id: "sample.commands.sample1",
+		key: [119], // F8
+		image: "../images/gear.gif",
+		forceSingleItem: true,
+		tooltip: "Run FOAM verification on selected dir" /* TODO - disable on file, retain only project/dir */	
+	};
+	
+	var serviceImpl = {
+		run : function() {
 			// TODO - I wasn't able to get xhr working with orion js library
 			// so I'm using normal js xhr calls.
 
@@ -36,7 +44,7 @@ define(["orion/plugin", "orion/xhr"], function(PluginProvider, xhr) {
 //			});
 
 			// All HTML5 Rocks properties support CORS.
-			var url = 'http://localhost:8080/foam/file/jiri-OrionContent/CoCoME/';
+			var url = 'http://localhost:8081/foam/file/jiri-OrionContent/foam/';
 			
 			var xhr = new XMLHttpRequest();			
 			xhr.open('GET', url, true);			
@@ -47,21 +55,15 @@ define(["orion/plugin", "orion/xhr"], function(PluginProvider, xhr) {
 			    window.alert('Response from CORS request to ' + url + ': ' + text);
 			};
 			
-			xhr.onerror = function() {
+			xhr.onerror = function(error) {
 				window.alert('Woops, there was an error making the request.');
+				window.console.log(error);
 			};
 			
 			xhr.send();
-
-//			window.alert("Hi!");
 		}
-	}, {
-		image: "../images/gear.gif",
-		name: "Run FOAM verification",
-		id: "sample.commands.sample1",
-		forceSingleItem: true,
-		tooltip: "Run FOAM verification on selected dir" /* TODO - disable on file, retain only project/dir */
-	});
-		
+	};
+	
+	provider.registerService("orion.edit.command", serviceImpl, serviceProperties);
 	provider.connect();
 });
