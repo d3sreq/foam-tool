@@ -13,5 +13,7 @@
 	org.eclipse.orion.server.core,\
 	org.eclipse.orion.server.servlets,\
 	org.json,\
-	com.google.guava
+	com.google.guava,\
+	org.eclipse.core.filesystem,\
+	org.eclipse.core.runtime
 Bundle-Version: 0.0.0.${tstamp}
