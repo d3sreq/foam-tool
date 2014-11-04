@@ -18,7 +18,7 @@ define(["orion/plugin"], function(PluginProvider) {
 	};
 	
 	var serviceImpl = {
-		run : function() {
+		run : function(selectedText, text, selection, fileName) {
 			// TODO - I wasn't able to get xhr working with orion js library
 			// so I'm using normal js xhr calls.
 
@@ -44,15 +44,27 @@ define(["orion/plugin"], function(PluginProvider) {
 //			});
 
 			// All HTML5 Rocks properties support CORS.
-			var url = 'http://localhost:8081/foam/file/jiri-OrionContent/foam/';
+			// fileName contains file name of the file opened in editor
+			// e.g. /file/jiri-OrionContent/foam/ucs/UC1_Process_Sale.uc
+			// TODO - address from some propeperty
+			var url = 'http://localhost:8081/foam' + fileName;
 			
 			var xhr = new XMLHttpRequest();			
 			xhr.open('GET', url, true);			
 			
 			// Response handlers.
 			xhr.onload = function() {
-				var text = xhr.responseText;			    
-			    window.alert('Response from CORS request to ' + url + ': ' + text);
+				var responseText = xhr.responseText;			    
+				//window.alert('Response from CORS request to ' + url + ': ' + responseText);
+				var parts = fileName.split("/");
+				// TODO - hardcoded address
+				var resultUrl = [
+					"http://localhost:8080", 
+					parts[1], parts[2], parts[3], 
+					"out/index.html"
+				].join("/");
+				
+				window.open(resultUrl);
 			};
 			
 			xhr.onerror = function(error) {
