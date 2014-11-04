@@ -49,12 +49,12 @@ define(["orion/plugin"], function(PluginProvider) {
 			// TODO - address from some propeperty
 			var url = 'http://localhost:8081/foam' + fileName;
 			
-			var xhr = new XMLHttpRequest();			
-			xhr.open('GET', url, true);			
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', url, true);
 			
 			// Response handlers.
 			xhr.onload = function() {
-				var responseText = xhr.responseText;			    
+				//var responseText = xhr.responseText;
 				//window.alert('Response from CORS request to ' + url + ': ' + responseText);
 				var parts = fileName.split("/");
 				// TODO - hardcoded address
