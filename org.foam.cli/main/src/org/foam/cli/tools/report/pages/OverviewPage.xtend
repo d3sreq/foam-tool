@@ -6,14 +6,14 @@ import org.eclipse.xtend.lib.annotations.Data
 class OverviewPage implements Page {
 	
 	val Menu menu
-	val String overviewImageLocation
+	val String overviewImageName // we require that the image is on the same level as the page 
 	
 	def private getContent() '''
 		<div>
 			<h1>Overview</h1>
 ««« according to http://www.w3schools.com/svg/svg_inhtml.asp can svg be embedded also
 ««« with <embed> tag which supports scripting
-			<object data="«overviewImageLocation»" type="image/svg+xml"></object>			
+			<object data="«overviewImageName»" type="image/svg+xml"></object>			
 		</div>
 	'''
 	

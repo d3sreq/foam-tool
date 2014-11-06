@@ -14,7 +14,7 @@ class UseCasePage implements Page {
 
 	val UseCase useCase
 	val Menu menu
-	val String useCaseImageLocation
+	val String useCaseImageFileName // we require that image is located in the same directory as html file
 	
 	override getId() {
 		useCase.id
@@ -53,7 +53,7 @@ class UseCasePage implements Page {
 			«ENDFOR»
 ««« according to http://www.w3schools.com/svg/svg_inhtml.asp can svg be embedded also
 ««« with <embed> tag which supports scripting
-			<object data="«useCaseImageLocation»" type="image/svg+xml"></object>
+			<object data="«useCaseImageFileName»" type="image/svg+xml"></object>
 		</div>
 	'''
 	
