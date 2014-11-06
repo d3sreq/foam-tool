@@ -26,7 +26,7 @@ define("orion/editor/stylers/text_x-usecase/syntax", ["orion/editor/stylers/lib/
 				name: "support.other.step.label.usecase"
 			},
 			{
-				match: "#\\(\\w+(?::\\w+)*\\)",				
+				match: "#\\(\\w+(?::[^)]+)*\\)",				
 				name: "keyword.control.annotation.usecase"
 			}
 			
