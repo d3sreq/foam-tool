@@ -1,5 +1,7 @@
 package org.foam.cli.tools.report.pages
 
+import org.eclipse.xtend.lib.annotations.Data
+
 @Data
 class PageTemplate {
 	def printPage(CharSequence css, CharSequence menu, CharSequence content) '''
