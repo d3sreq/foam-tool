@@ -57,7 +57,7 @@ import org.osgi.framework.FrameworkUtil
 
 import static extension org.foam.cntex.util.CntexModelExtensions.*
 
-@Component
+@Component(provide=#[ReportApplication, IExecutableTool])
 class ReportApplication implements IExecutableTool {
 	
 	static extension Logger = Logger.getLogger(ReportApplication)
@@ -231,8 +231,9 @@ class ReportApplication implements IExecutableTool {
 	def private createOverviewPage(UseCaseModel ucm, Menu menu, String outputDirName) {
 		
 		val dotCode = ucmOverviewUsingDot.transform(ucm)
-		val svgFileName = '''«outputDirName»/overview/overview.svg'''
-		graphvizWrapper.createSvg(dotCode, svgFileName)
+		val svgFileName = '''overview.svg'''
+		val fullPathToSvg = '''«outputDirName»/overview/«svgFileName»'''
+		graphvizWrapper.createSvg(dotCode, fullPathToSvg)
 		
 		new OverviewPage(menu, svgFileName)
 	}
@@ -257,8 +258,9 @@ class ReportApplication implements IExecutableTool {
 		
 		// dot -> svg (with links)
 		val dotContent = new Dot2DotLang().transform(dotGraph)
-		val imageFileName = '''«outputDirName»/«useCase.id»/«useCase.id».svg'''
-		graphvizWrapper.createSvg(dotContent, imageFileName)
+		val imageFileName = '''«useCase.id».svg'''
+		val fullPathToImage = '''«outputDirName»/«useCase.id»/«imageFileName»'''
+		graphvizWrapper.createSvg(dotContent, fullPathToImage)
 		
 		new UseCasePage(useCase, menu, imageFileName)
 	}

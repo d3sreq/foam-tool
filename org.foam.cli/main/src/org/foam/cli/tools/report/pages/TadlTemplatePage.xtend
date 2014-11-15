@@ -2,6 +2,7 @@ package org.foam.cli.tools.report.pages
 
 import org.foam.tadl.Template
 import org.foam.transform.lts2nusmvlang.TadlFormulaRenderer
+import org.eclipse.xtend.lib.annotations.Data
 
 @Data
 class TadlTemplatePage implements Page {

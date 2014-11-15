@@ -6,15 +6,16 @@ import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UcmPackage
 import org.foam.ucm.UseCase
+import org.eclipse.xtend.lib.annotations.Data
 
 @Data
 class UseCasePage implements Page {
 
-	extension FoamCommonAnnotationRenderer = new FoamCommonAnnotationRenderer
+	val foamCommonAnnotationRenderer = new FoamCommonAnnotationRenderer
 
 	val UseCase useCase
 	val Menu menu
-	val String useCaseImageLocation
+	val String useCaseImageFileName // we require that image is located in the same directory as html file
 	
 	override getId() {
 		useCase.id
@@ -53,7 +54,7 @@ class UseCasePage implements Page {
 			«ENDFOR»
 ««« according to http://www.w3schools.com/svg/svg_inhtml.asp can svg be embedded also
 ««« with <embed> tag which supports scripting
-			<object data="«useCaseImageLocation»" type="image/svg+xml"></object>
+			<object data="«useCaseImageFileName»" type="image/svg+xml"></object>
 		</div>
 	'''
 	
@@ -80,7 +81,7 @@ class UseCasePage implements Page {
 	def private printStep(Step step) '''
 		«step.text»
 		«FOR annotation : step.annotations BEFORE ' ' SEPARATOR ', '»
-			<span class="annot">«annotation.render»</span>
+			<span class="annot">«foamCommonAnnotationRenderer.render(annotation)»</span>
 		«ENDFOR»
 	'''
 	
