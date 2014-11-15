@@ -77,5 +77,36 @@ define(["orion/plugin"], function(PluginProvider) {
 	};
 	
 	provider.registerService("orion.edit.command", serviceImpl, serviceProperties);
+	
+	/////
+	provider.registerServiceProvider("orion.edit.validator", {
+      computeProblems: function(editorContext, options) {
+          var problems = [];
+          return editorContext.getText().then(function(contents) { 
+              var lines = contents.split(/\r?\n/);
+              for (var i=0; i < lines.length; i++) {
+                  var line = lines[i];
+                  var match = /\t \t| \t /.exec(line);
+                  if (match) {
+                      problems.push({
+                      description: "XOXO Mixed spaces and tabs.",  // not required if using descriptionKey / descriptionArgs
+                      line: i + 1,
+                      start: match.index + 1,
+                      end: match.index + match[0].length + 1,
+                      severity: "warning" });
+                  }
+              }
+              var result = { problems: problems };
+              return result;
+          });
+    }
+    },
+    {
+      //contentType: ["application/javascript"],
+      contentType: ["text/x-usecase"]      
+    });
+	/////
+	
+	
 	provider.connect();
 });
