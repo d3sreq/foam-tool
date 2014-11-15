@@ -6,11 +6,12 @@ import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UcmPackage
 import org.foam.ucm.UseCase
+import org.eclipse.xtend.lib.annotations.Data
 
 @Data
 class UseCasePage implements Page {
 
-	extension FoamCommonAnnotationRenderer = new FoamCommonAnnotationRenderer
+	val foamCommonAnnotationRenderer = new FoamCommonAnnotationRenderer
 
 	val UseCase useCase
 	val Menu menu
@@ -80,7 +81,7 @@ class UseCasePage implements Page {
 	def private printStep(Step step) '''
 		«step.text»
 		«FOR annotation : step.annotations BEFORE ' ' SEPARATOR ', '»
-			<span class="annot">«annotation.render»</span>
+			<span class="annot">«foamCommonAnnotationRenderer.render(annotation)»</span>
 		«ENDFOR»
 	'''
 	
