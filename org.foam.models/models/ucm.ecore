@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ucm" nsURI="ucm" nsPrefix="ucm">
+  <eAnnotations source="http://www.eclipse.org/OCL/Import">
+    <details key="annotation" value="annotation.ecore#/"/>
+    <details key="ecore" value="http://www.eclipse.org/emf/2002/Ecore#/"/>
+    <details key="flowannotation" value="flowannotation.ecore#/"/>
+  </eAnnotations>
+  <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+    <details key="invocationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+    <details key="settingDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+    <details key="validationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+  </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="UseCaseModel" eSuperTypes="annotation.ecore#//Annotable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="useCases" lowerBound="1"
         upperBound="-1" eType="#//UseCase" containment="true"/>
@@ -8,6 +18,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="UseCase">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
       <details key="constraints" value="PrecedenceWithoutCycle IncludeWithoutCycle IncludedIsSubsetOfPreceeded NoAbortInMainScenario NoGotoInMainScenario"/>
+    </eAnnotations>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+      <details key="NoAbortInMainScenario" value="not mainScenario.steps->collect(step|step.annotations)->exists(oclIsTypeOf(flowannotation::Abort))"/>
+      <details key="NoGotoInMainScenario" value="not mainScenario.steps->collect(step|step.annotations)->exists(oclIsTypeOf(flowannotation::Goto))"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mainScenario" lowerBound="1"
         eType="#//Scenario" containment="true" resolveProxies="false"/>
