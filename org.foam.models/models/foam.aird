@@ -1545,15 +1545,6 @@
     <ownedRepresentations xmi:type="diagram:DSemanticDiagram" xmi:id="_WcZbwG_1EeS-NZ29slKbMQ" name="tracemap class diagram">
       <ownedAnnotationEntries xmi:type="description:AnnotationEntry" xmi:id="_WcaC0G_1EeS-NZ29slKbMQ" source="GMF_DIAGRAMS">
         <data xmi:type="notation:Diagram" xmi:id="_WcaC0W_1EeS-NZ29slKbMQ" type="Sirius" element="_WcZbwG_1EeS-NZ29slKbMQ" measurementUnit="Pixel">
-          <children xmi:type="notation:Node" xmi:id="_OT9qIG_3EeS-NZ29slKbMQ" type="2003" element="_OTskYG_3EeS-NZ29slKbMQ">
-            <children xmi:type="notation:Node" xmi:id="_OT-RMG_3EeS-NZ29slKbMQ" type="5007"/>
-            <children xmi:type="notation:Node" xmi:id="_OT-RMW_3EeS-NZ29slKbMQ" type="7004">
-              <styles xmi:type="notation:SortingStyle" xmi:id="_OT-RMm_3EeS-NZ29slKbMQ"/>
-              <styles xmi:type="notation:FilteringStyle" xmi:id="_OT-RM2_3EeS-NZ29slKbMQ"/>
-            </children>
-            <styles xmi:type="notation:ShapeStyle" xmi:id="_OT9qIW_3EeS-NZ29slKbMQ" fontName="Sans" fontHeight="8"/>
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_OT9qIm_3EeS-NZ29slKbMQ" x="228" y="60" width="120" height="100"/>
-          </children>
           <children xmi:type="notation:Node" xmi:id="_EjPLYHABEeS-NZ29slKbMQ" visible="false" type="2003" element="_Ei2w4HABEeS-NZ29slKbMQ">
             <children xmi:type="notation:Node" xmi:id="_EjPLY3ABEeS-NZ29slKbMQ" type="5007"/>
             <children xmi:type="notation:Node" xmi:id="_EjPycHABEeS-NZ29slKbMQ" type="7004">
@@ -1657,21 +1648,6 @@
           </cache>
         </data>
       </ownedAnnotationEntries>
-      <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_OTskYG_3EeS-NZ29slKbMQ" name="StateToStep" tooltipText="" width="12" height="10">
-        <target xmi:type="ecore:EClass" href="tracemap.ecore#//StateToStep"/>
-        <semanticElements xmi:type="ecore:EClass" href="tracemap.ecore#//StateToStep"/>
-        <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
-        <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
-        <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
-        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_HQO9JXABEeS-NZ29slKbMQ" backgroundStyle="Liquid">
-          <labelColor xmi:type="viewpoint:RGBValues" xmi:id="_HQO9JnABEeS-NZ29slKbMQ"/>
-          <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
-          <borderColor xmi:type="viewpoint:RGBValues" xmi:id="_HQO9J3ABEeS-NZ29slKbMQ"/>
-          <backgroundColor xmi:type="viewpoint:RGBValues" xmi:id="_HQO9KHABEeS-NZ29slKbMQ" red="255" green="255" blue="255"/>
-          <foregroundColor xmi:type="viewpoint:RGBValues" xmi:id="_HQO9KXABEeS-NZ29slKbMQ" red="255" green="252" blue="216"/>
-        </ownedStyle>
-        <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-      </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_Ei2w4HABEeS-NZ29slKbMQ" name="EObject" visible="false" tooltipText="">
         <target xmi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
         <semanticElements xmi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
