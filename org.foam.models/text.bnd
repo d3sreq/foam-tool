@@ -1,0 +1,6 @@
+Bundle-Name: Text Model
+Bundle-Version: 1.0.0
+Export-Package:  \
+	org.foam.text
+Private-Package:  \
+	org.foam.text.impl
