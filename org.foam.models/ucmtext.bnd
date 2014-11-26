@@ -1,6 +1,6 @@
-Bundle-Name: Text Model
+Bundle-Name: Use case Text Model
 Bundle-Version: 1.0.0
 Export-Package:  \
-	org.foam.text
+	org.foam.ucmtext
 Private-Package:  \
-	org.foam.text.impl
+	org.foam.ucmtext.impl

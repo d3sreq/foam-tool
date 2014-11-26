@@ -17,6 +17,7 @@ import org.foam.ucm.UseCaseModel
 import static org.junit.Assert.*
 
 // TODO: this should be an extension
+// TODO: refactor - assertions can be replaced with EcoreUtil2.equals
 class UcmChecker {
 
 	def void assertUseCaseModelEquals(UseCaseModel expected, UseCaseModel actual) {

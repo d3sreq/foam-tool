@@ -25,10 +25,10 @@ public enum BranchingType {
 	Extension, Variation
 }
 
-@Component(provide = UcmLang2UcmService)
-class UcmLang2UcmService {
+@Component(provide = UcmLang2UcmServiceOld)
+class UcmLang2UcmServiceOld {
 
-	static extension Logger = Logger.getLogger(UcmLang2UcmService)
+	static extension Logger = Logger.getLogger(UcmLang2UcmServiceOld)
 
 	val usecaseFactory = UcmFactory.eINSTANCE
 	val annotationFactory = AnnotationFactory.eINSTANCE
@@ -164,7 +164,7 @@ class UcmLang2UcmService {
 		val line = lines.pop
 		
 		
-		val matcher = UcmLang2UcmService.PRIMARY_UC_PATTERN.matcher(line)
+		val matcher = UcmLang2UcmServiceOld.PRIMARY_UC_PATTERN.matcher(line)
 		
 		if (matcher.matches) {
 			Boolean.parseBoolean(matcher.group(1))
@@ -180,7 +180,7 @@ class UcmLang2UcmService {
 		
 		val list = <String> newArrayList
 		
-		if (line.startsWith(UcmLang2UcmService.PRECEDING_PREFIX)) {
+		if (line.startsWith(UcmLang2UcmServiceOld.PRECEDING_PREFIX)) {
 			val matcher = UC_ID_PATTERN.matcher(line)
 			while (matcher.find) {
 				list += matcher.group(1)
@@ -272,7 +272,7 @@ class UcmLang2UcmService {
 			}
 			val line = lines.pop
 			
-			val matcher = UcmLang2UcmService.LABEL_AND_REST_PATTERN.matcher(line)
+			val matcher = UcmLang2UcmServiceOld.LABEL_AND_REST_PATTERN.matcher(line)
 			if (!firstLineMatched) {
 				if (line.startsWith(extensionStart) || line.startsWith(variationStart)) {
 					// start of the branching and no step matched - end of the scenario
@@ -310,7 +310,7 @@ class UcmLang2UcmService {
 		
 		popEmptyLines(lines)
 		val line = lines.pop
-		val matcher = UcmLang2UcmService.BRANCHING_LABELED_ANNOTATED_TEXT_PATTERN.matcher(line)
+		val matcher = UcmLang2UcmServiceOld.BRANCHING_LABELED_ANNOTATED_TEXT_PATTERN.matcher(line)
 		
 		if (!matcher.matches) {
 			throw new ParseException('''Branching has invalid format: «line»''', -1)

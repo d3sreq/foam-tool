@@ -35,4 +35,8 @@
 	osgi.core;version=4.3,\
 	javax.inject,\
 	com.ibm.icu,\
-	org.ops4j.pax.logging.pax-logging-api
+	org.ops4j.pax.logging.pax-logging-api,\
+	org.foam.models.text;version=latest,\
+	org.foam.models.traceability2;version=latest,\
+	org.foam.models.traceability_ucm_text;version=latest,\
+	org.foam.models.ucmtext;version=latest

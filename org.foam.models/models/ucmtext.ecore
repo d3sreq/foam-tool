@@ -10,8 +10,8 @@
         eType="ecore:EClass text.ecore#//StringWithOffset" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="ecore:EClass text.ecore#//StringWithOffset"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="derived" upperBound="-1"
-        eType="#//SemanticBlock" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="derived" eType="#//SemanticBlock"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SemanticBlock" abstract="true" interface="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="PrimaryDef" eSuperTypes="#//SemanticBlock">
@@ -23,9 +23,9 @@
         eType="#//UcIdDef" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UcIdDef">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="id" upperBound="-1" eType="ecore:EClass text.ecore#//StringWithOffset"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="id" lowerBound="1" eType="ecore:EClass text.ecore#//StringWithOffset"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="description" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="description" lowerBound="1"
         eType="ecore:EClass text.ecore#//StringWithOffset" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UseCaseNameDef" eSuperTypes="#//SemanticBlock">
