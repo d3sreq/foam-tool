@@ -120,6 +120,7 @@ class UcmParser {
 	package def Iterable<UcIdDef> parsePreceded(StringWithOffset text) {
 		val matcher = precededPattern.matcher(text.content)
 		val result = <UcIdDef>newArrayList
+		val initOffset = text.offset
 		
 		while (matcher.find) {
 			val idOffset = matcher.start(1)
@@ -128,7 +129,9 @@ class UcmParser {
 			val descOffset = matcher.start(2)
 			val descContent = matcher.group(2).trim
 			
-			result += createUcIdDef(createStringWithOffset(idContent, idOffset), createStringWithOffset(descContent, descOffset))
+			val id = createStringWithOffset(idContent, initOffset + idOffset)
+			val desc = createStringWithOffset(descContent, initOffset + descOffset)
+			result += createUcIdDef(id, desc)
 		}
 		
 		result
@@ -174,17 +177,30 @@ class UcmParser {
 				.fold(new StringBuilder(matcher.group(3)), [sb, item | sb.append("\n").append(item)])
 				.toString
 			
-			// TODO - parse annotations
-			
 			ucmTextFac.createStepDef => [
 				it.label = createStringWithOffset(labelContent, labelOffset)
 				it.text = createStringWithOffset(bodyContent, bodyOffset)
+				it.annot += parseAnnotations(it.text)
 			]
 		]
 
 		ucmTextFac.createScenarioDef => [
 			it.steps += steps
 		]
+	}
+  
+	val annotationPattern = Pattern.compile("(#\\([^)]+\\))")
+	
+	def package Iterable<StringWithOffset> parseAnnotations(StringWithOffset stringWithOffset) {
+		val matcher = annotationPattern.matcher(stringWithOffset.content)
+		val result = <StringWithOffset>newArrayList
+		val initOffset = stringWithOffset.offset
+		
+		while (matcher.find) {
+			result += createStringWithOffset(matcher.group, initOffset + matcher.start)
+		}
+		
+		result
 	}
 	
 	// TODO - "top-level" parse method will be in separate package which will be exported
