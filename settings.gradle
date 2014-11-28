@@ -5,4 +5,5 @@ include \
 	'org.foam.xtext.ctl', \
 	'org.foam.xtext.ltl', \
 	'org.foam.transform', \
-	'org.foam.cli'
+	'org.foam.cli',\
+	'org.foam.orion.server'
