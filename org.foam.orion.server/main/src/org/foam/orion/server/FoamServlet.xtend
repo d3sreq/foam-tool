@@ -23,6 +23,9 @@ public class FoamServlet extends OrionServlet {
 	}
 
 	override doGet(HttpServletRequest req, HttpServletResponse resp) {
+		// TODO - is this safe ?
+		resp.setHeader("Access-Control-Allow-Origin", "*")
+		
 		val pathInfo = req.pathInfo
 		val Path path = if (pathInfo == null) Path.EMPTY else new Path(pathInfo)
 		
@@ -57,9 +60,6 @@ public class FoamServlet extends OrionServlet {
 		
 //		val result = new JSONObject().put("JSON", "Hello, World!\n" + nusmvWrapper.testLabel)
 //val result = new JSONObject().put("JSON", "Hello, World!\n")
-		
-		// TODO - is this safe ?
-		resp.setHeader("Access-Control-Allow-Origin", "*")		
 
 		val absolutePath = project.projectStore.toLocalFile(EFS.NONE, null).absolutePath
 		
