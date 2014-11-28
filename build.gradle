@@ -55,8 +55,8 @@ subprojects { p ->
 	repositories { mavenCentral() }
 	
 	//Setup source and target directories
-	sourceCompatibility = 1.7
-	targetCompatibility = 1.7
+	sourceCompatibility = 1.6
+	targetCompatibility = 1.6
 
 	sourceSets {
 		main {
@@ -205,4 +205,16 @@ task release << {
 	def inputs = fileTree(dir: 'release/repository', include: '*.jar') as Set
 	def output = new FileOutputStream("release/repository/index.xml.gz")
 	indexer.index(inputs, output, config)
+	
+	
+	///
+	def vserverJarName = 'release/distribution/foam-vserver.jar' 
+	
+	workspace.getProject('org.foam.orion.server').export(
+		"run-equinox.bndrun",
+		false,
+		file(vserverJarName)
+	)
+	file(vserverJarName).setExecutable(true)
+	
 }
