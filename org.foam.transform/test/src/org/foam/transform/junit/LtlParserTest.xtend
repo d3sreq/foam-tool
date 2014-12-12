@@ -99,6 +99,19 @@ class LtlParserTest {
 		], "a U b & c")
 	}
 	
+	@Test def void testNotUntilPrecedence() {
+		assertFormulaEquals(ltlFac.createUntil => [
+			left = propFac.createNot => [
+				formula = propXtextFac.createRuleVariableUse => [
+					variable = "emit2"
+				]
+			]			
+			right = propXtextFac.createRuleVariableUse => [
+				variable = "consume2"
+			]  
+		], "!emit2 U consume2")
+	}
+	
 	def private assertFormulaEquals(Formula expectedFormula, String actualFormula) {
 		val parseResult = ltlParser.doParse(actualFormula)
 		val formula = parseResult.rootASTElement as Formula

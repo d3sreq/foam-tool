@@ -29,7 +29,7 @@ RuleSimple returns Formula:
 	RuleUnaryPropositionalLogic;
 
 RuleUnaryPropositionalLogic returns Formula:
-	{Not} '!' formula=RuleStart
+	{Not} '!' formula=RuleSimple
 	| RuleAtomic;
 
 RuleAtomic returns Formula:
