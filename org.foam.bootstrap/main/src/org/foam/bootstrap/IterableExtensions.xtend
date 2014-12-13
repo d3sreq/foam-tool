@@ -118,36 +118,28 @@ class IterableExtensions {
 	}
 	
 	/**
-	 * Computes a transitive closure over a graph using a given lambda closure function.
-	 * It returns an {@link Set} of visited objects.
+	 * Computes a transitive closure over a graph using a given lambda function.
+	 * It returns an {@link Set} of visited objects which does not contain the starting node.
 	 * If the given graph is <b>not</b> a DAG, the algorithm performs a topological sort first.
 	 * Example usage:
 	 * <pre>
-	 * // collects all preceded use-cases of the use-case uc9 (uc9 will also be returned)
+	 * // collects all preceded use-cases of the use-case uc9 (uc9 will not be returned)
 	 * uc9.trasitiveClosure[preceded]
 	 * </pre>
 	 * 
 	 * @param node starting node
-	 * @param closureFunction the lambda function that determines the computation of a closure.
+	 * @param closureFunction.
 	 */
-	@Pure def static <T> Set<T> trasitiveClosure(T node, (T) => Iterable<T> closureFunction) {
-		trasitiveClosure(node, closureFunction, true)
-	}
-
-	@Pure def static <T> Set<T> trasitiveClosureWithoutStart(T node, (T) => Iterable<T> closureFunction) {
-		trasitiveClosure(node, closureFunction, false)
-	}
-	
-	@Pure def static <T> Set<T> trasitiveClosure(T node, (T) => Iterable<T> closureFunction, boolean withStartingNode) {
+	@Pure def static <T> Set<T> transitiveClosure(T node, (T) => Iterable<T> closureFunction) {
 		
 		Preconditions.checkNotNull(node)
 		Preconditions.checkNotNull(closureFunction)
 		
-		val visited = if(withStartingNode) <T> newHashSet(node) else <T> newHashSet
+		val visited = <T> newHashSet
 		trasitiveClosureHelper(node, closureFunction, visited)
 		return visited
 	}
-	
+
 	def private static <T> void trasitiveClosureHelper(T node, (T) => Iterable<T> closureFunction, Set<T> visited) {
 		val nextList = closureFunction.apply(node)
 		if(nextList != null) {
@@ -162,10 +154,10 @@ class IterableExtensions {
 
 	/**
 	 * This version works on DAGs only, but should perform better in a multi-threaded environment
-	 * because there is no shared stated. 
+	 * because there is no shared state. 
 	 */
-	@Pure def static <T> Iterable<T> trasitiveClosureDAG(T node, (T) => Iterable<T> closureFunction) {
-		#[node] + closureFunction.apply(node).map[trasitiveClosureDAG(closureFunction)].flatten
+	@Pure def static <T> Iterable<T> transitiveClosureDAG(T node, (T) => Iterable<T> closureFunction) {
+		#[node] + closureFunction.apply(node).map[transitiveClosureDAG(closureFunction)].flatten
 	}
 	
 }
