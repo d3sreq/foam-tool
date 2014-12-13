@@ -157,6 +157,6 @@ class IterableExtensionsTest {
 		
 		assertArrayEquals(#[1,2,3,4,5,6], 1.transitiveClosure[NODAG.get(it)].sort)
 		assertArrayEquals(#[1,2,3,4,5,6], 3.transitiveClosure[NODAG.get(it)].sort)
-		assertArrayEquals(#[5,6],         5.transitiveClosure[NODAG.get(it)].sort)
+		assertArrayEquals(#[6],           5.transitiveClosure[NODAG.get(it)].sort)
 	}
 }
