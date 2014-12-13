@@ -33,6 +33,7 @@ subprojects { p ->
 	// set explicitly encoding for java sources
 	// xtend sources have UTF-8 as default
 	compileJava.options.encoding = 'UTF-8'
+	compileJava.options.fork (memoryMaximumSize: '1024m')
 
 	// Each 'build' task should create OSGi bundles from compiled classes
 	p.tasks.getByName("build").configure {
