@@ -1,19 +1,18 @@
 package org.foam.transform.junit
 
 import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.foam.propositionallogic.Formula
 import org.foam.propositionallogic.PropositionallogicFactory
 import org.foam.propositionallogic.PropositionallogicPackage
-import org.foam.transform.junit.utils.PropositionalLogicFormulaChecker
 import org.foam.xtext.plogic.PropositionalLogicXtextStandaloneSetup
 import org.foam.xtext.plogic.parser.antlr.PropositionalLogicXtextParser
 import org.foam.xtext.plogic.propositionalLogicXtext.PropositionalLogicXtextFactory
+import org.junit.Assert
 import org.junit.Test
 
 class PropositionalLogicParserTest {
 
-	private extension PropositionalLogicFormulaChecker = new PropositionalLogicFormulaChecker
-	
 	val propFac = PropositionallogicFactory.eINSTANCE
 	val propXtextFac = PropositionalLogicXtextFactory.eINSTANCE
 	
@@ -50,6 +49,6 @@ class PropositionalLogicParserTest {
 	def private assertFormulaEquals(Formula expectedFormula, String actualFormula) {
 		val parseResult = propositionalLogicParser.doParse(actualFormula)
 		val formula = parseResult.rootASTElement as Formula
-		check(expectedFormula, formula)
+		Assert.assertTrue("Parsed and expected formula doesn't match", EcoreUtil.equals(expectedFormula, formula))
 	}
 }

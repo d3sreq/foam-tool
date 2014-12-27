@@ -4,11 +4,12 @@ import java.util.Collections
 import org.foam.annotation.AnnotationFactory
 import org.foam.flowannotation.FlowannotationFactory
 import org.foam.propositionallogic.PropositionallogicFactory
-import org.foam.transform.junit.utils.FlowAnnotationChecker
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.ucm.UcmFactory
 import org.foam.xtext.plogic.PropositionalLogicXtextStandaloneSetup
+import org.junit.Assert
 import org.junit.Test
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 class FlowAnnotationResolverTest {
 	val ucmFac = UcmFactory.eINSTANCE
@@ -16,7 +17,6 @@ class FlowAnnotationResolverTest {
 	val propFac = PropositionallogicFactory.eINSTANCE
 	val annotationFac = AnnotationFactory.eINSTANCE
 	val flowAnnotationResolver = new FlowAnnotationResolver
-	val flowAnnotationChecker = new FlowAnnotationChecker
 	
 	// TODO: this constructor is only needed for headless unit-testing
 	new() {PropositionalLogicXtextStandaloneSetup.doSetup}
@@ -55,7 +55,9 @@ class FlowAnnotationResolverTest {
 		
 		// tests that unknown annotation is replaced with abort annotation
 		flowAnnotationResolver.resolveAnnotations(ucmAbortInput)
-		flowAnnotationChecker.assertUseCaseModelEquals(ucmAbortExpected, ucmAbortInput)
+		Assert.assertTrue("Expected and actual use case model doesn't match", 
+			EcoreUtil.equals(ucmAbortExpected, ucmAbortInput)
+		)
 	}
 	
 	
@@ -120,7 +122,9 @@ class FlowAnnotationResolverTest {
 		
 		// tests that unknown annotation is replaced with include annotation
 		flowAnnotationResolver.resolveAnnotations(ucmIncludeInput)
-		flowAnnotationChecker.assertUseCaseModelEquals(ucmIncludeExpected, ucmIncludeInput)
+		Assert.assertTrue("Expected and actual use case model doesn't match", 
+			EcoreUtil.equals(ucmIncludeExpected, ucmIncludeInput)
+		)
 	}
 	
 	@Test
@@ -168,7 +172,9 @@ class FlowAnnotationResolverTest {
 		
 		// tests that unknown annotation is replaced with goto annotation
 		flowAnnotationResolver.resolveAnnotations(ucmGotoInput)
-		flowAnnotationChecker.assertUseCaseModelEquals(ucmGotoExpected, ucmGotoInput)
+		Assert.assertTrue("Expected and actual use case model doesn't match", 
+			EcoreUtil.equals(ucmGotoExpected, ucmGotoInput)
+		)
 	}
 	
 	@Test
@@ -214,7 +220,9 @@ class FlowAnnotationResolverTest {
 		
 		// tests that unknown annotation is replaced with goto annotation
 		flowAnnotationResolver.resolveAnnotations(ucmMarkInput)
-		flowAnnotationChecker.assertUseCaseModelEquals(ucmMarkExpected, ucmMarkInput)
+		Assert.assertTrue("Expected and actual use case model doesn't match", 
+			EcoreUtil.equals(ucmMarkExpected, ucmMarkInput)
+		)
 	}
 	
 	@Test
@@ -281,7 +289,9 @@ class FlowAnnotationResolverTest {
 		
 		// tests that unknown annotation is replaced with goto annotation
 		flowAnnotationResolver.resolveAnnotations(ucmGuardInput)
-		flowAnnotationChecker.assertUseCaseModelEquals(ucmGuardExpected, ucmGuardInput)
+		Assert.assertTrue("Expected and actual use case model doesn't match", 
+			EcoreUtil.equals(ucmGuardExpected, ucmGuardInput)
+		)
 	}
 	
 	@Test
@@ -327,8 +337,10 @@ class FlowAnnotationResolverTest {
 			]
 		]
 		
-		// tests that unknown annotation is replaced with goto annotation
+		// tests that unknown annotation is replaced with guard annotation
 		flowAnnotationResolver.resolveAnnotations(ucmGuardInput)
-		flowAnnotationChecker.assertUseCaseModelEquals(ucmGuardExpected, ucmGuardInput)
+		Assert.assertTrue("Expected and actual use case model doesn't match", 
+			EcoreUtil.equals(ucmGuardExpected, ucmGuardInput)
+		)
 	}
 }

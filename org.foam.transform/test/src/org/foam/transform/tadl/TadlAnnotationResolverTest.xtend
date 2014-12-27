@@ -1,5 +1,6 @@
 package org.foam.transform.tadl
 
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.foam.annotation.AnnotationFactory
 import org.foam.propositionallogic.PropositionallogicFactory
 import org.foam.propositionallogic.VariableDefinition
@@ -8,6 +9,7 @@ import org.foam.tadl.TadlFactory
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.ucm.UcmFactory
 import org.foam.ucm.UseCaseModel
+import org.junit.Assert
 import org.junit.Test
 
 class TadlAnnotationResolverTest {
@@ -18,7 +20,6 @@ class TadlAnnotationResolverTest {
 	extension AnnotationFactory = AnnotationFactory.eINSTANCE
 	
 	val tadlAnnotationResolver = new TadlAnnotationResolver
-	val checker = new TadlAnnotationChecker
 	
 	val VariableDefinition createDef = createVariableDefinition => [name = "create"]
 	val VariableDefinition useDef = createVariableDefinition => [name = "use"]
@@ -88,7 +89,9 @@ class TadlAnnotationResolverTest {
 		]
 		
 		tadlAnnotationResolver.resolveAnnotations(inputUcm, #[templateCreateUse])
-		checker.assertUseCaseModelEquals(expectedUcm, inputUcm)
+		Assert.assertTrue("Expected and actual use case doesn't match",
+			EcoreUtil.equals(expectedUcm, inputUcm)
+		)
 	}
 	
 	@Test def void retainUnknown() {
@@ -106,7 +109,11 @@ class TadlAnnotationResolverTest {
 			]
 		]
 		
+		val unresolved = EcoreUtil.copy(inputUcm)
+		
 		tadlAnnotationResolver.resolveAnnotations(inputUcm, #[templateCreateUse])
-		checker.assertUseCaseModelEquals(inputUcm, inputUcm)
+		Assert.assertTrue("Expected and actual use case doesn't match",
+			EcoreUtil.equals(inputUcm, unresolved)
+		)
 	} 
 }
