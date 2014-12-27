@@ -134,7 +134,7 @@ class ReportApplication implements IExecutableTool {
 		'''Validating UseCaseModel with resolved TADL annotations'''.debug
 		EmfCommons.basicValidate(useCaseModel)
 		
-		val counterExamples = getCounterExamples(useCaseModel)
+		val counterExamples = useCaseModel.counterExamples
 
 		'''Merging errors from counter examples'''.debug
 		val specifications = counterExamples
@@ -142,6 +142,13 @@ class ReportApplication implements IExecutableTool {
 			.flatten
 			.filter[trace != null]
 			.uniqueSpecifications
+		
+		
+		//specifications.forEach[
+		//	println("---------------------------------")
+		//	println(it)
+		//	it.trace.states.forEach[println(it.assignments.map['''«variableName» -> «value»'''].join(", "))]
+		//]
 			
 		'''Validating error specifications'''.debug
 		specifications.forEach[EmfCommons.basicValidate(it)]
@@ -359,9 +366,10 @@ class ReportApplication implements IExecutableTool {
 	def private Iterable<Template> tadlLang2Templates(String tadlDirName) {
 		val tadlLang2Tadl = new TadlLang2Tadl
 		
-		'''Reading TADL definitions from file "«tadlDirName»"'''.info
+		'''Reading TADL definitions from directory "«tadlDirName»"'''.info
 		val texts = readTexts(tadlDirName)
-		 
+		
+		'''Running the transformation'''.debug
 		val templates = texts.map[tadlLang2Tadl.parse(it)]
 		
 		'''TADL files resolved'''.debug

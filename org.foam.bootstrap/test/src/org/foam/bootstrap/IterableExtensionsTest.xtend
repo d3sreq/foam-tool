@@ -127,10 +127,10 @@ class IterableExtensionsTest {
 	}
 
 	@Test def void testTransitiveClosureLimits() {
-		assertArrayEquals("empty closure is ok", #[0] as int[], 0.trasitiveClosure[])
+		assertArrayEquals("empty closure is ok", #[] as int[], 0.transitiveClosure[])
 
 		try{ // cannot start from null
-			assertNull(null.trasitiveClosure[])
+			assertNull(null.transitiveClosure[])
 			fail
 		} catch(NullPointerException e) {}
 	}
@@ -145,9 +145,9 @@ class IterableExtensionsTest {
 			5->6
 		].toMultimap
 		
-		assertArrayEquals(#[1,2,3,4,5,6], 1.trasitiveClosure[DAG.get(it)].sort)
-		assertArrayEquals(#[2,4,5,6],     2.trasitiveClosure[DAG.get(it)].sort)
-		assertArrayEquals(#[3,4,6],       3.trasitiveClosure[DAG.get(it)].sort)
+		assertArrayEquals(#[2,3,4,5,6], 1.transitiveClosure[DAG.get(it)].sort)
+		assertArrayEquals(#[4,5,6],     2.transitiveClosure[DAG.get(it)].sort)
+		assertArrayEquals(#[4,6],       3.transitiveClosure[DAG.get(it)].sort)
 	}
 	
 	@Test def void testTransitiveClosureOnNODAG() {
@@ -155,8 +155,8 @@ class IterableExtensionsTest {
 			1->2, 2->3, 3->4, 4->1, 3->5, 5->6
 		].toMultimap
 		
-		assertArrayEquals(#[1,2,3,4,5,6], 1.trasitiveClosure[NODAG.get(it)].sort)
-		assertArrayEquals(#[1,2,3,4,5,6], 3.trasitiveClosure[NODAG.get(it)].sort)
-		assertArrayEquals(#[5,6],         5.trasitiveClosure[NODAG.get(it)].sort)
+		assertArrayEquals(#[1,2,3,4,5,6], 1.transitiveClosure[NODAG.get(it)].sort)
+		assertArrayEquals(#[1,2,3,4,5,6], 3.transitiveClosure[NODAG.get(it)].sort)
+		assertArrayEquals(#[6],           5.transitiveClosure[NODAG.get(it)].sort)
 	}
 }

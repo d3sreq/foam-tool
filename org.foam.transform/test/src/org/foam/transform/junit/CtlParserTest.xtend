@@ -1,23 +1,19 @@
 package org.foam.transform.junit
 
 import org.eclipse.emf.ecore.EPackage
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.foam.ctl.CtlFactory
 import org.foam.ctl.CtlPackage
 import org.foam.propositionallogic.Formula
 import org.foam.propositionallogic.PropositionallogicFactory
-import org.foam.transform.junit.utils.PropositionalLogicFormulaChecker
 import org.foam.xtext.ctl.CtlXtextStandaloneSetup
 import org.foam.xtext.ctl.parser.antlr.CtlXtextParser
 import org.foam.xtext.plogic.propositionalLogicXtext.PropositionalLogicXtextFactory
+import org.junit.Assert
 import org.junit.Test
 
 class CtlParserTest {
 	
-	// all CTL formulas can be checked with PropositionalLogicFormulaChecker
-	// because PropositionalLogicFormulaChecker checks both UnaryFormula
-	// and BinaryFormula and class type
-	private extension PropositionalLogicFormulaChecker = new PropositionalLogicFormulaChecker
-
 	val ctlFac = CtlFactory.eINSTANCE
 	val propFac = PropositionallogicFactory.eINSTANCE
 	val propXtextFac = PropositionalLogicXtextFactory.eINSTANCE
@@ -127,6 +123,6 @@ class CtlParserTest {
 	def private assertFormulaEquals(Formula expectedFormula, String actualFormula) {
 		val parseResult = ctlParser.doParse(actualFormula)
 		val formula = parseResult.rootASTElement as Formula
-		check(expectedFormula, formula)
+		Assert.assertTrue("Parsed and expected formula doesn't match", EcoreUtil.equals(expectedFormula, formula))
 	}
 }

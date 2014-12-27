@@ -33,6 +33,7 @@ subprojects { p ->
 	// set explicitly encoding for java sources
 	// xtend sources have UTF-8 as default
 	compileJava.options.encoding = 'UTF-8'
+	compileJava.options.fork (memoryMaximumSize: '1024m')
 
 	// Each 'build' task should create OSGi bundles from compiled classes
 	p.tasks.getByName("build").configure {
@@ -55,8 +56,8 @@ subprojects { p ->
 	repositories { mavenCentral() }
 	
 	//Setup source and target directories
-	sourceCompatibility = 1.7
-	targetCompatibility = 1.7
+	sourceCompatibility = 1.6
+	targetCompatibility = 1.6
 
 	sourceSets {
 		main {
@@ -205,4 +206,16 @@ task release << {
 	def inputs = fileTree(dir: 'release/repository', include: '*.jar') as Set
 	def output = new FileOutputStream("release/repository/index.xml.gz")
 	indexer.index(inputs, output, config)
+	
+	
+	///
+	def vserverJarName = 'release/distribution/foam-vserver.jar' 
+	
+	workspace.getProject('org.foam.orion.server').export(
+		"run-equinox.bndrun",
+		false,
+		file(vserverJarName)
+	)
+	file(vserverJarName).setExecutable(true)
+	
 }

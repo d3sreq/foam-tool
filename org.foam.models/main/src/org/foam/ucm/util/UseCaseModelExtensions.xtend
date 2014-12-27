@@ -35,11 +35,11 @@ class UseCaseModelExtensions {
 	}
 
 	@Pure def static getPreceededTransitively(UseCase useCase) {
-		useCase.trasitiveClosureWithoutStart[preceeded]
+		useCase.transitiveClosure[preceeded]
 	}
 	
 	@Pure def static getIncludedTransitively(UseCase useCase) {
-		useCase.trasitiveClosureWithoutStart[included]
+		useCase.transitiveClosure[included]
 	}
 
 	@Pure def static getIncluded(UseCase useCase) {

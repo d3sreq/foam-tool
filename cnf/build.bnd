@@ -22,7 +22,7 @@ target-dir:    build/osgi-bundles
 #java:         java
 #javac:        javac
 #javac.source: 1.5
-#javac.target: 1.5
+javac.target: 1.6
 #javac.debug:  on
 
 #-sources:       true

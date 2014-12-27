@@ -2,19 +2,19 @@ package org.foam.transform.junit
 
 import java.util.Collections
 import org.foam.annotation.AnnotationFactory
-import org.foam.transform.junit.utils.UcmChecker
 import org.foam.transform.ucm2ucm.UcmLang2UcmService
 import org.foam.ucm.Step
 import org.foam.ucm.UcmFactory
 import org.foam.ucm.UseCase
+import org.junit.Assert
 import org.junit.Test
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 class UcmLang2UcmTest {
 	
 	val ucmFac = UcmFactory.eINSTANCE
 	val annotationFac = AnnotationFactory.eINSTANCE
 	val ucmLang2Ucm = new UcmLang2UcmService
-	val ucmChecker = new UcmChecker
 	
 	val uc1 = '''
 		UC1 Select city on map
@@ -60,7 +60,10 @@ class UcmLang2UcmTest {
 		// tests that use case ID, name, main scenario and variation is parsed correctly
 		// tests that step divided to multiple lines is joined as expected
 		val actualModel = ucmLang2Ucm.transform(Collections.singletonList(uc1))
-		ucmChecker.assertUseCaseModelEquals(ucmSimple, actualModel)
+		Assert.assertTrue("Expected and actual use case doesn't match",
+			EcoreUtil.equals(ucmSimple, actualModel)
+		)
+		
 	}
 	
 	val uc4 = '''
@@ -87,7 +90,9 @@ class UcmLang2UcmTest {
 	@Test def parseNonPrimaryUseCase() {
 		// tests that parsed use case is added to non-primary use cases
 		val actualModel = ucmLang2Ucm.transform(Collections.singletonList(uc4))
-		ucmChecker.assertUseCaseModelEquals(ucmNonPrimary, actualModel)
+		Assert.assertTrue("Expected and actual use case doesn't match",
+			EcoreUtil.equals(ucmNonPrimary, actualModel)
+		)
 	}
 	
 	val uc5 = '''
@@ -155,7 +160,9 @@ class UcmLang2UcmTest {
 	def parseBranching() {
 		// tests parsing of the use case with more complicated branching 
 		val actualModel = ucmLang2Ucm.transform(Collections.singletonList(uc5))
-		ucmChecker.assertUseCaseModelEquals(ucmBranching, actualModel)
+		Assert.assertTrue("Expected and actual use case doesn't match",
+			EcoreUtil.equals(ucmBranching, actualModel)
+		)
 	}
 	
 	val uc7 = '''
@@ -224,7 +231,9 @@ class UcmLang2UcmTest {
 	@Test def parsePreceding() {
 		// tests that preceding use cases were parsed and resolved correctly
 		val actual = ucmLang2Ucm.transform(#[uc7, uc2, uc3])
-		ucmChecker.assertUseCaseModelEquals(ucmPreceding, actual)
+		Assert.assertTrue("Expected and actual use case doesn't match",
+			EcoreUtil.equals(ucmPreceding, actual)
+		)
 	}
 	
 	@Test def parseAnnotations() {
@@ -264,7 +273,9 @@ class UcmLang2UcmTest {
 		// NOTE: UnknownAnnotation objects are replaced with flow or tadl annotations
 		//       at later stage (not tested here).
 		val actualModel = ucmLang2Ucm.transform(#[uc6])
-		ucmChecker.assertUseCaseModelEquals(ucmAnnotations, actualModel)
+		Assert.assertTrue("Expected and actual use case doesn't match",
+			EcoreUtil.equals(ucmAnnotations, actualModel)
+		)
 	}
 	
 }

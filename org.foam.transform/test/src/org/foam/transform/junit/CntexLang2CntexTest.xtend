@@ -2,14 +2,14 @@ package org.foam.transform.junit
 
 import org.foam.cntex.CntexFactory
 import org.foam.transform.cntexlang2cntex.CntexLang2Cntex
-import org.foam.transform.junit.utils.CntexChecker
+import org.junit.Assert
 import org.junit.Test
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 class CntexLang2CntexTest {
 	
 	val cntexFac = CntexFactory.eINSTANCE
 	val cntexLang2CntEx = new CntexLang2Cntex
-	val cntexChecker = new CntexChecker
 	
 	@Test def parseCounterExample() {
 		val input = '''
@@ -113,6 +113,8 @@ class CntexLang2CntexTest {
 		]
 		
 		val actualCounterExample = cntexLang2CntEx.transform(input)
-		cntexChecker.assertCounterExampleEquals(expectedOutput, actualCounterExample)
+		Assert.assertTrue("Expected and actual counter examples doesn't match", 
+			EcoreUtil.equals(expectedOutput, actualCounterExample)
+		)
 	}
 }

@@ -76,24 +76,23 @@ class GraphvizWrapper {
 	 * This function also creates all necessary directories for the
 	 * generated SVG image.
 	 */
-	def void createSvg(CharSequence dotContent, String absoluteSvgFileName) {
+	def void createSvg(CharSequence dotContent, String svgFileName) {
 		
 		Preconditions.checkNotNull(dotContent)
-		Preconditions.checkNotNull(absoluteSvgFileName)
+		Preconditions.checkNotNull(svgFileName)
 		
 		// create directory structure if needed
-		val svgFile = new File(absoluteSvgFileName)
-		Preconditions.checkArgument(svgFile.isAbsolute)
+		val svgFile = new File(svgFileName)
 		svgFile.parentFile.mkdirs
 
 		Preconditions.checkArgument(svgFile.parentFile.exists)
 		Preconditions.checkArgument(svgFile.parentFile.isDirectory)
 		
 		// TODO: use stdin instead of writing a file to the filesystem
-		val dotFileName = '''«absoluteSvgFileName».dot'''
+		val dotFileName = '''«svgFileName».dot'''
 		Files.write(dotContent, new File(dotFileName), Charsets.UTF_8) 
 		
-		#["-Tsvg", "-o", absoluteSvgFileName, dotFileName].runGraphviz
+		#["-Tsvg", "-o", svgFileName, dotFileName].runGraphviz
 		
 		'''SVG image "«svgFile.name»" generated'''.info
 	}
