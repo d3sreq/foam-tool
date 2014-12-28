@@ -16,7 +16,7 @@ class UcmLang2UcmService {
 //	val traceFactory = Traceability_ucm_textFactory.eINSTANCE
 //	val blockParser = new BlockParser
 	
-	def UseCaseModel transform(Collection<? extends CharSequence> texts) {
+	def UseCaseModel transform(Iterable<? extends CharSequence> texts) {
 //		// container for saved strings with offsets
 //		val stringStorage = new BasicEList<StringWithOffset>
 //		val traces = traceFactory.createUcmToTextTraces
