@@ -1,0 +1,6 @@
+Bundle-Version: 1.0.0
+
+Private-Package:  \
+	org.foam.ucmtexttrac.impl
+Export-Package:  \
+	org.foam.ucmtexttrac
