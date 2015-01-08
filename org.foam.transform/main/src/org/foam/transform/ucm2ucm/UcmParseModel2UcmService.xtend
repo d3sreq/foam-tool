@@ -31,46 +31,27 @@ class UcmParseModel2UcmService {
 	@Pure
 	def transform(Iterable<UnparsedUseCaseText> unparsedUseCaseTexts) {
 		
-		val parseResults = unparsedUseCaseTexts.map[transformSingleUseCase]
+		// .toList is needed to materialize the list. Otherwise
+		// the subsequent iteration would again apply transformSingleUseCase method
+		// to iterable.
+		val parseResults = unparsedUseCaseTexts.map[transformSingleUseCase].toList
 		
 		// construct trace maps
 		val trace = traceFac.createUcmToUcmtextTrace => [t |
-			parseResults.forEach[
-				println(">>> " + it.useCase)
-				t.names.map.put(useCase, nameDef)
-				println(">>> " + t.names.map.get(0).key)
-				println(">>> " + it.useCase)
-				println(">>> " + t.names.map.get(0).key)
-			]
-			
-			
-//			parseResults.filter[primaryDef != null].forEach[t.primaryDef.map.put(useCase, primaryDef)]
-//			parseResults.filter[precedenceDef != null].forEach[t.precedenceDef.map.put(useCase, precedenceDef)]
-//			parseResults.map[steps].flatten.forEach[t.steps.map.put(key, value)]
-//			parseResults.map[annotations].flatten.forEach[t.annotations.map.put(key, value)]
-//			parseResults.map[branchingConditions].flatten.forEach[t.branchingConditions.map.put(key, value)]
-			
-			parseResults.forEach[
-				println(">>> " + it.useCase)
-				println(">>> " + t.names.map.get(0).key)
-			]
-			
-			parseResults.forEach[
-				println(">>> " + it.useCase)
-				println(">>> " + t.names.map.get(0).key)
-			]
+			parseResults.forEach[t.names.map.put(useCase, nameDef)]
+			parseResults.filter[primaryDef != null].forEach[t.primaryDef.map.put(useCase, primaryDef)]
+			parseResults.filter[precedenceDef != null].forEach[t.precedenceDef.map.put(useCase, precedenceDef)]
+			parseResults.map[steps].flatten.forEach[t.steps.map.put(key, value)]
+			parseResults.map[annotations].flatten.forEach[t.annotations.map.put(key, value)]
+			parseResults.map[branchingConditions].flatten.forEach[t.branchingConditions.map.put(key, value)]
 		]
 
 		// resolve precedence
-		val useCases = parseResults.map[useCase]
+		val useCases = parseResults.map[useCase].toList
 		val useCaseNameMap = useCases.toMap[name]
 		trace.precedenceDef.map.forEach[
 			key.preceeded += value.preceded.map[useCaseNameMap.get(id.content)] 
 		]
-		
-//		println(">>> " + trace.names.map.get(useCases.head))
-//		println(">>> " + useCases.size)
-//		println(">>> " + useCases.head.equals(trace.names.map.head.key))
 		
 		val ucm = fac.createUseCaseModel => [
 			it.useCases += useCases
@@ -128,7 +109,7 @@ class UcmParseModel2UcmService {
 		
 		// extensions and variations
 		val triples = scenarios.filter[type == ScenarioType.EXTENSION || type == ScenarioType.VARIATION]
-			.map[type -> transformBranchingScenario]
+			.map[type -> transformBranchingScenario].toList
 		
 		val branchingConditionMapping = triples.map[value.first]
 		val branchingStepMapping = triples.map[value.second].flatten
@@ -210,7 +191,7 @@ class UcmParseModel2UcmService {
 				annotations += stepDef.annot.map[parseAnnot]
 			]
 			Tuples.create(step -> stepDef, step.annotations.zip(stepDef.annot))
-		]
+		].toList
 		
 		val stepMapping = mapping.map[first]
 		scenario.steps += stepMapping.map[key]
