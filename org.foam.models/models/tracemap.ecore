@@ -11,7 +11,7 @@
       <eGenericType eTypeParameter="#//TraceEntry/V"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TraceMap" abstract="true" interface="true">
+  <eClassifiers xsi:type="ecore:EClass" name="TraceMap">
     <eTypeParameters name="K"/>
     <eTypeParameters name="V"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="map" upperBound="-1" containment="true">

@@ -19,6 +19,7 @@ import org.foam.xtext.plogic.parser.antlr.PropositionalLogicXtextParser
 import org.foam.xtext.plogic.propositionalLogicXtext.RuleVariableUse
 
 import static extension org.foam.ucm.util.UseCaseModelExtensions.*
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 class FlowAnnotationResolver {
 	private static val MARK_PREFIX = "mark_"
@@ -60,7 +61,7 @@ class FlowAnnotationResolver {
 				val resolvedAnnotation = resolveAnnotation(annotation, id2Uc, id2Step, useCaseModel)
 				
 				if (annotation != resolvedAnnotation) {
-					EcoreUtil2.replace(annotation, resolvedAnnotation)
+					EcoreUtil.replace(annotation, resolvedAnnotation)
 				}
 			]
 		}
@@ -136,7 +137,7 @@ class FlowAnnotationResolver {
 				variableDefinition = varName2VarDef.get(varName)
 			]
 			
-			EcoreUtil2.replace(ruleVar, varUse)
+			EcoreUtil.replace(ruleVar, varUse)
 		}
 	}
 	

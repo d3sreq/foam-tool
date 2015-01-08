@@ -165,7 +165,7 @@
           <foregroundColor xmi:type="viewpoint:RGBValues" xmi:id="_UhGoBHS8EeSFM6gY3YUEGw" red="255" green="252" blue="216"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_PlUqgHS8EeSFM6gY3YUEGw" name="offset : EInt = 0" tooltipText="&#xA;ERROR : The required feature 'eAttributeType' of 'org.eclipse.emf.ecore.impl.EAttributeImpl@f822e7c{platform:/resource/org.foam.models/models/text.ecore#//StringWithOffset/newAttribute}' must be set&#xA;ERROR : The typed element must have a type">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_PlUqgHS8EeSFM6gY3YUEGw" name="offset : EInt = 0" tooltipText="">
           <target xmi:type="ecore:EAttribute" href="text.ecore#//StringWithOffset/offset"/>
           <semanticElements xmi:type="ecore:EAttribute" href="text.ecore#//StringWithOffset/offset"/>
           <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_SG_9EXS8EeSFM6gY3YUEGw" labelFormat="bold" labelAlignment="LEFT" description="_SG_9EHS8EeSFM6gY3YUEGw">
@@ -175,7 +175,7 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
         </ownedElements>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_S8s2AHS8EeSFM6gY3YUEGw" name="content : EString" tooltipText="&#xA;ERROR : The required feature 'eAttributeType' of 'org.eclipse.emf.ecore.impl.EAttributeImpl@704653a6{platform:/resource/org.foam.models/models/text.ecore#//StringWithOffset/newAttribute}' must be set&#xA;ERROR : The typed element must have a type">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_S8s2AHS8EeSFM6gY3YUEGw" name="content : EString" tooltipText="">
           <target xmi:type="ecore:EAttribute" href="text.ecore#//StringWithOffset/content"/>
           <semanticElements xmi:type="ecore:EAttribute" href="text.ecore#//StringWithOffset/content"/>
           <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_UhHPEXS8EeSFM6gY3YUEGw" labelFormat="bold" labelAlignment="LEFT" description="_UhHPEHS8EeSFM6gY3YUEGw">

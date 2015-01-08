@@ -11,7 +11,6 @@ import org.foam.ucmtext.ScenarioDef
 import org.foam.ucmtext.ScenarioType
 import org.foam.ucmtext.UcIdDef
 import org.foam.ucmtext.UcmtextFactory
-import org.foam.ucmtext.UnparsedUseCaseText
 
 import static extension org.foam.bootstrap.IterableExtensions.*
 
@@ -24,13 +23,6 @@ class UcmParser {
 		TextFactory.eINSTANCE.createStringWithOffset => [
 			it.content = content
 			it.offset = offset
-		]
-	}
-	
-	@Pure
-	private static def UnparsedUseCaseText createUnparsedUseCaseText(CharSequence text) {
-		ucmTextFac.createUnparsedUseCaseText => [
-			it.text = createStringWithOffset(text.toString, 0)
 		]
 	}
 	
@@ -205,22 +197,26 @@ class UcmParser {
 	
 	// TODO - "top-level" parse method will be in separate package which will be exported
 	def parse(CharSequence text) {
-		val unparsedText = text.createUnparsedUseCaseText
+		val unparsedText = ucmTextFac.createUnparsedUseCaseText => [
+			it.text = createStringWithOffset(text.toString, 0)
+		]
 		
 		val blocks = unparsedText.text.parseBlocks
 		unparsedText.blocks += blocks
 		
 		// use case name
 		val useCaseNameBlock = blocks.findFirst[header.content.matches("UC\\d+")]
-		// TODO - useCaseNameBlock == null error
-		useCaseNameBlock.derived = ucmTextFac.createUseCaseNameDef => [
-			it.useCase = ucmTextFac.createUcIdDef => [
-				it.id = EcoreUtil.copy(useCaseNameBlock.header)
-				it.description = EcoreUtil.copy(useCaseNameBlock.body)
+		
+		// situation when useCaseNameBlock == null is resolved in subsequent
+		// transformation.
+		if (useCaseNameBlock != null) {
+			useCaseNameBlock.derived = ucmTextFac.createUseCaseNameDef => [
+				it.useCase = ucmTextFac.createUcIdDef => [
+					it.id = EcoreUtil.copy(useCaseNameBlock.header)
+					it.description = EcoreUtil.copy(useCaseNameBlock.body)
+				]
 			]
-		]
-		// TODO - add here link to traceability model ?
-		// or do it later ?
+		}
 		
 		// precedence
 		val precedingBlock = blocks.findFirst[header.content == "Preceding"]
@@ -240,10 +236,14 @@ class UcmParser {
 		
 		// main scenario
 		val mainScenarioBlock = blocks.findFirst[header.content == "Main scenario"]
-		// TODO - mainScenarioBlock == null
-		mainScenarioBlock.derived = mainScenarioBlock.body.parseScenarioDef => [
-			it.type = ScenarioType.MAIN
-		]
+
+		// situation when useCaseNameBlock == null is resolved in subsequent
+		// transformation.
+		if (mainScenarioBlock != null) {
+			mainScenarioBlock.derived = mainScenarioBlock.body.parseScenarioDef => [
+				it.type = ScenarioType.MAIN
+			]
+		}
 		
 		// extensions
 		blocks.filter[header.content == "Extension"].forEach[
@@ -258,6 +258,18 @@ class UcmParser {
 				it.type = ScenarioType.VARIATION
 			]
 		]
+		
+		unparsedText
 	}
 	
 }
+
+// first type of error - without specific location
+// but bound to given text
+// - main scenario not found
+// - use case name not found
+//
+// second - bound to location
+// - goto to unknown step
+// - bad step label 
+
