@@ -1,8 +1,8 @@
 package org.foam.transform.ucm2ucm
 
-import org.eclipse.xtend.lib.annotations.Data
-import org.eclipse.xtext.util.Tuples
-import org.foam.annotation.Annotation
+import java.util.Collections
+import java.util.List
+import java.util.Map
 import org.foam.annotation.AnnotationFactory
 import org.foam.annotation.UnknownAnnotation
 import org.foam.text.StringWithOffset
@@ -10,16 +10,16 @@ import org.foam.ucm.Scenario
 import org.foam.ucm.Step
 import org.foam.ucm.UcmFactory
 import org.foam.ucm.UseCase
-import org.foam.ucmtext.PrecedenceDef
+import org.foam.ucmtext.Block
 import org.foam.ucmtext.PrimaryDef
 import org.foam.ucmtext.ScenarioDef
 import org.foam.ucmtext.ScenarioType
 import org.foam.ucmtext.StepDef
 import org.foam.ucmtext.UnparsedUseCaseText
-import org.foam.ucmtext.UseCaseNameDef
 import org.foam.ucmtexttrac.UcmtexttracFactory
-
-import static extension org.foam.bootstrap.IterableExtensions.*
+import org.foam.ucmtext.PrecedenceDef
+import org.foam.ucmtext.SemanticBlock
+import org.foam.ucmtext.UseCaseNameDef
 
 class UcmParseModel2UcmService {
 	
@@ -27,129 +27,226 @@ class UcmParseModel2UcmService {
 	val annotFac = AnnotationFactory.eINSTANCE
 	val traceFac = UcmtexttracFactory.eINSTANCE
 	
-	// creates use case model with unresolved step annotations.
 	@Pure
 	def transform(Iterable<UnparsedUseCaseText> unparsedUseCaseTexts) {
+		val useCaseMapping = unparsedUseCaseTexts.map[fac.createUseCase -> it]
+			.toList
 		
-		// .toList is needed to materialize the list. Otherwise
-		// the subsequent iteration would again apply transformSingleUseCase method
-		// to iterable.
-		val parseResults = unparsedUseCaseTexts.map[transformSingleUseCase].toList
+		val scenarioMapping = unparsedUseCaseTexts.map[findScenarios]
+			.flatten
+			.map[fac.createScenario -> it]
+			.toList
 		
-		// construct trace maps
-		val trace = traceFac.createUcmToUcmtextTrace => [t |
-			parseResults.forEach[t.names.map.put(useCase, nameDef)]
-			parseResults.filter[primaryDef != null].forEach[t.primaryDef.map.put(useCase, primaryDef)]
-			parseResults.filter[precedenceDef != null].forEach[t.precedenceDef.map.put(useCase, precedenceDef)]
-			parseResults.map[steps].flatten.forEach[t.steps.map.put(key, value)]
-			parseResults.map[annotations].flatten.forEach[t.annotations.map.put(key, value)]
-			parseResults.map[branchingConditions].flatten.forEach[t.branchingConditions.map.put(key, value)]
-		]
-
-		// resolve precedence
-		val useCases = parseResults.map[useCase].toList
-		val useCaseNameMap = useCases.toMap[name]
-		trace.precedenceDef.map.forEach[
-			key.preceeded += value.preceded.map[useCaseNameMap.get(id.content)] 
-		]
+		val stepMapping = scenarioMapping.map[value]
+			.map[steps]
+			.flatten
+			.map[createAndFillStep -> it]
+			.toList
+		
+		val annotationMapping = stepMapping.map[value]
+			.map[annot]
+			.flatten
+			.map[createAndFillAnnotation -> it]
+			.toList
+		
+		val unparsedUseCaseTextToUseCase = <UnparsedUseCaseText, UseCase>newHashMap
+		useCaseMapping.forEach[unparsedUseCaseTextToUseCase.put(value, key)]
+		
+		addMainScenarioToUseCases(scenarioMapping, unparsedUseCaseTextToUseCase)
+		addBranchingScenariosToUseCases(scenarioMapping, stepMapping, unparsedUseCaseTextToUseCase)
+		addStepsToScenarios(scenarioMapping, stepMapping)
+		addAnnotationsToSteps(stepMapping, annotationMapping)
+		addPrimary(useCaseMapping)
+		addPrecedence(useCaseMapping)
+		addNameAndId(useCaseMapping)
 		
 		val ucm = fac.createUseCaseModel => [
-			it.useCases += useCases
+			useCases += useCaseMapping.map[key]
+		]
+		
+		val branchingConditionMapping = scenarioMapping.filter[value.isBranchingScenario]
+			.map[key -> value.steps.head]
+		
+		val trace = traceFac.createUcmToUcmtextTrace => [ t |
+			annotationMapping.forEach[t.annotations.map.put(key, value)]
+			branchingConditionMapping.forEach[t.branchingConditions.map.put(key, value)]
+			t.names.map.putAll(useCaseMapping.getMapping(UseCaseNameDef))
+			t.precedenceDef.map.putAll(useCaseMapping.getMapping(PrecedenceDef))
+			t.primaryDef.map.putAll(useCaseMapping.getMapping(PrimaryDef))
+			stepMapping.forEach[t.steps.map.put(key, value)]
 		]
 		
 		ucm -> trace
 	}
 	
-	/**
-	 * Transforms textual representation into UseCase object and returns
-	 * traceability information from UseCase to textual represenation.
-	 * Does not detect errors - validation is supposed to be performed
-	 * in subsequent processing.
-	 */
-	def private UseCaseParseResult transformSingleUseCase(UnparsedUseCaseText unparsedUseCaseText) {
-		val useCase = fac.createUseCase
-		
-		val derived = unparsedUseCaseText.blocks.map[derived]
-		
-		// use case id and name
-		val useCaseNameDef = derived.findFirst[it instanceof UseCaseNameDef] as UseCaseNameDef
-		if (useCaseNameDef != null) {
-			useCase.id = useCaseNameDef.useCase.id.content
-			useCase.name = useCaseNameDef.useCase.description.content
-		}
-		
-		// primary
-		val primaryDef = derived.findFirst[it instanceof PrimaryDef] as PrimaryDef
-		if (primaryDef != null) {
-			useCase.primary = Boolean.parseBoolean(primaryDef.value.content)
-		}
-		
-		// precedence
-		val precedenceDef = derived.findFirst[it instanceof PrecedenceDef] as PrecedenceDef
-		
-		val scenarios = derived.filter(ScenarioDef)
-		
-		// mapping from label to step used to attach branching scenario to the right step
-		val labelToStepMap = <String, Step>newHashMap
-		
-		val stepMapping = <Pair<Step, StepDef>>newArrayList
-		val annotationMapping = <Pair<Annotation, StringWithOffset>>newArrayList
-		
-		// main scenario
-		val mainScenarioDef = scenarios.findFirst[type == ScenarioType.MAIN]
-		if (mainScenarioDef != null) {
-			val result = mainScenarioDef.steps.transformScenario
-			
-			useCase.mainScenario = result.first
-			stepMapping += result.second
-			annotationMapping += result.third
-			
-			result.second.forEach[labelToStepMap.put(value.label.content, key)]
-		}
-		
-		// extensions and variations
-		val triples = scenarios.filter[type == ScenarioType.EXTENSION || type == ScenarioType.VARIATION]
-			.map[type -> transformBranchingScenario].toList
-		
-		val branchingConditionMapping = triples.map[value.first]
-		val branchingStepMapping = triples.map[value.second].flatten
-		stepMapping += branchingStepMapping
-		annotationMapping += triples.map[value.third].flatten
-		
-		branchingStepMapping.forEach[labelToStepMap.put(value.label.content, key)]
-		
-		// split branching scenarios according to step labels
-		// create scenario holder for each group
-		// add branching scenarios to use case
-		// triple: condition label, Scenario, branching type
-		triples.map[Tuples.create(value.first.value.label.content, value.first.key, key)]
-			.groupBy[it.first.branchingStepLabel]
-			.forEach[branchingStepLabel, tripleList |
-				val branchingStep = labelToStepMap.get(branchingStepLabel)
-				
-				// add scenario holder
-				val holder = fac.createScenarioHolder
-				useCase.branches.put(branchingStep, holder)
-				
-				// add scenarios to scenario holder
-				tripleList.sortBy[first].forEach[ t |
-					if (t.third == ScenarioType.EXTENSION) {
-						holder.extensions
-					} else {
-						holder.variations
-					}.add(t.second)
-				]
+	def private <T extends SemanticBlock> Map<UseCase, T> getMapping(List<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping, Class<T> type) {
+		val map = <UseCase, T>newHashMap
+		useCaseMapping.map[key -> value.findSemanticBlock(type)]
+			.filter[value != null]
+			.forEach[map.put(key, value)]
+		map
+	} 
+	
+	def private <T extends SemanticBlock> findSemanticBlock(UnparsedUseCaseText unparsedUseCaseText, Class<T> type) {
+		unparsedUseCaseText.blocks
+			.map[derived]
+			.filter(type)
+			.head
+	}
+	
+	def private addMainScenarioToUseCases(List<Pair<Scenario, ScenarioDef>> scenarioMapping, Map<UnparsedUseCaseText, UseCase> unparsedUseCaseTextToUseCase) {
+		scenarioMapping.filter[value.type == ScenarioType.MAIN].forEach[
+			val scenario = key
+			val scenarioDef = value
+			val unparsedUseCaseText = scenarioDef.unparsedUseCaseText
+			val useCase = unparsedUseCaseTextToUseCase.get(unparsedUseCaseText)
+			useCase.mainScenario = scenario
+		]
+	} 
+	
+	def private addBranchingScenariosToUseCases(List<Pair<Scenario, ScenarioDef>> scenarioMapping, List<Pair<Step, StepDef>> stepMapping, Map<UnparsedUseCaseText, UseCase> unparsedUseCaseTextToUseCase) {
+		val stepMap = <UseCase, Map<String, Step>>newHashMap
+		stepMapping.groupBy[value.unparsedUseCaseText]
+			.forEach[unparsedUseCaseText, pairs|
+				val useCase = unparsedUseCaseTextToUseCase.get(unparsedUseCaseText)
+				val labelToStep = <String, Step>newHashMap
+				pairs.forEach[labelToStep.put(value.label.content, key)]
+				stepMap.put(useCase, labelToStep) 
 			]
 		
-		new UseCaseParseResult(
-			useCase,
-			useCaseNameDef,
-			primaryDef,
-			precedenceDef,
-			branchingConditionMapping,
-			stepMapping,
-			annotationMapping
-		)
+		scenarioMapping.filter[value.isBranchingScenario]			
+			.groupBy[value.unparsedUseCaseText] // group by use case
+			.entrySet
+			.forEach[
+				val useCase = unparsedUseCaseTextToUseCase.get(key)
+				val labelToStep = stepMap.get(useCase)
+				
+				value.groupBy[value.branchingStepLabel] // group by branching step
+					.entrySet
+					.forEach[
+						val branchingStep = labelToStep.get(key)
+						// scenario holder - each step with branching has exactly one
+						val holder = fac.createScenarioHolder
+						
+						// sort values - e.g. 4a must precede 4b 
+						value.sortBy[value.branchingConditionLabel]  
+							.forEach[
+								val scenario = key
+								val scenarioDef = value
+								if (scenarioDef.type == ScenarioType.EXTENSION) {
+									holder.extensions
+								} else {
+									holder.variations
+								}.add(scenario)
+							]
+						
+						useCase.branches.put(branchingStep, holder)
+					]
+			]
+	}
+	
+	def private addStepsToScenarios(List<Pair<Scenario, ScenarioDef>> scenarioMapping, List<Pair<Step, StepDef>> stepMapping) {
+		val scenarioDefToScenario = <ScenarioDef, Scenario>newHashMap
+		scenarioMapping.forEach[scenarioDefToScenario.put(value, key)]
+		stepMapping.forEach[
+			val step = key
+			val stepDef = value
+			val scenarioDef = stepDef.eContainer as ScenarioDef
+			val scenario = scenarioDefToScenario.get(scenarioDef)
+			scenario.steps += step
+		]
+	}
+	
+	def private addAnnotationsToSteps(List<Pair<Step, StepDef>> stepMapping, List<Pair<UnknownAnnotation, StringWithOffset>> annotationMapping) {
+		val stepDefToStep = <StepDef, Step>newHashMap
+		stepMapping.forEach[stepDefToStep.put(value, key)]
+		annotationMapping.forEach[
+			val annotation = key
+			val stringWithOffset = value
+			val stepDef = stringWithOffset.eContainer as StepDef
+			val step = stepDefToStep.get(stepDef)
+			step.annotations += annotation
+		]
+	}
+	
+	def private addPrimary(List<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
+		useCaseMapping.forEach[
+			val useCase = key
+			val unparsedUseCaseText = value
+			val primaryDef = unparsedUseCaseText.findSemanticBlock(PrimaryDef)
+			if (primaryDef != null) {
+				val isPrimary = Boolean.parseBoolean(primaryDef.value.content)
+				useCase.primary = isPrimary
+			}
+		]
+	}
+	
+	def private addNameAndId(List<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
+		useCaseMapping.forEach[
+			val useCase = key
+			val unparsedUseCaseText = value
+			val nameDef = unparsedUseCaseText.findSemanticBlock(UseCaseNameDef)
+			if (nameDef != null) {
+				useCase.id = nameDef.useCase.id.content
+				useCase.name = nameDef.useCase.description.content
+			}
+		]
+	}
+	
+	def private addPrecedence(List<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
+		val useCaseIdToUseCase = useCaseMapping.map[key].toMap[id]
+		useCaseMapping.forEach[
+			val useCase = key
+			val unparsedUseCaseText = value
+			
+			val precedenceDef = unparsedUseCaseText.findSemanticBlock(PrecedenceDef)
+			if (precedenceDef != null) {
+				 val preceeded = precedenceDef.preceded
+					.map[useCaseIdToUseCase.get(id)]
+				useCase.preceeded += preceeded
+			}
+		]
+	}
+	
+	def private getUnparsedUseCaseText(StepDef stepDef) {
+		(stepDef.eContainer as ScenarioDef).unparsedUseCaseText
+	}
+	
+	def private getUnparsedUseCaseText(ScenarioDef scenarioDef) {
+		(scenarioDef.eContainer as Block).eContainer as UnparsedUseCaseText
+	}
+	
+	def private findScenarios(UnparsedUseCaseText unparsedUseCaseText) {
+		val scenarios = unparsedUseCaseText.blocks
+			.map[derived]
+			.filter(ScenarioDef)
+		
+		// find only first main scenario
+		val mainScenario = scenarios.findFirst[type == ScenarioType.MAIN]
+		val branchingScenarios = scenarios.filter[isBranchingScenario]	
+		
+		if (mainScenario == null) {
+			return branchingScenarios
+		} 
+		return Collections.singleton(mainScenario) + branchingScenarios
+	}
+	
+	def private createAndFillStep(StepDef stepDef) {
+		fac.createStep => [
+			text = stepDef.text.content
+		]
+	}
+	
+	def private isBranchingScenario(ScenarioDef scenarioDef) {
+		scenarioDef.type == ScenarioType.EXTENSION || scenarioDef.type == ScenarioType.VARIATION
+	}
+	
+	def private branchingConditionLabel(ScenarioDef scenarioDef) {
+		scenarioDef.steps.head.label.content
+	}
+	
+	def private branchingStepLabel(ScenarioDef scenarioDef) {
+		scenarioDef.branchingConditionLabel.branchingStepLabel
 	}
 	
 	def private branchingStepLabel(String conditionLabel) {
@@ -157,51 +254,7 @@ class UcmParseModel2UcmService {
 		conditionLabel.substring(0, conditionLabel.length - 1)
 	}
 	
-	@Data
-	private static class UseCaseParseResult {
-		val UseCase useCase
-		val UseCaseNameDef nameDef
-		val PrimaryDef primaryDef
-		val PrecedenceDef precedenceDef
-		val Iterable<Pair<Scenario, StepDef>> branchingConditions
-		val Iterable<Pair<Step, StepDef>> steps
-		val Iterable<Pair<Annotation, StringWithOffset>> annotations
-	}
-	
-	def private transformBranchingScenario(ScenarioDef scenarioDef) {
-		val tuple = scenarioDef.steps.tail.transformScenario
-		val condition = scenarioDef.steps.head
-		
-		if (condition != null) {
-			// TODO: transform annotations attached to condition
-			tuple.first.text = condition.text.content
-		}
-		
-		Tuples.create(tuple.first -> condition, tuple.second, tuple.third)
-	}
-
-	def private transformScenario(Iterable<StepDef> stepDefs) {
-		val scenario = fac.createScenario
-		
-		val mapping = stepDefs.map[stepDef |
-			val step = fac.createStep => [
-				// TODO: content without annotations (now whole
-				// text including annotations is copied).
-				text = stepDef.text.content
-				annotations += stepDef.annot.map[parseAnnot]
-			]
-			Tuples.create(step -> stepDef, step.annotations.zip(stepDef.annot))
-		].toList
-		
-		val stepMapping = mapping.map[first]
-		scenario.steps += stepMapping.map[key]
-		
-		val annotMapping = mapping.map[second].flatten
-		
-		Tuples.create(scenario, stepMapping, annotMapping)
-	}
-	
-	def private UnknownAnnotation parseAnnot(StringWithOffset stringWithOffset) {
+	def private UnknownAnnotation createAndFillAnnotation(StringWithOffset stringWithOffset) {
 		annotFac.createUnknownAnnotation => [
 			parts += stringWithOffset.content.split(":")
 		]

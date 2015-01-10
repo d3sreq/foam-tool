@@ -82,8 +82,10 @@ class UcmParseModel2UcmServiceTest {
 		]
 		
 		val result = service.transform(Collections.singleton(data))
+		val actualUcm = result.key
+		val actualTrace = result.value
 		
-		Assert.assertTrue("Actual UseCaseModel doesn't match the actual one", EcoreUtil.equals(expectedUcm, result.key))
-		Assert.assertTrue("Actual UcmToUcmtextTrace doesn't match the actual one", EcoreUtil.equals(expectedTrace, result.value))
+		Assert.assertTrue("Actual UseCaseModel doesn't match the actual one", EcoreUtil.equals(expectedUcm, actualUcm))
+		Assert.assertTrue("Actual UcmToUcmtextTrace doesn't match the actual one", EcoreUtil.equals(expectedTrace, actualTrace))
 	}
 }
