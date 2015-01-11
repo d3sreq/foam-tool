@@ -9,6 +9,7 @@ import org.foam.ucmtext.UcmtextFactory
 import org.foam.ucmtexttrac.UcmtexttracFactory
 import org.junit.Assert
 import org.junit.Test
+import org.foam.annotation.AnnotationFactory
 
 class UcmParseModel2UcmServiceTest {
 	
@@ -16,6 +17,7 @@ class UcmParseModel2UcmServiceTest {
 	val fac = UcmtextFactory.eINSTANCE
 	val textFac = TextFactory.eINSTANCE
 	val ucmTraceFac = UcmtexttracFactory.eINSTANCE
+	val annotationFac = AnnotationFactory.eINSTANCE
 	
 	val service = new UcmParseModel2UcmService
 	
@@ -227,6 +229,63 @@ class UcmParseModel2UcmServiceTest {
 		val data = #[uc1UnparsedUseCaseText, uc2UnparsedUseCaseText]
 		
 		val result = service.transform(data)
+		val actualUcm = result.key
+		val actualTrace = result.value
+		
+		Assert.assertTrue("Actual UseCaseModel doesn't match the actual one", EcoreUtil.equals(expectedUcm, actualUcm))
+		Assert.assertTrue("Actual UcmToUcmtextTrace doesn't match the actual one", EcoreUtil.equals(expectedTrace, actualTrace))
+	}
+	
+	@Test
+	def void annotationTest() {
+		val annot1 = createStringWithOffset("a")
+		val annot2 = createStringWithOffset("b:c:d")
+		
+		val stepDef1 = fac.createStepDef => [
+			label = createStringWithOffset("1")
+			text = createStringWithOffset("first step")
+			annot += #[annot1, annot2]
+		]
+		
+		val data = fac.createUnparsedUseCaseText => [
+			blocks += fac.createBlock => [
+				derived = fac.createScenarioDef => [
+					type = ScenarioType.MAIN
+					steps += stepDef1
+				]
+			]
+		]
+		
+		val annotation1 = annotationFac.createUnknownAnnotation => [
+			parts += "a"
+		]
+		
+		val annotation2 = annotationFac.createUnknownAnnotation => [
+			parts += #["b", "c", "d"]
+		]
+		
+		val step1 = ucmFac.createStep => [
+			text = "first step"
+			annotations += #[annotation1, annotation2]
+		]
+		
+		val uc = ucmFac.createUseCase => [
+			mainScenario = ucmFac.createScenario => [
+				steps += step1
+			]
+		]
+		
+		val expectedUcm = ucmFac.createUseCaseModel => [
+			useCases += uc
+		]
+		
+		val expectedTrace = ucmTraceFac.createUcmToUcmtextTrace => [
+			steps.map.put(step1, stepDef1)
+			annotations.map.put(annotation1, annot1)
+			annotations.map.put(annotation2, annot2)
+		]
+		
+		val result = service.transform(#[data])
 		val actualUcm = result.key
 		val actualTrace = result.value
 		
