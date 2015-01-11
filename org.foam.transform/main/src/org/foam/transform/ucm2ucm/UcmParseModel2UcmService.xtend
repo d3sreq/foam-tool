@@ -1,7 +1,6 @@
 package org.foam.transform.ucm2ucm
 
 import java.util.Collections
-import java.util.List
 import java.util.Map
 import org.foam.annotation.AnnotationFactory
 import org.foam.annotation.UnknownAnnotation
@@ -11,15 +10,15 @@ import org.foam.ucm.Step
 import org.foam.ucm.UcmFactory
 import org.foam.ucm.UseCase
 import org.foam.ucmtext.Block
+import org.foam.ucmtext.PrecedenceDef
 import org.foam.ucmtext.PrimaryDef
 import org.foam.ucmtext.ScenarioDef
 import org.foam.ucmtext.ScenarioType
+import org.foam.ucmtext.SemanticBlock
 import org.foam.ucmtext.StepDef
 import org.foam.ucmtext.UnparsedUseCaseText
-import org.foam.ucmtexttrac.UcmtexttracFactory
-import org.foam.ucmtext.PrecedenceDef
-import org.foam.ucmtext.SemanticBlock
 import org.foam.ucmtext.UseCaseNameDef
+import org.foam.ucmtexttrac.UcmtexttracFactory
 
 class UcmParseModel2UcmService {
 	
@@ -38,7 +37,7 @@ class UcmParseModel2UcmService {
 			.toList
 		
 		val stepMapping = scenarioMapping.map[value]
-			.map[steps]
+			.map[findSteps]
 			.flatten
 			.map[createAndFillStep -> it]
 			.toList
@@ -51,14 +50,16 @@ class UcmParseModel2UcmService {
 		
 		val unparsedUseCaseTextToUseCase = <UnparsedUseCaseText, UseCase>newHashMap
 		useCaseMapping.forEach[unparsedUseCaseTextToUseCase.put(value, key)]
+		val branchingScenarioMapping = scenarioMapping.filter[value.isBranchingScenario]
 		
 		addMainScenarioToUseCases(scenarioMapping, unparsedUseCaseTextToUseCase)
-		addBranchingScenariosToUseCases(scenarioMapping, stepMapping, unparsedUseCaseTextToUseCase)
+		addBranchingScenariosToUseCases(branchingScenarioMapping, stepMapping, unparsedUseCaseTextToUseCase)
+		addConditionToBranchingScenarios(branchingScenarioMapping)
 		addStepsToScenarios(scenarioMapping, stepMapping)
 		addAnnotationsToSteps(stepMapping, annotationMapping)
 		addPrimary(useCaseMapping)
-		addPrecedence(useCaseMapping)
 		addNameAndId(useCaseMapping)
+		addPrecedence(useCaseMapping)
 		
 		val ucm = fac.createUseCaseModel => [
 			useCases += useCaseMapping.map[key]
@@ -79,7 +80,15 @@ class UcmParseModel2UcmService {
 		ucm -> trace
 	}
 	
-	def private <T extends SemanticBlock> Map<UseCase, T> getMapping(List<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping, Class<T> type) {
+	def findSteps(ScenarioDef scenarioDef) {
+		if (scenarioDef.branchingScenario) {
+			// branching scenario - first step is a condition 
+			return scenarioDef.steps.tail
+		}
+		return scenarioDef.steps
+	}
+	
+	def private <T extends SemanticBlock> Map<UseCase, T> getMapping(Iterable<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping, Class<T> type) {
 		val map = <UseCase, T>newHashMap
 		useCaseMapping.map[key -> value.findSemanticBlock(type)]
 			.filter[value != null]
@@ -94,7 +103,7 @@ class UcmParseModel2UcmService {
 			.head
 	}
 	
-	def private addMainScenarioToUseCases(List<Pair<Scenario, ScenarioDef>> scenarioMapping, Map<UnparsedUseCaseText, UseCase> unparsedUseCaseTextToUseCase) {
+	def private addMainScenarioToUseCases(Iterable<Pair<Scenario, ScenarioDef>> scenarioMapping, Map<UnparsedUseCaseText, UseCase> unparsedUseCaseTextToUseCase) {
 		scenarioMapping.filter[value.type == ScenarioType.MAIN].forEach[
 			val scenario = key
 			val scenarioDef = value
@@ -104,7 +113,7 @@ class UcmParseModel2UcmService {
 		]
 	} 
 	
-	def private addBranchingScenariosToUseCases(List<Pair<Scenario, ScenarioDef>> scenarioMapping, List<Pair<Step, StepDef>> stepMapping, Map<UnparsedUseCaseText, UseCase> unparsedUseCaseTextToUseCase) {
+	def private addBranchingScenariosToUseCases(Iterable<Pair<Scenario, ScenarioDef>> branchingScenarioMapping, Iterable<Pair<Step, StepDef>> stepMapping, Map<UnparsedUseCaseText, UseCase> unparsedUseCaseTextToUseCase) {
 		val stepMap = <UseCase, Map<String, Step>>newHashMap
 		stepMapping.groupBy[value.unparsedUseCaseText]
 			.forEach[unparsedUseCaseText, pairs|
@@ -114,7 +123,7 @@ class UcmParseModel2UcmService {
 				stepMap.put(useCase, labelToStep) 
 			]
 		
-		scenarioMapping.filter[value.isBranchingScenario]			
+		branchingScenarioMapping			
 			.groupBy[value.unparsedUseCaseText] // group by use case
 			.entrySet
 			.forEach[
@@ -145,7 +154,15 @@ class UcmParseModel2UcmService {
 			]
 	}
 	
-	def private addStepsToScenarios(List<Pair<Scenario, ScenarioDef>> scenarioMapping, List<Pair<Step, StepDef>> stepMapping) {
+	def addConditionToBranchingScenarios(Iterable<Pair<Scenario, ScenarioDef>> branchingScenarioMapping) {
+		branchingScenarioMapping.forEach[
+			val scenario = key
+			val scenarioDef = value
+			scenario.text = scenarioDef.steps.head.text.content
+		]
+	}
+	
+	def private addStepsToScenarios(Iterable<Pair<Scenario, ScenarioDef>> scenarioMapping, Iterable<Pair<Step, StepDef>> stepMapping) {
 		val scenarioDefToScenario = <ScenarioDef, Scenario>newHashMap
 		scenarioMapping.forEach[scenarioDefToScenario.put(value, key)]
 		stepMapping.forEach[
@@ -157,7 +174,7 @@ class UcmParseModel2UcmService {
 		]
 	}
 	
-	def private addAnnotationsToSteps(List<Pair<Step, StepDef>> stepMapping, List<Pair<UnknownAnnotation, StringWithOffset>> annotationMapping) {
+	def private addAnnotationsToSteps(Iterable<Pair<Step, StepDef>> stepMapping, Iterable<Pair<UnknownAnnotation, StringWithOffset>> annotationMapping) {
 		val stepDefToStep = <StepDef, Step>newHashMap
 		stepMapping.forEach[stepDefToStep.put(value, key)]
 		annotationMapping.forEach[
@@ -169,7 +186,7 @@ class UcmParseModel2UcmService {
 		]
 	}
 	
-	def private addPrimary(List<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
+	def private addPrimary(Iterable<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
 		useCaseMapping.forEach[
 			val useCase = key
 			val unparsedUseCaseText = value
@@ -181,7 +198,7 @@ class UcmParseModel2UcmService {
 		]
 	}
 	
-	def private addNameAndId(List<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
+	def private addNameAndId(Iterable<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
 		useCaseMapping.forEach[
 			val useCase = key
 			val unparsedUseCaseText = value
@@ -193,7 +210,7 @@ class UcmParseModel2UcmService {
 		]
 	}
 	
-	def private addPrecedence(List<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
+	def private addPrecedence(Iterable<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping) {
 		val useCaseIdToUseCase = useCaseMapping.map[key].toMap[id]
 		useCaseMapping.forEach[
 			val useCase = key
@@ -201,9 +218,16 @@ class UcmParseModel2UcmService {
 			
 			val precedenceDef = unparsedUseCaseText.findSemanticBlock(PrecedenceDef)
 			if (precedenceDef != null) {
-				 val preceeded = precedenceDef.preceded
-					.map[useCaseIdToUseCase.get(id)]
-				useCase.preceeded += preceeded
+				 val preceded = precedenceDef.preceded
+					.map[useCaseIdToUseCase.get(id.content)]
+					.filterNull
+				// filtering nulls because when use case with given id 
+				// is not found null is returned. But adding null to the 
+				// useCase.preceeded throws validation error.
+				// Subsequent validation is required to check that
+				// size of the preceded list is same in the source
+				// and target model.
+				useCase.preceeded += preceded
 			}
 		]
 	}
