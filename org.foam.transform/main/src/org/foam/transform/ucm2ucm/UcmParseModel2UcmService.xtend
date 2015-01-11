@@ -80,7 +80,7 @@ class UcmParseModel2UcmService {
 		ucm -> trace
 	}
 	
-	def findSteps(ScenarioDef scenarioDef) {
+	def private findSteps(ScenarioDef scenarioDef) {
 		if (scenarioDef.branchingScenario) {
 			// branching scenario - first step is a condition 
 			return scenarioDef.steps.tail
@@ -154,7 +154,7 @@ class UcmParseModel2UcmService {
 			]
 	}
 	
-	def addConditionToBranchingScenarios(Iterable<Pair<Scenario, ScenarioDef>> branchingScenarioMapping) {
+	def private addConditionToBranchingScenarios(Iterable<Pair<Scenario, ScenarioDef>> branchingScenarioMapping) {
 		branchingScenarioMapping.forEach[
 			val scenario = key
 			val scenarioDef = value
