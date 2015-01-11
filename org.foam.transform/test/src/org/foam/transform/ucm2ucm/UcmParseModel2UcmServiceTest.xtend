@@ -53,8 +53,7 @@ class UcmParseModel2UcmServiceTest {
 			blocks += fac.createBlock => [
 				derived = fac.createScenarioDef => [
 					type = ScenarioType.MAIN
-					steps += stepDef1
-					steps += stepDef2
+					steps += #[stepDef1, stepDef2]
 				]
 			]
 		]
@@ -66,8 +65,7 @@ class UcmParseModel2UcmServiceTest {
 			id = "UC1"
 			name = "Process Sale"
 			mainScenario = ucmFac.createScenario => [
-				steps += step1
-				steps += step2
+				steps += #[step1, step2]
 			]
 		]
 		
@@ -105,8 +103,7 @@ class UcmParseModel2UcmServiceTest {
 		
 		val uc1branchingScenarioDef = fac.createScenarioDef => [
 			type = ScenarioType.VARIATION
-			steps += uc1StepDef1a
-			steps += uc1StepDef1a1
+			steps += #[uc1StepDef1a, uc1StepDef1a1]
 		]
 		
 		val uc1primaryDef = fac.createPrimaryDef => [
@@ -207,8 +204,7 @@ class UcmParseModel2UcmServiceTest {
 		]
 		
 		val expectedUcm = ucmFac.createUseCaseModel => [
-			useCases += uc1
-			useCases += uc2
+			useCases += #[uc1, uc2]
 		]
 		
 		val expectedTrace = ucmTraceFac.createUcmToUcmtextTrace => [
