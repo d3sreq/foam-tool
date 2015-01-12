@@ -19,7 +19,9 @@ import org.foam.ucmtext.StepDef
 import org.foam.ucmtext.UnparsedUseCaseText
 import org.foam.ucmtext.UseCaseNameDef
 import org.foam.ucmtexttrac.UcmtexttracFactory
+import aQute.bnd.annotation.component.Component
 
+@Component(provide = UcmParseModel2UcmService)
 class UcmParseModel2UcmService {
 	
 	val fac = UcmFactory.eINSTANCE

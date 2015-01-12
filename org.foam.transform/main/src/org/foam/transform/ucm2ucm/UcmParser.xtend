@@ -13,7 +13,9 @@ import org.foam.ucmtext.UcIdDef
 import org.foam.ucmtext.UcmtextFactory
 
 import static extension org.foam.bootstrap.IterableExtensions.*
+import aQute.bnd.annotation.component.Component
 
+@Component(provide = UcmParser)
 class UcmParser {
 	
 	private static val ucmTextFac = UcmtextFactory.eINSTANCE

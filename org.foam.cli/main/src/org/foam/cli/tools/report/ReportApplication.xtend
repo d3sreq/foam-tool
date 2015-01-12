@@ -43,7 +43,8 @@ import org.foam.transform.lts2nusmvlang.Lts2NusmvLangService
 import org.foam.transform.tadllang2tadl.TadlLang2Tadl
 import org.foam.transform.ucm.overview.dot.UcmOverviewUsingDot
 import org.foam.transform.ucm2lts.Ucm2LtsFacade
-import org.foam.transform.ucm2ucm.UcmLang2UcmService
+import org.foam.transform.ucm2ucm.UcmParseModel2UcmService
+import org.foam.transform.ucm2ucm.UcmParser
 import org.foam.transform.ucm2ucm.flowannotationresolver.FlowAnnotationResolver
 import org.foam.transform.ucm2ucm.tadlannotationresolver.TadlAnnotationResolver
 import org.foam.transform.utils.graphviz.GraphvizWrapper
@@ -72,9 +73,14 @@ class ReportApplication implements IExecutableTool {
 		this.graphvizWrapper = graphvizWrapper
 	}
 
-	private UcmLang2UcmService ucmLang2UcmService
-	@Reference def void setUcmLang2Ucm(UcmLang2UcmService serviceRef) {
-		this.ucmLang2UcmService = serviceRef
+	private UcmParser ucmParser
+	@Reference def void setUcmParser(UcmParser ucmParser) {
+		this.ucmParser = ucmParser
+	}
+	
+	private UcmParseModel2UcmService ucmParseModel2UcmService
+	@Reference def void setUcmParseModel2UcmService(UcmParseModel2UcmService ucmParseModel2UcmService) {
+		this.ucmParseModel2UcmService = ucmParseModel2UcmService
 	}
 	
 	private Lts2NusmvLangService lts2NusmvLangService
@@ -353,14 +359,16 @@ class ReportApplication implements IExecutableTool {
 	def private UseCaseModel ucmlang2Ucm(String inputDirName) {
 		'''Reading use case files from the directory "«inputDirName»"'''.info
 		val texts = readTexts(inputDirName)
-		
-		'''Running the transformation'''.debug
-		val useCaseModel = ucmLang2UcmService.transform(texts)
+
+		'''Parsing use cases'''.debug
+		val parsedTexts = texts.map[ucmParser.parse(it)]
+		val resultPair = ucmParseModel2UcmService.transform(parsedTexts)
 
 		'''Resolving FLOW annotations'''.debug
-		new FlowAnnotationResolver().resolveAnnotations(useCaseModel)
+		new FlowAnnotationResolver().resolveAnnotations(resultPair.key, resultPair.value)
 		
-		useCaseModel
+		// TODO - use also trace information
+		resultPair.key
 	}
 	
 	def private Iterable<Template> tadlLang2Templates(String tadlDirName) {
