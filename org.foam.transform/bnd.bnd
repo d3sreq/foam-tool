@@ -37,8 +37,6 @@
 	com.ibm.icu,\
 	org.ops4j.pax.logging.pax-logging-api,\
 	org.foam.models.text;version=latest,\
-	org.foam.models.traceability2;version=latest,\
-	org.foam.models.traceability_ucm_text;version=latest,\
 	org.foam.models.ucmtext;version=latest,\
 	org.foam.models.tracemap;version=latest,\
 	org.foam.models.ucmtexttrac;version=latest

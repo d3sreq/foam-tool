@@ -1,4 +1,0 @@
-Bundle-Name: FOAM Model (Traceability core)
-Bundle-Version: 1.0.0
-Export-Package: org.foam.traceability2
-Private-Package: org.foam.traceability2.impl

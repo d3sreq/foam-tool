@@ -1,7 +1,0 @@
-Bundle-Name: FOAM Model (Traceability between UCM and LTS), using traceability2
-Bundle-Version: 1.0.0
-Export-Package:  \
-	org.foam.traceability_ucm_text.util,\
-	org.foam.traceability_ucm_text
-Private-Package:  \
-	org.foam.traceability_ucm_text.impl

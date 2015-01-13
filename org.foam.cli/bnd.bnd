@@ -36,4 +36,6 @@
 	org.eclipse.emf.ecore.xmi,\
 	osgi.cmpn,\
 	osgi.core;version=4.3,\
-	org.ops4j.pax.logging.pax-logging-api
+	org.ops4j.pax.logging.pax-logging-api,\
+	org.foam.models.ucmtext;version=latest,\
+	org.foam.models.ucmtexttrac;version=latest
