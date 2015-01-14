@@ -20,10 +20,10 @@ import org.foam.ucmtext.UnparsedUseCaseText
 import org.foam.ucmtext.UseCaseNameDef
 import org.foam.ucmtexttrac.UcmtexttracFactory
 import aQute.bnd.annotation.component.Component
+import java.util.LinkedHashMap
 
 @Component(provide = UcmParseModel2UcmService)
 class UcmParseModel2UcmService {
-	
 	val fac = UcmFactory.eINSTANCE
 	val annotFac = AnnotationFactory.eINSTANCE
 	val traceFac = UcmtexttracFactory.eINSTANCE
@@ -90,8 +90,8 @@ class UcmParseModel2UcmService {
 		return scenarioDef.steps
 	}
 	
-	def private <T extends SemanticBlock> Map<UseCase, T> getMapping(Iterable<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping, Class<T> type) {
-		val map = <UseCase, T>newHashMap
+	def private <T extends SemanticBlock> LinkedHashMap<UseCase, T> getMapping(Iterable<Pair<UseCase, UnparsedUseCaseText>> useCaseMapping, Class<T> type) {
+		val map = <UseCase, T>newLinkedHashMap
 		useCaseMapping.map[key -> value.findSemanticBlock(type)]
 			.filter[value != null]
 			.forEach[map.put(key, value)]
