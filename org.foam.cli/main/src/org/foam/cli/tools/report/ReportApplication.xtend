@@ -56,6 +56,8 @@ import org.foam.verification.VerificationPackage
 import org.osgi.framework.FrameworkUtil
 
 import static extension org.foam.cntex.util.CntexModelExtensions.*
+import org.eclipse.emf.ecore.EValidator
+import org.foam.ucm.util.UcmValidatorCustom
 
 @Component(provide=#[ReportApplication, IExecutableTool])
 class ReportApplication implements IExecutableTool {
@@ -321,6 +323,10 @@ class ReportApplication implements IExecutableTool {
 		TraceabilityPackage.eINSTANCE.eClass
 		VerificationPackage.eINSTANCE.eClass
 		EmfCommons.registerAsteriskInExtensionToFactory
+		
+		'''Registering validators'''.debug
+		val validatorRegistry = EValidator.Registry.INSTANCE
+		validatorRegistry.put(UcmPackage.eINSTANCE, new UcmValidatorCustom)
 	}
 	
 	def private getCounterExamples(UseCaseModel useCaseModel) {
