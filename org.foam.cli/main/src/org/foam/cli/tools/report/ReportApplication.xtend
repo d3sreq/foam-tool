@@ -55,8 +55,10 @@ import org.foam.ucm.UseCase
 import org.foam.ucm.UseCaseModel
 import org.foam.verification.VerificationPackage
 import org.osgi.framework.FrameworkUtil
+import org.eclipse.emf.common.util.Diagnostic
 
 import static extension org.foam.cntex.util.CntexModelExtensions.*
+import org.eclipse.emf.ecore.util.Diagnostician
 
 @Component(provide=#[ReportApplication, IExecutableTool])
 class ReportApplication implements IExecutableTool {
@@ -130,7 +132,15 @@ class ReportApplication implements IExecutableTool {
 		// transformations
 		val useCaseModel = ucmlang2Ucm(inputDirName)
 		'''Validating input UseCaseModel (with resolved flow annotations)'''.debug
-		EmfCommons.basicValidate(useCaseModel)
+
+		// TODO - refactor
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
+		if (diagnostic.severity != Diagnostic.OK) {
+			"Following validation errors found - stopping processing:".error
+			diagnostic.children.forEach[it.toString.error]
+			"Model parsing failed".error
+			return
+		}
 		
 		val templates = tadlLang2Templates(tadlDirName)
 		'''Validating input TADL templates'''.debug
@@ -358,10 +368,11 @@ class ReportApplication implements IExecutableTool {
 	
 	def private UseCaseModel ucmlang2Ucm(String inputDirName) {
 		'''Reading use case files from the directory "«inputDirName»"'''.info
-		val texts = readTexts(inputDirName)
-
+		val texts = readTexts(inputDirName, ".uc")
+		
 		'''Parsing use cases'''.debug
-		val parsedTexts = texts.map[ucmParser.parse(it)]
+		val parsedTexts = texts.map[ucmParser.parse(it)].toList
+		
 		val resultPair = ucmParseModel2UcmService.transform(parsedTexts)
 
 		'''Resolving FLOW annotations'''.debug
@@ -375,7 +386,7 @@ class ReportApplication implements IExecutableTool {
 		val tadlLang2Tadl = new TadlLang2Tadl
 		
 		'''Reading TADL definitions from directory "«tadlDirName»"'''.info
-		val texts = readTexts(tadlDirName)
+		val texts = readTexts(tadlDirName, ".tadl")
 		
 		'''Running the transformation'''.debug
 		val templates = texts.map[tadlLang2Tadl.parse(it)]
@@ -396,9 +407,9 @@ class ReportApplication implements IExecutableTool {
 	}
 	
 	/**
-	 * Gets String content of each file in the given directory
+	 * Gets String content of each file in the given directory with given extension
 	 */
-	def private Iterable<String> readTexts(String inputDir) {
+	def private Iterable<String> readTexts(String inputDir, String fileExtension) {
 
 		Preconditions.checkNotNull( inputDir )
 		Preconditions.checkArgument( ! inputDir.empty )
@@ -407,7 +418,11 @@ class ReportApplication implements IExecutableTool {
 		Preconditions.checkState(dir.exists)
 		Preconditions.checkState(dir.isDirectory)
 		
-		dir.listFiles.map[Files.toString(it, Charsets.UTF_8)]
+		// search input directory recursively
+		Files.fileTreeTraverser
+			.breadthFirstTraversal(dir)
+			.filter[it.name.endsWith(fileExtension)]
+			.map[Files.toString(it, Charsets.UTF_8)]
 	}
 
 	/**

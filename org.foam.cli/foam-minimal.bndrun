@@ -28,7 +28,6 @@
 # - org.apache.felix.gogo.shell					listed as LAST (if exists)
 #
 -runbundles:  \
-	com.google.guava;version='[12.0.1,12.0.2)',\
 	com.google.guava;version='[18.0.0,18.0.1)',\
 	com.google.inject;version='[3.0.0,3.0.1)',\
 	javax.inject;version='[1.0.0,1.0.1)',\
@@ -60,8 +59,12 @@
 	org.foam.models.lts;version=latest,\
 	org.foam.models.propositionallogic;version=latest,\
 	org.foam.models.tadl;version=latest,\
+	org.foam.models.text;version=latest,\
 	org.foam.models.traceability;version=latest,\
+	org.foam.models.tracemap;version=latest,\
 	org.foam.models.ucm;version=latest,\
+	org.foam.models.ucmtext;version=latest,\
+	org.foam.models.ucmtexttrac;version=latest,\
 	org.foam.models.verification;version=latest,\
 	org.foam.transform.cntexlang2cntex;version=latest,\
 	org.foam.transform.dot2dotlang;version=latest,\
@@ -94,4 +97,4 @@
 	Local,\
 	Bndtools Hub
 #-runprogramargs: ReportApplication -i /home/jirka/paper/foam-tool-clouds/provider-use-cases/system-correct/ucs -t /home/jirka/paper/foam-tool-clouds/provider-use-cases/system-correct/tadl -o /home/jirka/paper/foam-tool-clouds/provider-use-cases/system-correct/out
--runprogramargs: ReportApplication -i /home/jirka/paper/foam-tool-clouds/openshift-use-cases/ucs -t /home/jirka/paper/foam-tool-clouds/openshift-use-cases/tadl -o /home/jirka/paper/foam-tool-clouds/openshift-use-cases/out
+-runprogramargs: ReportApplication -i /home/jirka/paper/foam-tool-clouds/data/provider-use-cases/command/ucs -t /home/jirka/paper/foam-tool-clouds/data/tadl-shared -o /home/jirka/paper/foam-tool-clouds/data/provider-use-cases/command/out

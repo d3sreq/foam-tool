@@ -1,6 +1,6 @@
 -sub: *.bnd
 -buildpath:  \
-	com.google.guava,\
+	com.google.guava;version='[18.0.0,18.0.1)',\
 	org.apache.servicemix.bundles.junit,\
 	org.eclipse.emf.codegen,\
 	org.eclipse.emf.codegen.ecore,\
