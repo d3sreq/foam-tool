@@ -203,7 +203,9 @@ class UcmParser {
 			it.text = createStringWithOffset(text.toString, 0)
 		]
 		
-		val blocks = unparsedText.text.parseBlocks
+		val blocks = unparsedText.text
+			.parseBlocks
+			.toList // blocks are modified later, so we want them to be created only once  
 		unparsedText.blocks += blocks
 		
 		// use case name
