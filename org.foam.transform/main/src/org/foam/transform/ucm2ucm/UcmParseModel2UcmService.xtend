@@ -282,7 +282,16 @@ class UcmParseModel2UcmService {
 	
 	def private UnknownAnnotation createAndFillAnnotation(StringWithOffset stringWithOffset) {
 		annotFac.createUnknownAnnotation => [
-			parts += stringWithOffset.content.split(":")
+			val list = stringWithOffset.content.split(":")
+			if (!list.empty) {
+				if (list.head.startsWith("#(")) {
+					list.set(0, list.head.substring(2))
+				}
+				if (list.last.endsWith(")")) {
+					list.set(list.size - 1, list.last.substring(0, list.last.length - 1))
+				}	
+			}
+			parts += list
 		]
 	}
 	
