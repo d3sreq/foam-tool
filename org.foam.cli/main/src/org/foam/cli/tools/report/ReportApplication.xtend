@@ -60,6 +60,7 @@ import org.eclipse.emf.common.util.Diagnostic
 import static extension org.foam.cntex.util.CntexModelExtensions.*
 import org.eclipse.emf.ecore.EValidator
 import org.foam.ucm.util.UcmValidatorCustom
+import org.eclipse.emf.ecore.util.Diagnostician
 
 @Component(provide=#[ReportApplication, IExecutableTool])
 class ReportApplication implements IExecutableTool {
