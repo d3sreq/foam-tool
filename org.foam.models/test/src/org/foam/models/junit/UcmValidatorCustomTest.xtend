@@ -17,12 +17,12 @@ class UcmValidatorCustomTest {
 	
 	@BeforeClass
 	def static void init() {
-		EValidator.Registry::INSTANCE.put(UcmPackage::eINSTANCE, new UcmValidatorCustom)
+		EValidator.Registry.INSTANCE.put(UcmPackage.eINSTANCE, new UcmValidatorCustom)
 	}
 	
-	val ucmFac = UcmFactory::eINSTANCE
-	val flowFac = FlowannotationFactory::eINSTANCE
-	val logicFac = PropositionallogicFactory::eINSTANCE
+	val ucmFac = UcmFactory.eINSTANCE
+	val flowFac = FlowannotationFactory.eINSTANCE
+	val logicFac = PropositionallogicFactory.eINSTANCE
 	
 	@Test
 	def void testPrecedenceWithoutCycleSingleUseCase() {
@@ -35,7 +35,7 @@ class UcmValidatorCustomTest {
 			uc1.preceeded += uc1
 		]
 		
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
 		assertOnlyDiagnosticError(diagnostic, "PrecedenceWithoutCycle")
 	}
 	
@@ -55,8 +55,8 @@ class UcmValidatorCustomTest {
 		]
 		
 		val constraintName = "PrecedenceWithoutCycle"
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
-		assertEquals(Diagnostic::ERROR, diagnostic.severity)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
+		assertEquals(Diagnostic.ERROR, diagnostic.severity)
 		assertEquals(2, diagnostic.children.size)
 		assertTrue(diagnostic.children.head.message.contains(constraintName))
 		assertTrue(diagnostic.children.get(1).message.contains(constraintName))
@@ -83,8 +83,8 @@ class UcmValidatorCustomTest {
 		]
 		
 		val constraintName = "IncludeWithoutCycle"
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
-		assertEquals(Diagnostic::ERROR, diagnostic.severity)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
+		assertEquals(Diagnostic.ERROR, diagnostic.severity)
 		assertEquals(2, diagnostic.children.size)
 		assertTrue(diagnostic.children.head.message.contains(constraintName))
 		assertTrue(diagnostic.children.get(1).message.contains(constraintName))
@@ -117,7 +117,7 @@ class UcmValidatorCustomTest {
 			useCases += newArrayList(uc1, uc2, uc3)
 		]
 		
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
 		assertOnlyDiagnosticError(diagnostic, "IncludedIsSubsetOfPreceeded")
 	}
 	
@@ -132,7 +132,7 @@ class UcmValidatorCustomTest {
 			uc1.mainScenario.steps.head.annotations += flowFac.createAbort			
 		]
 		
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
 		assertOnlyDiagnosticError(diagnostic, "NoAbortInMainScenario")
 	}
 	
@@ -150,7 +150,7 @@ class UcmValidatorCustomTest {
 			]
 		]
 		
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
 		assertOnlyDiagnosticError(diagnostic, "NoGotoInMainScenario")
 	}
 	
@@ -177,7 +177,7 @@ class UcmValidatorCustomTest {
 			]
 		]
 		
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
 		assertOnlyDiagnosticError(diagnostic, "GotoOnlyAtScenarioEnd")
 	}
 	
@@ -202,7 +202,7 @@ class UcmValidatorCustomTest {
 			]
 		]
 		
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
 		assertOnlyDiagnosticError(diagnostic, "OnlyOneOfAbortGotoAtScenarioEnd")
 	}
 	
@@ -229,13 +229,13 @@ class UcmValidatorCustomTest {
 			]
 		]
 		
-		val diagnostic = Diagnostician::INSTANCE.validate(useCaseModel)
+		val diagnostic = Diagnostician.INSTANCE.validate(useCaseModel)
 		assertOnlyDiagnosticError(diagnostic, "GuardOnlyAtScenarioStart")
 	}
 	
 	
 	def private assertOnlyDiagnosticError(Diagnostic diagnostic, String constraintName) {
-		assertEquals(Diagnostic::ERROR, diagnostic.severity)
+		assertEquals(Diagnostic.ERROR, diagnostic.severity)
 		assertEquals(1, diagnostic.children.size)
 		assertTrue(diagnostic.children.head.message.contains(constraintName))
 	}

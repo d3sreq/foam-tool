@@ -236,7 +236,7 @@ package class Lts2NusmvContext {
 		val step = state2ucstep.get(state)
 		if(step == null) return null
 		
-		return '''«step.label». «step.text»'''
+		return '''«step.label». «step.text.replaceAll("\n", " ")»'''
 	}
 	
 	private  def getType(State state){

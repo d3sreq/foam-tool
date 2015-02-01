@@ -17,7 +17,7 @@
 	org.foam.xtext.ctl;version=latest,\
 	org.foam.xtext.ltl;version=latest,\
 	org.foam.xtext.plogic;version=latest,\
-	com.google.guava,\
+	com.google.guava;version=18.0.0.rc2,\
 	com.google.inject,\
 	biz.aQute.bnd.annotation,\
 	org.apache.commons.lang,\
@@ -35,4 +35,8 @@
 	osgi.core;version=4.3,\
 	javax.inject,\
 	com.ibm.icu,\
-	org.ops4j.pax.logging.pax-logging-api
+	org.ops4j.pax.logging.pax-logging-api,\
+	org.foam.models.text;version=latest,\
+	org.foam.models.ucmtext;version=latest,\
+	org.foam.models.tracemap;version=latest,\
+	org.foam.models.ucmtexttrac;version=latest

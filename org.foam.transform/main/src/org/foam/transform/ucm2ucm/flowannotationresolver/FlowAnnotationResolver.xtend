@@ -19,6 +19,8 @@ import org.foam.xtext.plogic.parser.antlr.PropositionalLogicXtextParser
 import org.foam.xtext.plogic.propositionalLogicXtext.RuleVariableUse
 
 import static extension org.foam.ucm.util.UseCaseModelExtensions.*
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.foam.ucmtexttrac.UcmToUcmtextTrace
 
 class FlowAnnotationResolver {
 	private static val MARK_PREFIX = "mark_"
@@ -34,9 +36,6 @@ class FlowAnnotationResolver {
 		// Without registration exception with "Unresolved proxy" is thrown
 		// when parsing Ctl or LTL formula (propositional logic formula is parsed
 		// without errors).
-		//
-		// Package should be probably registered in GenerateLtlXtext.mwe2 file
-		// but wasn't able to figure out how to do it.
 		if (!EPackage.Registry.INSTANCE.containsKey(PropositionallogicPackage.eNS_URI)) {
 			EPackage.Registry.INSTANCE.put(PropositionallogicPackage.eNS_URI, PropositionallogicPackage.eINSTANCE)
 		}
@@ -45,7 +44,7 @@ class FlowAnnotationResolver {
 		propLogicParser = propLogicInjector.getInstance(PropositionalLogicXtextParser)
 	}
 	
-	def resolveAnnotations(UseCaseModel useCaseModel) {
+	def resolveAnnotations(UseCaseModel useCaseModel, UcmToUcmtextTrace ucmToUcmtextTrace) {
 
 		val allUseCases = useCaseModel.useCases
 		val id2Uc = allUseCases.toMap[id]
@@ -60,7 +59,12 @@ class FlowAnnotationResolver {
 				val resolvedAnnotation = resolveAnnotation(annotation, id2Uc, id2Step, useCaseModel)
 				
 				if (annotation != resolvedAnnotation) {
-					EcoreUtil2.replace(annotation, resolvedAnnotation)
+					EcoreUtil.replace(annotation, resolvedAnnotation)
+					
+					val map = ucmToUcmtextTrace.annotations.map
+					val stringWithOffset = map.get(annotation)
+					map.remove(annotation)
+					map.put(resolvedAnnotation, stringWithOffset)
 				}
 			]
 		}
@@ -136,7 +140,7 @@ class FlowAnnotationResolver {
 				variableDefinition = varName2VarDef.get(varName)
 			]
 			
-			EcoreUtil2.replace(ruleVar, varUse)
+			EcoreUtil.replace(ruleVar, varUse)
 		}
 	}
 	

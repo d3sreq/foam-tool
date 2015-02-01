@@ -10,20 +10,42 @@ import org.foam.xtext.plogic.PropositionalLogicXtextStandaloneSetup
 import org.junit.Assert
 import org.junit.Test
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.foam.ucmtexttrac.UcmtexttracFactory
+import org.foam.text.TextFactory
+import org.foam.text.StringWithOffset
 
 class FlowAnnotationResolverTest {
 	val ucmFac = UcmFactory.eINSTANCE
 	val flowFac = FlowannotationFactory.eINSTANCE
 	val propFac = PropositionallogicFactory.eINSTANCE
 	val annotationFac = AnnotationFactory.eINSTANCE
+	val ucmTraceFac = UcmtexttracFactory.eINSTANCE
+	val textFac = TextFactory.eINSTANCE
+	
 	val flowAnnotationResolver = new FlowAnnotationResolver
 	
-	// TODO: this constructor is only needed for headless unit-testing
+	// constructor is needed only for headless unit-testing
 	new() {PropositionalLogicXtextStandaloneSetup.doSetup}
+
+	/**
+	 * Creates StringWithOffset with dummy offset value.
+	 */
+	def private StringWithOffset createStringWithOffset(String text) {
+		textFac.createStringWithOffset => [
+			offset = 0
+			content = text
+		]
+	}
 
 	@Test
 	def resolveAbort() {
-		val ucmAbortInput = ucmFac.createUseCaseModel => [
+		val unresolvedAnnotation = annotationFac.createUnknownAnnotation => [
+			parts += Collections.singletonList("abort")
+		]
+		
+		val abortString = createStringWithOffset("abort")
+		
+		val ucmInput = ucmFac.createUseCaseModel => [
 			useCases += ucmFac.createUseCase => [
 				id = "UC1"
 				name = "Abort test"
@@ -31,15 +53,17 @@ class FlowAnnotationResolverTest {
 				mainScenario = ucmFac.createScenario => [
 					steps += ucmFac.createStep => [
 						text = "Use case aborts."
-						annotations += annotationFac.createUnknownAnnotation => [
-							parts += Collections.singletonList("abort")
-						]
+						annotations += unresolvedAnnotation
 					]				
 				]
 			]
 		]
+		val traceInput = ucmTraceFac.createUcmToUcmtextTrace
+		traceInput.annotations.map.put(unresolvedAnnotation, abortString)
 	
-		val ucmAbortExpected = ucmFac.createUseCaseModel => [
+		val abortAnnotation = flowFac.createAbort
+	
+		val ucmExpected = ucmFac.createUseCaseModel => [
 			useCases += ucmFac.createUseCase => [
 				id = "UC1"
 				name = "Abort test"
@@ -47,16 +71,22 @@ class FlowAnnotationResolverTest {
 				mainScenario = ucmFac.createScenario => [
 					steps += ucmFac.createStep => [
 						text = "Use case aborts."
-						annotations += flowFac.createAbort
+						annotations += abortAnnotation
 					]
 				]
 			]
 		]
 		
+		val traceExpected = ucmTraceFac.createUcmToUcmtextTrace
+		traceExpected.annotations.map.put(abortAnnotation, abortString)
+		
 		// tests that unknown annotation is replaced with abort annotation
-		flowAnnotationResolver.resolveAnnotations(ucmAbortInput)
+		flowAnnotationResolver.resolveAnnotations(ucmInput, traceInput)
 		Assert.assertTrue("Expected and actual use case model doesn't match", 
-			EcoreUtil.equals(ucmAbortExpected, ucmAbortInput)
+			EcoreUtil.equals(ucmExpected, ucmInput)
+		)
+		Assert.assertTrue("Expected and actual trace model doesn't match", 
+			EcoreUtil.equals(traceExpected, traceInput)
 		)
 	}
 	
@@ -65,7 +95,11 @@ class FlowAnnotationResolverTest {
 	@Test
 	def resolveInclude() {
 		
-		val ucmIncludeInput = ucmFac.createUseCaseModel => [
+		val unresolvedAnnotation = annotationFac.createUnknownAnnotation => [
+			parts += #["include", "UC3"]
+		]
+		
+		val ucmInput = ucmFac.createUseCaseModel => [
 			useCases += ucmFac.createUseCase => [
 				id = "UC3"
 				name = "Included use case"
@@ -84,25 +118,34 @@ class FlowAnnotationResolverTest {
 				mainScenario = ucmFac.createScenario => [
 					steps += ucmFac.createStep => [
 						text = "Step triggers included use case."
-						annotations += annotationFac.createUnknownAnnotation => [
-							parts += newArrayList("include", "UC3")
-						]
+						annotations += unresolvedAnnotation
 					]
 				]
 			]
 		]
 		
-		val ucmIncludeExpected = ucmFac.createUseCaseModel => [
-			val useCase3 = ucmFac.createUseCase => [
-				id = "UC3"
-				name = "Included use case"
-				
-				mainScenario = ucmFac.createScenario => [
-					steps += ucmFac.createStep => [
-						text = "Only step of the included use case"
-					]
+		val includeString = createStringWithOffset("xxx")
+		
+		val traceInput = ucmTraceFac.createUcmToUcmtextTrace
+		traceInput.annotations.map.put(unresolvedAnnotation, includeString)
+		
+		val useCase3 = ucmFac.createUseCase => [
+			id = "UC3"
+			name = "Included use case"
+			
+			mainScenario = ucmFac.createScenario => [
+				steps += ucmFac.createStep => [
+					text = "Only step of the included use case"
 				]
 			]
+		]
+		
+		val includeAnnotation = flowFac.createInclude => [
+			inlinedUseCase = useCase3
+		]
+		
+		val ucmExpected = ucmFac.createUseCaseModel => [
+			
 			useCases += useCase3
 			
 			useCases += ucmFac.createUseCase => [
@@ -112,24 +155,33 @@ class FlowAnnotationResolverTest {
 				mainScenario = ucmFac.createScenario => [
 					steps += ucmFac.createStep => [
 						text = "Step triggers included use case."
-						annotations += flowFac.createInclude => [
-							inlinedUseCase = useCase3
-						]
+						annotations += includeAnnotation
 					]
 				]			
 			]
 		]
 		
+		val traceExpected = ucmTraceFac.createUcmToUcmtextTrace
+		traceExpected.annotations.map.put(includeAnnotation, includeString)
+		
 		// tests that unknown annotation is replaced with include annotation
-		flowAnnotationResolver.resolveAnnotations(ucmIncludeInput)
+		flowAnnotationResolver.resolveAnnotations(ucmInput, traceInput)
 		Assert.assertTrue("Expected and actual use case model doesn't match", 
-			EcoreUtil.equals(ucmIncludeExpected, ucmIncludeInput)
+			EcoreUtil.equals(ucmExpected, ucmInput)
+		)
+		
+		Assert.assertTrue("Expected and actual trace model doesn't match", 
+			EcoreUtil.equals(traceExpected, traceInput)
 		)
 	}
-	
+
 	@Test
 	def resolveGoto() {
-		val ucmGotoInput = ucmFac.createUseCaseModel => [
+		val unresolvedAnnotation = annotationFac.createUnknownAnnotation => [
+			parts += #["goto", "1"]
+		]
+		
+		val ucmInput = ucmFac.createUseCaseModel => [
 			useCases += ucmFac.createUseCase => [
 				id = "UC4"
 				name = "Goto test"
@@ -141,45 +193,56 @@ class FlowAnnotationResolverTest {
 					
 					steps += ucmFac.createStep => [
 						text = "Continue with step 1."
-						annotations += annotationFac.createUnknownAnnotation => [
-							parts += newArrayList("goto", "1")
-						]
+						annotations += unresolvedAnnotation
 					]
 				]
 			]
 		]
 		
-		val ucmGotoExpected = ucmFac.createUseCaseModel => [
+		val gotoString = createStringWithOffset("xxx")
+		
+		val traceInput = ucmTraceFac.createUcmToUcmtextTrace
+		traceInput.annotations.map.put(unresolvedAnnotation, gotoString)
+		
+		val step1 = ucmFac.createStep => [ text = "First step." ]
+		val gotoAnnotation = flowFac.createGoto => [ target = step1 ]
+		
+		val ucmExpected = ucmFac.createUseCaseModel => [
 			useCases += ucmFac.createUseCase => [
 				id = "UC4"
 				name = "Goto test"
 				
 				mainScenario = ucmFac.createScenario => [
-					val step1 = ucmFac.createStep => [
-						text = "First step."
-					]
 					steps += step1
-					
 					steps += ucmFac.createStep => [
 						text = "Continue with step 1."
-						annotations += flowFac.createGoto => [
-							target = step1
-						]
+						annotations += gotoAnnotation
 					]
 				]
 			]
 		]
+		
+		val traceExpected = ucmTraceFac.createUcmToUcmtextTrace
+		traceExpected.annotations.map.put(gotoAnnotation, gotoString)
 		
 		// tests that unknown annotation is replaced with goto annotation
-		flowAnnotationResolver.resolveAnnotations(ucmGotoInput)
+		flowAnnotationResolver.resolveAnnotations(ucmInput, traceInput)
 		Assert.assertTrue("Expected and actual use case model doesn't match", 
-			EcoreUtil.equals(ucmGotoExpected, ucmGotoInput)
+			EcoreUtil.equals(ucmExpected, ucmInput)
+		)
+		
+		Assert.assertTrue("Expected and actual trace model doesn't match", 
+			EcoreUtil.equals(traceExpected, traceInput)
 		)
 	}
-	
+
 	@Test
 	def resolveMark() {
-		val ucmMarkInput = ucmFac.createUseCaseModel => [
+		val unresolvedAnnotation = annotationFac.createUnknownAnnotation => [
+			parts += #["mark", "x"]
+		]
+		
+		val ucmInput = ucmFac.createUseCaseModel => [
 			useCases += ucmFac.createUseCase => [
 				id = "UC5"
 				name = "Mark test"
@@ -187,18 +250,27 @@ class FlowAnnotationResolverTest {
 				mainScenario = ucmFac.createScenario => [
 					steps += ucmFac.createStep => [
 						text = "Step with mark."
-						annotations += annotationFac.createUnknownAnnotation => [
-							parts += newArrayList("mark", "x")
-						]
+						annotations += unresolvedAnnotation
 					]
 				]
 			]
 		]
 		
-		val ucmMarkExpected = ucmFac.createUseCaseModel => [
-			val xVarDef = propFac.createVariableDefinition => [
-				name = "mark_x"
-			]
+		val markString = createStringWithOffset("xxx")
+		
+		val traceInput = ucmTraceFac.createUcmToUcmtextTrace
+		traceInput.annotations.map.put(unresolvedAnnotation, markString)
+		
+		val xVarDef = propFac.createVariableDefinition => [
+			name = "mark_x"
+		]
+		
+		val markAnnotation = flowFac.createMark => [
+			variableDefinition = xVarDef
+		]
+		
+		val ucmExpected = ucmFac.createUseCaseModel => [
+			
 			annotations += flowFac.createVariableDefinitionAnnotation => [
 				variableDefinition = xVarDef
 			]
@@ -210,24 +282,33 @@ class FlowAnnotationResolverTest {
 				mainScenario = ucmFac.createScenario => [
 					steps += ucmFac.createStep => [
 						text = "Step with mark."
-						annotations += flowFac.createMark => [
-							variableDefinition = xVarDef
-						]
+						annotations += markAnnotation
 					]
 				]
 			]
 		]
 		
-		// tests that unknown annotation is replaced with goto annotation
-		flowAnnotationResolver.resolveAnnotations(ucmMarkInput)
+		val traceExpected = ucmTraceFac.createUcmToUcmtextTrace
+		traceExpected.annotations.map.put(markAnnotation, markString)
+		
+		// tests that unknown annotation is replaced with mark annotation
+		flowAnnotationResolver.resolveAnnotations(ucmInput, traceInput)
 		Assert.assertTrue("Expected and actual use case model doesn't match", 
-			EcoreUtil.equals(ucmMarkExpected, ucmMarkInput)
+			EcoreUtil.equals(ucmExpected, ucmInput)
+		)
+		
+		Assert.assertTrue("Expected and actual trace model doesn't match", 
+			EcoreUtil.equals(traceExpected, traceInput)
 		)
 	}
-	
+
 	@Test
 	def resolveGuard() {
-		val ucmGuardInput = ucmFac.createUseCaseModel => [
+		val unresolvedAnnotation = annotationFac.createUnknownAnnotation => [
+			parts += #["guard", "x & y"]
+		]
+
+		val ucmInput = ucmFac.createUseCaseModel => [
 			val yVarDef = propFac.createVariableDefinition => [
 				name = "mark_y"
 			]
@@ -242,25 +323,41 @@ class FlowAnnotationResolverTest {
 				mainScenario = ucmFac.createScenario => [
 					steps += ucmFac.createStep => [
 						text = "Step with guard."
-						annotations += annotationFac.createUnknownAnnotation => [
-							parts += newArrayList("guard", "x & y")
-						]
+						annotations += unresolvedAnnotation
 					]
 				]
 			]
 		]
 		
-		val ucmGuardExpected = ucmFac.createUseCaseModel => [
-			val yVarDef = propFac.createVariableDefinition => [
-				name = "mark_y"
+		val guardString = createStringWithOffset("xxx")
+		
+		val traceInput = ucmTraceFac.createUcmToUcmtextTrace
+		traceInput.annotations.map.put(unresolvedAnnotation, guardString)
+		
+		val xVarDef = propFac.createVariableDefinition => [
+			name = "mark_x"
+		]
+		
+		val yVarDef = propFac.createVariableDefinition => [
+			name = "mark_y"
+		]
+		
+		val guardAnnotation = flowFac.createGuard => [
+			formula = propFac.createAnd => [
+				left = propFac.createVariableUse => [
+					variableDefinition = xVarDef
+				]
+				right = propFac.createVariableUse => [
+					variableDefinition = yVarDef
+				]
 			]
+		]
+		
+		val ucmExpected = ucmFac.createUseCaseModel => [
 			annotations += flowFac.createVariableDefinitionAnnotation => [
 				variableDefinition = yVarDef
 			]
 			
-			val xVarDef = propFac.createVariableDefinition => [
-				name = "mark_x"
-			]
 			annotations += flowFac.createVariableDefinitionAnnotation => [
 				variableDefinition = xVarDef
 			]
@@ -272,75 +369,90 @@ class FlowAnnotationResolverTest {
 				mainScenario = ucmFac.createScenario => [
 					steps += ucmFac.createStep => [
 						text = "Step with guard."
-						annotations += flowFac.createGuard => [
-							formula = propFac.createAnd => [
-								left = propFac.createVariableUse => [
-									variableDefinition = xVarDef
-								]
-								right = propFac.createVariableUse => [
-									variableDefinition = yVarDef
-								]
-							]
-						]
+						annotations += guardAnnotation
 					]
 				]
 			]
 		]
 		
-		// tests that unknown annotation is replaced with goto annotation
-		flowAnnotationResolver.resolveAnnotations(ucmGuardInput)
-		Assert.assertTrue("Expected and actual use case model doesn't match", 
-			EcoreUtil.equals(ucmGuardExpected, ucmGuardInput)
-		)
-	}
-	
-	@Test
-	def resolveGuardWithSingleVariable() {
-		val ucmGuardInput = ucmFac.createUseCaseModel => [
-			useCases += ucmFac.createUseCase => [
-				id = "UC6"
-				name = "Guard test"
-				
-				mainScenario = ucmFac.createScenario => [
-					steps += ucmFac.createStep => [
-						text = "Step with guard."
-						annotations += annotationFac.createUnknownAnnotation => [
-							parts += newArrayList("guard", "x")
-						]
-					]
-				]
-			]
-		]
-		
-		val ucmGuardExpected = ucmFac.createUseCaseModel => [
-			val xVarDef = propFac.createVariableDefinition => [
-				name = "mark_x"
-			]
-			annotations += flowFac.createVariableDefinitionAnnotation => [
-				variableDefinition = xVarDef
-			]
-			
-			useCases += ucmFac.createUseCase => [
-				id = "UC6"
-				name = "Guard test"
-				
-				mainScenario = ucmFac.createScenario => [
-					steps += ucmFac.createStep => [
-						text = "Step with guard."
-						annotations += flowFac.createGuard => [
-							formula = propFac.createVariableUse => [
-								variableDefinition = xVarDef
-							]
-						]
-					]
-				]
-			]
-		]
+		val traceExpected = ucmTraceFac.createUcmToUcmtextTrace
+		traceExpected.annotations.map.put(guardAnnotation, guardString)
 		
 		// tests that unknown annotation is replaced with guard annotation
-		flowAnnotationResolver.resolveAnnotations(ucmGuardInput)
+		flowAnnotationResolver.resolveAnnotations(ucmInput, traceInput)
 		Assert.assertTrue("Expected and actual use case model doesn't match", 
-			EcoreUtil.equals(ucmGuardExpected, ucmGuardInput)
+			EcoreUtil.equals(ucmExpected, ucmInput)
+		)
+		
+		Assert.assertTrue("Expected and actual trace model doesn't match", 
+			EcoreUtil.equals(traceExpected, traceInput)
+		)
+	}
+
+	@Test
+	def resolveGuardWithSingleVariable() {
+		val unresolvedAnnotation = annotationFac.createUnknownAnnotation => [
+			parts += #["guard", "x"]
+		]
+		
+		val ucmInput = ucmFac.createUseCaseModel => [
+			useCases += ucmFac.createUseCase => [
+				id = "UC6"
+				name = "Guard test"
+				
+				mainScenario = ucmFac.createScenario => [
+					steps += ucmFac.createStep => [
+						text = "Step with guard."
+						annotations += unresolvedAnnotation
+					]
+				]
+			]
+		]
+		
+		val guardString = createStringWithOffset("xxx")
+		
+		val traceInput = ucmTraceFac.createUcmToUcmtextTrace
+		traceInput.annotations.map.put(unresolvedAnnotation, guardString)
+		
+		val xVarDef = propFac.createVariableDefinition => [
+			name = "mark_x"
+		]
+		
+		val guardAnnotation = flowFac.createGuard => [
+			formula = propFac.createVariableUse => [
+				variableDefinition = xVarDef
+			]
+		]
+		
+		val ucmExpected = ucmFac.createUseCaseModel => [
+			annotations += flowFac.createVariableDefinitionAnnotation => [
+				variableDefinition = xVarDef
+			]
+			
+			useCases += ucmFac.createUseCase => [
+				id = "UC6"
+				name = "Guard test"
+				
+				mainScenario = ucmFac.createScenario => [
+					steps += ucmFac.createStep => [
+						text = "Step with guard."
+						annotations += guardAnnotation
+					]
+				]
+			]
+		]
+		
+		val traceExpected = ucmTraceFac.createUcmToUcmtextTrace
+		traceExpected.annotations.map.put(guardAnnotation, guardString)
+		
+		// tests that unknown annotation is replaced with guard annotation
+		flowAnnotationResolver.resolveAnnotations(ucmInput, traceInput)
+		Assert.assertTrue("Expected and actual use case model doesn't match", 
+			EcoreUtil.equals(ucmExpected, ucmInput)
+		)
+		
+		Assert.assertTrue("Expected and actual trace model doesn't match", 
+			EcoreUtil.equals(traceExpected, traceInput)
 		)
 	}
 }

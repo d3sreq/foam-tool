@@ -1,12 +1,12 @@
 package org.foam.bootstrap
 
+import com.google.common.base.Preconditions
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
 import java.util.Collection
 import java.util.Iterator
-import org.eclipse.xtend.lib.annotations.Data
 import java.util.Set
-import com.google.common.base.Preconditions
+import org.eclipse.xtend.lib.annotations.Data
 
 class IterableExtensions {
 

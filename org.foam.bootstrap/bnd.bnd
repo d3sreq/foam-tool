@@ -1,6 +1,6 @@
 -sub: *.bnd
 -buildpath:  \
-	com.google.guava,\
+	com.google.guava;version=18.0.0.rc2,\
 	biz.aQute.bnd.annotation,\
 	org.apache.servicemix.bundles.junit,\
 	org.eclipse.xtend.lib,\

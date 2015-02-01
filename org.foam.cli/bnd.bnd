@@ -26,7 +26,7 @@
 	org.foam.models.ucm;version=latest,\
 	org.foam.models.verification;version=latest,\
 	biz.aQute.bnd.annotation,\
-	com.google.guava,\
+	com.google.guava;version=18.0.0.rc2,\
 	org.apache.servicemix.bundles.jopt-simple,\
 	org.eclipse.xtend.lib;version=2.7.2,\
 	org.eclipse.xtend.lib.macro;version=2.7.2,\
@@ -36,4 +36,6 @@
 	org.eclipse.emf.ecore.xmi,\
 	osgi.cmpn,\
 	osgi.core;version=4.3,\
-	org.ops4j.pax.logging.pax-logging-api
+	org.ops4j.pax.logging.pax-logging-api,\
+	org.foam.models.ucmtext;version=latest,\
+	org.foam.models.ucmtexttrac;version=latest

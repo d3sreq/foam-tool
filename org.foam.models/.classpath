@@ -7,5 +7,6 @@
 	<classpathentry kind="src" path="main/emf-gen"/>
 	<classpathentry excluding="**/*._trace|**/.gitignore" kind="src" path="main/xtend-gen"/>
 	<classpathentry excluding="**/packageinfo" kind="src" path="main/src"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="build/classes/main"/>
 </classpath>

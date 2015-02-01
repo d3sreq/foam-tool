@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.foam.models/main/emf-gen" modelPluginID="org.foam.models"
+    modelName="Ucmtext" modelPluginClass="" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" bundleManifest="false" complianceLevel="7.0"
+    copyrightFields="false" usedGenPackages="text.genmodel#//text" operationReflection="true"
+    importOrganizing="true">
+  <foreignModel>ucmtext.ecore</foreignModel>
+  <genPackages prefix="Ucmtext" basePackage="org.foam" disposableProviderFactory="true"
+      adapterFactory="false" ecorePackage="ucmtext.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ucmtext.ecore#//ScenarioType">
+      <genEnumLiterals ecoreEnumLiteral="ucmtext.ecore#//ScenarioType/Main"/>
+      <genEnumLiterals ecoreEnumLiteral="ucmtext.ecore#//ScenarioType/Variation"/>
+      <genEnumLiterals ecoreEnumLiteral="ucmtext.ecore#//ScenarioType/Extension"/>
+    </genEnums>
+    <genClasses ecoreClass="ucmtext.ecore#//UnparsedUseCaseText">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//UnparsedUseCaseText/blocks"/>
+    </genClasses>
+    <genClasses ecoreClass="ucmtext.ecore#//Block">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//Block/header"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//Block/body"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//Block/derived"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="ucmtext.ecore#//SemanticBlock"/>
+    <genClasses ecoreClass="ucmtext.ecore#//PrimaryDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//PrimaryDef/value"/>
+    </genClasses>
+    <genClasses ecoreClass="ucmtext.ecore#//PrecedenceDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//PrecedenceDef/preceded"/>
+    </genClasses>
+    <genClasses ecoreClass="ucmtext.ecore#//UcIdDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//UcIdDef/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//UcIdDef/description"/>
+    </genClasses>
+    <genClasses ecoreClass="ucmtext.ecore#//UseCaseNameDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//UseCaseNameDef/useCase"/>
+    </genClasses>
+    <genClasses ecoreClass="ucmtext.ecore#//ScenarioDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//ScenarioDef/steps"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ucmtext.ecore#//ScenarioDef/type"/>
+    </genClasses>
+    <genClasses ecoreClass="ucmtext.ecore#//StepDef">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//StepDef/label"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//StepDef/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ucmtext.ecore#//StepDef/annot"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
