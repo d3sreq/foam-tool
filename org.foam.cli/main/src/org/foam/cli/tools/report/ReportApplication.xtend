@@ -59,6 +59,8 @@ import org.eclipse.emf.common.util.Diagnostic
 
 import static extension org.foam.cntex.util.CntexModelExtensions.*
 import org.eclipse.emf.ecore.util.Diagnostician
+import org.eclipse.emf.ecore.EValidator
+import org.foam.ucm.util.UcmValidatorCustom
 
 @Component(provide=#[ReportApplication, IExecutableTool])
 class ReportApplication implements IExecutableTool {
@@ -337,6 +339,8 @@ class ReportApplication implements IExecutableTool {
 		TraceabilityPackage.eINSTANCE.eClass
 		VerificationPackage.eINSTANCE.eClass
 		EmfCommons.registerAsteriskInExtensionToFactory
+		
+		EValidator.Registry.INSTANCE.put(UcmPackage.eINSTANCE, new UcmValidatorCustom)
 	}
 	
 	def private getCounterExamples(UseCaseModel useCaseModel) {
