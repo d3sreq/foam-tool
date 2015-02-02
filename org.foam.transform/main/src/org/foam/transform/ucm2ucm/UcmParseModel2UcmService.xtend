@@ -145,10 +145,10 @@ class UcmParseModel2UcmService {
 								val scenario = key
 								val scenarioDef = value
 								if (scenarioDef.type == ScenarioType.EXTENSION) {
-									holder.extensions
+									holder.extensions.add(scenario)
 								} else {
-									holder.variations
-								}.add(scenario)
+									holder.variations.add(scenario)
+								}
 							]
 						
 						useCase.branches.put(branchingStep, holder)
