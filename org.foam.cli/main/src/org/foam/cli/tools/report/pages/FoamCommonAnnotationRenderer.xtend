@@ -23,9 +23,9 @@ class FoamCommonAnnotationRenderer {
 	// flow annotations
 	def dispatch render(Abort annot) '''#abort'''
 	def dispatch render(Include annot) '''#include:<a href="../«annot.inlinedUseCase.id»/«annot.inlinedUseCase.id».html">«annot.inlinedUseCase.id»</a>'''
-	def dispatch render(Goto annot) '''#goto:«annot.target.label»'''
-	def dispatch render(Mark annot) '''#mark:«annot.variableDefinition.name»'''
+	def dispatch render(Goto annot) '''#goto:«annot.target.label»'''	
 	def dispatch render(Guard annot) '''#guard:«annot.formula.evalFormula»'''
+	def dispatch render(Mark annot)  '''#«IF !annot.value»un«ENDIF»mark:«annot.variableDefinition.name»'''
 
 	// temporal annotations
 	def dispatch render(TemporalAnnotation annot) '''#«annot.variableDefinition.name»:«annot.group.qualifier»'''

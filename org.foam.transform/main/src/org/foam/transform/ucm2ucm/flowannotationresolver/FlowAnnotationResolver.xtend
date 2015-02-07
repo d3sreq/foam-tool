@@ -103,8 +103,19 @@ class FlowAnnotationResolver {
 			}
 			case "mark": {
 				flowannotationFactory.createMark => [
+					value = true
 					val varName = annotation.parts.get(1)
 					// TODO - add only once ?
+					variableDefinition = findOrAddVariableDefinition('''«MARK_PREFIX»«varName»''', varName2VarDef, useCaseModel)
+				]
+			}
+			case "unmark": {
+				flowannotationFactory.createMark => [
+					value = false
+					val varName = annotation.parts.get(1)
+					// adding annotations as well as in "mark" annotation
+					// another option would be to force "mark" before "unmark" but
+					// it feels too restrictive to me (jv)
 					variableDefinition = findOrAddVariableDefinition('''«MARK_PREFIX»«varName»''', varName2VarDef, useCaseModel)
 				]
 			}

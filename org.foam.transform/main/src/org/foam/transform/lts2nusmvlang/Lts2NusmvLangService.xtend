@@ -2,6 +2,7 @@ package org.foam.transform.lts2nusmvlang
 
 import aQute.bnd.annotation.component.Component
 import com.google.common.base.Preconditions
+import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
 import com.google.common.collect.SetMultimap
 import java.util.HashMap
@@ -28,8 +29,8 @@ import org.foam.verification.Action
 import static org.foam.transform.utils.modeling.FoamNamingExtensions.*
 
 import static extension org.apache.commons.lang.WordUtils.*
-import static extension org.foam.transform.lts2nusmvlang.Lts2NusmvExtensions.*
 import static extension org.foam.bootstrap.IterableExtensions.*
+import static extension org.foam.transform.lts2nusmvlang.Lts2NusmvExtensions.*
 
 /**
  * @author Viliam Simko
@@ -164,13 +165,9 @@ package class Lts2NusmvContext {
 		trans2guards.put(newTransition, guardAnnot)
 	}
 	
-	private val markvar2trans = <VariableDefinition, List<Transition>> newHashMap
+	private val Multimap<VariableDefinition, Pair<Transition, Boolean>> markvar2trans = HashMultimap.create
 	def private dispatch void prepareTransitionAnnotationMapping(Automaton automaton, Transition transition, Mark markAnnot) {
-		if(!markvar2trans.containsKey(markAnnot.variableDefinition)) {
-			markvar2trans.put(markAnnot.variableDefinition, newArrayList)
-		}
-		
-		markvar2trans.get(markAnnot.variableDefinition) += transition
+		markvar2trans.put(markAnnot.variableDefinition, transition -> markAnnot.value)
 	}
 	
 	private val actvar2acttrans = <VariableDefinition, List<Pair<Action,Transition>>> newHashMap
@@ -335,7 +332,7 @@ package class Lts2NusmvContext {
 				init(«vardef.name») := FALSE;
 				next(«vardef.name») := case
 					«FOR trans : markvar2trans.get(vardef)»
-						s=«trans.start.stateId» : TRUE; -- transition («trans.start.stateId» -> «trans.end.stateId»)
+						s=«trans.key.start.stateId» : «trans.value.toString.toUpperCase»; -- transition («trans.key.start.stateId» -> «trans.key.end.stateId»)
 					«ENDFOR»
 					TRUE : «vardef.name»;
 				esac;

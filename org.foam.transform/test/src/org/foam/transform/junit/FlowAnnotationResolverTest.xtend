@@ -267,6 +267,7 @@ class FlowAnnotationResolverTest {
 		
 		val markAnnotation = flowFac.createMark => [
 			variableDefinition = xVarDef
+			value = true
 		]
 		
 		val ucmExpected = ucmFac.createUseCaseModel => [
